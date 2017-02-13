@@ -1,9 +1,12 @@
-import React, { Component } from 'react';
-
+import React, { Component } from 'react'
+import { Button } from 'semantic-ui-react'
 class Home extends Component {
     render() {
         return (
-            <h1>Homepage</h1>
+            <div>
+                <h1>Homepage</h1>
+                <Button primary>Hello</Button>
+            </div>
         );
     }
 }
