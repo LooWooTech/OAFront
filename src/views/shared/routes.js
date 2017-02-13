@@ -23,10 +23,10 @@ export default () => {
             <Route path='/' component={Layout}>
                 <IndexRoute component={Home} onEnter={authorize} />
                 <Route path='/document' component={DocumentLayout}>
-                    <Route path='index' component={DocumentIndex} />
+                    <IndexRoute component={DocumentIndex} />
                 </Route>
             </Route>
-            <Route path='/user/'>
+            <Route path='/user'>
                 <Route path='login' component={Login} />
                 <Route path='logout' component={Logout} />
             </Route>

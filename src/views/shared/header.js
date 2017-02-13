@@ -6,7 +6,7 @@ import { Menu, Dropdown, Icon } from 'semantic-ui-react'
 
 export default class Header extends Component {
 
-    state = { activeItem: 'index' }
+    state = { activeItem: 'home' }
     handleItemClick = (e, { name }) => {
         this.setState({ activeItem: name })
         if (name === 'home') {
