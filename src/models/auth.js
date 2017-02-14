@@ -1,7 +1,7 @@
 module.exports = {
 
   hasLogin(){
-    return !!localStorage.token;
+    return !!!localStorage.token;
   },
 
   getToken() {
