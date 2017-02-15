@@ -7,9 +7,9 @@ export default class Layout extends React.Component {
   render() {
     return (
       <div className="App">
-        <Header  location={this.props.location}/>
+        <Header/>
         <div id="container">
-          <Sider location={this.props.location} />
+          <Sider pathname={this.props.location.pathname} />
           <div id="main">
             {this.props.children}
           </div>

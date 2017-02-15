@@ -3,29 +3,32 @@ import { Link } from 'react-router'
 import auth from '../../models/auth'
 import { Menu, Dropdown, Icon } from 'semantic-ui-react'
 
+const headerNavData = [
+    { name: 'home', active: true, path: '/', icon: 'fa fa-commenting', text: '动态' },
+    { name: 'document', icon: 'fa fa-file-o', text: '公文' },
+    { name: 'calendar', icon: 'fa fa-calendar', text: '日程' },
+    { name: 'task', icon: 'fa fa-clock-o', text: '任务' },
+    { name: 'news', icon: 'fa fa-newspaper-o', text: '信息' },
+    { name: 'attendace', icon: 'fa fa-calendar-check-o', text: '考勤' },
+    { name: 'archive', icon: 'fa fa-tasks', text: '档案' },
+    { name: 'meeting', icon: 'fa fa-television', text: '会议' },
+    { name: 'car', icon: 'fa fa-car', text: '车辆' },
+    { name: 'file', icon: 'fa fa-files-o', text: '文档' }
+];
+
 export default class Header extends React.Component {
     render() {
-        let items = [
-            { name: 'home', active: true, path: '/', icon: 'fa fa-commenting', text: '动态' },
-            { name: 'document', icon: 'fa fa-file-o', text: '公文' },
-            { name: 'calendar', icon: 'fa fa-calendar', text: '日程' },
-            { name: 'task', icon: 'fa fa-clock-o', text: '任务' },
-            { name: 'news', icon: 'fa fa-newspaper-o', text: '信息' },
-            { name: 'attendace', icon: 'fa fa-calendar-check-o', text: '考勤' },
-            { name: 'archive', icon: 'fa fa-tasks', text: '档案' },
-            { name: 'meeting', icon: 'fa fa-television', text: '会议' },
-            { name: 'car', icon: 'fa fa-car', text: '车辆' },
-            { name: 'file', icon: 'fa fa-files-o', text: '文档' },
-        ].map((item, key) =>
-            <Link key={key} onlyActiveOnIndex={item.active} to={item.path || item.name} activeClassName='active' className='item'><i className={item.icon} />&nbsp;{item.text}</Link>
-            );
 
-        let username = (<span><Icon name='user' />Hello, Bob</span>)
+        let NavHtml = headerNavData.map((item, key) =>
+            <Link key={key} onlyActiveOnIndex={item.active} to={item.path || item.name} activeClassName='active' className='item'><i className={item.icon} />&nbsp;{item.text}</Link>
+        )
+
+        let username = <span><Icon name='user' />Hello, {auth.getUserName()}</span>
 
         return (
             auth.hasLogin() ?
                 <Menu id='header'>
-                    {items}
+                    {NavHtml}
                     <Menu.Menu position='right'>
                         <Dropdown trigger={username} pointing className='link item'>
                             <Dropdown.Menu>

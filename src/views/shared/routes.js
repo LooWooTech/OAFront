@@ -1,5 +1,5 @@
 import React from 'react'
-import { Router, Route, IndexRoute, hashHistory } from 'react-router'
+import { Router, Route, IndexRoute, hashHistory, browserHistory } from 'react-router'
 import auth from '../../models/auth'
 import Layout from './_layout'
 import Home from '../home/index'
@@ -20,9 +20,7 @@ export default () =>
     <Router history={hashHistory}>
         <Route path='/' component={Layout}>
             <IndexRoute component={Home} onEnter={authorize} />
-            <Route path='/document'>
-                <IndexRoute component={DocumentIndex} />
-            </Route>
+            <Route path='document' component={DocumentIndex} />
         </Route>
         <Route path='/user'>
             <Route path='login' component={Login} />

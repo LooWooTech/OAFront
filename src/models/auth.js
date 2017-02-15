@@ -1,16 +1,24 @@
 module.exports = {
 
-  hasLogin(){
-    return !!!localStorage.token;
+  hasLogin() {
+    return !!localStorage.token;
   },
 
   getToken() {
-    return localStorage.token
+    return localStorage.token;
   },
 
   logout(cb) {
-    delete localStorage.token
+    delete localStorage.token;
     if (cb) cb()
+  },
+
+  getUserName() {
+    return localStorage.username;
+  },
+
+  submitLogin(formData) {
+    //ajax
   }
 
 }
