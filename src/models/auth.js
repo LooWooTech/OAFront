@@ -1,24 +1,23 @@
 module.exports = {
 
   hasLogin() {
-    return !!localStorage.token;
+    return this.getToken();
   },
 
   getToken() {
-    return localStorage.token;
+    return this.getUser().Ticket;
   },
 
-  logout(cb) {
-    delete localStorage.token;
-    if (cb) cb()
+  login(user) {
+    localStorage.user = JSON.stringify(user);
   },
 
-  getUserName() {
-    return localStorage.username;
+  logout() {
+    delete localStorage.user;
   },
 
-  submitLogin(formData) {
-    //ajax
-  }
+  getUser() {
+    return JSON.parse(localStorage.user || '{}');
+  },
 
 }

@@ -1,0 +1,35 @@
+#root, #app {
+    height: 100%;
+    bottom: 0;
+    position: absolute;
+    width: 100%;
+}
+
+#page-container {
+    position: absolute;
+    background: #fff;
+    bottom: 0px;
+    overflow: hidden;
+    top: 40px;
+    width: 100%;
+}
+
+#sider {
+    width: 200px;
+    overflow: hidden;
+    position: relative;
+    bottom: 0;
+    height: 100%;
+    background: #eee;
+    padding-top: 20px;
+}
+
+#main-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-left: solid 200px transparent;
+    overflow: auto;
+}

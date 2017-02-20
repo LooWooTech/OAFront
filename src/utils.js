@@ -1,40 +1,79 @@
-import { browserHistory } from 'react-router'
-import auth from './models/auth'
+import { hashHistory } from 'react-router'
 import 'whatwg-fetch'
+import auth from './models/auth'
 
-const getRequestHeaders = () => {
-    var headers = new Headers();
-    headers.set('token', auth.getToken());
-    return headers;
+const $ = require('jquery')
+function ajaxRequest(url, method, data, cb, err) {
+    $.ajax({
+        method: method,
+        data: data,
+        dataType: 'json',
+        url: url,
+        headers: {
+            token: auth.getToken(),
+        },
+        success: function (json, status, xhr) {
+            if (cb) {
+                cb(json, status, xhr);
+            }
+        },
+        error: function (xhr, status, error) {
+            //console.log(arguments);
+            if (err) {
+                err(error);
+            }
+        }
+    });
 }
 
-const catchRequestError = e => {
-    console.log("Oops, error", e);
+/*function checkStatus(response) {
+    if (response.status >= 200 && response.status < 300) {
+        return response;
+    }
+
+    const error = new Error(response.statusText);
+    error.response = response;
+}
+function parseJSON(response) {
+    return response.json();
 }
 
-const ajaxRequest = (url, method, data, cb) => {
-    fetch(url, {
-        method: 'POST',
-        headers: getRequestHeaders(),
-        data: data
-    }).then(response => response.json())
-        .then(data => {
-            console.log(data)
-            cb(data)
+function fetchRequest(url, method, data, cb, err) {
+    var init = {
+        method: method,
+        headers: {
+            'token': auth.getToken()
+        },
+        credentials:false,
+        mode:'cors',
+        body: data || {}
+    };
+    // if (data) {
+    //     var formData = new FormData();
+    //     Object.keys(data).map(key => formData.append(key, data[key]));
+    //     init.body = formData;
+    // }
+    var request = new Request(url, init);
+    console.log(request);
+    fetch(request).then(checkStatus)
+        .then(parseJSON)
+        .then(json => {
+            if (cb) {
+                cb(json);
+            }
         })
-        .catch(catchRequestError);
+        .catch(e => {
+            if (err) {
+                err(e)
+            }
+        });
 }
-
+*/
 module.exports = {
     Redirect(path) {
-        browserHistory.push(path);
+        hashHistory.push(path);
     },
-
-    POST(url, data, cb) {
-        ajaxRequest(url, "POST", data, cb)
-    },
-
-    GET(url, cb) {
-        ajaxRequest(url, "GET", null, cb)
-    },
+    Request(url, method, data, cb, err) {
+        ajaxRequest(url, method, data, cb, err)
+    }
 }

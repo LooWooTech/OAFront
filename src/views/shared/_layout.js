@@ -6,11 +6,11 @@ export default class Layout extends React.Component {
 
   render() {
     return (
-      <div className="App">
-        <Header/>
-        <div id="container">
+      <div id="app" className="nano has-scrollbar">
+        <Header />
+        <div id="page-container">
           <Sider pathname={this.props.location.pathname} />
-          <div id="main">
+          <div id="main-content" className="nano-content" style={{ right: '-17px' }}>
             {this.props.children}
           </div>
         </div>

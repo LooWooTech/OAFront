@@ -890,14 +890,14 @@ babel-register@^6.16.0, babel-register@^6.22.0:
     mkdirp "^0.5.1"
     source-map-support "^0.4.2"
 
-babel-runtime@6.11.6, babel-runtime@^6.9.1:
+babel-runtime@6.11.6:
   version "6.11.6"
   resolved "http://registry.npm.taobao.org/babel-runtime/download/babel-runtime-6.11.6.tgz#6db707fef2d49c49bfa3cb64efdb436b518b8222"
   dependencies:
     core-js "^2.4.0"
     regenerator-runtime "^0.9.5"
 
-babel-runtime@^6.0.0, babel-runtime@^6.18.0, babel-runtime@^6.22.0, babel-runtime@^6.9.0:
+babel-runtime@^6.0.0, babel-runtime@^6.18.0, babel-runtime@^6.22.0, babel-runtime@^6.9.0, babel-runtime@^6.9.1:
   version "6.22.0"
   resolved "http://registry.npm.taobao.org/babel-runtime/download/babel-runtime-6.22.0.tgz#1cf8b4ac67c77a4ddb0db2ae1f74de52ac4ca611"
   dependencies:
@@ -1165,6 +1165,10 @@ clap@^1.0.9:
   resolved "http://registry.npm.taobao.org/clap/download/clap-1.1.2.tgz#316545bf22229225a2cecaa6824cd2f56a9709ed"
   dependencies:
     chalk "^1.1.3"
+
+classnames@^2.1.5:
+  version "2.2.5"
+  resolved "http://registry.npm.taobao.org/classnames/download/classnames-2.2.5.tgz#fb3801d453467649ef3603c7d61a02bd129bde6d"
 
 clean-css@4.0.x:
   version "4.0.5"
@@ -1545,7 +1549,7 @@ debug@2.2.0, debug@~2.2.0:
   dependencies:
     ms "0.7.1"
 
-debug@^2.1.0, debug@^2.1.1, debug@^2.2.0:
+debug@^2.1.0, debug@^2.1.1, debug@^2.2.0, debug@^2.4.5:
   version "2.6.0"
   resolved "http://registry.npm.taobao.org/debug/download/debug-2.6.0.tgz#bc596bcabe7617f11d9fa15361eded5608b8499b"
   dependencies:
@@ -2223,7 +2227,7 @@ fs.realpath@^1.0.0:
   version "1.0.0"
   resolved "http://registry.npm.taobao.org/fs.realpath/download/fs.realpath-1.0.0.tgz#1504ad2523158caa40db4a2787cb01411994ea4f"
 
-fsevents@1.0.14, fsevents@^1.0.0:
+fsevents@^1.0.0:
   version "1.0.14"
   resolved "http://registry.npm.taobao.org/fsevents/download/fsevents-1.0.14.tgz#558e8cc38643d8ef40fe45158486d0d25758eee4"
   dependencies:
@@ -3047,6 +3051,10 @@ jodid25519@^1.0.0:
   dependencies:
     jsbn "~0.1.0"
 
+jquery@^3.1.1:
+  version "3.1.1"
+  resolved "http://registry.npm.taobao.org/jquery/download/jquery-3.1.1.tgz#347c1c21c7e004115e0a4da32cece041fad3c8a3"
+
 js-base64@^2.1.9:
   version "2.1.9"
   resolved "http://registry.npm.taobao.org/js-base64/download/js-base64-2.1.9.tgz#f0e80ae039a4bd654b5f281fc93f04a914a7fcce"
@@ -3300,7 +3308,7 @@ lodash.uniq@^4.3.0:
   version "4.5.0"
   resolved "http://registry.npm.taobao.org/lodash.uniq/download/lodash.uniq-4.5.0.tgz#d0225373aeb652adc1bc82e4945339a842754773"
 
-"lodash@>=3.5 <5", lodash@^4.0.0, lodash@^4.14.0, lodash@^4.15.0, lodash@^4.16.2, lodash@^4.16.4, lodash@^4.2.0, lodash@^4.3.0:
+"lodash@>=3.5 <5", lodash@^4.0.0, lodash@^4.14.0, lodash@^4.15.0, lodash@^4.16.2, lodash@^4.16.4, lodash@^4.17.2, lodash@^4.2.0, lodash@^4.3.0:
   version "4.17.4"
   resolved "http://registry.npm.taobao.org/lodash/download/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
 
@@ -4242,55 +4250,6 @@ react-router@^3.0.2:
     loose-envify "^1.2.0"
     warning "^3.0.0"
 
-react-scripts@0.8.5:
-  version "0.8.5"
-  resolved "http://registry.npm.taobao.org/react-scripts/download/react-scripts-0.8.5.tgz#5dc154617be7addef5022c261b96b3e3068418cb"
-  dependencies:
-    autoprefixer "6.5.1"
-    babel-core "6.17.0"
-    babel-eslint "7.1.1"
-    babel-jest "17.0.2"
-    babel-loader "6.2.7"
-    babel-preset-react-app "^2.0.1"
-    case-sensitive-paths-webpack-plugin "1.1.4"
-    chalk "1.1.3"
-    connect-history-api-fallback "1.3.0"
-    cross-spawn "4.0.2"
-    css-loader "0.26.0"
-    detect-port "1.0.1"
-    dotenv "2.0.0"
-    eslint "3.8.1"
-    eslint-config-react-app "^0.5.0"
-    eslint-loader "1.6.0"
-    eslint-plugin-flowtype "2.21.0"
-    eslint-plugin-import "2.0.1"
-    eslint-plugin-jsx-a11y "2.2.3"
-    eslint-plugin-react "6.4.1"
-    extract-text-webpack-plugin "1.0.1"
-    file-loader "0.9.0"
-    filesize "3.3.0"
-    fs-extra "0.30.0"
-    gzip-size "3.0.0"
-    html-webpack-plugin "2.24.0"
-    http-proxy-middleware "0.17.2"
-    jest "17.0.2"
-    json-loader "0.5.4"
-    object-assign "4.1.0"
-    path-exists "2.1.0"
-    postcss-loader "1.0.0"
-    promise "7.1.1"
-    react-dev-utils "^0.4.2"
-    recursive-readdir "2.1.0"
-    strip-ansi "3.0.1"
-    style-loader "0.13.1"
-    url-loader "0.5.7"
-    webpack "1.14.0"
-    webpack-dev-server "1.16.2"
-    webpack-manifest-plugin "1.1.0"
-    whatwg-fetch "1.0.0"
-  optionalDependencies:
-    fsevents "1.0.14"
-
 react@^15.4.2:
   version "15.4.2"
   resolved "http://registry.npm.taobao.org/react/download/react-15.4.2.tgz#41f7991b26185392ba9bae96c8889e7e018397ef"
@@ -4578,6 +4537,15 @@ sane@~1.4.1:
 sax@^1.2.1, sax@~1.2.1:
   version "1.2.2"
   resolved "http://registry.npm.taobao.org/sax/download/sax-1.2.2.tgz#fd8631a23bc7826bef5d871bdb87378c95647828"
+
+semantic-ui-react@^0.64.8:
+  version "0.64.8"
+  resolved "http://registry.npm.taobao.org/semantic-ui-react/download/semantic-ui-react-0.64.8.tgz#241c4f314b73cb6ee39773b5ca39aa0985ac99e2"
+  dependencies:
+    babel-runtime "^6.22.0"
+    classnames "^2.1.5"
+    debug "^2.4.5"
+    lodash "^4.17.2"
 
 "semver@2 || 3 || 4 || 5", semver@^5.1.0, semver@^5.3.0, semver@~5.3.0:
   version "5.3.0"
@@ -5232,9 +5200,9 @@ whatwg-encoding@^1.0.1:
   dependencies:
     iconv-lite "0.4.13"
 
-whatwg-fetch@1.0.0, whatwg-fetch@>=0.10.0:
-  version "1.0.0"
-  resolved "http://registry.npm.taobao.org/whatwg-fetch/download/whatwg-fetch-1.0.0.tgz#01c2ac4df40e236aaa18480e3be74bd5c8eb798e"
+whatwg-fetch@>=0.10.0, whatwg-fetch@^2.0.2:
+  version "2.0.2"
+  resolved "http://registry.npm.taobao.org/whatwg-fetch/download/whatwg-fetch-2.0.2.tgz#fe294d1d89e36c5be8b3195057f2e4bc74fc980e"
 
 whatwg-url@^4.3.0:
   version "4.3.0"

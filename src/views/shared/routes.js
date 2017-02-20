@@ -1,5 +1,5 @@
 import React from 'react'
-import { Router, Route, IndexRoute, hashHistory, browserHistory } from 'react-router'
+import { Router, Route, IndexRoute, hashHistory } from 'react-router'
 import auth from '../../models/auth'
 import Layout from './_layout'
 import Home from '../home/index'
