@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router';
-import { Menu, Input, Table, Icon } from 'semantic-ui-react';
+import { Menu, Input, Table, Icon } from 'antd';
 
 export default class DocumentIndex extends React.Component {
     render() {

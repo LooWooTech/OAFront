@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router';
 import auth from '../../models/auth';
-import { Menu, Dropdown } from 'semantic-ui-react';
+import { Menu, Dropdown, Icon } from 'antd';
 import utils from '../../utils';
 
 const headerNavData = [
@@ -18,29 +18,38 @@ const headerNavData = [
 ];
 
 const NavItem = (item, key) =>
-    <Link key={key} onlyActiveOnIndex={item.active} to={item.path || item.name} activeClassName="active" className="item">
+    <Menu.Item key={item.name}>
         <i className={item.icon} />&nbsp;{item.text}
-    </Link>;
+    </Menu.Item>;
 
-const userName = <span><i className="fa fa-user" />&nbsp;{auth.getUser().Username}</span>
+const userMenu = <Menu>
+    <Menu.Item>个人资料</Menu.Item>
+    <Menu.Item>修改密码</Menu.Item>
+    <Menu.Divider />
+    <Menu.Item>通讯录</Menu.Item>
+    <Menu.Item>消息设置</Menu.Item>
+    <Menu.Divider />
+    <Menu.Item onClick={() => {
+        auth.logout();
+        utils.Redirect('/user/login');
+    }}>退出登录</Menu.Item>
+</Menu>;
 
-export default () =>
-    <Menu id="header" fixed="top" inverted>
-        {headerNavData.map((item, key) => NavItem(item, key))}
-        <Menu.Menu position="right">
-            <Dropdown trigger={userName} pointing className="link item">
-                <Dropdown.Menu>
-                    <Dropdown.Item>个人资料</Dropdown.Item>
-                    <Dropdown.Item>修改密码</Dropdown.Item>
-                    <Dropdown.Divider />
-                    <Dropdown.Item>通讯录</Dropdown.Item>
-                    <Dropdown.Item>消息设置</Dropdown.Item>
-                    <Dropdown.Divider />
-                    <Dropdown.Item onClick={() => {
-                        auth.logout();
-                        utils.Redirect('/user/login');
-                    }}>退出登录</Dropdown.Item>
-                </Dropdown.Menu>
-            </Dropdown>
-        </Menu.Menu>
-    </Menu>;
+export default class TopNav extends React.Component {
+    state = { current: 'home' };
+    handleClick(e) {
+        console.log('click ', e);
+        this.setState({ current: e.key });
+    }
+    render() {
+        return (
+            <Menu  mode="horizontal" selectedKeys={[this.state.current]} onClick={e => this.handleClick(e)}>
+                {headerNavData.map((item, key) => NavItem(item, key))}
+                <Menu.SubMenu refs="nav-right" title={<span><Icon type="user" />&nbsp;{auth.getUser().Username}</span>}>
+                    <Menu.Item key="setting:1">Option 1</Menu.Item>
+                    <Menu.Item key="setting:2">Option 2</Menu.Item>
+                </Menu.SubMenu>
+            </Menu>
+        );
+    }
+}
