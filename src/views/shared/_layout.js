@@ -10,7 +10,7 @@ export default class Layout extends React.Component {
         <Header />
         <div id="page-container">
           <Sider pathname={this.props.location.pathname} />
-          <div id="main-content" className="nano-content" style={{ right: '-17px' }}>
+          <div id="main-content" className="nano-content">
             {this.props.children}
           </div>
         </div>

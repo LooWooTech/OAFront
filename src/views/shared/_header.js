@@ -17,38 +17,30 @@ const headerNavData = [
     { name: 'file', icon: 'fa fa-files-o', text: '文档' },
 ];
 
-export default class Header extends React.Component {
-    render() {
-        const NavHtml = headerNavData.map((item, key) =>
-            <Link key={key} onlyActiveOnIndex={item.active} to={item.path || item.name} activeClassName="active" className="item">
-                <i className={item.icon} />&nbsp;{item.text}
-            </Link>
-        )
+const NavItem = (item, key) =>
+    <Link key={key} onlyActiveOnIndex={item.active} to={item.path || item.name} activeClassName="active" className="item">
+        <i className={item.icon} />&nbsp;{item.text}
+    </Link>;
 
-        const username = <span><i className="fa fa-user" />&nbsp;{auth.getUser().Username}</span>
-        return (
-            auth.hasLogin() ?
-                <Menu id="header" fixed="top">
-                    {NavHtml}
-                    <Menu.Menu position="right">
-                        <Dropdown trigger={username} pointing className="link item">
-                            <Dropdown.Menu>
-                                <Dropdown.Item>个人资料</Dropdown.Item>
-                                <Dropdown.Item>修改密码</Dropdown.Item>
-                                <Dropdown.Divider />
-                                <Dropdown.Item>通讯录</Dropdown.Item>
-                                <Dropdown.Item>消息设置</Dropdown.Item>
-                                <Dropdown.Divider />
-                                <Dropdown.Item onClick={() => {
-                                    auth.logout();
-                                    utils.Redirect('/user/login');
-                                }}>退出登录</Dropdown.Item>
-                            </Dropdown.Menu>
-                        </Dropdown>
-                    </Menu.Menu>
-                </Menu>
-                :
-                null
-        );
-    }
-}
+const userName = <span><i className="fa fa-user" />&nbsp;{auth.getUser().Username}</span>
+
+export default () =>
+    <Menu id="header" fixed="top" inverted>
+        {headerNavData.map((item, key) => NavItem(item, key))}
+        <Menu.Menu position="right">
+            <Dropdown trigger={userName} pointing className="link item">
+                <Dropdown.Menu>
+                    <Dropdown.Item>个人资料</Dropdown.Item>
+                    <Dropdown.Item>修改密码</Dropdown.Item>
+                    <Dropdown.Divider />
+                    <Dropdown.Item>通讯录</Dropdown.Item>
+                    <Dropdown.Item>消息设置</Dropdown.Item>
+                    <Dropdown.Divider />
+                    <Dropdown.Item onClick={() => {
+                        auth.logout();
+                        utils.Redirect('/user/login');
+                    }}>退出登录</Dropdown.Item>
+                </Dropdown.Menu>
+            </Dropdown>
+        </Menu.Menu>
+    </Menu>;

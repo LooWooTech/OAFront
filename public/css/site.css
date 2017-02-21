@@ -27,9 +27,15 @@
 #main-content {
     position: absolute;
     top: 0;
-    left: 0;
+    left: 200px;
     right: 0;
     bottom: 0;
-    border-left: solid 200px transparent;
     overflow: auto;
+    overflow-x: none;
+    padding: 10px;
+}
+
+#main-content .toolbar {
+    margin: -10px;
+    margin-bottom: 10px;
 }

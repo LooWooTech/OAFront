@@ -9,12 +9,11 @@ import utils from '../../utils'
 
 export default class Login extends Component {
     state = {}
-    handleSubmit = (e, form) => {
+    handleSubmit = (e, {formData}) => {
         e.preventDefault()
-        api.UserLogin(this, form.formData, json => {
+        api.UserLogin(this, formData, json => {
             auth.login(json);
             utils.Redirect('/');
-            //window.locaiton.href = '/';
         })
     }
     render() {
