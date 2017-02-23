@@ -6,7 +6,7 @@ import utils from '../../utils';
 
 const headerNavData = [
     { name: 'home', active: true, path: '/', icon: 'fa fa-commenting', text: '动态' },
-    { name: 'document', icon: 'fa fa-file-o', text: '公文' },
+    { name: 'missive', icon: 'fa fa-file-o', text: '公文' },
     { name: 'calendar', icon: 'fa fa-calendar', text: '日程' },
     { name: 'task', icon: 'fa fa-clock-o', text: '任务' },
     { name: 'news', icon: 'fa fa-newspaper-o', text: '信息' },
@@ -24,23 +24,29 @@ const NavItem = (item, key) =>
 
 const userName = <span><i className="fa fa-user" />&nbsp;{auth.getUser().Username}</span>
 
-export default () =>
-    <Menu id="header" fixed="top" inverted>
-        {headerNavData.map((item, key) => NavItem(item, key))}
-        <Menu.Menu position="right">
-            <Dropdown trigger={userName} pointing className="link item">
-                <Dropdown.Menu>
-                    <Dropdown.Item>个人资料</Dropdown.Item>
-                    <Dropdown.Item>修改密码</Dropdown.Item>
-                    <Dropdown.Divider />
-                    <Dropdown.Item>通讯录</Dropdown.Item>
-                    <Dropdown.Item>消息设置</Dropdown.Item>
-                    <Dropdown.Divider />
-                    <Dropdown.Item onClick={() => {
-                        auth.logout();
-                        utils.Redirect('/user/login');
-                    }}>退出登录</Dropdown.Item>
-                </Dropdown.Menu>
-            </Dropdown>
-        </Menu.Menu>
-    </Menu>;
+export default class Header extends React.Component {
+    
+    render() {
+        return (
+            <Menu id="header" fixed="top" inverted>
+                {headerNavData.map((item, key) => NavItem(item, key))}
+                <Menu.Menu position="right">
+                    <Dropdown trigger={userName} pointing className="link item">
+                        <Dropdown.Menu>
+                            <Dropdown.Item onClick={this.handleItemClick}>个人资料</Dropdown.Item>
+                            <Dropdown.Item>修改密码</Dropdown.Item>
+                            <Dropdown.Divider />
+                            <Dropdown.Item>通讯录</Dropdown.Item>
+                            <Dropdown.Item>消息设置</Dropdown.Item>
+                            <Dropdown.Divider />
+                            <Dropdown.Item onClick={() => {
+                                auth.logout();
+                                utils.Redirect('/user/login');
+                            }}>退出登录</Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown>
+                </Menu.Menu>
+            </Menu>
+        );
+    }
+}

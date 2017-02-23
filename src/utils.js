@@ -1,4 +1,4 @@
-import { hashHistory } from 'react-router'
+import { hashHistory,browserHistory } from 'react-router'
 import 'whatwg-fetch'
 import auth from './models/auth'
 

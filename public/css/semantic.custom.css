@@ -2,3 +2,11 @@
     margin-left: 0;
     margin-right: 0;
 }
+
+.ui.secondary.pointing.menu .active.item {
+    font-weight: normal;
+}
+
+.ui.button {
+    font-weight: normal;
+}
