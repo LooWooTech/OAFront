@@ -2,37 +2,47 @@ import React from 'react'
 import { Link } from 'react-router'
 
 const pageIndexRegex = /page=\d+/ig;
-const getPageUrl = (pageIndex, url) => {
-    //把当前url的page参数去掉，换成pageIndex
-    var toUrl = (url || '').toString().replace(pageIndexRegex, '');
-    if (toUrl.indexOf('?') === -1) {
-        toUrl = toUrl + '?';
-    }
-    return toUrl + "&page=" + pageIndex;
-}
+
 
 export default class Pagination extends React.Component {
 
     static contextTypes = {
-        router: React.PropTypes.object
-    }
+        router: React.PropTypes.object,
+        total: React.PropTypes.number,
+        rows: React.PropTypes.number
+    };
+
+    getPageUrl = (pageIndex) => {
+        //把当前url的page参数去掉，换成pageIndex
+        var link = this.props.link;
+        if (link) {
+            return link.replace('{page}', pageIndex);
+        }
+        var toUrl = (this.context.router.location.pathname || '').toString().replace(pageIndexRegex, '');
+        toUrl += toUrl.indexOf('?') === -1 ? '?' : '';
+        return toUrl + "&page=" + pageIndex;
+    };
 
     render() {
-        let currentPage = parseInt(this.context.router.location.query.page || '1');
-        let pathname = this.context.router.location.pathname;
+        let empty = <span></span>;
+        let recordCount = parseInt(this.props.total || '0', 10);
+        let pageSize = parseInt(this.props.rows || '20', 10);
+        if (recordCount === 0 || recordCount <= pageSize) {
+            return empty;
+        }
+        let currentPage = parseInt(this.context.router.params.page || this.context.router.location.query.page || '1', 10);
+        let pageCount = recordCount / pageSize + (recordCount % pageSize > 0 ? 1 : 0);
+        let listSize = parseInt(this.props.pageSize || '5', 10);
 
         const getLink = (pageIndex, text) =>
             <Link
                 key={Math.random()}
-                to={getPageUrl(pageIndex, pathname)}
+                to={this.getPageUrl(pageIndex)}
                 className="item"
                 activeClassName="active"
                 onClick={() => this.props.onClick ? this.props.onClick(pageIndex) : false}
             >{text || pageIndex}</Link>;
 
-        let pageCount = parseInt(this.props.pageCount || '1');
-        let pageSize = parseInt(this.props.rows || '20');
-        let listSize = parseInt(this.props.pageSize || '5');
 
         let startIndex = currentPage - currentPage % listSize + 1;
         if (currentPage % listSize === 0) {
@@ -57,18 +67,14 @@ export default class Pagination extends React.Component {
         const prevList = startIndex / listSize > 1 ? getLink(startIndex - listSize, '...') : '';
         const nextList = endIndex + 1 < pageCount ? getLink(endIndex + 1, '...') : '';
 
-        if (pageCount > 1) {
-            return <div className="ui pagination menu">
-                {firstPage}
-                {prevPage}
-                {prevList}
-                {pageList}
-                {nextList}
-                {nextPage}
-                {lastPage}
-            </div>;
-        } else {
-            return <span></span>;
-        }
+        return <div className="ui pagination menu">
+            {firstPage}
+            {prevPage}
+            {prevList}
+            {pageList}
+            {nextList}
+            {nextPage}
+            {lastPage}
+        </div>;
     }
 }

@@ -6,6 +6,8 @@ import Home from '../home/index'
 import Login from '../user/login'
 import Logout from '../user/logout'
 import MissiveIndex from '../missive/index'
+import MissiveEdit from '../missive/edit'
+
 
 const authorize = (nextState, replace) => {
     if (!auth.hasLogin()) {
@@ -19,8 +21,9 @@ const authorize = (nextState, replace) => {
 export default () =>
     <Router history={hashHistory}>
         <Route path='/' component={Layout}>
-            <IndexRoute component={Home} onEnter={authorize} />
+            <IndexRoute component={Home} />
             <Route path='missive' component={MissiveIndex} />
+            <Route path='missive/edit' component={MissiveEdit} />
         </Route>
         <Route path='/user'>
             <Route path='login' component={Login} />

@@ -7,7 +7,6 @@ import api from '../../models/api';
 
 export default class MissiveIndex extends Component {
     state = {
-        page: parseInt(this.props.location.query.page || '1', 10),
         searchKey: '',
         status: null,
         data: []
@@ -46,10 +45,10 @@ export default class MissiveIndex extends Component {
                 <div className="toolbar">
                     <Menu secondary>
                         <Menu.Item>
-                            <Link to="/document/edit" className="ui primary button"><i className="fa fa-file-o"></i> 新建公文</Link>
+                            <Link to="/missive/edit" className="ui primary button"><i className="fa fa-file-o"></i> 新建公文</Link>
                         </Menu.Item>
                         <Menu.Item>
-                            <Link to="/document/export" className="ui danger button"><i className="fa fa-share-square-o"></i> 导出公文</Link>
+                            <Link to="/missive/export" className="ui danger button"><i className="fa fa-share-square-o"></i> 导出公文</Link>
                         </Menu.Item>
                         <Menu.Menu position="right">
                             <Menu.Item>
@@ -88,7 +87,7 @@ export default class MissiveIndex extends Component {
                             )}
                         </Table.Body>
                     </Table>
-                    <Pagination pageCount='30' onClick={this.handlePageChange} />
+                    <Pagination onClick={this.handlePageChange} total="1000"/>
                 </div>
             </div >
         )

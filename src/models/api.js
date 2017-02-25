@@ -35,10 +35,8 @@ function jsonToQueryString(json) {
 module.exports = {
     //登录
     User: {
-        Login: (component, data, cb, err) => {
-            //?name=" + data.name + "&pasword=" + data.password
-            invokeApi(component, host + "user/login", HTTP_GET, data, cb, err);
-        },
+        Login: (component, data, cb, err) =>
+            invokeApi(component, host + "user/login", HTTP_GET, data, cb, err),
         //找回密码
         FindPasswordSendMail: (component, data, cb, err) => {
             invokeApi(component, host + "user/sendpasswordemail", HTTP_GET, data, cb, err);
