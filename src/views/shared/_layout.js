@@ -6,11 +6,11 @@ export default class Layout extends React.Component {
 
   render() {
     return (
-      <div id="app" className="nano has-scrollbar">
+      <div id="app">
         <Header />
         <div id="page-container">
           <Sider pathname={this.props.location.pathname} />
-          <div id="main-content" className="nano-content">
+          <div id="main-content">
             {this.props.children}
           </div>
         </div>

@@ -1,11 +1,27 @@
-body {
-  background-color: #DADADA;
+.container {
+  text-align: center;
 }
 
-body > .grid {
-  height: 100%;
+.login-panel {
+  position: absolute;
+  /* right: 40%; */
+  bottom: 40%;
+  background: #ddd;
+  width: 100%;
+  padding: 20px;
+  text-align: center;
+  height: 120px;
+  overflow: hidden;
 }
 
-.column {
-  max-width: 450px;
+.login-form {
+  
+}
+
+.login-form-forgot {
+  float: right;
+}
+
+.login-form-button {
+  width: 100%;
 }
