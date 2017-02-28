@@ -76,7 +76,7 @@ class MissiveEditForm extends React.Component {
             </Form.Item>
             <Form.Item label="是否上互联网发布"  {...defaultItemConfig}  >
                 {getFieldDecorator("SFFB", { initialValue: model.SFFB })(
-                    <Checkbox value="1">是</Checkbox>
+                    <Checkbox>是</Checkbox>
                 )}
             </Form.Item>
             <Form.Item label="责任人" {...shortCol} >
@@ -102,18 +102,25 @@ class MissiveEditForm extends React.Component {
                 {model.Word > 0 ? <Link to={`/file/preview?id=${model.Word.ID}`}>
                     <i className="fa fa-attachment" />{model.Word.Name}
                 </Link> : null}
-                {getFieldDecorator("Word", { action: `/file/upload?infoId=${model.ID}&id=${model.WordID}`, onChange: this.handleUploadWord, showUploadList: false })(
+                {getFieldDecorator("Word", {
+                    action: `/file/upload?infoId=${model.ID}&id=${model.WordID}`,
+                    onChange: this.handleUploadWord,
+                    showUploadList: false
+                })(
                     <Upload>
                         <Button><Icon type="upload" />上传Word文档</Button>
                     </Upload>
-                )}
+                    )}
             </Form.Item>
             <Form.Item label="Excel文件" {...defaultItemConfig} >
-                {getFieldDecorator("Excel", { action: `/file/upload?infoId=${model.ID}`, onChange: this.handleUploadExcel })(
+                {getFieldDecorator("Excel", {
+                    action: `/file/upload?infoId=${model.ID}`,
+                    onChange: this.handleUploadExcel,
+                })(
                     <Upload>
                         <Button><Icon type="upload" />上传Excel文档</Button>
                     </Upload>
-                )}
+                    )}
             </Form.Item>
             <Form.Item wrapperCol={{ span: 4, offset: 4 }}>
                 <Button type="primary" icon="save" htmlType="submit">保存</Button>

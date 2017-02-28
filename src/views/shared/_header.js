@@ -5,7 +5,7 @@ import utils from '../../utils';
 
 const headerNavData = [
     { name: 'home', active: true, path: '/', icon: 'fa fa-commenting', text: '动态' },
-    { name: 'missive', icon: 'fa fa-file-o', text: '公文' },
+    { name: 'missive', path: '/missive/sendlist', icon: 'fa fa-file-o', text: '公文' },
     { name: 'calendar', icon: 'fa fa-calendar', text: '日程' },
     { name: 'task', icon: 'fa fa-clock-o', text: '任务' },
     { name: 'news', icon: 'fa fa-newspaper-o', text: '信息' },
@@ -14,31 +14,61 @@ const headerNavData = [
     { name: 'meeting', icon: 'fa fa-television', text: '会议' },
     { name: 'car', icon: 'fa fa-car', text: '车辆' },
     { name: 'file', icon: 'fa fa-files-o', text: '文档' },
+    { name: 'system', path: '/system/config', icon: 'fa fa-gear', text: '系统设置', role: 3 }
 ];
 
-const NavItem = (item, key) =>
-    <Menu.Item key={item.name}>
-        <i className={item.icon} />&nbsp;{item.text}
-    </Menu.Item>;
+const NavItem = (item, key) => {
+    //if (item.role > 0 && auth.getUser().Role !== item.role) {
+    //    return;
+    //}
+    return (
+        <Menu.Item key={item.name}>
+            <i className={item.icon} />&nbsp;{item.text}
+        </Menu.Item>
+    )
+};
+
+const getCurrentPathName = (path) => {
+    var name = path.substring(1);
+    if (name === '') return 'home';
+    headerNavData.map(item => {
+        if ((item.path || '').indexOf(path) === 0) {
+            name = item.name;
+            return item;
+        }
+    });
+    return name;
+}
 
 export default class TopNav extends React.Component {
     static contextTypes = {
         router: React.PropTypes.object,
     };
 
-    state = { current: (this.context.router.location.pathname || 'home').replace('/', '') };
+    state = { current: (getCurrentPathName(this.context.router.location.pathname) || 'home').replace('/', '') };
     handleLeftMenuClick = e => {
         if (this.state.current === e.key) {
             return false;
         }
         this.setState({ current: e.key });
+        headerNavData.map(item => {
+            if (item.name === e.key) {
+                utils.Redirect(item.path || '/' + item.name);
+            }
+        })
+    };
 
-        if (e.key === 'home') {
-            utils.Redirect('/');
-        } else {
-            utils.Redirect('/' + e.key);
+    handleRightMenuClick = e => {
+        switch (e.key) {
+            case 'logout':
+                auth.logout();
+                utils.Redirect('/user/login');
+                break;
+            default:
+                break;
         }
-    }
+    };
+
     render() {
         return (
             <Affix offsetTop={0}>
@@ -46,7 +76,7 @@ export default class TopNav extends React.Component {
                     <Menu theme="dark" mode="horizontal" selectedKeys={[this.state.current]} onClick={this.handleLeftMenuClick} className="left">
                         {headerNavData.map((item, key) => NavItem(item, key))}
                     </Menu>
-                    <Menu theme="dark"  mode="horizontal" className="right">
+                    <Menu theme="dark" mode="horizontal" className="right" onClick={this.handleRightMenuClick}>
                         <Menu.Item>
                             <Badge count={5}>
                                 <i className="fa fa-bell-o"></i>
@@ -59,10 +89,7 @@ export default class TopNav extends React.Component {
                             <Menu.Item>通讯录</Menu.Item>
                             <Menu.Item>消息设置</Menu.Item>
                             <Menu.Divider />
-                            <Menu.Item onClick={() => {
-                                auth.logout();
-                                utils.Redirect('/user/login');
-                            }}>退出登录</Menu.Item>
+                            <Menu.Item key="logout">退出登录</Menu.Item>
                         </Menu.SubMenu>
                     </Menu>
                 </div>

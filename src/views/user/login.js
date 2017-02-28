@@ -17,7 +17,7 @@ class Login extends Component {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                api.UserLogin(this, values, json => {
+                api.User.Login(this, values, json => {
                     auth.login(json);
                     utils.Redirect('/');
                 })

@@ -8,9 +8,16 @@ import Logout from '../user/logout'
 import MissiveIndex from '../missive/index'
 import MissiveEdit from '../missive/edit'
 
+import UserList from '../user/list'
+import GroupList from '../group/list'
+import DepartmentList from '../department/list'
+import CategoryList from '../category/list'
+import SystemConfig from '../system/config'
+import FlowList from '../flow/list'
 
 const authorize = (nextState, replace) => {
     if (!auth.hasLogin()) {
+        console.log("未登录");
         replace({
             pathname: '/user/login',
             state: { nextPathname: nextState.location.pathname }
@@ -20,10 +27,19 @@ const authorize = (nextState, replace) => {
 
 export default () =>
     <Router history={hashHistory}>
-        <Route path='/' component={Layout}>
+        <Route path='/' component={Layout}  onEnter={authorize}>
             <IndexRoute component={Home} />
-            <Route path='missive' component={MissiveIndex} />
+            <Route path='missive/sendlist' component={MissiveIndex} />
             <Route path='missive/edit' component={MissiveEdit} />
+
+            <Route userRole={3}>
+                <Route path='system/config' component={SystemConfig} />
+                <Route path='user/list' component={UserList} />
+                <Route path='group/list' component={GroupList} />
+                <Route path='category/list' component={CategoryList} />
+                <Route path='department/list' component={DepartmentList} />
+                <Route path='flow/list' component={FlowList} />
+            </Route>
         </Route>
         <Route path='/user'>
             <Route path='login' component={Login} />
