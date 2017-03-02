@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router';
-import { Affix, Button, Row, Col, message, Input, Table, Pagination } from 'antd';
+import { Affix, Button, Input, Table, Pagination } from 'antd';
 import utils from '../../utils';
 import api from '../../models/api';
 
-export default class MissiveIndex extends React.Component {
+export default class MissiveSendList extends React.Component {
     state = {
         searchKey: '',
         status: null,

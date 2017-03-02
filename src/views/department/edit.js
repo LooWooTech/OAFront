@@ -3,13 +3,15 @@ import { Modal, Form, Input } from 'antd';
 
 const FormItem = Form.Item;
 
-class GroupEditForm extends Component {
+class DepartmentEditForm extends Component {
 
     state = { visible: false, };
+
     showModelHandler = (e) => {
         if (e) e.stopPropagation();
         this.setState({ visible: true, });
     };
+
     hideModelHandler = () => {
         this.setState({ visible: false, });
     };
@@ -62,4 +64,4 @@ class GroupEditForm extends Component {
     }
 }
 
-export default Form.create()(GroupEditForm);
+export default Form.create()(DepartmentEditForm);

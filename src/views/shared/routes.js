@@ -1,11 +1,11 @@
 import React from 'react'
-import { Router, Route, IndexRoute, hashHistory, browserHistory } from 'react-router'
+import { Router, Route, IndexRoute, hashHistory } from 'react-router'
 import auth from '../../models/auth'
 import Layout from './_layout'
 import Home from '../home/index'
 import Login from '../user/login'
 import Logout from '../user/logout'
-import MissiveIndex from '../missive/index'
+import MissiveSendList from '../missive/send_list'
 import MissiveEdit from '../missive/edit'
 
 import UserList from '../user/list'
@@ -29,7 +29,7 @@ export default () =>
     <Router history={hashHistory}>
         <Route path='/' component={Layout}  onEnter={authorize}>
             <IndexRoute component={Home} />
-            <Route path='missive/sendlist' component={MissiveIndex} />
+            <Route path='missive/sendlist' component={MissiveSendList} />
             <Route path='missive/edit' component={MissiveEdit} />
 
             <Route userRole={3}>

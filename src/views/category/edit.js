@@ -3,13 +3,15 @@ import { Modal, Form, Input } from 'antd';
 
 const FormItem = Form.Item;
 
-class GroupEditForm extends Component {
+class DepartmentEditForm extends Component {
 
     state = { visible: false, };
+
     showModelHandler = (e) => {
         if (e) e.stopPropagation();
         this.setState({ visible: true, });
     };
+
     hideModelHandler = () => {
         this.setState({ visible: false, });
     };
@@ -24,9 +26,8 @@ class GroupEditForm extends Component {
     }
 
     render() {
-        const { children } = this.props;
+        const { children, record, parent } = this.props;
         const { getFieldDecorator } = this.props.form;
-        const { ID, Name } = this.props.record || {};
         const formItemLayout = {
             labelCol: { span: 6 },
             wrapperCol: { span: 14 },
@@ -37,7 +38,7 @@ class GroupEditForm extends Component {
                 <span onClick={this.showModelHandler}>
                     {children}
                 </span>
-                <Modal title={ID ? '编辑用户组' : '新建用户组'}
+                <Modal title={record ? '修改分类' : (parent ? '添加子类' : '添加分类')}
                     visible={this.state.visible}
                     onOk={this.handleSubmit}
                     onCancel={this.hideModelHandler}
@@ -45,13 +46,23 @@ class GroupEditForm extends Component {
                     <Form horizontal onSubmit={this.handleSubmit}>
                         {
                             getFieldDecorator('ID', {
-                                initialValue: ID
+                                initialValue: (record ? record.ID : 0)
                             })(<Input type="hidden" />)
+                        }
+                        {
+                            getFieldDecorator('ParentID', {
+                                initialValue: parent ? parent.ID : 0,
+                            })(<Input type="hidden" />)
+                        }
+                        {
+                            parent ? <FormItem {...formItemLayout} label="上级分类" >
+                                <Input defaultValue={parent.Name} />
+                            </FormItem> : ''
                         }
                         <FormItem {...formItemLayout} label="分组名称" >
                             {
                                 getFieldDecorator('name', {
-                                    initialValue: Name,
+                                    initialValue: (record ? record.Name : ''),
                                 })(<Input />)
                             }
                         </FormItem>
@@ -62,4 +73,4 @@ class GroupEditForm extends Component {
     }
 }
 
-export default Form.create()(GroupEditForm);
+export default Form.create()(DepartmentEditForm);
