@@ -59,11 +59,16 @@ export default class MissiveSendList extends React.Component {
                         { title: '审批流程', dataIndex: 'FlowNode.Name' },
                     ]}
                     dataSource={this.state.data}
+                    pagination={<Pagination
+                        total={this.state.page.total}
+                        pageSize={this.state.page.pageSize}
+                        onChange={(page, pageSize) => {
+                            this.loadData(page)
+                        }}
+                    />}
                 >
                 </Table>
-                <Pagination total={this.state.page.total} pageSize={this.state.page.rows} onChange={(page, pageSize) => {
-                    this.loadData(page)
-                }} />
+
             </div >
         )
     }

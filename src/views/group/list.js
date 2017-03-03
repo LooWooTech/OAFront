@@ -37,14 +37,14 @@ export default class GroupList extends React.Component {
                     {
                         title: '操作', dataIndex: 'ID', width: 200,
                         render: (text, item) => (
-                            <span>
+                            <Button.Group>
                                 <EditModal onSubmit={this.onEditSave} record={item} children={<Button icon="edit">编辑</Button>} />
                                 <Popconfirm placement="topRight" title="你确定要删除吗？"
                                     onConfirm={() => api.Group.Delete(this, item.ID, this.loadPageData)}
                                     okText="是" cancelText="否">
                                     <Button type="danger" icon="delete">删除</Button>
                                 </Popconfirm>
-                            </span>
+                            </Button.Group>
                         )
                     }
                 ]}

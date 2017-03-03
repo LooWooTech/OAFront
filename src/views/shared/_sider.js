@@ -15,6 +15,7 @@ const sideMenuData = {
     system: [
         { active: true, path: '/system/config', icon: 'fa fa-gear', text: '参数配置' },
         { active: true, path: '/user/list', icon: 'fa fa-user', text: '用户管理' },
+        { active: true, path: '/flow/list', icon: 'fa fa-flow', text: '流程管理' },
         { active: true, path: '/group/list', icon: 'fa fa-users', text: '群组管理' },
         { active: true, path: '/department/list', icon: 'fa fa-sitemap', text: '部门管理' },
         { active: true, path: '/category/list', icon: 'fa fa-list', text: '分类管理' },
