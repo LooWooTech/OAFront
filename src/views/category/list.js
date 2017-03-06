@@ -76,6 +76,7 @@ export default class DepartmentList extends React.Component {
                     }
                 ]}
                 dataSource={this.state.list}
+                pagination={false}
             >
             </Table>
         </div>;

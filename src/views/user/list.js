@@ -11,11 +11,21 @@ export default class UserList extends React.Component {
             current: parseInt(this.props.location.query.page || '1', 10),
             total: 0
         },
-        data: []
+        data: [],
+        departments: [],
+        groups: []
     };
-    componentDidMount() {
+
+    componentWillMount() {
         this.loadPageData();
-    };
+        api.Department.List(this, data => {
+            this.setState({ departments: data });
+        });
+        api.Group.List(this, data => {
+            this.setState({ groups: data });
+        })
+    }
+
     componentWillUnmount() {
         api.Abort();
     };
@@ -30,6 +40,7 @@ export default class UserList extends React.Component {
                     page: data.Page,
                 })
             });
+
     };
 
     onEditSave = (err, values) => {
@@ -37,10 +48,11 @@ export default class UserList extends React.Component {
     }
 
     render() {
+        const defaultProps = { departments: this.state.departments, groups: this.state.groups }
         return <div>
             <Affix offsetTop={0} className="toolbar">
                 <Button.Group>
-                    <EditModal children={<Button type="primary" icon="new">添加用户</Button>} onSubmit={this.onEditSave} />
+                    <EditModal children={<Button type="primary" icon="new">添加用户</Button>} {...defaultProps} onSubmit={this.onEditSave} />
                 </Button.Group>
             </Affix>
             <Table
@@ -55,7 +67,7 @@ export default class UserList extends React.Component {
                         title: '操作', dataIndex: 'ID', width: 200,
                         render: (text, item) => (
                             <span>
-                                <EditModal onSubmit={this.onEditSave} record={item} children={<Button icon="edit">编辑</Button>} />
+                                <EditModal onSubmit={this.onEditSave} record={item} {...defaultProps} children={<Button icon="edit">编辑</Button>} />
                                 <Popconfirm placement="topRight" title="你确定要删除吗？"
                                     onConfirm={() => api.Group.Delete(this, item.ID, this.loadPageData)}
                                     okText="是" cancelText="否">

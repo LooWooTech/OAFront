@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { Modal, Form, Input } from 'antd';
+import { Modal, Form, Input, Select } from 'antd';
 
 const FormItem = Form.Item;
 
 class UserEditForm extends Component {
 
     state = { visible: false, };
+
     showModelHandler = (e) => {
         if (e) e.stopPropagation();
         this.setState({ visible: true, });
@@ -24,7 +25,7 @@ class UserEditForm extends Component {
     }
 
     render() {
-        const { children } = this.props;
+        const { children, departments, groups } = this.props;
         const { getFieldDecorator } = this.props.form;
         const model = this.props.record || {};
         const formItemLayout = {
@@ -48,16 +49,6 @@ class UserEditForm extends Component {
                                 initialValue: model.ID
                             })(<Input type="hidden" />)
                         }
-                        {
-                            getFieldDecorator('GroupIds', {
-                                initialValue: model.GroupIds
-                            })(<Input type="hidden" />)
-                        }
-                        {
-                            getFieldDecorator('DepartmentID', {
-                                initialValue: model.DepartmentID
-                            })(<Input type="hidden" />)
-                        }
                         <FormItem {...formItemLayout} label="用户名" >
                             {
                                 getFieldDecorator('name', {
@@ -77,6 +68,24 @@ class UserEditForm extends Component {
                                 getFieldDecorator('password', {
 
                                 })(<Input type="password" />)
+                            }
+                        </FormItem>
+                        <FormItem {...formItemLayout} label="所属部门">
+                            {
+                                getFieldDecorator('departmentId', {
+                                    initialValue: model.DepartmentID
+                                })(<Select>
+                                    {departments.map((item,key) => <Select.Option key={item.ID} value={item.ID}>{item.Name}</Select.Option>)}
+                                </Select>)
+                            }
+                        </FormItem>
+                        <FormItem {...formItemLayout} label="所属分组">
+                            {
+                                getFieldDecorator('groupIds', {
+                                    initialValue: model.GroupIds
+                                })(<Select multiple>
+                                    {groups.map((item,key) => <Select.Option key={item.ID} value={item.ID}>{item.Name}</Select.Option>)}
+                                </Select>)
                             }
                         </FormItem>
                     </Form>

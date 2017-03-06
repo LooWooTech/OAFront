@@ -6,8 +6,8 @@ const HTTP_POST = "POST"
 const HTTP_DELETE = "DELETE"
 const HTTP_PUT = "PUT"
 
-const host = 'http://localhost:61709/api/'
-function invokeApi(component, path, method, data, callback, onError) {
+const host = 'http://localhost:8012/api/'
+function invokeApi(component, path, method, data, callback, onError, async = true) {
     component.setState({ loading: true });
     var url = host + path;
     data = data || component.state.data || {};
@@ -31,7 +31,7 @@ function invokeApi(component, path, method, data, callback, onError) {
             message.error(error.Message);
         }
         console.log("ERROR:", error);
-    });
+    }, async);
 
 }
 function jsonToQueryString(json) {

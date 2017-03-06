@@ -31,7 +31,7 @@ class MissiveEditForm extends React.Component {
     };
 
     render() {
-        const {model} = this.state;
+        const { model } = this.state;
         const { getFieldDecorator } = this.props.form;
 
         return <Form onSubmit={this.handleSubmit}>
@@ -79,11 +79,6 @@ class MissiveEditForm extends React.Component {
                     <Checkbox>是</Checkbox>
                 )}
             </Form.Item>
-            <Form.Item label="责任人" {...shortCol} >
-                {getFieldDecorator("ZRR", { initialValue: model.ZRR })(
-                    <Input />
-                )}
-            </Form.Item>
             <Form.Item label="密级"  {...defaultItemConfig}  >
                 {getFieldDecorator("ConfidentialLevel", { initialValue: model.ConfidentialLevel || 2 })(
                     <Radio.Group>
@@ -93,39 +88,56 @@ class MissiveEditForm extends React.Component {
                     </Radio.Group>
                 )}
             </Form.Item>
-            <Form.Item label="期限" {...defaultItemConfig} >
-                {getFieldDecorator("QX", { initialValue: model.QX })(
-                    <DatePicker placeholder="选择日期" />
-                )}
-            </Form.Item>
-            <Form.Item label="Word文档" {...defaultItemConfig} >
-                {model.Word > 0 ? <Link to={`/file/preview?id=${model.Word.ID}`}>
-                    <i className="fa fa-attachment" />{model.Word.Name}
-                </Link> : null}
-                {getFieldDecorator("Word", {
-                    action: `/file/upload?infoId=${model.ID}&id=${model.WordID}`,
-                    onChange: this.handleUploadWord,
-                    showUploadList: false
-                })(
-                    <Upload>
-                        <Button><Icon type="upload" />上传Word文档</Button>
-                    </Upload>
-                    )}
-            </Form.Item>
-            <Form.Item label="Excel文件" {...defaultItemConfig} >
-                {getFieldDecorator("Excel", {
-                    action: `/file/upload?infoId=${model.ID}`,
-                    onChange: this.handleUploadExcel,
-                })(
-                    <Upload>
-                        <Button><Icon type="upload" />上传Excel文档</Button>
-                    </Upload>
-                    )}
-            </Form.Item>
+            <Row>
+                <Col span={12}>
+                    <Form.Item label="责任人" labelCol={{ span: 8 }} wrapperCol={{ span: 8 }} >
+                        {getFieldDecorator("ZRR", { initialValue: model.ZRR })(
+                            <Input />
+                        )}
+                    </Form.Item>
+                </Col>
+                <Col span={12}>
+                    <Form.Item label="期限" {...defaultItemConfig} >
+                        {getFieldDecorator("QX", { initialValue: model.QX })(
+                            <DatePicker placeholder="选择日期" />
+                        )}
+                    </Form.Item>
+                </Col>
+            </Row>
+            <Row>
+                <Col span={12}>
+                    <Form.Item label="Word文档" labelCol={{ span: 8 }} wrapperCol={{ span: 16 }} >
+                        {model.Word > 0 ? <Link to={`/file/preview?id=${model.Word.ID}`}>
+                            <i className="fa fa-attachment" />{model.Word.Name}
+                        </Link> : null}
+                        {getFieldDecorator("Word", {
+                            action: `/file/upload?infoId=${model.ID}&id=${model.WordID}`,
+                            onChange: this.handleUploadWord,
+                            showUploadList: false
+                        })(
+                            <Upload>
+                                <Button><Icon type="upload" />上传Word文档</Button>
+                            </Upload>
+                            )}
+                    </Form.Item>
+                </Col>
+                <Col span={12}>
+                    <Form.Item label="Excel文件" {...defaultItemConfig} >
+                        {getFieldDecorator("Excel", {
+                            action: `/file/upload?infoId=${model.ID}`,
+                            onChange: this.handleUploadExcel,
+                        })(
+                            <Upload>
+                                <Button><Icon type="upload" />上传Excel文档</Button>
+                            </Upload>
+                            )}
+                    </Form.Item>
+                </Col>
+            </Row>
             <Form.Item wrapperCol={{ span: 4, offset: 4 }}>
                 <Button type="primary" icon="save" htmlType="submit">保存</Button>
             </Form.Item>
-        </Form>;
+        </Form >;
     }
 }
 

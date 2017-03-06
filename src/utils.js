@@ -28,11 +28,13 @@ import auth from './models/auth'
 
 const $ = require('jquery')
 let currentRequest = null;
-function ajaxRequest(url, method, data, callback, onError) {
+
+function ajaxRequest(url, method, data, callback, onError, async) {
     currentRequest = $.ajax({
         method: method,
         data: data,
         url: url,
+        async: async,
         headers: {
             authorization: "Basic " + auth.getToken(),
         },
@@ -42,7 +44,12 @@ function ajaxRequest(url, method, data, callback, onError) {
             }
         },
         error: function (xhr, status, error) {
-            var json = JSON.parse(xhr.responseText);
+            var json = { Message: error };
+            try {
+                json = JSON.parse(xhr.responseText);
+            } catch (ex) {
+
+            }
             if (onError) {
                 onError(json);
             }
@@ -95,8 +102,8 @@ module.exports = {
     Redirect(path) {
         hashHistory.push(path);
     },
-    Request(url, method, data, cb, err) {
-        return ajaxRequest(url, method, data, cb, err)
+    Request(url, method, data, cb, err, async) {
+        return ajaxRequest(url, method, data, cb, err, async)
     },
     AbortRequest() {
         currentRequest.abort();

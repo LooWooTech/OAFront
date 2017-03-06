@@ -49,6 +49,7 @@ export default class GroupList extends React.Component {
                     }
                 ]}
                 dataSource={this.state.list}
+                pagination={false}
             >
             </Table>
         </div>;
