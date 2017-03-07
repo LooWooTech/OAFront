@@ -1,6 +1,6 @@
 import React from 'react';
 import auth from '../../models/auth';
-import { Affix, Menu, Icon, Badge } from 'antd';
+import { Menu, Icon, Badge } from 'antd';
 import utils from '../../utils';
 
 const headerNavData = [
@@ -9,7 +9,7 @@ const headerNavData = [
     { name: 'calendar', icon: 'fa fa-calendar', text: '日程' },
     { name: 'task', icon: 'fa fa-clock-o', text: '任务' },
     { name: 'news', icon: 'fa fa-newspaper-o', text: '信息' },
-    { name: 'attendace', icon: 'fa fa-calendar-check-o', text: '考勤' },
+    { name: 'attendace', path: '/attendance/index', icon: 'fa fa-calendar-check-o', text: '考勤' },
     { name: 'archive', icon: 'fa fa-tasks', text: '档案' },
     { name: 'meeting', icon: 'fa fa-television', text: '会议' },
     { name: 'car', icon: 'fa fa-car', text: '车辆' },
@@ -71,7 +71,7 @@ export default class TopNav extends React.Component {
 
     render() {
         return (
-            <Affix offsetTop={0}>
+            
                 <div className="navbar fixed">
                     <Menu theme="dark" mode="horizontal" selectedKeys={[this.state.current]} onClick={this.handleLeftMenuClick} className="left">
                         {headerNavData.map((item, key) => NavItem(item, key))}
@@ -93,7 +93,7 @@ export default class TopNav extends React.Component {
                         </Menu.SubMenu>
                     </Menu>
                 </div>
-            </Affix>
+           
         );
     }
 }

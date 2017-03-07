@@ -1,7 +1,6 @@
-body{
+body {
     font-size: 1rem;
 }
-
 
 #page-container {
     position: absolute;
@@ -57,6 +56,12 @@ hr {
     font-size: 1.2em;
     width: 100%;
     background: #404040;
+}
+
+.navbar.fixed {
+    position: fixed;
+    top: 0;
+    z-index: 9;
 }
 
 .left {

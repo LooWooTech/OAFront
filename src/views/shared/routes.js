@@ -15,6 +15,8 @@ import CategoryList from '../category/list'
 import SystemConfig from '../system/config'
 import FlowList from '../flow/list'
 
+import AttendanceIndex from '../attendance/index'
+
 const authorize = (nextState, replace) => {
     if (!auth.hasLogin()) {
         console.log("未登录");
@@ -31,6 +33,8 @@ export default () =>
             <IndexRoute component={Home} />
             <Route path='missive/sendlist' component={MissiveSendList} />
             <Route path='missive/edit' component={MissiveEdit} />
+
+            <Route path="attendance/index" component={AttendanceIndex} />
 
             <Route userRole={3}>
                 <Route path='system/config' component={SystemConfig} />

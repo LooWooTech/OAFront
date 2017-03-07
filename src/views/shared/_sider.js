@@ -1,5 +1,6 @@
-import React from 'react'
-import { Link } from 'react-router'
+import React from 'react';
+import { Link } from 'react-router';
+import auth from '../../models/auth';
 
 const sideMenuData = {
     feed: [
@@ -11,6 +12,12 @@ const sideMenuData = {
         { active: true, path: '/missive/sendlist', icon: 'fa fa-send', text: '发文查询' },
         { path: '/missive/edit', icon: 'fa fa-pencil-square-o', text: '发文拟稿' },
         { path: '/missive/receivelist', icon: 'fa fa-envelope-open-o', text: '收文查询' },
+    ],
+    attendance: [
+        { active: true, path: '/attendance/index', icon: 'fa fa-calendar-check-o', text: '考勤记录' },
+        { path: '/attendance/leavehisotry', icon: 'fa fa-history', text: '请假记录' },
+        { path: '/attendance/leavelist', icon: 'fa fa-list', text: '请假审批', role: 2 },
+        { path: '/attendance/holidays', icon: 'fa fa-holiday', text: '节假日管理', role: 2 }
     ],
     system: [
         { active: true, path: '/system/config', icon: 'fa fa-gear', text: '参数配置' },

@@ -102,7 +102,7 @@ export default class FlowList extends React.Component {
                                 <NodeModal
                                     departments={this.state.departments}
                                     groups={this.state.groups}
-                                    record={{ FlowID: item.ID }}
+                                    record={{ FlowId: item.ID }}
                                     onSubmit={this.onNodeSave}
                                     children={<Button icon="add">添加节点</Button>}
                                 />
