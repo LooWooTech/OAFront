@@ -16,6 +16,10 @@ import SystemConfig from '../system/config'
 import FlowList from '../flow/list'
 
 import AttendanceIndex from '../attendance/index'
+import HolidayList from '../attendance/holidays'
+import LeaveList from '../attendance/leave_list'
+import LeaveHistory from '../attendance/leave_history'
+
 
 const authorize = (nextState, replace) => {
     if (!auth.hasLogin()) {
@@ -29,12 +33,15 @@ const authorize = (nextState, replace) => {
 
 export default () =>
     <Router history={hashHistory}>
-        <Route path='/' component={Layout}  onEnter={authorize}>
+        <Route path='/' component={Layout} onEnter={authorize}>
             <IndexRoute component={Home} />
             <Route path='missive/sendlist' component={MissiveSendList} />
             <Route path='missive/edit' component={MissiveEdit} />
 
             <Route path="attendance/index" component={AttendanceIndex} />
+            <Route path="attendance/holidays" component={HolidayList} />
+            <Route path="attendance/leavelist" component={LeaveList} />
+            <Route path="attendance/history" component={LeaveHistory} />
 
             <Route userRole={3}>
                 <Route path='system/config' component={SystemConfig} />

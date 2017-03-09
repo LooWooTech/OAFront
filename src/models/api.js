@@ -154,5 +154,19 @@ module.exports = {
         Delete: (component, id, cb, err) => {
             invokeApi(component, 'Category/delete?id=' + id, HTTP_DELETE, null, cb, err);
         }
+    },
+    Holiday: {
+        List: (component, page, cb, err) => {
+            invokeApi(component, 'Holiday/list?page='+page, HTTP_GET, null, cb, err);
+        },
+        Save: (component, data, cb, err) => {
+            invokeApi(component, 'Holiday/save', HTTP_POST, data, cb, err);
+        },
+        Delete: (component, id, cb, err) => {
+            invokeApi(component, 'Holiday/delete?id=' + id, HTTP_DELETE, null, cb, err);
+        },
+        GenerateWeeks: (component, year, cb, err) => {
+            invokeApi(component, 'Holiday/generateweeks?year=' + year, HTTP_GET, null, cb, err);
+        }
     }
 };

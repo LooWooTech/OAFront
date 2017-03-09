@@ -4,7 +4,7 @@ import moment from 'moment';
 
 const FormItem = Form.Item;
 
-class LeaveFormModal extends React.Component {
+class HolidayFormModal extends React.Component {
     state = { visible: false };
 
     showModelHandler = (e) => {
@@ -33,12 +33,14 @@ class LeaveFormModal extends React.Component {
         };
         const record = this.props.record || {};
         const dateFormat = 'YYYY-MM-DD';
+        const beginDate = record.BeginDate ? moment(record.BeginDate, dateFormat) : moment();
+        const endDate = record.endDate ? moment(record.EndDate, dateFormat) : moment();
         return (
             <span>
                 <span onClick={this.showModelHandler}>
                     {children}
                 </span>
-                <Modal title={record.ID > 0 ? '修改申请' : '申请假期'}
+                <Modal title={record.ID > 0 ? '修改节假日' : '添加节假日'}
                     visible={this.state.visible}
                     onOk={this.handleSubmit}
                     onCancel={this.hideModelHandler}
@@ -49,26 +51,19 @@ class LeaveFormModal extends React.Component {
                                 initialValue: (record.ID || 0)
                             })(<Input type="hidden" />)
                         }
-                        <FormItem {...formItemLayout} label="请假类型" >
-                            {getFieldDecorator('type', {
-                                initialValue: (record.Type || 1),
-                            })(<Radio.Group>
-                                <Radio value={1}>公事</Radio>
-                                <Radio value={2}>私事</Radio>
-                                <Radio value={3}>年假</Radio>
-                                <Radio value={4}>病假</Radio>
-                                <Radio value={5}>调休</Radio>
-                            </Radio.Group>)}
+                        <FormItem {...formItemLayout} label="节假日名称" >
+                            {getFieldDecorator('name', {
+                                initialValue: record.Name,
+                            })(<Input />)}
                         </FormItem>
-                        <FormItem {...formItemLayout} label="请假时段" >
+                        <FormItem {...formItemLayout} label="起止日期" >
                             {getFieldDecorator('Range', {
-                                initialValue: [moment(record.BeginTime || '2017-03-09', dateFormat),
-                                moment(record.EndTime || '2017-03-15', dateFormat)],
+                                initialValue: [beginDate, endDate],
                             })(<DatePicker.RangePicker />)}
                         </FormItem>
-                        <FormItem {...formItemLayout} label="请假事由" >
-                            {getFieldDecorator('Reason', {
-                                initialValue: record.Reason,
+                        <FormItem {...formItemLayout} label="备注" >
+                            {getFieldDecorator('Note', {
+                                initialValue: record.Note,
                             })(<Input type="textarea" autosize={{ minRows: 2, maxRows: 6 }} />)}
                         </FormItem>
                     </Form>
@@ -78,4 +73,4 @@ class LeaveFormModal extends React.Component {
     }
 }
 
-export default Form.create()(LeaveFormModal);
+export default Form.create()(HolidayFormModal);
