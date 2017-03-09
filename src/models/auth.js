@@ -20,4 +20,9 @@ module.exports = {
     return JSON.parse(localStorage.user || '{}');
   },
 
+  isCurrentUser(id) {
+    var user = this.getUser();
+    return user.ID === id;
+  }
+
 }

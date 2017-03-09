@@ -1,41 +1,73 @@
+body {
+    font-size: 1rem;
+}
+
 #page-container {
     position: absolute;
     background: #fff;
     bottom: 0px;
-    overflow: hidden;
-    top: 40px;
+    top: 48px;
     width: 100%;
 }
+
 #sider {
     width: 200px;
     overflow: hidden;
-    position: relative;
+    position: fixed;
     bottom: 0;
     height: 100%;
     background: #f7f7f7;
     padding-top: 20px;
     z-index: 2;
+    top: 48px;
     border-right: solid 1px #ddd;
 }
+
 #main-content {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    overflow: auto;
-    overflow-x: hidden;
     padding: 10px;
     border-left: solid 200px transparent;
     z-index: 1;
 }
 
-#main-content .toolbar {
+.toolbar {
     margin: -10px;
     margin-bottom: 10px;
+    height: 50px;
+    background: #efefef;
+    padding: 10px;
+    right: 10px;
+    left: 210px;
+}
+
+.toolbar.fixed {
+    position: fixed;
+    top: 58px;
 }
 
 hr {
     border: none;
     border-top: solid 1px #ddd;
+}
+
+.navbar {
+    display: block;
+    height: 48px;
+    border-bottom: 1px solid #e9e9e9;
+    font-size: 1.2em;
+    width: 100%;
+    background: #404040;
+}
+
+.navbar.fixed {
+    position: fixed;
+    top: 0;
+    z-index: 9;
+}
+
+.left {
+    float: left;
+}
+
+.right {
+    float: right;
 }
