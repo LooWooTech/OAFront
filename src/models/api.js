@@ -157,7 +157,7 @@ module.exports = {
     },
     Holiday: {
         List: (component, page, cb, err) => {
-            invokeApi(component, 'Holiday/list?page='+page, HTTP_GET, null, cb, err);
+            invokeApi(component, 'Holiday/list?page=' + page, HTTP_GET, null, cb, err);
         },
         Save: (component, data, cb, err) => {
             invokeApi(component, 'Holiday/save', HTTP_POST, data, cb, err);
@@ -168,5 +168,25 @@ module.exports = {
         GenerateWeeks: (component, year, cb, err) => {
             invokeApi(component, 'Holiday/generateweeks?year=' + year, HTTP_GET, null, cb, err);
         }
-    }
+    },
+    Leave: {
+        List: (component, parameters, cb, err) => {
+            invokeApi(component, 'Leave/list', HTTP_GET, parameters, cb, err);
+        },
+        Save: (component, data, cb, err) => {
+            invokeApi(component, 'Leave/save', HTTP_POST, data, cb, err);
+        },
+        Delete: (component, id, cb, err) => {
+            invokeApi(component, 'Leave/delete?id=' + id, HTTP_DELETE, null, cb, err);
+        },
+    },
+    Attendance: {
+        List: (component, parameters, cb, err) => {
+            invokeApi(component, 'Attendance/list', HTTP_GET, parameters, cb, err);
+        },
+        Statistics: (component, parameters, cb, err) => {
+            invokeApi(component, 'Attendance/Statistics', HTTP_GET, parameters, cb, err);
+        },
+    },
+
 };

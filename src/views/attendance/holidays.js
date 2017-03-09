@@ -34,7 +34,7 @@ class HolidayList extends Component {
         return (
             <div>
                 <div className="toolbar">
-                    <HolidayFormModal onSubmit={this.onHolidayFormSave}>
+                    <HolidayFormModal onSubmit={this.onEditSave}>
                         <Button type="primary" icon="file" >添加节假日</Button>
                     </HolidayFormModal>
                     &nbsp;&nbsp;

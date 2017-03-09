@@ -2,11 +2,10 @@ import React from 'react';
 import { Button, Card, Badge, Row, Col, Calendar } from 'antd';
 import LeaveFormModal from './leave_form';
 import moment from 'moment';
-import utils from '../../utils';
+import api from '../../models/api';
 
 export default class AttendanceIndex extends React.Component {
     state = {
-        date: moment(),
         selectedDate: moment(),
         statistics: {
             Normal: 15,
@@ -16,36 +15,63 @@ export default class AttendanceIndex extends React.Component {
             OfficialLeave: 1,
             PersonLeave: 1
         },
-        selectDateData: {
-
-        },
-        selectedEvent: {
-
-        },
-        cellData: {
-            '2017-03-8': [
-
-            ]
-        }
+        today: {},
+        leaves: [],
+        list: []
     };
 
     onLeaveFormSubmit = (error, values) => {
-        // api.Attendance.LeaveRequest(this,values,json=>{
-        //     utils.Redirect('leavehistory');
-        // });
+        api.Leave.Save(this, values, json => {
+
+        })
     };
+
+    componentWillMount() {
+        this.loadData();
+    }
+
+    loadData = date => {
+
+        date = date || moment();
+        api.Attendance.List(this, { year: date.year(), month: date.month() }, json => {
+            this.setState({ statistics: json });
+        });
+        api.Attendance.Statistics(this, { year: date.year(), month: date.month() }, json => {
+            this.setState({ statistics: json })
+        });
+    }
 
     onSelect = date => {
         //设置date的打卡数据和请假数据
-        console.log(date.format());
-        this.setState({ selectedDate: date, date });
+        if (date.month() !== this.state.selectedDate.month()) {
+            this.onPanelChange(date);
+        } else {
+            api.Leave.List(this, { date: date.format() }, json => {
+                this.setState({ leaves: json })
+            });
+        }
+        this.setState({ selectedDate: date });
     };
+
     onPanelChange = (date, mode) => {
+        if (mode === 'year') return;
         this.setState({ date });
+        //获取当前月的统计
+        this.loadData(date);
     };
 
     dateCellRender = date => {
-        //显示date的考勤情况
+        this.state.list.map((item, key) => {
+            if (item.Date === date.format()) {
+                //上班下班情况
+                return <span>
+                    <Badge status="default" text={'正常'} /><br />
+                </span>;
+            }
+            else{
+                return <Badge status="default" text={'正常'} />;
+            }
+        })
     };
 
     render() {
@@ -62,7 +88,7 @@ export default class AttendanceIndex extends React.Component {
             <Row>
                 <Col span={18}>
                     <Calendar
-                        value={this.state.date}
+                        value={this.state.selectedDate}
                         onPanelChange={this.onPanelChange}
                         dateCellRender={this.dateCellRender}
                         onSelect={this.onSelect}

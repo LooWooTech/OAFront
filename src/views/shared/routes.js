@@ -40,7 +40,7 @@ export default () =>
 
             <Route path="attendance/index" component={AttendanceIndex} />
             <Route path="attendance/holidays" component={HolidayList} />
-            <Route path="attendance/leavelist" component={LeaveList} />
+            <Route path="attendance/leaves" component={LeaveList} />
             <Route path="attendance/history" component={LeaveHistory} />
 
             <Route userRole={3}>

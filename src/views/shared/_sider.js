@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router';
 import auth from '../../models/auth';
-
+const currentUser = auth.getUser();
 const sideMenuData = {
     feed: [
         { active: true, path: '/', icon: 'fa fa-comment', text: '全部动态' },
@@ -15,8 +15,8 @@ const sideMenuData = {
     ],
     attendance: [
         { active: true, path: '/attendance/index', icon: 'fa fa-calendar-check-o', text: '考勤记录' },
-        { path: '/attendance/history', icon: 'fa fa-history', text: '请假记录' },
-        { path: '/attendance/leavelist', icon: 'fa fa-list', text: '请假审批', role: 2 },
+        { path: '/attendance/history', icon: 'fa fa-history', text: '我的请假记录' },
+        { path: '/attendance/leaves', icon: 'fa fa-list', text: '请假审批', role: 2 },
         { path: '/attendance/holidays', icon: 'fa fa-calendar', text: '节假日管理', role: 2 }
     ],
     system: [
