@@ -36,7 +36,7 @@ function ajaxRequest(url, method, data, callback, onError, async) {
         url: url,
         async: async,
         headers: {
-            authorization: "Basic " + auth.getToken(),
+            token: auth.getToken(),
         },
         success: function (json, status, xhr) {
             if (callback) {

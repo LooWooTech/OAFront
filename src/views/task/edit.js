@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-class SystemConfig extends Component {
+class TaskEdit extends Component {
     render() {
         return (
             <div>
@@ -10,4 +10,4 @@ class SystemConfig extends Component {
     }
 }
 
-export default SystemConfig;
+export default TaskEdit;

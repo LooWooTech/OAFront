@@ -21,6 +21,9 @@ import LeaveList from '../attendance/leave_list'
 import LeaveHistory from '../attendance/leave_history'
 
 
+import TaskIndex from '../task/index'
+import TaskList from '../task/list'
+
 const authorize = (nextState, replace) => {
     if (!auth.hasLogin()) {
         console.log("未登录");
@@ -37,6 +40,9 @@ export default () =>
             <IndexRoute component={Home} />
             <Route path='missive/sendlist' component={MissiveSendList} />
             <Route path='missive/edit' component={MissiveEdit} />
+
+            <Route path="task/index" component={TaskIndex} />
+            <Route path="task/list" component={TaskList} />
 
             <Route path="attendance/index" component={AttendanceIndex} />
             <Route path="attendance/holidays" component={HolidayList} />

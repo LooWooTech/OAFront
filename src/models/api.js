@@ -42,8 +42,13 @@ function jsonToQueryString(json) {
 }
 
 module.exports = {
+    //formId
+    FormType: {
+        Missive: 1
+    },
+    //断开请求
     Abort: utils.AbortRequest,
-    //登录
+
     User: {
         Login: (component, data, cb, err) =>
             invokeApi(component, 'user/login', HTTP_GET, data, cb, err),
@@ -71,18 +76,18 @@ module.exports = {
             invokeApi(component, 'file/upload', HTTP_PUT, fileId, cb, err);
         }
     },
-    Missive: {
-        SendList: (component, parameter, cb, err) => {
-            invokeApi(component, 'missive/sendlist', HTTP_GET, parameter, cb, err);
+    FormInfo: {
+        List: (component, parameters, cb, err) => {
+            invokeApi(component, 'FormInfo/list', HTTP_GET, parameters, cb, err);
         },
         Save: (component, data, cb, err) => {
-            invokeApi(component, 'missive/save', HTTP_POST, data, cb, err);
+            invokeApi(component, 'FormInfo/save', HTTP_POST, data, cb, err);
         },
         Model: (component, id, cb, err) => {
-            invokeApi(component, 'missive/model?id=' + id, HTTP_GET, null, cb, err);
+            invokeApi(component, 'FormInfo/model?id=' + id, HTTP_GET, null, cb, err);
         },
         Delete: (component, id, cb, err) => {
-            invokeApi(component, 'missive/delete?id=' + id, HTTP_DELETE, null, cb, err);
+            invokeApi(component, 'FormInfo/delete?id=' + id, HTTP_DELETE, null, cb, err);
         }
     },
     Flow: {
@@ -167,6 +172,20 @@ module.exports = {
         },
         GenerateWeeks: (component, year, cb, err) => {
             invokeApi(component, 'Holiday/generateweeks?year=' + year, HTTP_GET, null, cb, err);
+        }
+    },
+    Task: {
+        List: (component, parameters, cb, err) => {
+            invokeApi(component, 'Task/list', HTTP_GET, parameters, cb, err);
+        },
+        Model: (component, id, cb, err) => {
+            invokeApi(component, 'Task/model?id=' + id, HTTP_GET, null, cb, err);
+        },
+        Save: (component, data, cb, err) => {
+            invokeApi(component, 'task/save', HTTP_POST, data, cb, err);
+        },
+        Delete: (component, id, cb, err) => {
+            invokeApi(component, 'task/delete?id=' + id, HTTP_DELETE, null, cb, err);
         }
     },
     Leave: {

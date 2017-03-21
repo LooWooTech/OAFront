@@ -36,6 +36,7 @@ const getCurrentPathName = (path) => {
             name = item.name;
             return item;
         }
+        return null;
     });
     return name;
 }
@@ -55,6 +56,7 @@ export default class TopNav extends React.Component {
             if (item.name === e.key) {
                 utils.Redirect(item.path || '/' + item.name);
             }
+            return null;
         })
     };
 

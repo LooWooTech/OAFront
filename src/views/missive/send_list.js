@@ -16,7 +16,8 @@ export default class MissiveSendList extends React.Component {
         data: []
     };
     loadData = (page, searchKey, status) => {
-        api.Missive.SendList(this, {
+        api.FormInfo.List(this, {
+            formId: api.FormType.Missive,
             page: page || this.state.page.current || 1,
             searchKey: searchKey || this.state.searchKey,
             status: status || this.state.status,
@@ -50,9 +51,9 @@ export default class MissiveSendList extends React.Component {
                     rowKey="ID"
                     loading={this.state.loading}
                     columns={[
-                        { title: '文号', dataIndex: 'Number' },
-                        { title: '标题', dataIndex: 'Title', render: (text, item) => <Link to={`/messive/edit?id=${item.ID}`}>{item.Title}</Link> },
-                        { title: '密级', dataIndex: 'ConfidentialLevel' },
+                        { title: '文号', dataIndex: 'Info.Data.Data.GW_WH' },
+                        { title: '标题', dataIndex: 'Info.Title', render: (text, item) => <Link to={`/missive/edit?id=${item.Info.ID}`}>{text}</Link> },
+                        { title: '密级', dataIndex: 'Info.Data.Data.GW_MJ' },
                         { title: '种类', dataIndex: 'Category.Name' },
                         { title: '机关部门', dataIndex: 'BornOrgan.Name' },
                         { title: '发往单位', dataIndex: 'ToOrgan.Name' },

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Form, Input, Radio, DatePicker } from 'antd';
+import { Modal, Form, Input, DatePicker } from 'antd';
 import moment from 'moment';
 
 const FormItem = Form.Item;

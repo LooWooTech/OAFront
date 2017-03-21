@@ -7,16 +7,11 @@ import ResultTab from './_result';
 import ContentTab from './_content';
 
 class MissiveEdit extends Component {
-
-
     state = { activeItem: 'info', model: {} }
-
     handleItemClick = (e, { name }) => this.setState({ activeItem: name })
-
     handleExport = e => {
 
     };
-
     render() {
         return <div>
             <Tabs>

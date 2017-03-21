@@ -38,7 +38,7 @@ class Login extends Component {
             <div className="container">
             <div className="login-panel">
                 <Spin spinning={this.state.loading} tip="登录中" >
-                <Form inline onSubmit={this.handleSubmit} className="login-form">
+                <Form layout="inline" onSubmit={this.handleSubmit} className="login-form">
                     <FormItem validateStatus={userNameError ? 'error' : ''} help={userNameError || ''}>
                         {userNameDecorator(<Input addonBefore={<Icon type="user" />} placeholder="用户名" />)}
                     </FormItem>

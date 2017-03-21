@@ -5,7 +5,7 @@ module.exports = {
   },
 
   getToken() {
-    return this.getUser().Ticket;
+    return this.getUser().Token;
   },
 
   login(user) {
