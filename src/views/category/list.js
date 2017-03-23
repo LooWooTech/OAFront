@@ -9,6 +9,7 @@ function buildTreeData(list) {
         if (item.ParentID === 0) {
             roots.push(getChildren(item, list));
         }
+        return null;
     });
     return roots;
 }
@@ -18,6 +19,7 @@ function getChildren(node, list) {
             if (!node.children) node.children = [];
             node.children.push(getChildren(item, list));
         }
+        return null;
     });
     return node;
 }

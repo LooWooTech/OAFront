@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router';
-import auth from '../../models/auth';
-const currentUser = auth.getUser();
+//import auth from '../../models/auth';
+//const currentUser = auth.getUser();
 const sideMenuData = {
     feed: [
         { active: true, path: '/', icon: 'fa fa-comment', text: '全部动态' },
@@ -31,6 +31,7 @@ const sideMenuData = {
 
 const getSideMenuData = (path) => {
     for (var key in sideMenuData) {
+        if (!sideMenuData.hasOwnProperty(key)) continue;
         var group = sideMenuData[key];
         for (var i = 0; i < group.length; i++) {
             var item = group[i];

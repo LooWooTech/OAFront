@@ -10,14 +10,12 @@ const host = 'http://localhost:8012/api/'
 function invokeApi(component, path, method, data, callback, onError, async = true) {
     component.setState({ loading: true });
     var url = host + path;
-    data = data || component.state.data || {};
     var postData = jsonToQueryString(data);
     if (method === HTTP_GET || method === HTTP_DELETE) {
         url += (postData ? "?" + postData : '')
         data = null;
-    } else {
-        // data = postData;
-    }
+    } 
+    
     utils.Request(url, method, data, json => {
         component.setState({ loading: false });
         if (callback) {
@@ -35,6 +33,7 @@ function invokeApi(component, path, method, data, callback, onError, async = tru
 
 }
 function jsonToQueryString(json) {
+    if (!json) return null;
     return Object.keys(json).map(function (key) {
         return encodeURIComponent(key) + '=' +
             encodeURIComponent(json[key]);
@@ -48,7 +47,9 @@ module.exports = {
     },
     //断开请求
     Abort: utils.AbortRequest,
-
+    ApiUrl: (path) => {
+        return host + path;
+    },
     User: {
         Login: (component, data, cb, err) =>
             invokeApi(component, 'user/login', HTTP_GET, data, cb, err),
@@ -72,8 +73,20 @@ module.exports = {
         },
     },
     File: {
+        FileUrl: (fileId) => {
+            return `${host}file/index?id=${fileId}`;
+        },
+        UploadUrl: (fileId = 0, infoId = 0, name = null) => {
+            return `${host}file/upload?infoId=${infoId}&id=${fileId}&name=${name}`;
+        },
         Upload: (component, fileId, cb, err) => {
             invokeApi(component, 'file/upload', HTTP_PUT, fileId, cb, err);
+        },
+        Delete: (component, fileId, cb, err) => {
+            invokeApi(component, 'file/delete?id=' + fileId, HTTP_DELETE, null, cb, err);
+        },
+        UpdateRelation: (component, fileIds, infoId, cb, err) => {
+            invokeApi(component, 'file/UpdateRelation', HTTP_POST, { fileIds, infoId }, cb, err);
         }
     },
     FormInfo: {
