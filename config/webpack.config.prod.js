@@ -7,7 +7,7 @@ var InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
 var url = require('url');
 var paths = require('./paths');
 var getClientEnvironment = require('./env');
-
+var theme = require('./theme');
 
 
 function ensureSlash(path, needsSlash) {
@@ -115,6 +115,7 @@ module.exports = {
         exclude: [
           /\.html$/,
           /\.(js|jsx)$/,
+          /\.less$/,
           /\.css$/,
           /\.json$/,
           /\.svg$/
@@ -126,11 +127,23 @@ module.exports = {
         }
       },
       // Process JS with Babel.
-      {
+            {
         test: /\.(js|jsx)$/,
         include: paths.appSrc,
         loader: 'babel',
-        
+        query: {
+          plugins: [
+            ['import', [{ libraryName: "antd", style: true }]],
+          ],
+          // This is a feature of `babel-loader` for webpack (not Babel itself).
+          // It enables caching results in ./node_modules/.cache/babel-loader/
+          // directory for faster rebuilds.
+          cacheDirectory: true
+        }
+      },
+      {
+        test: /\.less$/,
+        loader: `style!css!postcss!less?{modifyVars:${JSON.stringify(theme)}}`
       },
       // The notation here is somewhat confusing.
       // "postcss" loader applies autoprefixer to our CSS.

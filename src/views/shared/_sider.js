@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router';
-//import auth from '../../models/auth';
-//const currentUser = auth.getUser();
+import auth from '../../models/auth';
+const currentUser = auth.getUser();
 const sideMenuData = {
     feed: [
         { active: true, path: '/', icon: 'fa fa-comment', text: '全部动态' },
@@ -43,18 +43,24 @@ const getSideMenuData = (path) => {
     return [];
 }
 
-const MenuItem = (menu, key) =>
-    <Link key={key} onlyActiveOnIndex={menu.active} to={menu.path || menu.name} className='item' activeClassName='active'><i className={menu.icon} />&nbsp;{menu.text}</Link>
+const MenuItem = (menu, key) => currentUser.Role >= (menu.role || 0) ?
+    <li>
+        <Link key={key} onlyActiveOnIndex={menu.active} to={menu.path || menu.name} activeClassName='active'>
+            <i className={menu.icon} />&nbsp;{menu.text}
+        </Link>
+    </li> : <span key={key}></span>;
 
 class Sider extends React.Component {
 
     render() {
         let menuData = getSideMenuData(this.props.pathname)
         return menuData.length > 0 ?
-            <div id='sider' className='ui pointing secondary vertical menu'>
-                {menuData.map((item, key) => MenuItem(item, key))}
+            <div id='sider' className='menu'>
+                <ul>
+                    {menuData.map((item, key) => MenuItem(item, key))}
+                </ul>
             </div>
-            : null
+            : <span></span>
     }
 }
 

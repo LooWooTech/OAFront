@@ -1,44 +1,48 @@
 import React, { Component } from 'react';
 import { Button, Table, Pagination, Popconfirm } from 'antd';
-import LeaveFormModal from './leave_form';
 import api from '../../models/api';
-
 import auth from '../../models/auth';
 
-class LeaveHistory extends Component {
-    componentWillMount() {
-        this.loadPageData();
-    }
-    loadPageData = (page = 1) => {
-        api.Leave.List(this, { page, userId: auth.getUser().ID }, json => {
-            let { current, total, pageSize } = json.Page;
-            let list = json.List;
-            this.setState({ current, total, pageSize, list });
-        })
+class MyLeaveList extends Component {
+    state = {
+        searchKey: '',
+        status: null,
+        page: {
+            rows: 20,
+            current: parseInt(this.props.location.query.page || '1', 10),
+            total: 0
+        },
+        userId: 0,
+        data: []
     };
-    onEditSave = (err, values) => api.Leave.Save(this, values, json => this.loadPageData);
-    onDelete = id => api.Leave.Delete(this, id, this.loadPageData);
+    componentWillMount() {
+        this.loadData();
+    }
+
+    loadData = (page) => {
+        api.FormInfo.List(this, {
+            formId: api.FormType.Leave,
+            postUserId: auth.getUser().ID,
+            page: page || this.state.page.current || 1,
+        }, data => {
+            this.setState({ data: data.List, page: data.Page });
+        });
+    };
+
+    onEditSave = (err, values) => api.Leave.Save(this, values, this.loadData);
+    onDelete = id => api.FormInfo.Delete(this, id, this.loadData)
 
     render() {
         const columns = [
-            { title: '请假类型', render: (text, item) => item.TypeName },
-            { title: '起止日期', render: (text, item) => <span>{item.BeginDate}~{item.EndDate}</span> },
-            { title: '状态', render: (text, item) => item.Result === null ? '未审核' : (item.Result ? '已通过' : '未通过') },
+            { title: '请假类型', dataIndex: 'Data.QJ_LX' },
+            { title: '申请人', dataIndex: 'Data.SQR' },
+            { title: '申请日期', dataIndex: 'CreateTime' },
+            { title: '时间范围', render: (text, item) => <span>{item.Data.KC_RQ}~{item.Data.JS_RQ}</span> },
+            { title: '审批流程', dataIndex: 'FlowNodeData.Name', render: (text, item) => <span>{text}</span> },
             {
                 title: '操作', render: (text, item) => <span>
-                    {item.Result === null ? <LeaveFormModal
-                        record={item}
-                        onSubmit={this.onEditSave}
-                        children={<Button>修改</Button>}
-                    /> : <span></span>}
-                    <Popconfirm
-                        placement="topRight"
-                        title="你确定要删除吗？"
-                        onConfirm={() => this.onDelete(item.ID)}
-                        okText="是"
-                        cancelText="否"
-                    >
-                        <Button type="danger" icon="delete">删除</Button>
+                    <Popconfirm>
+
                     </Popconfirm>
                 </span>
             }
@@ -46,20 +50,24 @@ class LeaveHistory extends Component {
         return (
             <div>
                 <div className="toolbar">
-                    <LeaveFormModal onSubmit={this.onEditSave}>
-                        <Button type="primary" icon="file" >申请假期</Button>
-                    </LeaveFormModal>
+                    <Button><i className="fa fa-export"></i>导出记录</Button>
                 </div>
                 <Table
                     rowKey="ID"
                     dataSource={this.state.list}
                     columns={columns}
-                    expandedRowRender={item => <p>{item.Reson}</p>}
-                    pagination={<Pagination total={this.state.total} pageSize={this.state.pageSize} onChange={page => this.loadPageData(page)} />}
+                    expandedRowRender={item => <p>{item.Data.QJ_SM}</p>}
+                    pagination={<Pagination
+                        total={this.state.page.total}
+                        pageSize={this.state.page.pageSize}
+                        onChange={(page, pageSize) => {
+                            this.loadData(page)
+                        }}
+                    />}
                 />
             </div>
         );
     }
 }
 
-export default LeaveHistory;
+export default MyLeaveList;

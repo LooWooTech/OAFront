@@ -14,8 +14,8 @@ function invokeApi(component, path, method, data, callback, onError, async = tru
     if (method === HTTP_GET || method === HTTP_DELETE) {
         url += (postData ? "?" + postData : '')
         data = null;
-    } 
-    
+    }
+
     utils.Request(url, method, data, json => {
         component.setState({ loading: false });
         if (callback) {
@@ -43,7 +43,9 @@ function jsonToQueryString(json) {
 module.exports = {
     //formId
     FormType: {
-        Missive: 1
+        Missive: 1,
+        Leave: 2,
+        Task: 3,
     },
     //断开请求
     Abort: utils.AbortRequest,

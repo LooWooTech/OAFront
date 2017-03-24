@@ -3,31 +3,44 @@ import { Button, Table, Pagination, Popconfirm } from 'antd';
 import api from '../../models/api';
 
 class LeaveList extends Component {
-    componentWillMount() {
-        this.loadPageData();
-    }
-    loadPageData = (page = 1, userId = 0) => {
-        api.Leave.List(this, { page, userId }, json => {
-            let { current, total, pageSize } = json.Page;
-            let list = json.List;
-            this.setState({ current, total, pageSize, list });
-        })
+    state = {
+        searchKey: '',
+        status: null,
+        page: {
+            rows: 20,
+            current: parseInt(this.props.location.query.page || '1', 10),
+            total: 0
+        },
+        data: []
     };
-    onEditSave = (err, values) => api.Leave.Save(this, values, json => this.loadPageData);
-    onDelete = id => api.Leave.Delete(this, id, this.loadPageData);
+    componentWillMount() {
+        this.loadData();
+    };
+    
+    loadData = (page) => {
+        api.FormInfo.List(this, {
+            formId: api.FormType.Leave,
+            page: page || this.state.page.current || 1,
+        }, data => {
+            this.setState({ data: data.List, page: data.Page });
+        });
+    };
+
+    onApproval = (item) => { };
 
     render() {
+
         const columns = [
-            { title: '请假类型', render: (text, item) => item.TypeName },
-            { title: '申请人', render: (text, item) => <a onClick={() => this.loadPageData(1, item.UserId)}>{item.User.Username}</a> },
+            { title: '请假类型', dataIndex: 'Data.Type' },
+            { title: '申请人', dataIndex: 'Data.Name' },
             { title: '申请日期', dataIndex: 'CreateTime' },
-            { title: '时间范围', render: (text, item) => <span>{item.BeginDate}~{item.EndDate}</span> },
-            { title: '状态', render: (text, item) => item.Result === null ? '未审核' : (item.Result ? '已通过' : '未通过') },
+            { title: '时间范围', render: (text, item) => <span>{item.Data.BeginTime}~{item.Data.EndTime}</span> },
+            { title: '审批流程', dataIndex: 'FlowNodeData.Name', render: (text, item) => <span>{text}</span> },
             {
                 title: '操作', render: (text, item) => <span>
-                    <Popconfirm>
+                    {item.FlowNodeData.Result === null ? '已审批' : <Button>
 
-                    </Popconfirm>
+                    </Button>}
                 </span>
             }
         ];
@@ -40,8 +53,14 @@ class LeaveList extends Component {
                     rowKey="ID"
                     dataSource={this.state.list}
                     columns={columns}
-                    expandedRowRender={item => <p>{item.Reson}</p>}
-                    pagination={<Pagination total={this.state.total} pageSize={this.state.pageSize} onChange={page => this.loadPageData(page)} />}
+                    expandedRowRender={item => <p>{item.Data.QJ_SM}</p>}
+                    pagination={<Pagination
+                        total={this.state.page.total}
+                        pageSize={this.state.page.pageSize}
+                        onChange={(page, pageSize) => {
+                            this.loadData(page)
+                        }}
+                    />}
                 />
             </div>
         );

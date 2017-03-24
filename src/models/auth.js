@@ -7,8 +7,8 @@ module.exports = {
   },
 
   getToken() {
-    //return cookie.select(/token/ig);
-    return this.getUser().Token;
+    return cookie.select(/token/ig);
+    //return this.getUser().Token;
   },
 
   login(user) {
@@ -22,7 +22,9 @@ module.exports = {
   },
 
   getUser() {
-    return JSON.parse(localStorage.user || '{}');
+    var user =  JSON.parse(localStorage.user || '{}');
+    //console.log(user);
+    return user;
   },
 
   isCurrentUser(id) {
