@@ -18,7 +18,7 @@ class NodeEditForm extends Component {
         });
     };
 
-    
+
     componentWillMount() {
         //显示的时候绑定默认的受理人
         let record = this.props.record;
@@ -31,7 +31,6 @@ class NodeEditForm extends Component {
             })
         }
     };
-    
 
     showModelHandler = (e) => {
         if (e) e.stopPropagation();
@@ -59,6 +58,8 @@ class NodeEditForm extends Component {
             labelCol: { span: 6 },
             wrapperCol: { span: 14 },
         };
+        const nodes = this.props.nodes || [];
+        console.log(nodes);
 
         return (
             <span>
@@ -70,24 +71,35 @@ class NodeEditForm extends Component {
                     onOk={this.handleSubmit}
                     onCancel={this.hideModelHandler}
                 >
-                    <Form horizontal onSubmit={this.handleSubmit}>
+                    <Form layout="horizontal" onSubmit={this.handleSubmit}>
                         {getFieldDecorator('ID', {
                             initialValue: model.ID
-                        })(
-                            <Input type="hidden" />
-                            )}
+                        })(<Input type="hidden" />)}
+                        {getFieldDecorator('Step', {
+                            initialValue: model.Step,
+                        })(<Input type="hidden" />)}
                         {getFieldDecorator('FlowId', {
                             initialValue: model.FlowId
-                        })(
-                            <Input type="hidden" />
-                            )}
+                        })(<Input type="hidden" />)}
                         <FormItem {...formItemLayout} label="名称" >
-                            {getFieldDecorator('name', {
+                            {getFieldDecorator('Name', {
                                 initialValue: model.Name,
                             })(<Input />)}
                         </FormItem>
+                        <FormItem {...formItemLayout} label="前一节点" >
+                            {getFieldDecorator('Prev.ID', {
+                                initialValue: ((model.Prev || {}).ID || '').toString(),
+                            })(
+                                <Select  notFoundContent="无" >
+                                    {nodes.map((node, key) => <Select.Option
+                                        key={node.ID}
+                                        disabled={node.ID === model.ID}>
+                                        {node.Name}</Select.Option>)}
+                                </Select>
+                                )}
+                        </FormItem>
                         <FormItem {...formItemLayout} label="受理人" >
-                            {getFieldDecorator('userId', {
+                            {getFieldDecorator('UserId', {
                                 initialValue: (model.UserId || '').toString(),
                             })(
                                 <Select
@@ -108,7 +120,7 @@ class NodeEditForm extends Component {
                                 )}
                         </FormItem>
                         <FormItem {...formItemLayout} label="受理部门">
-                            {getFieldDecorator('departmentId', {
+                            {getFieldDecorator('DepartmentId', {
                                 initialValue: (model.DepartmentId || '').toString(),
                             })(
                                 <Select>
@@ -120,7 +132,7 @@ class NodeEditForm extends Component {
                                 )}
                         </FormItem>
                         <FormItem {...formItemLayout} label="受理用户组">
-                            {getFieldDecorator('groupId', {
+                            {getFieldDecorator('GroupId', {
                                 initialValue: (model.GroupId || '').toString(),
                             })(
                                 <Select>

@@ -63,7 +63,7 @@ module.exports = {
             invokeApi(component, 'user/list', HTTP_GET, data, cb, err);
         },
         Save: (component, data, cb, err) => {
-            invokeApi(component, 'user/save', HTTP_POST, data, cb, err);
+            invokeApi(component, 'user/save?groupIds=' + (data.GroupIds || []).join(), HTTP_POST, data, cb, err);
         },
         Delete: (component, id, cb, err) => {
             invokeApi(component, 'user/delete?id=' + id, HTTP_DELETE, null, cb, err);

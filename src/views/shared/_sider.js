@@ -44,8 +44,8 @@ const getSideMenuData = (path) => {
 }
 
 const MenuItem = (menu, key) => currentUser.Role >= (menu.role || 0) ?
-    <li>
-        <Link key={key} onlyActiveOnIndex={menu.active} to={menu.path || menu.name} activeClassName='active'>
+    <li key={key} >
+        <Link onlyActiveOnIndex={menu.active} to={menu.path || menu.name} activeClassName='active'>
             <i className={menu.icon} />&nbsp;{menu.text}
         </Link>
     </li> : <span key={key}></span>;

@@ -41,8 +41,9 @@ class FlowEditForm extends Component {
                     visible={this.state.visible}
                     onOk={this.handleSubmit}
                     onCancel={this.hideModelHandler}
+
                 >
-                    <Form horizontal onSubmit={this.handleSubmit}>
+                    <Form layout="horizontal" onSubmit={this.handleSubmit}>
                         {
                             getFieldDecorator('ID', {
                                 initialValue: ID

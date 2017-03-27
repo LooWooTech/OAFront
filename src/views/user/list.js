@@ -44,7 +44,8 @@ export default class UserList extends React.Component {
     };
 
     onEditSave = (err, values) => {
-        api.User.Save(this, values, this.loadPageData);
+        var data = values;
+        api.User.Save(this, data, this.loadPageData);
     }
 
     render() {
@@ -59,12 +60,21 @@ export default class UserList extends React.Component {
                 rowKey="ID"
                 loading={this.state.loading}
                 columns={[
+                    { title: '#', dataIndex: 'ID' },
                     { title: '姓名', dataIndex: 'Username', },
                     { title: '用户名', dataIndex: 'Name' },
-                    { title: '用户组', dataIndex: 'Group.Name' },
+                    {
+                        title: '用户组', render: (text, item) => {
+                            if (item.UserGroups) {
+                                var groupNames = item.UserGroups.map(ug => ug.Group.Name);
+                                return groupNames.join();
+                            }
+                            return null;
+                        }
+                    },
                     { title: '部门', dataIndex: 'Department.Name' },
                     {
-                        title: '操作', dataIndex: 'ID', width: 200,
+                        title: '操作',  width: 200,
                         render: (text, item) => (
                             <span>
                                 <EditModal onSubmit={this.onEditSave} record={item} {...defaultProps} children={<Button icon="edit">编辑</Button>} />

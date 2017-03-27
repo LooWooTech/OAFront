@@ -43,7 +43,7 @@ class UserEditForm extends Component {
                     onOk={this.handleSubmit}
                     onCancel={this.hideModelHandler}
                 >
-                    <Form horizontal onSubmit={this.handleSubmit}>
+                    <Form layout="horizontal" onSubmit={this.handleSubmit}>
                         {
                             getFieldDecorator('ID', {
                                 initialValue: model.ID
@@ -51,40 +51,40 @@ class UserEditForm extends Component {
                         }
                         <FormItem {...formItemLayout} label="用户名" >
                             {
-                                getFieldDecorator('name', {
+                                getFieldDecorator('Name', {
                                     initialValue: model.Name,
                                 })(<Input />)
                             }
                         </FormItem>
                         <FormItem {...formItemLayout} label="姓名" >
                             {
-                                getFieldDecorator('username', {
+                                getFieldDecorator('Username', {
                                     initialValue: model.Username,
                                 })(<Input />)
                             }
                         </FormItem>
                         <FormItem {...formItemLayout} label="密码" >
                             {
-                                getFieldDecorator('password', {
+                                getFieldDecorator('Password', {
 
                                 })(<Input type="password" />)
                             }
                         </FormItem>
                         <FormItem {...formItemLayout} label="所属部门">
                             {
-                                getFieldDecorator('departmentId', {
-                                    initialValue: model.DepartmentID
+                                getFieldDecorator('DepartmentId', {
+                                    initialValue: (model.DepartmentId || 0).toString()
                                 })(<Select>
-                                    {departments.map((item,key) => <Select.Option key={item.ID} value={item.ID}>{item.Name}</Select.Option>)}
+                                    {departments.map((item, key) => <Select.Option key={item.ID}>{item.Name}</Select.Option>)}
                                 </Select>)
                             }
                         </FormItem>
                         <FormItem {...formItemLayout} label="所属分组">
                             {
-                                getFieldDecorator('groupIds', {
-                                    initialValue: model.GroupIds
+                                getFieldDecorator('GroupIds', {
+                                    initialValue: (model.UserGroups || []).map(ug => ug.GroupID.toString())
                                 })(<Select multiple>
-                                    {groups.map((item,key) => <Select.Option key={item.ID} value={item.ID}>{item.Name}</Select.Option>)}
+                                    {groups.map((item, key) => <Select.Option key={item.ID}>{item.Name}</Select.Option>)}
                                 </Select>)
                             }
                         </FormItem>

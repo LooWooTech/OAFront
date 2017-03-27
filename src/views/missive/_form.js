@@ -122,7 +122,7 @@ class MissiveEditForm extends React.Component {
             </Form.Item>
             <Form.Item label="是否上互联网发布"  {...defaultItemConfig}  >
                 {getFieldDecorator("Data.SF_FB_WWW", { initialValue: data.SF_FB_WWW })(
-                    <Checkbox checked={data.SF_FB_WWW}>是</Checkbox>
+                    <Checkbox defaultChecked={data.SF_FB_WWW}>是</Checkbox>
                 )}
             </Form.Item>
             <Form.Item label="密级"  {...defaultItemConfig}  >

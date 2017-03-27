@@ -52,15 +52,16 @@ export default class FlowList extends React.Component {
                 { title: '节点名称', dataIndex: 'Name' },
                 { title: '审核部门', dataIndex: 'Department.Name' },
                 { title: '审核人', dataIndex: 'User.Username' },
-                { title: '审核角色', dataIndex: 'Role' },
+                { title: '审核角色', dataIndex: 'Group.Name' },
                 {
-                    title: '操作', dataIndex: 'ID', width:200, render: (text, item) =>
+                    title: '操作', dataIndex: 'ID', width: 200, render: (text, item) =>
                         <Button.Group>
                             <NodeModal
                                 record={item}
                                 onSubmit={this.onNodeSave}
                                 departments={this.state.departments}
                                 groups={this.state.groups}
+                                nodes={record.Nodes}
                                 children={<Button icon="edit">编辑</Button>}
                             />
                             <Popconfirm
@@ -102,6 +103,7 @@ export default class FlowList extends React.Component {
                                 <NodeModal
                                     departments={this.state.departments}
                                     groups={this.state.groups}
+                                    nodes={item.Nodes}
                                     record={{ FlowId: item.ID }}
                                     onSubmit={this.onNodeSave}
                                     children={<Button icon="add">添加节点</Button>}

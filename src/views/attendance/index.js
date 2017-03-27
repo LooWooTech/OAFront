@@ -46,7 +46,9 @@ export default class AttendanceIndex extends React.Component {
         if (date.month() !== this.state.selectedDate.month()) {
             this.onPanelChange(date);
         } else {
-            api.Leave.List(this, { date: date.format() }, json => {
+            var beginTime = date.format('l');
+            var endTime = date.add(1, 'days').format('l');
+            api.FormInfo.List(this, { beginTime, endTime }, json => {
                 this.setState({ leaves: json })
             });
         }
@@ -68,7 +70,7 @@ export default class AttendanceIndex extends React.Component {
                     <Badge status="default" text={'正常'} /><br />
                 </span>;
             }
-            else{
+            else {
                 return <Badge status="default" text={'正常'} />;
             }
         })

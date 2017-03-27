@@ -5,7 +5,12 @@ function xmlHttpRequest(url, method, data, cb, err) {
     var req = currentRequest = new XMLHttpRequest();
     req.onreadystatechange = () => {
         if (req.readyState === 4) {
-            var json = JSON.parse(req.responseText || '{}');
+
+            var json = req.responseText || '{}';
+            try {
+                json = JSON.parse(json);
+            } catch (ex) {
+            }
             if (req.status === 200) {
                 if (cb) {
                     cb(json);
@@ -23,7 +28,7 @@ function xmlHttpRequest(url, method, data, cb, err) {
     req.withCredentials = true;
     req.open(method, url, true);
     //req.setRequestHeader("Authorization", auth.getToken());
-    req.setRequestHeader("content-type", "application/json")
+    req.setRequestHeader("Content-Type", "application/json")
     var postData = data ? JSON.stringify(data) : null;
     req.send(postData);
 };
