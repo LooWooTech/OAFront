@@ -51,13 +51,13 @@ export default class MissiveSendList extends React.Component {
                     rowKey="ID"
                     loading={this.state.loading}
                     columns={[
-                        { title: '文号', dataIndex: 'Info.Data.GW_WH' },
-                        { title: '标题', dataIndex: 'Info.Title', render: (text, item) => <Link to={`/missive/edit?id=${item.Info.ID}`}>{text}</Link> },
-                        { title: '密级', dataIndex: 'Info.Data.GW_MJ' },
-                        { title: '种类', dataIndex: 'Category.Name' },
-                        { title: '主送机关', dataIndex: 'Info.Data.ZS_JG' },
-                        { title: '期限', dataIndex: 'Info.Data.QX_RQ' },
-                        { title: '审批流程', dataIndex: 'FlowNodeData.Name' },
+                        { title: '文号', dataIndex: 'Data.GW_WH' },
+                        { title: '标题', dataIndex: 'Title', render: (text, item) => <Link to={`/missive/edit?id=${item.InfoId}`}>{text}</Link> },
+                        { title: '密级', dataIndex: 'Data.GW_MJ' },
+                        { title: '种类', dataIndex: 'CategoryName' },
+                        { title: '主送机关', dataIndex: 'Data.ZS_JG' },
+                        { title: '期限', dataIndex: 'Data.QX_RQ' },
+                        { title: '审批流程', dataIndex: 'FlowStep' },
                     ]}
                     dataSource={this.state.data}
                     pagination={<Pagination

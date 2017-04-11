@@ -7,8 +7,7 @@ module.exports = {
   },
 
   getToken() {
-    return cookie.select(/token/ig);
-    //return this.getUser().Token;
+    return cookie.load('token') != null;
   },
 
   login(user) {

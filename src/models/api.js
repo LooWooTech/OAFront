@@ -12,7 +12,9 @@ function invokeApi(component, path, method, data, callback, onError, async = tru
     var url = host + path;
     var postData = jsonToQueryString(data);
     if (method === HTTP_GET || method === HTTP_DELETE) {
-        url += (postData ? "?" + postData : '')
+        url += (postData
+            ? "?" + postData
+            : '')
         data = null;
     }
 
@@ -33,11 +35,14 @@ function invokeApi(component, path, method, data, callback, onError, async = tru
 
 }
 function jsonToQueryString(json) {
-    if (!json) return null;
-    return Object.keys(json).map(function (key) {
-        return encodeURIComponent(key) + '=' +
-            encodeURIComponent(json[key]);
-    }).join('&');
+    if (!json)
+        return null;
+    return Object
+        .keys(json)
+        .map(function (key) {
+            return encodeURIComponent(key) + '=' + encodeURIComponent(json[key]);
+        })
+        .join('&');
 }
 
 module.exports = {
@@ -45,7 +50,7 @@ module.exports = {
     FormType: {
         Missive: 1,
         Leave: 2,
-        Task: 3,
+        Task: 3
     },
     //断开请求
     Abort: utils.AbortRequest,
@@ -53,8 +58,7 @@ module.exports = {
         return host + path;
     },
     User: {
-        Login: (component, data, cb, err) =>
-            invokeApi(component, 'user/login', HTTP_GET, data, cb, err),
+        Login: (component, data, cb, err) => invokeApi(component, 'user/login', HTTP_GET, data, cb, err),
         //找回密码
         FindPasswordSendMail: (component, data, cb, err) => {
             invokeApi(component, 'user/sendpasswordemail', HTTP_GET, data, cb, err);
@@ -70,9 +74,12 @@ module.exports = {
         }
     },
     Form: {
+        Model: (component, formId, cb) => {
+            invokeApi(component, 'form/model?id=' + formId, HTTP_GET, null, cb, null);
+        },
         List: (component, cb, err) => {
             invokeApi(component, 'form/list', HTTP_GET, null, cb, err);
-        },
+        }
     },
     File: {
         FileUrl: (fileId) => {
@@ -88,7 +95,10 @@ module.exports = {
             invokeApi(component, 'file/delete?id=' + fileId, HTTP_DELETE, null, cb, err);
         },
         UpdateRelation: (component, fileIds, infoId, cb, err) => {
-            invokeApi(component, 'file/UpdateRelation', HTTP_POST, { fileIds, infoId }, cb, err);
+            invokeApi(component, 'file/UpdateRelation', HTTP_POST, {
+                fileIds,
+                infoId
+            }, cb, err);
         }
     },
     FormInfo: {
@@ -126,8 +136,8 @@ module.exports = {
         }
     },
     FlowData: {
-        Model: (component, formId, infoId, cb, err) => {
-            invokeApi(component, 'flowdata/model', HTTP_GET, { formId, infoId }, cb, err);
+        Model: (component, flowDataId, cb, err) => {
+            invokeApi(component, 'flowdata/model?id=' + flowDataId, HTTP_GET, null, cb, err);
         },
         Submit: (component, userId, data, cb, err) => {
             invokeApi(component, 'flowdata/submit?userId=' + userId, HTTP_POST, data, cb, err);
@@ -139,8 +149,11 @@ module.exports = {
             invokeApi(component, 'flowdata/cencel?id=' + id, HTTP_GET, null, cb, err);
         },
         CurrentNode: (component, formId, infoId, cb, err) => {
-            invokeApi(component, 'flowdata/currentusernode', HTTP_GET, { formId, infoId }, cb, err);
-        },
+            invokeApi(component, 'flowdata/currentusernode', HTTP_GET, {
+                formId,
+                infoId
+            }, cb, err);
+        }
     },
     Group: {
         List: (component, cb, err) => {
@@ -212,7 +225,7 @@ module.exports = {
         },
         Delete: (component, id, cb, err) => {
             invokeApi(component, 'Leave/delete?id=' + id, HTTP_DELETE, null, cb, err);
-        },
+        }
     },
     Attendance: {
         List: (component, parameters, cb, err) => {
@@ -220,7 +233,6 @@ module.exports = {
         },
         Statistics: (component, parameters, cb, err) => {
             invokeApi(component, 'Attendance/Statistics', HTTP_GET, parameters, cb, err);
-        },
-    },
-
+        }
+    }
 };

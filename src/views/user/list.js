@@ -64,15 +64,9 @@ export default class UserList extends React.Component {
                     { title: '姓名', dataIndex: 'Username', },
                     { title: '用户名', dataIndex: 'Name' },
                     {
-                        title: '用户组', render: (text, item) => {
-                            if (item.UserGroups) {
-                                var groupNames = item.UserGroups.map(ug => ug.Group.Name);
-                                return groupNames.join();
-                            }
-                            return null;
-                        }
+                        title: '用户组', render: (text, item) => item.Groups.map(g => g.Name).join()
                     },
-                    { title: '部门', dataIndex: 'Department.Name' },
+                    { title: '部门', dataIndex: 'DepartmentName' },
                     {
                         title: '操作',  width: 200,
                         render: (text, item) => (

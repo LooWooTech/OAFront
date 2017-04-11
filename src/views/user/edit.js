@@ -73,7 +73,7 @@ class UserEditForm extends Component {
                         <FormItem {...formItemLayout} label="所属部门">
                             {
                                 getFieldDecorator('DepartmentId', {
-                                    initialValue: (model.DepartmentId || 0).toString()
+                                    initialValue: (model.DepartmentId || '').toString()
                                 })(<Select>
                                     {departments.map((item, key) => <Select.Option key={item.ID}>{item.Name}</Select.Option>)}
                                 </Select>)
@@ -82,7 +82,7 @@ class UserEditForm extends Component {
                         <FormItem {...formItemLayout} label="所属分组">
                             {
                                 getFieldDecorator('GroupIds', {
-                                    initialValue: (model.UserGroups || []).map(ug => ug.GroupID.toString())
+                                    initialValue: (model.Groups || []).map(g => g.ID.toString())
                                 })(<Select multiple>
                                     {groups.map((item, key) => <Select.Option key={item.ID}>{item.Name}</Select.Option>)}
                                 </Select>)

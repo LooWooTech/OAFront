@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router';
 import auth from '../../models/auth';
-const currentUser = auth.getUser();
 const sideMenuData = {
     feed: [
         { active: true, path: '/', icon: 'fa fa-comment', text: '全部动态' },
@@ -43,21 +42,24 @@ const getSideMenuData = (path) => {
     return [];
 }
 
-const MenuItem = (menu, key) => currentUser.Role >= (menu.role || 0) ?
-    <li key={key} >
-        <Link onlyActiveOnIndex={menu.active} to={menu.path || menu.name} activeClassName='active'>
-            <i className={menu.icon} />&nbsp;{menu.text}
-        </Link>
-    </li> : <span key={key}></span>;
-
+const MenuItem = (user, menu, key) => {
+    if (user.Role >= (menu.role || 0)) {
+        return <li key={key} >
+            <Link onlyActiveOnIndex={menu.active} to={menu.path || menu.name} activeClassName='active'>
+                <i className={menu.icon} />&nbsp;{menu.text}
+            </Link>
+        </li>;
+    }
+    return <span key={key}></span >;
+};
 class Sider extends React.Component {
-
     render() {
-        let menuData = getSideMenuData(this.props.pathname)
+        let menuData = getSideMenuData(this.props.pathname);
+        const user = auth.getUser();
         return menuData.length > 0 ?
             <div id='sider' className='menu'>
                 <ul>
-                    {menuData.map((item, key) => MenuItem(item, key))}
+                    {menuData.map((item, key) => MenuItem(user, item, key))}
                 </ul>
             </div>
             : <span></span>

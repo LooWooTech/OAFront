@@ -1,52 +1,12 @@
 import React from 'react';
-import { Form, Input, DatePicker, Radio, Checkbox, Upload, Button, Icon, Row, Col, message } from 'antd';
+import { Form, Input, DatePicker, Radio, Checkbox, Upload, Button, Icon, Row, Col } from 'antd';
 import moment from 'moment';
 import api from '../../models/api';
-import utils from '../../utils';
 
 const shortCol = { labelCol: { span: 4 }, wrapperCol: { span: 4 } };
 const defaultItemConfig = { labelCol: { span: 4 }, wrapperCol: { span: 8 } };
 class MissiveEditForm extends React.Component {
-    static contextTypes = {
-        router: React.PropTypes.object,
-    };
-    state = { model: {}, data: {}, word: {}, excels: [] };
-    componentDidMount() {
-        //请求表单的数据
-        var modelId = parseInt(this.context.router.location.query.id || '0', 10);
-        if (modelId > 0) {
-            api.FormInfo.Model(this, modelId, data => {
-                this.setState({ model: data || {} });
-                this.setState({ data: data.Data || {} });
-                this.setState({ word: this.state.data.Word || {} });
-                this.setState({ excels: this.state.data.Excels || [] });
-            });
-        }
-    };
-    handleSubmit = e => {
-        e.preventDefault();
-        var formData = this.props.form.getFieldsValue();
-        formData.Title = formData.Data.WJ_BT;
-        formData.Keywords = formData.Data.GW_WH + "," + formData.Data.GW_ZTC;
-        formData.Data.FW_RQ = formData.Data.FW_RQ ? formData.Data.FW_RQ.format() : '';
-        formData.Data.QX_RQ = formData.Data.QX_RQ ? formData.Data.QX_RQ.format('YYYY-MM-DD') : '';
-
-        formData.Data.Word = this.state.word;
-        formData.Data.Excels = this.state.excels;
-
-        var isAdd = formData.ID === 0;
-        api.FormInfo.Save(this, formData, json => {
-            message.success('保存成功');
-            //如果id=0，则需要更新附件的infoId
-            if (isAdd) {
-                var fileIds = [];
-                if (this.state.word.ID > 0) fileIds.push(this.state.word.ID);
-                this.state.excels.map(v => fileIds.push(v.ID));
-                api.File.UpdateRelation(this, fileIds, json.ID);
-            }
-            utils.Redirect('/missive/sendlist');
-        });
-    };
+    state = { word: {}, excels: [] };
     handleUploadWord = ({ file }) => {
         if (!file || !file.response) return;
         var response = file.response;
@@ -55,28 +15,34 @@ class MissiveEditForm extends React.Component {
             //message.error(word.Message);
             return;
         }
-        this.setState({ response });
+        this.setState({ word: response });
     };
     handleUploadExcel = ({ file, fileList }) => {
-        if (!file || !file.response) return;
-        var response = file.response;
-        if (response.Message) {
-            message.error(response.Message);
-            return;
-        }
-        var list = fileList.map(v => v.response);
-        this.setState({ 'excels': list });
     };
+
     handleDeleteFile = (file) => {
         var dbFile = file.response || { ID: file.uid };
         api.File.Delete(this, dbFile.ID);
         return true;
     };
+
     render() {
-        const { model, data, word, excels } = this.state;
+        const model = this.props.data;
+        if(!model) return null;
+        const data = model.Data || {};
+        const word = data.Word || {};
+        const defaultExcels = (data.Excels || []).map(v => {
+            return {
+                uid: v.ID,
+                name: v.FileName,
+                status: 'done',
+                response: v,
+                url: api.File.FileUrl(v.ID)
+            };
+        });
         const { getFieldDecorator } = this.props.form;
-        
-        return <Form onSubmit={this.handleSubmit}>
+
+        return <Form>
             {getFieldDecorator("ID", { initialValue: model.ID })(<Input type="hidden" />)}
             {getFieldDecorator("FormId", { initialValue: 1 })(<Input type="hidden" />)}
             {getFieldDecorator("CategoryId", { initialValue: model.CategoryId })(<Input type="hidden" />)}
@@ -153,14 +119,17 @@ class MissiveEditForm extends React.Component {
             <Row>
                 <Col span={12}>
                     <Form.Item label="Word文档" labelCol={{ span: 8 }} wrapperCol={{ span: 16 }} >
-                        <Upload action={api.File.UploadUrl(word.ID, model.ID, 'word')}
-                            onChange={this.handleUploadWord}
-                            name="word"
-                            withCredentials={true}
-                            showUploadList={false}
-                        >
-                            <Button><Icon type="upload" />上传Word文档</Button>
-                        </Upload>
+                        {getFieldDecorator("Word", { initialValue: data.Word })(
+                            <Upload action={api.File.UploadUrl(word.ID, model.ID, 'word')}
+                                onChange={this.handleUploadWord}
+                                name="word"
+                                withCredentials={true}
+                                showUploadList={false}
+                            >
+                                <Button><Icon type="upload" />上传Word文档</Button>
+                            </Upload>
+                        )}
+
                         <br />
                         {word.ID > 0 ?
                             <div>
@@ -178,30 +147,20 @@ class MissiveEditForm extends React.Component {
                 </Col>
                 <Col span={12}>
                     <Form.Item label="Excel文件" {...defaultItemConfig} >
-                        <Upload action={api.File.UploadUrl(0, model.ID, 'excels')}
-                            onChange={this.handleUploadExcel}
-                            name="excels"
-                            withCredentials={true}
-                            onRemove={this.handleDeleteFile}
-                            showUploadList={true}
-                            defaultFileList={excels.map(v => {
-                                return {
-                                    uid: v.ID,
-                                    name: v.FileName,
-                                    status: 'done',
-                                    response: v,
-                                    url: api.File.FileUrl(v.ID)
-                                };
-                            })}
-                        >
-                            <Button><Icon type="upload" />上传Excel文档</Button>
-                        </Upload>
+                        {getFieldDecorator("Excels", { initialValue: data.Excels })(
+                            <Upload action={api.File.UploadUrl(0, model.ID, 'excels')}
+                                onChange={this.handleUploadExcel}
+                                name="excels"
+                                withCredentials={true}
+                                onRemove={this.handleDeleteFile}
+                                defaultFileList={defaultExcels}
+                            >
+                                <Button><Icon type="upload" />上传Excel文档</Button>
+                            </Upload>
+                        )}
                     </Form.Item>
                 </Col>
             </Row>
-            <Form.Item wrapperCol={{ span: 4, offset: 4 }}>
-                <Button type="primary" icon="save" htmlType="submit">保存</Button>
-            </Form.Item>
         </Form>;
     }
 }
