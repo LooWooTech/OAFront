@@ -122,9 +122,6 @@ module.exports = {
         Save: (component, data, cb, err) => {
             invokeApi(component, 'flow/save', HTTP_POST, data, cb, err);
         },
-        NextNodeUserList: (component, nodeId, cb, err) => {
-            invokeApi(component, 'flow/nextnodeuserlist?currentnodeId=' + nodeId, HTTP_GET, null, cb, err);
-        },
         Delete: (component, id, cb, err) => {
             invokeApi(component, 'flow/delete?id=' + id, HTTP_DELETE, null, cb, err);
         },
@@ -149,10 +146,10 @@ module.exports = {
             invokeApi(component, 'flowdata/cencel?id=' + id, HTTP_GET, null, cb, err);
         },
         CurrentNode: (component, formId, infoId, cb, err) => {
-            invokeApi(component, 'flowdata/currentusernode', HTTP_GET, {
-                formId,
-                infoId
-            }, cb, err);
+            invokeApi(component, 'flowdata/currentusernode', HTTP_GET, { formId, infoId }, cb, err);
+        },
+        UserList: (component, infoId, nodeId, result, cb, err) => {
+            invokeApi(component, 'flowdata/getuserlist', HTTP_GET, { infoId, nodeId, result }, cb, err);
         }
     },
     Group: {

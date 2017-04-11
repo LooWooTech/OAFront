@@ -5,10 +5,12 @@ import FormTab from './_form';
 import ResultTab from './_result';
 import ContentTab from './_content';
 import FlowList from '../flowdata/list';
+import SubmitFlowModal from '../flowdata/form';
 import utils from '../../utils';
 
 let MissiveEditForm = null;
 export default class MissiveEdit extends Component {
+
     componentWillMount() {
         var id = parseInt(this.props.location.query.id || '0', 10);
         if (id === 0) {
@@ -26,7 +28,6 @@ export default class MissiveEdit extends Component {
                 canSubmit: false,
                 canCancel: false
             });
-
         }
         else {
             api.FormInfo.Model(this, id, data => {
@@ -38,7 +39,8 @@ export default class MissiveEdit extends Component {
                 });
             });
         }
-    }
+    };
+
     handleSave = e => {
         if (!MissiveEditForm) return;
         var formdata = MissiveEditForm.getFieldsValue();
@@ -77,7 +79,9 @@ export default class MissiveEdit extends Component {
         });
 
     };
+
     handleExport = e => { };
+
     render() {
         const model = this.state.model;
         if (!model) return null;
@@ -85,9 +89,16 @@ export default class MissiveEdit extends Component {
             <Affix offsetTop={0} className="toolbar">
                 <Button.Group>
                     <Button onClick={this.handleSave} type="primary" icon="save" htmlType="submit">保存</Button>
-                    {this.state.canSubmit ? <Button type="success" icon="submit" htmlType="button">提交</Button> : null}
-                    {this.state.canCancel ? <Button type="error" icon="cancel" htmlType="button">撤销</Button> : null}
-                    <Button onClick={() => utils.Redirect('/missive/sendlist')} type="" icon="back" htmlType="button">返回</Button>
+                    {this.state.canSubmit ?
+                        <SubmitFlowModal
+                            canSubmit={this.state.canSubmit}
+                            info={model}
+                            nodeData={model.flownodeData}
+                            children={<Button type="success" icon="check" htmlType="button">提交</Button>}
+                        />
+                        : null}
+                    {this.state.canCancel ? <Button type="error" icon="rollback" htmlType="button">撤销</Button> : null}
+                    <Button onClick={() => utils.Redirect('/missive/sendlist')} type="" icon="arrow-left" htmlType="button">返回</Button>
                 </Button.Group>
             </Affix>
             <Tabs>
