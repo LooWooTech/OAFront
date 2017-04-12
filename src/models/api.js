@@ -136,20 +136,20 @@ module.exports = {
         Model: (component, flowDataId, cb, err) => {
             invokeApi(component, 'flowdata/model?id=' + flowDataId, HTTP_GET, null, cb, err);
         },
-        Submit: (component, userId, data, cb, err) => {
-            invokeApi(component, 'flowdata/submit?userId=' + userId, HTTP_POST, data, cb, err);
+        Submit: (component, userId, infoId, data, cb, err) => {
+            invokeApi(component, 'flowdata/submit?userId=' + userId + '&infoId=' + infoId, HTTP_POST, data, cb, err);
         },
-        CanCancel: (component, id, cb, err) => {
-            invokeApi(component, 'flowdata/cancencel?id=' + id, HTTP_GET, null, cb, err);
+        CanComplete: (component, flowDataId, nodeDataId, cb, err) => {
+            invokeApi(component, 'flowdata/CanComplete?flowdataId=' + flowDataId + "&nodedataId=" + nodeDataId, HTTP_GET, null, cb, err);
         },
-        Cancel: (component, id, cb, err) => {
-            invokeApi(component, 'flowdata/cencel?id=' + id, HTTP_GET, null, cb, err);
+        Cancel: (component, infoId, cb, err) => {
+            invokeApi(component, 'flowdata/cencel?infoId=' + infoId, HTTP_GET, null, cb, err);
         },
-        CurrentNode: (component, formId, infoId, cb, err) => {
-            invokeApi(component, 'flowdata/currentusernode', HTTP_GET, { formId, infoId }, cb, err);
+        UserList: (component, infoId, nodeId, cb, err) => {
+            invokeApi(component, 'flowdata/userlist', HTTP_GET, { infoId, nodeId }, cb, err);
         },
-        UserList: (component, infoId, nodeId, result, cb, err) => {
-            invokeApi(component, 'flowdata/getuserlist', HTTP_GET, { infoId, nodeId, result }, cb, err);
+        BackList: (component, infoId, backId, cb, err) => {
+            invokeApi(component, 'flowdata/backlist', HTTP_GET, { infoId, backId }, cb, err)
         }
     },
     Group: {

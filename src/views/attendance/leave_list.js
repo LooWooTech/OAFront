@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Table, Pagination, Popconfirm } from 'antd';
+import { Button, Table, Popconfirm } from 'antd';
 import api from '../../models/api';
 
 class LeaveList extends Component {
@@ -7,7 +7,7 @@ class LeaveList extends Component {
         searchKey: '',
         status: null,
         page: {
-            rows: 20,
+            pageSize: 20,
             current: parseInt(this.props.location.query.page || '1', 10),
             total: 0
         },
@@ -16,11 +16,12 @@ class LeaveList extends Component {
     componentWillMount() {
         this.loadData();
     };
-    
+
     loadData = (page) => {
         api.FormInfo.List(this, {
             formId: api.FormType.Leave,
             page: page || this.state.page.current || 1,
+            rows: this.state.page.pageSize
         }, data => {
             this.setState({ data: data.List, page: data.Page });
         });
@@ -47,20 +48,19 @@ class LeaveList extends Component {
         return (
             <div>
                 <div className="toolbar">
-                    <Button><i className="fa fa-export"></i>导出记录</Button>
+                    <Button icon="export">导出记录</Button>
                 </div>
                 <Table
                     rowKey="ID"
                     dataSource={this.state.list}
                     columns={columns}
                     expandedRowRender={item => <p>{item.Data.QJ_SM}</p>}
-                    pagination={<Pagination
-                        total={this.state.page.total}
-                        pageSize={this.state.page.pageSize}
-                        onChange={(page, pageSize) => {
-                            this.loadData(page)
-                        }}
-                    />}
+                    pagination={{
+                        size: 5, ...this.state.page,
+                        onChange: (page, pageSize) => {
+                            this.loadPageData(page)
+                        },
+                    }}
                 />
             </div>
         );

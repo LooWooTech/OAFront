@@ -51,15 +51,15 @@ class UserEditForm extends Component {
                         }
                         <FormItem {...formItemLayout} label="用户名" >
                             {
-                                getFieldDecorator('Name', {
-                                    initialValue: model.Name,
+                                getFieldDecorator('Username', {
+                                    initialValue: model.Username,
                                 })(<Input />)
                             }
                         </FormItem>
                         <FormItem {...formItemLayout} label="姓名" >
                             {
-                                getFieldDecorator('Username', {
-                                    initialValue: model.Username,
+                                getFieldDecorator('RealName', {
+                                    initialValue: model.RealName,
                                 })(<Input />)
                             }
                         </FormItem>

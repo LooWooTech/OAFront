@@ -1,66 +1,119 @@
 import React from 'react';
-import { Link } from 'react-router';
+import { Menu } from 'antd';
 import auth from '../../models/auth';
+import utils from '../../utils';
+
 const sideMenuData = {
     feed: [
-        { active: true, path: '/', icon: 'fa fa-comment', text: '全部动态' },
-        { path: '?scope=my', icon: 'fa fa-comment-o', text: '我的动态' },
-        { path: '?scope=star', icon: 'fa fa-star-o', text: '星标动态' },
+        {
+            title: '动态', items: [
+                { path: '/?scope=all', icon: 'fa fa-comment', text: '全部动态' },
+                { path: '/?scope=my', icon: 'fa fa-comment-o', text: '我的动态' },
+                { path: '/?scope=star', icon: 'fa fa-star-o', text: '星标动态' },
+            ]
+        }
     ],
     missive: [
-        { active: true, path: '/missive/sendlist', icon: 'fa fa-send', text: '发文查询' },
-        { path: '/missive/edit', icon: 'fa fa-pencil-square-o', text: '发文拟稿' },
-        { path: '/missive/receivelist', icon: 'fa fa-envelope-open-o', text: '收文查询' },
+        {
+            title: '发文', items: [
+                { path: '/missive/sendlist?status=1', icon: 'fa fa-envelope-open-o', text: '收件箱' },
+                { path: '/missive/sendlist?status=2', icon: 'fa fa-send', text: '已办箱' },
+                { path: '/missive/sendlist?status=0', icon: 'fa fa-envelope-o', text: '草稿箱' },
+                { path: '/missive/sendlist?status=3', icon: 'fa fa-envelope', text: '完结箱' },
+                { path: '/missive/sendlist?status=4', icon: 'fa fa-reply', text: '退回箱' },
+            ]
+        },
+        {
+            title: '收文', items: [
+                { path: '/missive/receivelist', icon: 'fa fa-envelope-open-o', text: '收文查询' },
+            ]
+        }
     ],
     attendance: [
-        { active: true, path: '/attendance/index', icon: 'fa fa-calendar-check-o', text: '考勤记录' },
-        { path: '/attendance/history', icon: 'fa fa-history', text: '我的请假记录' },
-        { path: '/attendance/leaves', icon: 'fa fa-list', text: '请假审批', role: 2 },
-        { path: '/attendance/holidays', icon: 'fa fa-calendar', text: '节假日管理', role: 2 }
+        {
+            title: '考勤', items: [
+                { path: '/attendance/index', icon: 'fa fa-calendar-check-o', text: '考勤记录' },
+                { path: '/attendance/history', icon: 'fa fa-history', text: '我的请假记录' },
+            ]
+        },
+        {
+            title: '管理', role: 2, items: [
+                { path: '/attendance/leaves', icon: 'fa fa-list', text: '请假审批', },
+                { path: '/attendance/holidays', icon: 'fa fa-calendar', text: '节假日管理' }
+            ]
+        }
     ],
     system: [
-        { active: true, path: '/system/config', icon: 'fa fa-gear', text: '参数配置' },
-        { active: true, path: '/user/list', icon: 'fa fa-user', text: '用户管理' },
-        { active: true, path: '/flow/list', icon: 'fa fa-flow', text: '流程管理' },
-        { active: true, path: '/group/list', icon: 'fa fa-users', text: '群组管理' },
-        { active: true, path: '/department/list', icon: 'fa fa-sitemap', text: '部门管理' },
-        { active: true, path: '/category/list', icon: 'fa fa-list', text: '分类管理' },
+        {
+            title: '系统管理', role: 2, items: [
+                { path: '/system/config', icon: 'fa fa-gear', text: '参数配置' },
+                { path: '/user/list', icon: 'fa fa-user', text: '用户管理' },
+                { path: '/flow/list', icon: 'fa fa-check-square-o', text: '流程管理' },
+                { path: '/group/list', icon: 'fa fa-users', text: '群组管理' },
+                { path: '/department/list', icon: 'fa fa-sitemap', text: '部门管理' },
+                { path: '/category/list', icon: 'fa fa-list', text: '分类管理' },
+            ]
+        }
     ]
 };
 
 const getSideMenuData = (path) => {
+    if (path === '/') {
+        return sideMenuData['feed'];
+    }
     for (var key in sideMenuData) {
         if (!sideMenuData.hasOwnProperty(key)) continue;
-        var group = sideMenuData[key];
-        for (var i = 0; i < group.length; i++) {
-            var item = group[i];
+        var groups = sideMenuData[key];
+        var selected = [];
+        groups.map(group => group.items.map(item => {
             if (item.path.indexOf(path) === 0) {
-                return sideMenuData[key];
+                selected = groups;
             }
+        }));
+        if (selected.length === 0) {
+            if (path.replace('/', '').indexOf(key) === 0) {
+                return groups;
+            }
+        }
+        else {
+            return selected;
         }
     }
     return [];
 }
 
-const MenuItem = (user, menu, key) => {
-    if (user.Role >= (menu.role || 0)) {
-        return <li key={key} >
-            <Link onlyActiveOnIndex={menu.active} to={menu.path || menu.name} activeClassName='active'>
-                <i className={menu.icon} />&nbsp;{menu.text}
-            </Link>
-        </li>;
-    }
-    return <span key={key}></span >;
-};
 class Sider extends React.Component {
+
+    handleMenuClick = e => {
+        if (this.props.pathname === e.key) {
+            return false;
+        }
+        utils.Redirect(e.key);
+    };
+
     render() {
-        let menuData = getSideMenuData(this.props.pathname);
+
+        const groups = getSideMenuData(this.props.pathname);
         const user = auth.getUser();
-        return menuData.length > 0 ?
-            <div id='sider' className='menu'>
-                <ul>
-                    {menuData.map((item, key) => MenuItem(user, item, key))}
-                </ul>
+        const pathname = this.props.pathname;
+        const search = this.props.search;
+        const url = pathname + search;
+
+        return groups.length > 0 ?
+            <div id='sider'>
+                <Menu onClick={this.handleMenuClick} selectedKeys={[pathname, url]} >
+                    {groups.map((group, key) => {
+                        var show = true;// group.role && user.Role >= group.role;
+                        return show ? <Menu.ItemGroup title={group.title} key={key}>
+                            {group.items.map(item => {
+                                var show = true//item.role && user.Role >= item.role;
+                                return show ? <Menu.Item key={item.path}>
+                                    <i className={item.icon} />&nbsp;{item.text}
+                                </Menu.Item> : null
+                            })}
+                        </Menu.ItemGroup> : null
+                    })}
+                </Menu>
             </div>
             : <span></span>
     }

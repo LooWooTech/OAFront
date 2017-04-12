@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Timeline } from 'antd';
+import moment from 'moment';
 
 class FlowDataList extends Component {
 
@@ -16,8 +17,10 @@ class FlowDataList extends Component {
                     {list.map(item => {
                         var color = item.Result === true ? 'green' : (item.Result === false ? 'red' : 'blue');
                         return <Timeline.Item color={color}>
-                            {item.User.Department.Name}-{item.User.Name}{item.UpdateTime}
-                            <span>{item.Content}</span>
+                            {item.Department}-{item.Signature}
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            {item.UpdateTime ? moment(item.UpdateTime).format('YYYY-MM-DD HH:mm') : ''}
+                            <div>{item.Content}</div>
                         </Timeline.Item>
                     })}
                 </Timeline>

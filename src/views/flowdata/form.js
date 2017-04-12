@@ -1,14 +1,17 @@
 import React, { Component } from 'react';
 import { Modal, Form, Input, Button } from 'antd';
 import SelectUserModal from './users';
+import SelectBackModal from './back';
+import api from '../../models/api';
 
 class SubmitForm extends Component {
     state = { visible: false, };
-    handleSubmit = (selectedUserId) => {
+    handleSubmit = (selectedUserId, result) => {
         let data = this.props.form.getFieldsValue();
-        //把data传给 选择人员选择框
-        console.log(selectedUserId);
-        console.log(data);
+        data.Result = result;
+        api.FlowData.Submit(this, selectedUserId, data.InfoId, data, json => {
+
+        });
     };
 
     showModal = () => {
@@ -22,7 +25,7 @@ class SubmitForm extends Component {
         }
         const nodedata = this.props.nodedata || {};
         const { getFieldDecorator } = this.props.form;
-        const canBack = info.FlowDataId > 0 && info.FlowData.Nodes.length > 1 && nodedata.result === null;
+        const canBack = info.FlowDataId > 0 && info.FlowData.Nodes.length > 1 && nodedata.Result === null;
         return (
             <span>
                 <span onClick={this.showModal}>
@@ -37,15 +40,14 @@ class SubmitForm extends Component {
                                 infoId={info.ID || 0}
                                 onOk={this.handleSubmit}
                                 nodeId={nodedata.FlowNodeId || 0}
-                                result={true}
+                                dataId={info.FlowDataId}
                                 children={<Button type="primary" icon="check" htmlType="button">同意</Button>}
                             /> : null}
                         {canBack ?
-                            <SelectUserModal
+                            <SelectBackModal
                                 infoId={info.ID || 0}
                                 onOk={this.handleSubmit}
                                 nodeId={nodedata.FlowNodeId || 0}
-                                result={false}
                                 children={<Button type="danger" icon="rollback" htmlType="button">退回</Button>}
                             /> : null}
                     </div>}

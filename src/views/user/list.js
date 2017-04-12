@@ -1,5 +1,5 @@
 import React from 'react';
-import { Affix, Table, Button, Popconfirm, Pagination } from 'antd';
+import { Affix, Table, Button, Popconfirm } from 'antd';
 import EditModal from './edit';
 import api from '../../models/api';
 
@@ -7,7 +7,7 @@ export default class UserList extends React.Component {
     state = {
         searchKey: '',
         page: {
-            rows: 20,
+            pageSize: 20,
             current: parseInt(this.props.location.query.page || '1', 10),
             total: 0
         },
@@ -26,18 +26,24 @@ export default class UserList extends React.Component {
         })
     }
 
+    componentWillReceiveProps(nextProps) {
+        //console.log(nextProps);
+    }
+
     componentWillUnmount() {
         api.Abort();
     };
     loadPageData = (page, searchKey) => {
         api.User.List(this, {
             page: page || this.state.page.current || 1,
+            rows: this.state.page.pageSize,
             searchKey: searchKey || this.state.searchKey,
         },
             data => {
                 this.setState({
                     data: data.List,
                     page: data.Page,
+                    request: true
                 })
             });
 
@@ -49,26 +55,30 @@ export default class UserList extends React.Component {
     }
 
     render() {
+        if (!this.state.request) {
+            return null;
+        }
         const defaultProps = { departments: this.state.departments, groups: this.state.groups }
+
         return <div>
             <Affix offsetTop={0} className="toolbar">
                 <Button.Group>
-                    <EditModal children={<Button type="primary" icon="new">添加用户</Button>} {...defaultProps} onSubmit={this.onEditSave} />
+                    <EditModal children={<Button type="primary" icon="file">添加用户</Button>} {...defaultProps} onSubmit={this.onEditSave} />
                 </Button.Group>
             </Affix>
             <Table
                 rowKey="ID"
                 loading={this.state.loading}
                 columns={[
-                    { title: '#', dataIndex: 'ID' },
-                    { title: '姓名', dataIndex: 'Username', },
-                    { title: '用户名', dataIndex: 'Name' },
+                    { title: 'ID', dataIndex: 'ID', width: 50 },
+                    { title: '姓名', dataIndex: 'RealName', },
+                    { title: '用户名', dataIndex: 'Username' },
                     {
                         title: '用户组', render: (text, item) => item.Groups.map(g => g.Name).join()
                     },
                     { title: '部门', dataIndex: 'DepartmentName' },
                     {
-                        title: '操作',  width: 200,
+                        title: '操作', width: 200,
                         render: (text, item) => (
                             <span>
                                 <EditModal onSubmit={this.onEditSave} record={item} {...defaultProps} children={<Button icon="edit">编辑</Button>} />
@@ -82,17 +92,14 @@ export default class UserList extends React.Component {
                     }
                 ]}
                 dataSource={this.state.data}
-                pagination={
-                    <Pagination
-                        total={this.state.page.total}
-                        pageSize={this.state.page.pageSize}
-                        onChange={(page, pageSize) => {
-                            this.loadPageData(page)
-                        }}
-                    />}
-            >
-            </Table>
+                pagination={{
+                    size: 5, ...this.state.page,
+                    onChange: (page, pageSize) => {
+                        this.loadPageData(page)
+                    },
+                }}
+            />
 
-        </div>;
+        </div >;
     }
 }

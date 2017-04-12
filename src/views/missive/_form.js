@@ -1,10 +1,8 @@
 import React from 'react';
-import { Form, Input, DatePicker, Radio, Checkbox, Upload, Button, Icon, Row, Col } from 'antd';
+import { Form, Input, DatePicker, Radio, Checkbox, Upload, Button, Icon, Row, Col, message } from 'antd';
 import moment from 'moment';
 import api from '../../models/api';
 
-const shortCol = { labelCol: { span: 4 }, wrapperCol: { span: 4 } };
-const defaultItemConfig = { labelCol: { span: 4 }, wrapperCol: { span: 8 } };
 class MissiveEditForm extends React.Component {
     state = { word: {}, excels: [] };
     handleUploadWord = ({ file }) => {
@@ -21,6 +19,11 @@ class MissiveEditForm extends React.Component {
     };
 
     handleDeleteFile = (file) => {
+        var canDelete = this.props.canEdit;
+        if (!canDelete) {
+            message.error('不能删除');
+            return;
+        }
         var dbFile = file.response || { ID: file.uid };
         api.File.Delete(this, dbFile.ID);
         return true;
@@ -28,9 +31,17 @@ class MissiveEditForm extends React.Component {
 
     render() {
         const model = this.props.data;
-        if(!model) return null;
+        if (!model) return null;
+
         const data = model.Data || {};
-        const word = data.Word || {};
+        const word = this.state.word.ID > 0 ? this.state.word : data.Word || {};
+        const defaultWords = word.ID > 0 ? [{
+            uid: word.ID,
+            name: word.FileName,
+            status: 'done',
+            response: word,
+            url: api.File.FileUrl(word.ID)
+        }] : [];
         const defaultExcels = (data.Excels || []).map(v => {
             return {
                 uid: v.ID,
@@ -40,7 +51,10 @@ class MissiveEditForm extends React.Component {
                 url: api.File.FileUrl(v.ID)
             };
         });
+        const disabled = !this.props.canEdit;
         const { getFieldDecorator } = this.props.form;
+        const shortCol = { labelCol: { span: 4 }, wrapperCol: { span: 4 } };
+        const defaultItemConfig = { labelCol: { span: 4 }, wrapperCol: { span: 8 } };
 
         return <Form>
             {getFieldDecorator("ID", { initialValue: model.ID })(<Input type="hidden" />)}
@@ -49,27 +63,27 @@ class MissiveEditForm extends React.Component {
             {getFieldDecorator("FlowDataId", { initialValue: model.FlowDataId })(<Input type="hidden" />)}
             <Form.Item label="公文文号" {...shortCol} >
                 {getFieldDecorator("Data.GW_WH", { initialValue: data.GW_WH })(
-                    <Input />
+                    <Input disabled={disabled} />
                 )}
             </Form.Item>
             <Form.Item label="发文日期" {...defaultItemConfig} >
                 {getFieldDecorator("Data.FW_RQ", { initialValue: moment(data.FW_RQ) })(
-                    <DatePicker placeholder="选择日期" format="YYYY-MM-DD" />
+                    <DatePicker placeholder="选择日期" format="YYYY-MM-DD" disabled={disabled} />
                 )}
             </Form.Item>
             <Form.Item label="文件标题" {...defaultItemConfig} >
                 {getFieldDecorator("Data.WJ_BT", { initialValue: data.WJ_BT })(
-                    <Input />
+                    <Input disabled={disabled} />
                 )}
             </Form.Item>
             <Form.Item label="主题词" {...defaultItemConfig} >
                 {getFieldDecorator("Data.GW_ZTC", { initialValue: data.GW_ZTC })(
-                    <Input />
+                    <Input disabled={disabled} />
                 )}
             </Form.Item>
             <Form.Item label="政务公开" {...defaultItemConfig} >
                 {getFieldDecorator("Data.ZWGK", { initialValue: data.ZWGK || 1 })(
-                    <Radio.Group>
+                    <Radio.Group disabled={disabled} >
                         <Radio value={1} >主动公开</Radio>
                         <Radio value={2} >依申请公开</Radio>
                         <Radio value={3} >不公开</Radio>
@@ -78,22 +92,22 @@ class MissiveEditForm extends React.Component {
             </Form.Item>
             <Form.Item label="主送机关" {...defaultItemConfig} >
                 {getFieldDecorator("Data.ZS_JG", { initialValue: data.ZS_JG })(
-                    <Input />
+                    <Input disabled={disabled} />
                 )}
             </Form.Item>
             <Form.Item label="抄送机关" {...defaultItemConfig}>
                 {getFieldDecorator("Data.CS_JG", { initialValue: data.CS_JG })(
-                    <Input />
+                    <Input disabled={disabled} />
                 )}
             </Form.Item>
             <Form.Item label="是否上互联网发布"  {...defaultItemConfig}  >
                 {getFieldDecorator("Data.SF_FB_WWW", { initialValue: data.SF_FB_WWW })(
-                    <Checkbox defaultChecked={data.SF_FB_WWW}>是</Checkbox>
+                    <Checkbox defaultChecked={data.SF_FB_WWW} disabled={disabled} >是</Checkbox>
                 )}
             </Form.Item>
             <Form.Item label="密级"  {...defaultItemConfig}  >
                 {getFieldDecorator("Data.GW_MJ", { initialValue: data.GW_MJ || 2 })(
-                    <Radio.Group>
+                    <Radio.Group disabled={disabled} >
                         <Radio value={1} >密级1</Radio>
                         <Radio value={2}>密级2</Radio>
                         <Radio value={3}>密级3</Radio>
@@ -104,7 +118,7 @@ class MissiveEditForm extends React.Component {
                 <Col span={12}>
                     <Form.Item label="责任人" labelCol={{ span: 8 }} wrapperCol={{ span: 8 }} >
                         {getFieldDecorator("Data.ZRR", { initialValue: data.ZRR })(
-                            <Input />
+                            <Input disabled={disabled} />
                         )}
                     </Form.Item>
                 </Col>
@@ -123,26 +137,13 @@ class MissiveEditForm extends React.Component {
                             <Upload action={api.File.UploadUrl(word.ID, model.ID, 'word')}
                                 onChange={this.handleUploadWord}
                                 name="word"
+                                onRemove={this.handleDeleteFile}
                                 withCredentials={true}
-                                showUploadList={false}
+                                defaultFileList={defaultWords}
                             >
-                                <Button><Icon type="upload" />上传Word文档</Button>
+                                <Button disabled={disabled}><Icon type="upload" />上传Word文档</Button>
                             </Upload>
                         )}
-
-                        <br />
-                        {word.ID > 0 ?
-                            <div>
-                                <a href={api.File.FileUrl(word.ID)} target="_blank">
-                                    {word.FileName}
-                                </a>&nbsp;&nbsp;&nbsp;&nbsp;
-                                <a onClick={() => {
-                                    if (confirm('你确定要删除吗？')) {
-                                        this.setState({ word: {} });
-                                    }
-                                }}><i className="fa fa-remove" /></a>
-                            </div> : <span></span>
-                        }
                     </Form.Item>
                 </Col>
                 <Col span={12}>
@@ -155,7 +156,7 @@ class MissiveEditForm extends React.Component {
                                 onRemove={this.handleDeleteFile}
                                 defaultFileList={defaultExcels}
                             >
-                                <Button><Icon type="upload" />上传Excel文档</Button>
+                                <Button disabled={disabled}><Icon type="upload" />上传Excel文档</Button>
                             </Upload>
                         )}
                     </Form.Item>

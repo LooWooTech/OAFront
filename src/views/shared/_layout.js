@@ -9,7 +9,7 @@ export default class Layout extends React.Component {
       <div id="app">
         <Header />
         <div id="page-container">
-          <Sider pathname={this.props.location.pathname} />
+          <Sider pathname={this.props.location.pathname} search={this.props.location.search} />
           <div id="main-content">
             {this.props.children}
           </div>

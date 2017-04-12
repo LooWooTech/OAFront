@@ -8,7 +8,7 @@ class MyLeaveList extends Component {
         searchKey: '',
         status: null,
         page: {
-            rows: 20,
+            pageSize: 20,
             current: parseInt(this.props.location.query.page || '1', 10),
             total: 0
         },
@@ -24,6 +24,7 @@ class MyLeaveList extends Component {
             formId: api.FormType.Leave,
             postUserId: auth.getUser().ID,
             page: page || this.state.page.current || 1,
+            rows: this.state.page.pageSize
         }, data => {
             this.setState({ data: data.List, page: data.Page });
         });
@@ -57,13 +58,12 @@ class MyLeaveList extends Component {
                     dataSource={this.state.list}
                     columns={columns}
                     expandedRowRender={item => <p>{item.Data.QJ_SM}</p>}
-                    pagination={<Pagination
-                        total={this.state.page.total}
-                        pageSize={this.state.page.pageSize}
-                        onChange={(page, pageSize) => {
-                            this.loadData(page)
-                        }}
-                    />}
+                    pagination={{
+                        size: 5, ...this.state.page,
+                        onChange: (page, pageSize) => {
+                            this.loadPageData(page)
+                        },
+                    }}
                 />
             </div>
         );

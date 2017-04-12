@@ -1,4 +1,4 @@
-import { hashHistory } from 'react-router'
+import { browserHistory } from 'react-router'
 
 let currentRequest = null;
 function xmlHttpRequest(url, method, data, cb, err) {
@@ -108,7 +108,7 @@ function xmlHttpRequest(url, method, data, cb, err) {
 
 module.exports = {
     Redirect(path) {
-        hashHistory.push(path);
+        browserHistory.push(path);
     },
     Request(url, method, data, cb, err, async) {
         return xmlHttpRequest(url, method, data, cb, err, async)

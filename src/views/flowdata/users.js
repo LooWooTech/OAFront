@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Modal, Button, Select, message } from 'antd'
+import { Modal, Select, message } from 'antd'
 import api from '../../models/api';
 
 class SelectUserModal extends Component {
@@ -8,8 +8,7 @@ class SelectUserModal extends Component {
     componentWillMount() {
         let infoId = this.props.infoId;
         let nodeId = this.props.nodeId;
-        let result = this.props.result;
-        api.FlowData.UserList(this, infoId, nodeId, result, data => {
+        api.FlowData.UserList(this, infoId, nodeId, data => {
             this.setState({ users: data || [] })
         });
     }
@@ -20,18 +19,31 @@ class SelectUserModal extends Component {
             message.error('请选择一位用户');
             return;
         }
-        onOk(this.state.selected);
+        onOk(this.state.selected, true);
         this.setState({ visible: false });
     };
     handleChange = value => {
         this.setState({ selected: value })
-    }
+    };
+    handleSubmit = () => {
+        //判断是否完结，如果完结，则不弹出窗口，直接提交
+        let dataId = this.props.dataId;
+        let nodeId = this.props.nodeId;
+        api.FlowData.CanComplete(this, dataId, nodeId, result => {
+            if (!result) {
+                this.setState({ visible: true });
+            } else {
+                const onOk = this.props.onOk;
+                onOk(0, true);
+            }
+        });
+    };
     render() {
         const children = this.props.children;
 
         return (
             <span>
-                <span onClick={() => this.setState({ visible: true })}>
+                <span onClick={this.handleSubmit}>
                     {children}
                 </span>
                 <Modal
@@ -50,7 +62,7 @@ class SelectUserModal extends Component {
                         >
                             {this.state.users.map((user, key) =>
                                 <Select.Option key={key} value={user.ID.toString()}>
-                                    {user.Username}
+                                    {user.RealName}
                                 </Select.Option>
                             )}
                         </Select>

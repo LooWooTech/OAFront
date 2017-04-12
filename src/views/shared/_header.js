@@ -4,8 +4,8 @@ import { Menu, Icon, Badge } from 'antd';
 import utils from '../../utils';
 
 const headerNavData = [
-    { name: 'home', active: true, path: '/', icon: 'fa fa-commenting', text: '动态' },
-    { name: 'missive', path: '/missive/sendlist', icon: 'fa fa-file-o', text: '公文' },
+    { name: 'home', active: true, path: '/?scope=all', icon: 'fa fa-commenting', text: '动态' },
+    { name: 'missive', path: '/missive/sendlist?status=1', icon: 'fa fa-file-o', text: '公文' },
     { name: 'calendar', icon: 'fa fa-calendar', text: '日程' },
     { name: 'task', icon: 'fa fa-clock-o', text: '任务' },
     { name: 'news', icon: 'fa fa-newspaper-o', text: '信息' },
@@ -14,7 +14,7 @@ const headerNavData = [
     { name: 'meeting', icon: 'fa fa-television', text: '会议' },
     { name: 'car', icon: 'fa fa-car', text: '车辆' },
     { name: 'file', icon: 'fa fa-files-o', text: '文档' },
-    { name: 'system', path: '/system/config', icon: 'fa fa-gear', text: '系统设置', role: 3 }
+    { name: 'system', path: '/user/list', icon: 'fa fa-gear', text: '系统设置', role: 3 }
 ];
 
 const NavItem = (item, key) => {

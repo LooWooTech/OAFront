@@ -43,30 +43,34 @@ export default class MissiveEdit extends Component {
 
     handleSave = e => {
         if (!MissiveEditForm) return;
-        var formdata = MissiveEditForm.getFieldsValue();
-        formdata.Title = formdata.Data.WJ_BT;
-        formdata.Keywords = formdata.Data.GW_WH + "," + formdata.Data.GW_ZTC;
-        formdata.Data.FW_RQ = formdata.Data.FW_RQ ? formdata.Data.FW_RQ.format() : '';
-        formdata.Data.QX_RQ = formdata.Data.QX_RQ ? formdata.Data.QX_RQ.format('YYYY-MM-DD') : '';
-
-        if (formdata.Word && formdata.Word.file) {
-            formdata.Data.Word = formdata.Word.file.response;
-        } else {
-            formdata.Data.Word = formdata.Word || {};
+        if (!this.state.canEdit) {
+            message.error("不可编辑");
+            return;
         }
-        if (formdata.Excels && formdata.Excels.fileList) {
+        var model = MissiveEditForm.getFieldsValue();
+        model.Title = model.Data.WJ_BT;
+        model.Keywords = model.Data.GW_WH + "," + model.Data.GW_ZTC;
+        model.Data.FW_RQ = model.Data.FW_RQ ? model.Data.FW_RQ.format() : '';
+        model.Data.QX_RQ = model.Data.QX_RQ ? model.Data.QX_RQ.format('YYYY-MM-DD') : '';
+
+        if (model.Word && model.Word.file) {
+            model.Data.Word = model.Word.file.response;
+        } else {
+            model.Data.Word = model.Word || {};
+        }
+        if (model.Excels && model.Excels.fileList) {
             var files = [];
-            formdata.Excels.fileList.map(file => {
+            model.Excels.fileList.map(file => {
                 files.push(file.response);
             });
             //console.log(files);
-            formdata.Data.Excels = files;
+            model.Data.Excels = files;
         }
         else {
-            formdata.Data.Excels = formdata.Excels || [];
+            model.Data.Excels = model.Excels || [];
         }
-        var isAdd = formdata.ID === 0;
-        api.FormInfo.Save(this, formdata, json => {
+        var isAdd = model.ID === 0;
+        api.FormInfo.Save(this, model, json => {
             message.success('保存成功');
             //如果id=0，则需要更新附件的infoId
             if (isAdd) {
@@ -85,10 +89,17 @@ export default class MissiveEdit extends Component {
     render() {
         const model = this.state.model;
         if (!model) return null;
+
+        const showFlow = !!model.FlowDataId;
+        const showResult = !!model.FlowDataId;
+        const showPreview = model.Data.Word && model.Data.Word.ID > 0;
+
         return <div>
             <Affix offsetTop={0} className="toolbar">
                 <Button.Group>
-                    <Button onClick={this.handleSave} type="primary" icon="save" htmlType="submit">保存</Button>
+                    {this.state.canEdit ?
+                        <Button onClick={this.handleSave} type="primary" icon="save" htmlType="submit">保存</Button>
+                        : null}
                     {this.state.canSubmit ?
                         <SubmitFlowModal
                             canSubmit={this.state.canSubmit}
@@ -97,28 +108,37 @@ export default class MissiveEdit extends Component {
                             children={<Button type="success" icon="check" htmlType="button">提交</Button>}
                         />
                         : null}
-                    {this.state.canCancel ? <Button type="error" icon="rollback" htmlType="button">撤销</Button> : null}
+                    {this.state.canCancel ? <Button type="danger" icon="rollback" htmlType="button">撤销</Button> : null}
                     <Button onClick={() => utils.Redirect('/missive/sendlist')} type="" icon="arrow-left" htmlType="button">返回</Button>
                 </Button.Group>
             </Affix>
             <Tabs>
-                <Tabs.TabPane tab="基本信息" key="1">
-                    <FormTab data={model} ref={instance => {
+                <Tabs.TabPane tab="拟稿表单" key="1">
+                    <FormTab data={model} canEdit={this.state.canEdit} ref={instance => {
                         if (!instance) return;
                         var form = instance.getForm();
                         MissiveEditForm = form;
                         //this.setState({ form: form });
                     }} />
                 </Tabs.TabPane>
-                <Tabs.TabPane tab="附件预览" key="2">
-                    <ContentTab />
-                </Tabs.TabPane>
-                <Tabs.TabPane tab="审批流程" key="3">
-                    <FlowList data={model.FlowData} />
-                </Tabs.TabPane>
-                <Tabs.TabPane tab="成果预览" key="4">
-                    <ResultTab />
-                </Tabs.TabPane>
+                {showPreview ?
+                    <Tabs.TabPane tab="附件预览" key="2">
+                        <ContentTab />
+                    </Tabs.TabPane>
+                    : null
+                }
+                {showFlow ?
+                    <Tabs.TabPane tab="审批流程" key="3">
+                        <FlowList data={model.FlowData} />
+                    </Tabs.TabPane>
+                    : null
+                }
+                {showResult ?
+                    <Tabs.TabPane tab="成果预览" key="4">
+                        <ResultTab />
+                    </Tabs.TabPane>
+                    : null
+                }
             </Tabs>
         </div>;
     }

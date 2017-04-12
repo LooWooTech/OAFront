@@ -87,8 +87,8 @@ class NodeEditForm extends Component {
                             })(<Input />)}
                         </FormItem>
                         <FormItem {...formItemLayout} label="前一节点" >
-                            {getFieldDecorator('Prev.ID', {
-                                initialValue: ((model.Prev || {}).ID || '').toString(),
+                            {getFieldDecorator('PrevId', {
+                                initialValue: (model.PrevId || '').toString(),
                             })(
                                 <Select  notFoundContent="无" >
                                     {nodes.map((node, key) => <Select.Option
@@ -136,6 +136,7 @@ class NodeEditForm extends Component {
                                 initialValue: (model.GroupId || '').toString(),
                             })(
                                 <Select>
+                                <Select.Option key={0}>无</Select.Option>
                                     {groups.map((item, key) =>
                                         <Select.Option key={item.ID}>
                                             {item.Name}

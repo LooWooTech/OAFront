@@ -35,9 +35,10 @@ export default class DepartmentList extends React.Component {
                 rowKey="ID"
                 loading={this.state.loading}
                 columns={[
+                    { title: 'ID', dataIndex: 'ID', width: 50 },
                     { title: '部门名称', dataIndex: 'Name', },
                     {
-                        title: '操作', dataIndex: 'ID', width: 200,
+                        title: '操作', width: 200,
                         render: (text, item) => (
                             <span>
                                 <EditModal onOk={this.loadPageData} record={item} children={<Button icon="edit">编辑</Button>} />

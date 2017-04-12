@@ -33,9 +33,10 @@ export default class GroupList extends React.Component {
                 rowKey="ID"
                 loading={this.state.loading}
                 columns={[
+                    { title: 'ID', dataIndex: 'ID', width: 50 },
                     { title: '分组名称', dataIndex: 'Name', },
                     {
-                        title: '操作', dataIndex: 'ID', width: 200,
+                        title: '操作', width: 200,
                         render: (text, item) => (
                             <Button.Group>
                                 <EditModal onSubmit={this.onEditSave} record={item} children={<Button icon="edit">编辑</Button>} />
