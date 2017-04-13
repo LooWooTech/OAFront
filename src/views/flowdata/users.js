@@ -7,8 +7,8 @@ class SelectUserModal extends Component {
 
     componentWillMount() {
         let infoId = this.props.infoId;
-        let nodeId = this.props.nodeId;
-        api.FlowData.UserList(this, infoId, nodeId, data => {
+        let flowNodeId = this.props.flowNodeId || 0;
+        api.FlowData.UserList(this, infoId, flowNodeId, data => {
             this.setState({ users: data || [] })
         });
     }
@@ -19,7 +19,7 @@ class SelectUserModal extends Component {
             message.error('请选择一位用户');
             return;
         }
-        onOk(this.state.selected, true);
+        onOk(true, this.state.selected);
         this.setState({ visible: false });
     };
     handleChange = value => {
@@ -28,13 +28,13 @@ class SelectUserModal extends Component {
     handleSubmit = () => {
         //判断是否完结，如果完结，则不弹出窗口，直接提交
         let dataId = this.props.dataId;
-        let nodeId = this.props.nodeId;
-        api.FlowData.CanComplete(this, dataId, nodeId, result => {
+        let nodeDataId = this.props.nodeDataId;
+        api.FlowData.CanComplete(this, dataId || 0, nodeDataId || 0, result => {
             if (!result) {
                 this.setState({ visible: true });
             } else {
                 const onOk = this.props.onOk;
-                onOk(0, true);
+                onOk(true);
             }
         });
     };

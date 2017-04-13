@@ -3,16 +3,17 @@ import cookie from 'react-cookie'
 module.exports = {
 
   hasLogin() {
-    return this.getToken();
+    return this.getUser() && this.getToken();
   },
 
   getToken() {
-    return cookie.load('token') != null;
+    return cookie.load('token');
   },
 
   login(user) {
     localStorage.user = JSON.stringify(user);
     cookie.save("token", user.Token, { domain: 'localhost' });
+    this.getToken();
   },
 
   logout() {
@@ -21,9 +22,7 @@ module.exports = {
   },
 
   getUser() {
-    var user =  JSON.parse(localStorage.user || '{}');
-    //console.log(user);
-    return user;
+    return JSON.parse(localStorage.user || '{}');
   },
 
   isCurrentUser(id) {

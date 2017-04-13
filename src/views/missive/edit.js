@@ -10,8 +10,11 @@ import utils from '../../utils';
 
 let MissiveEditForm = null;
 export default class MissiveEdit extends Component {
-
     componentWillMount() {
+        this.loadData();
+    };
+
+    loadData = () => {
         var id = parseInt(this.props.location.query.id || '0', 10);
         if (id === 0) {
             this.setState({
@@ -26,16 +29,28 @@ export default class MissiveEdit extends Component {
                 canView: true,
                 canEdit: true,
                 canSubmit: false,
-                canCancel: false
+                canCancel: false,
             });
         }
         else {
             api.FormInfo.Model(this, id, data => {
+                console.log(data);
+                //处理json序列化掉nodedata的问题
+                var nodeDataRefId = (data.flowNodeData || {}).$ref;
+                if (nodeDataRefId) {
+                    data.model.FlowData.Nodes.map(v => {
+                        if (v.$id === nodeDataRefId) {
+                            data.flowNodeData = v;
+                        }
+                        return v;
+                    })
+                }
                 this.setState({
                     model: data.model,
                     canEdit: data.canEdit,
                     canSubmit: data.canSubmit,
-                    canCancel: data.canCancel
+                    canCancel: data.canCancel,
+                    flowNodeData: data.flowNodeData
                 });
             });
         }
@@ -63,7 +78,6 @@ export default class MissiveEdit extends Component {
             model.Excels.fileList.map(file => {
                 files.push(file.response);
             });
-            //console.log(files);
             model.Data.Excels = files;
         }
         else {
@@ -79,21 +93,28 @@ export default class MissiveEdit extends Component {
                 this.state.excels.map(v => fileIds.push(v.ID));
                 api.File.UpdateRelation(this, fileIds, json.ID);
             }
-            utils.Redirect('/missive/sendlist');
+            utils.Redirect('/missive/sendlist?status=0');
         });
 
     };
 
     handleExport = e => { };
 
+    handleCancel = e => {
+        if (!confirm('你确定要撤销流程吗?')) return false;
+        api.FlowData.Cancel(this, this.state.model.ID, data => {
+            this.loadData();
+        });
+    };
+    handleSubmitFlow = () => {
+        this.loadData();
+    };
     render() {
         const model = this.state.model;
         if (!model) return null;
-
         const showFlow = !!model.FlowDataId;
         const showResult = !!model.FlowDataId;
         const showPreview = model.Data.Word && model.Data.Word.ID > 0;
-
         return <div>
             <Affix offsetTop={0} className="toolbar">
                 <Button.Group>
@@ -102,13 +123,14 @@ export default class MissiveEdit extends Component {
                         : null}
                     {this.state.canSubmit ?
                         <SubmitFlowModal
+                            callback={this.handleSubmitFlow}
                             canSubmit={this.state.canSubmit}
                             info={model}
-                            nodeData={model.flownodeData}
+                            record={this.state.flowNodeData}
                             children={<Button type="success" icon="check" htmlType="button">提交</Button>}
                         />
                         : null}
-                    {this.state.canCancel ? <Button type="danger" icon="rollback" htmlType="button">撤销</Button> : null}
+                    {this.state.canCancel ? <Button type="danger" icon="rollback" htmlType="button" onClick={this.handleCancel}>撤销</Button> : null}
                     <Button onClick={() => utils.Redirect('/missive/sendlist')} type="" icon="arrow-left" htmlType="button">返回</Button>
                 </Button.Group>
             </Affix>

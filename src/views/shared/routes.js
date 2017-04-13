@@ -1,5 +1,5 @@
 import React from 'react'
-import { Router, Route, IndexRoute, browserHistory } from 'react-router'
+import { Router, Route, IndexRoute, hashHistory } from 'react-router'
 import auth from '../../models/auth'
 import Layout from './_layout'
 import Home from '../home/index'
@@ -26,7 +26,6 @@ import TaskList from '../task/list'
 
 const authorize = (nextState, replace) => {
     if (!auth.hasLogin()) {
-        console.log("未登录");
         replace({
             pathname: '/user/login',
             state: { nextPathname: nextState.location.pathname }
@@ -35,7 +34,7 @@ const authorize = (nextState, replace) => {
 }
 
 export default () =>
-    <Router history={browserHistory}>
+    <Router history={hashHistory}>
         <Route path='/' component={Layout} onEnter={authorize}>
             <IndexRoute component={Home} />
             <Route path='missive/sendlist' component={MissiveSendList} />

@@ -7,8 +7,8 @@ class SelectUserModal extends Component {
 
     componentWillMount() {
         let infoId = this.props.infoId;
-        let backId = this.props.nodeId;
-        api.FlowData.BackList(this, infoId, backId, data => {
+        let currentFlowNodeId = this.props.flowNodeId;
+        api.FlowData.BackList(this, infoId, currentFlowNodeId, data => {
             this.setState({ list: data || [] })
         });
     }
@@ -19,19 +19,18 @@ class SelectUserModal extends Component {
             message.error('请选择一个流程节点');
             return;
         }
-        onOk(this.state.selected, this.props.result);
+        onOk(this.state.selected, false);
         this.setState({ visible: false });
     };
     handleChange = value => {
         this.setState({ selected: value })
     }
     render() {
-        const children = this.props.children;
 
         return (
             <span>
                 <span onClick={() => this.setState({ visible: true })}>
-                    {children}
+                    {this.props.children}
                 </span>
                 <Modal
                     title="选择退回流程"

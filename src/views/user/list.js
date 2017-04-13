@@ -27,7 +27,6 @@ export default class UserList extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        //console.log(nextProps);
     }
 
     componentWillUnmount() {

@@ -43,16 +43,12 @@ export default class AttendanceIndex extends React.Component {
 
     onSelect = date => {
         //设置date的打卡数据和请假数据
+        this.setState({ selectedDate: date });
         if (date.month() !== this.state.selectedDate.month()) {
             this.onPanelChange(date);
         } else {
-            var beginTime = date.format('l');
-            var endTime = date.add(1, 'days').format('l');
-            api.FormInfo.List(this, { beginTime, endTime }, json => {
-                this.setState({ leaves: json })
-            });
+            
         }
-        this.setState({ selectedDate: date });
     };
 
     onPanelChange = (date, mode) => {

@@ -12,7 +12,7 @@ function hasErrors(fieldsError) {
     return Object.keys(fieldsError).some(field => fieldsError[field]);
 }
 class Login extends Component {
-    state = {loading:false}
+    state = { loading: false }
     handleSubmit = (e) => {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
@@ -36,24 +36,22 @@ class Login extends Component {
         const passwordDecorator = getFieldDecorator('password', { rules: [{ required: true, message: '请填写密码' }], });
         return (
             <div className="container">
-            <div className="login-panel">
-                <Spin spinning={this.state.loading} tip="登录中" >
-                <Form layout="inline" onSubmit={this.handleSubmit} className="login-form">
-                    <FormItem validateStatus={userNameError ? 'error' : ''} help={userNameError || ''}>
-                        {userNameDecorator(<Input addonBefore={<Icon type="user" />} placeholder="用户名" />)}
-                    </FormItem>
-                    <FormItem validateStatus={passwordError ? 'error' : ''} help={passwordError || ''} >
-                        {passwordDecorator(<Input addonBefore={<Icon type="lock" />} type="password" placeholder="Password" />)}
-                    </FormItem>
-                    <FormItem>
-                        <Button type="primary" htmlType="submit" disabled={hasErrors(getFieldsError())}>登录</Button>
-                    </FormItem>
-                    <FormItem>
-                        &nbsp;<Link to="/user/findpassword">找回密码</Link>
-                    </FormItem>
-                </Form>
-                </Spin>
-            </div>
+                <div className="login-panel">
+                    <Form layout="inline" onSubmit={this.handleSubmit} className="login-form">
+                        <FormItem validateStatus={userNameError ? 'error' : ''} help={userNameError || ''}>
+                            {userNameDecorator(<Input addonBefore={<Icon type="user" />} placeholder="用户名" />)}
+                        </FormItem>
+                        <FormItem validateStatus={passwordError ? 'error' : ''} help={passwordError || ''} >
+                            {passwordDecorator(<Input addonBefore={<Icon type="lock" />} type="password" placeholder="密码" />)}
+                        </FormItem>
+                        <FormItem>
+                            <Button type="primary" htmlType="submit" loading={this.state.loading} disabled={hasErrors(getFieldsError())}>登录</Button>
+                        </FormItem>
+                        <FormItem>
+                            &nbsp;<Link to="/user/findpassword">找回密码</Link>
+                        </FormItem>
+                    </Form>
+                </div>
             </div>
         );
     }

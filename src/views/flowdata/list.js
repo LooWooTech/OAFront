@@ -16,7 +16,7 @@ class FlowDataList extends Component {
                 <Timeline>
                     {list.map(item => {
                         var color = item.Result === true ? 'green' : (item.Result === false ? 'red' : 'blue');
-                        return <Timeline.Item color={color}>
+                        return <Timeline.Item color={color} key={item.ID}>
                             {item.Department}-{item.Signature}
                             &nbsp;&nbsp;&nbsp;&nbsp;
                             {item.UpdateTime ? moment(item.UpdateTime).format('YYYY-MM-DD HH:mm') : ''}

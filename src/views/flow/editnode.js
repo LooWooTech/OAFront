@@ -14,7 +14,6 @@ class NodeEditForm extends Component {
         if (!value) return;
         api.User.List(this, { searchKey: value }, json => {
             this.setState({ users: json.List });
-            console.log(json.List);
         });
     };
 
@@ -23,7 +22,6 @@ class NodeEditForm extends Component {
         //显示的时候绑定默认的受理人
         let record = this.props.record;
         if (record.User) {
-            console.log(record);
             this.setState({
                 users: [
                     { ID: record.User.ID, Username: record.User.Username }
@@ -59,7 +57,6 @@ class NodeEditForm extends Component {
             wrapperCol: { span: 14 },
         };
         const nodes = this.props.nodes || [];
-        console.log(nodes);
 
         return (
             <span>
