@@ -33,32 +33,35 @@ const authorize = (nextState, replace) => {
     }
 }
 
-export default () =>
-    <Router history={hashHistory}>
-        <Route path='/' component={Layout} onEnter={authorize}>
-            <IndexRoute component={Home} />
-            <Route path='missive/sendlist' component={MissiveSendList} />
-            <Route path='missive/edit' component={MissiveEdit} />
+export default class Routes extends React.Component {
+    render() {
+        return <Router history={hashHistory}>
+            <Route path='/' component={Layout} onEnter={authorize}>
+                <IndexRoute component={Home} />
+                <Route path='missive/sendlist' component={MissiveSendList} />
+                <Route path='missive/edit' component={MissiveEdit} />
 
-            <Route path="task/index" component={TaskIndex} />
-            <Route path="task/list" component={TaskList} />
+                <Route path="task/index" component={TaskIndex} />
+                <Route path="task/list" component={TaskList} />
 
-            <Route path="attendance/index" component={AttendanceIndex} />
-            <Route path="attendance/holidays" component={HolidayList} />
-            <Route path="attendance/leaves" component={LeaveList} />
-            <Route path="attendance/history" component={LeaveHistory} />
+                <Route path="attendance/index" component={AttendanceIndex} />
+                <Route path="attendance/holidays" component={HolidayList} />
+                <Route path="attendance/leaves" component={LeaveList} />
+                <Route path="attendance/history" component={LeaveHistory} />
 
-            <Route userRole={3}>
-                <Route path='system/config' component={SystemConfig} />
-                <Route path='user/list' component={UserList} />
-                <Route path='group/list' component={GroupList} />
-                <Route path='category/list' component={CategoryList} />
-                <Route path='department/list' component={DepartmentList} />
-                <Route path='flow/list' component={FlowList} />
+                <Route userRole={3}>
+                    <Route path='system/config' component={SystemConfig} />
+                    <Route path='user/list' component={UserList} />
+                    <Route path='group/list' component={GroupList} />
+                    <Route path='category/list' component={CategoryList} />
+                    <Route path='department/list' component={DepartmentList} />
+                    <Route path='flow/list' component={FlowList} />
+                </Route>
             </Route>
-        </Route>
-        <Route path='/user'>
-            <Route path='login' component={Login} />
-            <Route path='logout' component={Logout} />
-        </Route>
-    </Router>
+            <Route path='/user'>
+                <Route path='login' component={Login} />
+                <Route path='logout' component={Logout} />
+            </Route>
+        </Router>;
+    }
+}

@@ -42,10 +42,6 @@ const getCurrentPathName = (path) => {
 }
 
 export default class TopNav extends React.Component {
-    static contextTypes = {
-        router: React.PropTypes.object,
-    };
-
     state = { current: (getCurrentPathName(this.context.router.location.pathname) || 'home').replace('/', '') };
     handleLeftMenuClick = e => {
         if (this.state.current === e.key) {
@@ -73,29 +69,33 @@ export default class TopNav extends React.Component {
 
     render() {
         return (
-            
-                <div className="navbar fixed">
-                    <Menu theme="dark" mode="horizontal" selectedKeys={[this.state.current]} onClick={this.handleLeftMenuClick} className="left">
-                        {headerNavData.map((item, key) => NavItem(item, key))}
-                    </Menu>
-                    <Menu theme="dark" mode="horizontal" className="right" onClick={this.handleRightMenuClick}>
-                        <Menu.Item>
-                            <Badge count={5}>
-                                <i className="fa fa-bell-o"></i>
-                            </Badge>
-                        </Menu.Item>
-                        <Menu.SubMenu title={<span><Icon type="user" /> {auth.getUser().Username || 'Administrator'} </span>}>
-                            <Menu.Item>个人资料</Menu.Item>
-                            <Menu.Item>修改密码</Menu.Item>
-                            <Menu.Divider />
-                            <Menu.Item>通讯录</Menu.Item>
-                            <Menu.Item>消息设置</Menu.Item>
-                            <Menu.Divider />
-                            <Menu.Item key="logout">退出登录</Menu.Item>
-                        </Menu.SubMenu>
-                    </Menu>
-                </div>
-           
+
+            <div className="navbar fixed">
+                <Menu theme="dark" mode="horizontal" selectedKeys={[this.state.current]} onClick={this.handleLeftMenuClick} className="left">
+                    {headerNavData.map((item, key) => NavItem(item, key))}
+                </Menu>
+                <Menu theme="dark" mode="horizontal" className="right" onClick={this.handleRightMenuClick}>
+                    <Menu.Item>
+                        <Badge count={5}>
+                            <i className="fa fa-bell-o"></i>
+                        </Badge>
+                    </Menu.Item>
+                    <Menu.SubMenu title={<span><Icon type="user" /> {auth.getUser().Username || 'Administrator'} </span>}>
+                        <Menu.Item>个人资料</Menu.Item>
+                        <Menu.Item>修改密码</Menu.Item>
+                        <Menu.Divider />
+                        <Menu.Item>通讯录</Menu.Item>
+                        <Menu.Item>消息设置</Menu.Item>
+                        <Menu.Divider />
+                        <Menu.Item key="logout">退出登录</Menu.Item>
+                    </Menu.SubMenu>
+                </Menu>
+            </div>
+
         );
     }
+}
+
+TopNav.contextTypes = {
+    router: React.PropTypes.object,
 }

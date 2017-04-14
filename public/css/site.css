@@ -75,3 +75,38 @@ hr {
     border:none;
     cursor: text;
 }
+.missive_result{
+    max-width: 780px;
+}
+.missive_result h1 {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: red;
+}.missive_result h1 span {
+    font-size: .5rem;
+    color: #333;
+    display: block;
+    line-height: 20px;
+}
+
+.missive_result .table {
+    border: solid 1px red;
+    margin: 10px;
+}
+
+.missive_result .ant-row {
+    border-bottom: solid 1px red; padding: 10px;
+}
+.flownode{ min-height: 80px;}
+.flownode .datetime {
+    padding-left: 10px;
+}
+
+.flownode span {
+    display: inline-block;
+}
+
+.flownode .bottom {
+    text-align: right;
+}

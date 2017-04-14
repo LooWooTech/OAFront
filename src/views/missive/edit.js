@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Affix, Button, Tabs, message } from 'antd';
 import api from '../../models/api';
+import auth from '../../models/auth';
 import FormTab from './_form';
 import ResultTab from './_result';
 import ContentTab from './_content';
@@ -34,23 +35,19 @@ export default class MissiveEdit extends Component {
         }
         else {
             api.FormInfo.Model(this, id, data => {
-                console.log(data);
-                //处理json序列化掉nodedata的问题
-                var nodeDataRefId = (data.flowNodeData || {}).$ref;
-                if (nodeDataRefId) {
-                    data.model.FlowData.Nodes.map(v => {
-                        if (v.$id === nodeDataRefId) {
-                            data.flowNodeData = v;
-                        }
-                        return v;
-                    })
+
+                if (data.model.FlowData && data.model.FlowData.Nodes) {
+                    var user = auth.getUser();
+                    data.flowNodeData = data.model.FlowData.Nodes.sort((a, b) => a.ID < b.ID).find(n => n.UserId === user.ID);
                 }
+
                 this.setState({
                     model: data.model,
                     canEdit: data.canEdit,
                     canSubmit: data.canSubmit,
                     canCancel: data.canCancel,
-                    flowNodeData: data.flowNodeData
+                    flowNodeData: data.flowNodeData,
+                    status: data.status
                 });
             });
         }
@@ -131,7 +128,7 @@ export default class MissiveEdit extends Component {
                         />
                         : null}
                     {this.state.canCancel ? <Button type="danger" icon="rollback" htmlType="button" onClick={this.handleCancel}>撤销</Button> : null}
-                    <Button onClick={() => utils.Redirect('/missive/sendlist')} type="" icon="arrow-left" htmlType="button">返回</Button>
+                    <Button onClick={() => utils.Redirect('/missive/sendlist?status=' + this.state.status)} type="" icon="arrow-left" htmlType="button">返回</Button>
                 </Button.Group>
             </Affix>
             <Tabs>
@@ -157,7 +154,7 @@ export default class MissiveEdit extends Component {
                 }
                 {showResult ?
                     <Tabs.TabPane tab="成果预览" key="4">
-                        <ResultTab />
+                        <ResultTab data={model} />
                     </Tabs.TabPane>
                     : null
                 }

@@ -101,14 +101,14 @@ class MissiveEditForm extends React.Component {
                 )}
             </Form.Item>
             <Form.Item label="是否上互联网发布"  {...defaultItemConfig}  >
-                {getFieldDecorator("Data.SF_FB_WWW", { initialValue: data.SF_FB_WWW })(
-                    <Checkbox defaultChecked={data.SF_FB_WWW} disabled={disabled} >是</Checkbox>
+                {getFieldDecorator("Data.HLW_FB", { initialValue: data.HLW_FB })(
+                    <Checkbox defaultChecked={data.HLW_FB} disabled={disabled} >是</Checkbox>
                 )}
             </Form.Item>
             <Form.Item label="密级"  {...defaultItemConfig}  >
                 {getFieldDecorator("Data.GW_MJ", { initialValue: data.GW_MJ || 2 })(
                     <Radio.Group disabled={disabled} >
-                        <Radio value={1} >密级1</Radio>
+                        <Radio value={1}>密级1</Radio>
                         <Radio value={2}>密级2</Radio>
                         <Radio value={3}>密级3</Radio>
                     </Radio.Group>
@@ -125,7 +125,7 @@ class MissiveEditForm extends React.Component {
                 <Col span={12}>
                     <Form.Item label="期限" {...defaultItemConfig} >
                         {getFieldDecorator("Data.QX_RQ", { initialValue: data.QX_RQ ? moment(data.QX_RQ) : null })(
-                            <DatePicker placeholder="选择日期" />
+                            <DatePicker placeholder="选择日期"  disabled={disabled}/>
                         )}
                     </Form.Item>
                 </Col>
