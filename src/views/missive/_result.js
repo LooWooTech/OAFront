@@ -6,7 +6,7 @@ class ResultTab extends Component {
     render() {
         const model = this.props.data;
         const flowData = model.FlowData || {};
-        const nodes = (flowData.Nodes || []).sort((a, b) => a.ID > b.ID);
+        const nodes = (flowData.Nodes || []).sort((a, b) => a.ID < b.ID);
         const GetNodeData = name => {
             var data = nodes.find(e => e.FlowNodeName.startsWith(name)) || {};
             return <div className="flownode">
@@ -20,7 +20,10 @@ class ResultTab extends Component {
                 </div>
             </div>
         };
-        const getZWGK = name => model.Data.ZW_GK === name ? '√' : '□' + name;
+        const getZWGK = () => {
+            var texts = ['主动公开', '依申请公开', '不公开'].map((text, key) => (model.Data.ZWGK === (key + 1) ? '√' : '□') + text);
+            return texts.map(text => <span>{text}&nbsp;&nbsp;&nbsp;&nbsp;</span>)
+        }
         return (
             <div className="missive_result">
                 <h1>舟山市国土资源局定海分局发文拟稿纸
@@ -31,26 +34,26 @@ class ResultTab extends Component {
                         {GetNodeData('签发')}
                     </Row>
                     <Row>
-                        {GetNodeData('分管领导审核')}
+                        {GetNodeData('分管领导')}
                     </Row>
                     <Row>
                         <Col span={11}>
-                            {GetNodeData('办公室审核')}
+                            {GetNodeData('办公室')}
                         </Col>
                         <Col span={13}>
-                            {GetNodeData('科室负责人审核')}
+                            {GetNodeData('科室负责人')}
                         </Col>
                     </Row>
                     <Row>
                         {GetNodeData('拟稿人')}
                     </Row>
-                    <Row>
-                        政务公开： {getZWGK('主动公开')} {getZWGK('依申请公开')} {getZWGK('不公开')}
+                    <Row style={{ padding: '10px' }}>
+                        政务公开： {getZWGK()}
                     </Row>
-                    <Row>
+                    <Row style={{ padding: '10px' }}>
                         是否互联网发布（{model.Data.HLW_FB === true ? "√是、否" : model.Data.HLW_FB === false ? "是、√否" : "是、否"}）
                     </Row>
-                    <Row>
+                    <Row style={{ padding: '10px' }}>
                         <Col span={6}>
                             密级：{model.Data.GW_MJ}
                         </Col>
@@ -61,17 +64,16 @@ class ResultTab extends Component {
                             责任人：{model.Data.ZRR}
                         </Col>
                     </Row>
-                    <Row>
-                        <div>文件标题：</div>
-                        <div>{model.Data.WJ_BT}</div>
+                    <Row style={{ padding: '10px' }}>
+                        文件标题：{model.Data.WJ_BT}
                     </Row>
-                    <Row>
+                    <Row style={{ padding: '10px' }}>
                         主题词：{model.Data.GW_ZTC}
                     </Row>
-                    <Row>
+                    <Row style={{ padding: '10px' }}>
                         主送机关：{model.Data.ZS_JG}
                     </Row>
-                    <Row>
+                    <Row style={{ padding: '10px' }}>
                         抄送机关：{model.Data.GW_ZTC}
                     </Row>
                     

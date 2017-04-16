@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Timeline } from 'antd';
+import { Timeline, Icon } from 'antd';
 import moment from 'moment';
 
 class FlowDataList extends Component {
@@ -12,19 +12,18 @@ class FlowDataList extends Component {
             return <span>流程尚未开始</span>;
         }
         return (
-            <div>
-                <Timeline>
-                    {list.map(item => {
-                        var color = item.Result === true ? 'green' : (item.Result === false ? 'red' : 'blue');
-                        return <Timeline.Item color={color} key={item.ID}>
-                            {item.Department}-{item.Signature}
-                            &nbsp;&nbsp;&nbsp;&nbsp;
-                            {item.UpdateTime ? moment(item.UpdateTime).format('YYYY-MM-DD HH:mm') : ''}
-                            <div>{item.Content}</div>
-                        </Timeline.Item>
-                    })}
-                </Timeline>
-            </div>
+            <Timeline>
+                {list.sort((a, b) => a.ID > b.ID).map(item => {
+                    var color = item.Result === true ? 'green' : (item.Result === false ? 'red' : 'blue');
+                    var icon = color === 'green' ? 'check' : color === 'red' ? 'close' : 'clock-circle-o';
+                    return <Timeline.Item dot={<Icon type={icon} style={{ fontSize: '1rem' }} />} color={color} key={item.ID}>
+                        <span className="flownode-name">{item.FlowNodeName}</span>
+                        <span className="flownode-sign">{item.Signature}</span>
+                        <span className="flownode-datetime">{item.UpdateTime ? moment(item.UpdateTime).format('YYYY-MM-DD HH:mm') : ''}</span>
+                        <div className="flownode-content">{item.Content}</div>
+                    </Timeline.Item>
+                })}
+            </Timeline>
         )
     }
 }

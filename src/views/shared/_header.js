@@ -80,7 +80,7 @@ export default class TopNav extends React.Component {
                             <i className="fa fa-bell-o"></i>
                         </Badge>
                     </Menu.Item>
-                    <Menu.SubMenu title={<span><Icon type="user" /> {auth.getUser().Username || 'Administrator'} </span>}>
+                    <Menu.SubMenu title={<span><Icon type="user" /> {auth.getUser().RealName || 'Administrator'} </span>}>
                         <Menu.Item>个人资料</Menu.Item>
                         <Menu.Item>修改密码</Menu.Item>
                         <Menu.Divider />

@@ -47,7 +47,7 @@ export default class MissiveEdit extends Component {
                     canSubmit: data.canSubmit,
                     canCancel: data.canCancel,
                     flowNodeData: data.flowNodeData,
-                    status: data.status
+                    status: data.status || 0
                 });
             });
         }
@@ -64,7 +64,7 @@ export default class MissiveEdit extends Component {
         model.Keywords = model.Data.GW_WH + "," + model.Data.GW_ZTC;
         model.Data.FW_RQ = model.Data.FW_RQ ? model.Data.FW_RQ.format() : '';
         model.Data.QX_RQ = model.Data.QX_RQ ? model.Data.QX_RQ.format('YYYY-MM-DD') : '';
-
+        model.Data.Pdf = model.Pdf;
         if (model.Word && model.Word.file) {
             model.Data.Word = model.Word.file.response;
         } else {
@@ -86,7 +86,9 @@ export default class MissiveEdit extends Component {
             //如果id=0，则需要更新附件的infoId
             if (isAdd) {
                 var fileIds = [];
-                if (this.state.word.ID > 0) fileIds.push(this.state.word.ID);
+                if (this.state.word.ID > 0) {
+                    fileIds.push(this.state.word.ID);
+                }
                 this.state.excels.map(v => fileIds.push(v.ID));
                 api.File.UpdateRelation(this, fileIds, json.ID);
             }
@@ -111,7 +113,7 @@ export default class MissiveEdit extends Component {
         if (!model) return null;
         const showFlow = !!model.FlowDataId;
         const showResult = !!model.FlowDataId;
-        const showPreview = model.Data.Word && model.Data.Word.ID > 0;
+        const showPreview = model.Data.Word && model.Data.Word.ID > 0 && model.Data.Pdf && model.Data.Pdf.ID > 0;
         return <div>
             <Affix offsetTop={0} className="toolbar">
                 <Button.Group>
@@ -128,10 +130,10 @@ export default class MissiveEdit extends Component {
                         />
                         : null}
                     {this.state.canCancel ? <Button type="danger" icon="rollback" htmlType="button" onClick={this.handleCancel}>撤销</Button> : null}
-                    <Button onClick={() => utils.Redirect('/missive/sendlist?status=' + this.state.status)} type="" icon="arrow-left" htmlType="button">返回</Button>
+                    <Button onClick={() => utils.Redirect('/missive/sendlist?status=' + (this.state.status || 0))} type="" icon="arrow-left" htmlType="button">返回</Button>
                 </Button.Group>
             </Affix>
-            <Tabs>
+            <Tabs style={{ position: 'absolute', left: '200px', top: '50px', bottom: '0', right: '0' }}>
                 <Tabs.TabPane tab="拟稿表单" key="1">
                     <FormTab data={model} canEdit={this.state.canEdit} ref={instance => {
                         if (!instance) return;
@@ -142,13 +144,17 @@ export default class MissiveEdit extends Component {
                 </Tabs.TabPane>
                 {showPreview ?
                     <Tabs.TabPane tab="附件预览" key="2">
-                        <ContentTab />
+                        <div style={{ position: 'absolute', left: '0', top: '50px', bottom: '0', right: '0' }}>
+                            <ContentTab file={model.Data.Pdf} />
+                        </div>
                     </Tabs.TabPane>
                     : null
                 }
                 {showFlow ?
                     <Tabs.TabPane tab="审批流程" key="3">
-                        <FlowList data={model.FlowData} />
+                        <div style={{ padding: '20px', marginLeft: '20px' }}>
+                            <FlowList data={model.FlowData} />
+                        </div>
                     </Tabs.TabPane>
                     : null
                 }

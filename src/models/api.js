@@ -99,6 +99,9 @@ module.exports = {
                 fileIds,
                 infoId
             }, cb, err);
+        },
+        ConvertToPdf: (component, id, cb, err) => {
+            invokeApi(component, 'file/converttopdf?id=' + id, HTTP_GET, null, cb, err);
         }
     },
     FormInfo: {

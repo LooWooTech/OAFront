@@ -87,7 +87,7 @@ class NodeEditForm extends Component {
                             {getFieldDecorator('PrevId', {
                                 initialValue: (model.PrevId || '').toString(),
                             })(
-                                <Select  notFoundContent="无" >
+                                <Select notFoundContent="无" >
                                     {nodes.map((node, key) => <Select.Option
                                         key={node.ID}
                                         disabled={node.ID === model.ID}>
@@ -106,12 +106,12 @@ class NodeEditForm extends Component {
                                     showArrow={false}
                                     filterOption={false}
                                     onSearch={this.onSearchChange}
-                                    placeholder={model.UserName || "请输入姓名"}
+                                    placeholder="请输入姓名"
                                     optionLabelProp="children"
                                 >
                                     {this.state.users.map((item, key) =>
                                         <Select.Option key={key} value={(item.ID || '').toString()}>
-                                            {item.Username}
+                                            {item.RealName}
                                         </Select.Option>)}
                                 </Select>
                                 )}
@@ -121,6 +121,7 @@ class NodeEditForm extends Component {
                                 initialValue: (model.DepartmentId || '').toString(),
                             })(
                                 <Select>
+                                    <Select.Option key={0}>无</Select.Option>
                                     {departments.map((item, key) =>
                                         <Select.Option key={item.ID} title={item.Name}>
                                             {item.Name}
@@ -133,7 +134,7 @@ class NodeEditForm extends Component {
                                 initialValue: (model.GroupId || '').toString(),
                             })(
                                 <Select>
-                                <Select.Option key={0}>无</Select.Option>
+                                    <Select.Option key={0}>无</Select.Option>
                                     {groups.map((item, key) =>
                                         <Select.Option key={item.ID}>
                                             {item.Name}

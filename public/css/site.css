@@ -26,6 +26,7 @@ body {
     padding: 10px;
     border-left: solid 200px transparent;
     z-index: 1;
+    height: 100%;
 }
 
 .toolbar {
@@ -96,9 +97,9 @@ hr {
 }
 
 .missive_result .ant-row {
-    border-bottom: solid 1px red; padding: 10px;
+    border-bottom: solid 1px red;
 }
-.flownode{ min-height: 80px;}
+.flownode{ min-height: 80px; padding: 10px;}
 .flownode .datetime {
     padding-left: 10px;
 }
@@ -108,5 +109,22 @@ hr {
 }
 
 .flownode .bottom {
+    position: absolute;
     text-align: right;
+    bottom: 10px;
+    right: 10px;
+}
+
+.ant-timeline .flownode-name {
+    display: inline-block;
+    min-width: 100px;
+}
+.ant-timeline .flownode-sign {
+    color: #108ee9;
+    display: inline-block;
+    min-width: 100px;
+}.ant-timeline .flownode-content {
+    display: block;
+    font-size: 1rem;
+    color: #111;
 }

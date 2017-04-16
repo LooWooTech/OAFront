@@ -83,7 +83,7 @@ class UserEditForm extends Component {
                             {
                                 getFieldDecorator('GroupIds', {
                                     initialValue: (model.Groups || []).map(g => g.ID.toString())
-                                })(<Select multiple>
+                                })(<Select mode="multiple">
                                     {groups.map((item, key) => <Select.Option key={item.ID}>{item.Name}</Select.Option>)}
                                 </Select>)
                             }

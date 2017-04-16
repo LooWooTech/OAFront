@@ -1,22 +1,42 @@
 import React from 'react';
-import { Form, Input, DatePicker, Radio, Checkbox, Upload, Button, Icon, Row, Col, message } from 'antd';
+import { Form, Input, DatePicker, Radio, Checkbox, Upload, Button, Icon, Row, Col, Spin, message } from 'antd';
 import moment from 'moment';
 import api from '../../models/api';
 
 class MissiveEditForm extends React.Component {
-    state = { word: {}, excels: [] };
-    handleUploadWord = ({ file }) => {
+    state = {
+        uploading: false,
+    }
+
+    componentWillMount() {
+        const model = this.props.data;
+        if (model && model.Data) {
+            this.setState({ word: model.Data.Word });
+        }
+    }
+
+
+    handleUploadWord = ({ file, fileList }) => {
         if (!file || !file.response) return;
+        this.toggleSpin(true);
         var response = file.response;
         if (response.Message) {
             alert(response.Message)
-            //message.error(word.Message);
+            this.toggleSpin(false);
             return;
         }
-        this.setState({ word: response });
+
+        api.File.ConvertToPdf(this, response.ID, pdf => {
+            this.setState({ word: response, pdf });
+            this.toggleSpin(false);
+        });
     };
     handleUploadExcel = ({ file, fileList }) => {
     };
+
+    toggleSpin = (value) => {
+        this.setState({ uploading: value });
+    }
 
     handleDeleteFile = (file) => {
         var canDelete = this.props.canEdit;
@@ -34,7 +54,8 @@ class MissiveEditForm extends React.Component {
         if (!model) return null;
 
         const data = model.Data || {};
-        const word = this.state.word.ID > 0 ? this.state.word : data.Word || {};
+        const word = this.state.word ? this.state.word : data.Word || {};
+        const pdf = this.state.pdf ? this.state.pdf : data.Pdf;
         const defaultWords = word.ID > 0 ? [{
             uid: word.ID,
             name: word.FileName,
@@ -125,26 +146,42 @@ class MissiveEditForm extends React.Component {
                 <Col span={12}>
                     <Form.Item label="期限" {...defaultItemConfig} >
                         {getFieldDecorator("Data.QX_RQ", { initialValue: data.QX_RQ ? moment(data.QX_RQ) : null })(
-                            <DatePicker placeholder="选择日期"  disabled={disabled}/>
+                            <DatePicker placeholder="选择日期" disabled={disabled} />
                         )}
                     </Form.Item>
                 </Col>
             </Row>
             <Row>
                 <Col span={12}>
-                    <Form.Item label="Word文档" labelCol={{ span: 8 }} wrapperCol={{ span: 16 }} >
-                        {getFieldDecorator("Word", { initialValue: data.Word })(
-                            <Upload action={api.File.UploadUrl(word.ID, model.ID, 'word')}
-                                onChange={this.handleUploadWord}
-                                name="word"
-                                onRemove={this.handleDeleteFile}
-                                withCredentials={true}
-                                defaultFileList={defaultWords}
-                            >
-                                <Button disabled={disabled}><Icon type="upload" />上传Word文档</Button>
-                            </Upload>
-                        )}
-                    </Form.Item>
+                    <Spin tip="上传中" spinning={this.state.uploading}>
+                        {getFieldDecorator("Pdf", { initialValue: pdf })(<Input type="hidden" />)}
+                        <Form.Item label="Word文档" labelCol={{ span: 8 }} wrapperCol={{ span: 16 }} >
+                            {getFieldDecorator("Word", { initialValue: data.Word })(
+                                <Upload action={api.File.UploadUrl(word.ID, model.ID, 'word')}
+                                    onChange={this.handleUploadWord}
+                                    name="word"
+                                    onRemove={this.handleDeleteFile}
+                                    withCredentials={true}
+                                    showUploadList={false}
+                                    accept=".doc,.docx"
+                                >
+                                    <Button disabled={disabled}><Icon type="upload" />上传Word文档</Button>
+                                </Upload>
+                            )}
+                        {word.ID > 0 ?
+                            <div>
+                                <a href={api.File.FileUrl(word.ID)} target="_blank">
+                                    {word.FileName}
+                                </a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <a onClick={() => {
+                                    if (confirm('你确定要删除吗？')) {
+                                        this.setState({ word: {} });
+                                    }
+                                }}><i className="fa fa-remove" /></a>
+                            </div> : <span></span>
+                        }
+                           </Form.Item>
+                 </Spin>
                 </Col>
                 <Col span={12}>
                     <Form.Item label="Excel文件" {...defaultItemConfig} >
@@ -155,6 +192,7 @@ class MissiveEditForm extends React.Component {
                                 withCredentials={true}
                                 onRemove={this.handleDeleteFile}
                                 defaultFileList={defaultExcels}
+                                accept=".xls,.xlsx"
                             >
                                 <Button disabled={disabled}><Icon type="upload" />上传Excel文档</Button>
                             </Upload>
