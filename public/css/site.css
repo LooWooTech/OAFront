@@ -72,19 +72,23 @@ hr {
     float: right;
 }
 
-.ant-input[disabled]{
-    border:none;
+.ant-input[disabled] {
+    border: none;
     cursor: text;
 }
-.missive_result{
+
+.missive_result {
     max-width: 780px;
 }
+
 .missive_result h1 {
     text-align: center;
     font-size: 1.5rem;
     font-weight: 400;
     color: red;
-}.missive_result h1 span {
+}
+
+.missive_result h1 span {
     font-size: .5rem;
     color: #333;
     display: block;
@@ -99,7 +103,12 @@ hr {
 .missive_result .ant-row {
     border-bottom: solid 1px red;
 }
-.flownode{ min-height: 80px; padding: 10px;}
+
+.flownode {
+    min-height: 80px;
+    padding: 10px;
+}
+
 .flownode .datetime {
     padding-left: 10px;
 }
@@ -119,11 +128,14 @@ hr {
     display: inline-block;
     min-width: 100px;
 }
+
 .ant-timeline .flownode-sign {
     color: #108ee9;
     display: inline-block;
     min-width: 100px;
-}.ant-timeline .flownode-content {
+}
+
+.ant-timeline .flownode-content {
     display: block;
     font-size: 1rem;
     color: #111;

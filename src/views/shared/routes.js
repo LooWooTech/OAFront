@@ -11,6 +11,7 @@ import MissiveEdit from '../missive/edit'
 import UserList from '../user/list'
 import GroupList from '../group/list'
 import DepartmentList from '../department/list'
+import JobTitleList from '../jobtitle/list'
 import CategoryList from '../category/list'
 import SystemConfig from '../system/config'
 import FlowList from '../flow/list'
@@ -55,6 +56,7 @@ export default class Routes extends React.Component {
                     <Route path='group/list' component={GroupList} />
                     <Route path='category/list' component={CategoryList} />
                     <Route path='department/list' component={DepartmentList} />
+                    <Route path='jobtitle/list' component={JobTitleList} />
                     <Route path='flow/list' component={FlowList} />
                 </Route>
             </Route>

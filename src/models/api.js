@@ -180,6 +180,17 @@ module.exports = {
             invokeApi(component, 'department/delete?id=' + id, HTTP_DELETE, null, cb, err);
         }
     },
+    JobTitle: {
+        List: (component, cb, err) => {
+            invokeApi(component, 'jobtitle/list', HTTP_GET, null, cb, err);
+        },
+        Save: (component, data, cb, err) => {
+            invokeApi(component, 'jobtitle/save', HTTP_POST, data, cb, err);
+        },
+        Delete: (component, id, cb, err) => {
+            invokeApi(component, 'jobtitle/delete?id=' + id, HTTP_DELETE, null, cb, err);
+        }
+    },
     Category: {
         List: (component, data, cb, err) => {
             invokeApi(component, 'Category/list', HTTP_GET, data, cb, err);

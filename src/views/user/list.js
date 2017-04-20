@@ -1,6 +1,6 @@
 import React from 'react';
-import { Affix, Table, Button, Popconfirm } from 'antd';
-import EditModal from './edit';
+import { Affix, Table, Button, Popconfirm, Input, Select } from 'antd';
+import EditModal from '../shared/_editmodal';
 import api from '../../models/api';
 
 export default class UserList extends React.Component {
@@ -13,17 +13,15 @@ export default class UserList extends React.Component {
         },
         data: [],
         departments: [],
-        groups: []
+        groups: [],
+        titles: []
     };
 
     componentWillMount() {
         this.loadPageData();
-        api.Department.List(this, data => {
-            this.setState({ departments: data });
-        });
-        api.Group.List(this, data => {
-            this.setState({ groups: data });
-        })
+        api.Department.List(this, data => this.setState({ departments: data }));
+        api.Group.List(this, data => this.setState({ groups: data }))
+        api.JobTitle.List(this, data => this.setState({ titles: data }))
     }
 
     componentWillReceiveProps(nextProps) {
@@ -53,16 +51,63 @@ export default class UserList extends React.Component {
         api.User.Save(this, data, this.loadPageData);
     }
 
+    getFormItems = record => {
+        record = record || { ID: 0, Username: '', RealName: '', DepartmentId: 0, GroupIds: [], JobTitleId: 0 };
+        console.log(record);
+        return [{
+            name: 'ID',
+            defaultValue: record.ID,
+            render: <Input type="hidden" />
+        }, {
+            title: '用户名',
+            name: 'Username',
+            defaultValue: record.Username,
+            render: <Input />
+        }, {
+            title: '姓名',
+            name: 'Username',
+            defaultValue: record.RealName,
+            render: <Input />
+        }, {
+            title: '部门',
+            name: 'DepartmentId',
+            defaultValue: record.DepartmentId.toString(),
+            render: <Select name="DepartmentId">
+                <Select.Option value='0'>无</Select.Option>
+                {this.state.departments.map(item => <Select.Option key={item.ID}>{item.Name}</Select.Option>)}
+            </Select>
+        }, {
+            title: '职称',
+            name: 'JobTitleId',
+            defaultValue: record.JobTitleId.toString(),
+            render: <Select name="JobTitleId">
+                <Select.Option value='0'>无</Select.Option>
+                {this.state.titles.map(item => <Select.Option key={item.ID}>{item.Name}</Select.Option>)}
+            </Select>
+        }, {
+            title: '用户组',
+            name: 'GroupIds',
+            defaultValue: (record.Groups || []).map(g => g.ID.toString()),
+            render: <Select name="GroupIds" mode="multiple">
+                {this.state.groups.map(item => <Select.Option key={item.ID}>{item.Name}</Select.Option>)}
+            </Select>
+        }];
+    };
+
     render() {
         if (!this.state.request) {
             return null;
         }
-        const defaultProps = { departments: this.state.departments, groups: this.state.groups }
 
         return <div>
             <Affix offsetTop={0} className="toolbar">
                 <Button.Group>
-                    <EditModal children={<Button type="primary" icon="file">添加用户</Button>} {...defaultProps} onSubmit={this.onEditSave} />
+                    <EditModal
+                        name="用户"
+                        trigger={<Button type="primary" icon="file">添加用户</Button>}
+                        onSubmit={this.onEditSave}
+                        children={this.getFormItems()}
+                    />
                 </Button.Group>
             </Affix>
             <Table
@@ -80,7 +125,12 @@ export default class UserList extends React.Component {
                         title: '操作', width: 200,
                         render: (text, item) => (
                             <span>
-                                <EditModal onSubmit={this.onEditSave} record={item} {...defaultProps} children={<Button icon="edit">编辑</Button>} />
+                                <EditModal
+                                    name="用户"
+                                    onSubmit={this.onEditSave}
+                                    children={this.getFormItems(item)}
+                                    trigger={<Button icon="edit">编辑</Button>}
+                                />
                                 <Popconfirm placement="topRight" title="你确定要删除吗？"
                                     onConfirm={() => api.Group.Delete(this, item.ID, this.loadPageData)}
                                     okText="是" cancelText="否">
@@ -99,6 +149,6 @@ export default class UserList extends React.Component {
                 }}
             />
 
-        </div >;
+        </div>;
     }
 }

@@ -16,6 +16,10 @@ function xmlHttpRequest(url, method, data, cb, err) {
                     cb(json);
                 }
             }
+            else if (req.status === 204) {
+                cb();
+                return;
+            }
             else {
                 if (err) {
                     err(json);

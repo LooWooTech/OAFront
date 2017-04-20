@@ -1,47 +1,60 @@
 import React from 'react';
-import { Affix, Table, Button, Popconfirm, Input } from 'antd';
+import { Affix, Table, Button, Popconfirm, Form, Input, Select } from 'antd';
 import EditModal from '../shared/_editmodal';
 import api from '../../models/api';
 
-export default class GroupList extends React.Component {
-    state = { list: [] };
-
+export default class DepartmentList extends React.Component {
+    state = {}
     componentDidMount() {
-        this.loadPageData();
+        this.loadData();
     };
     componentWillUnmount() {
         api.Abort();
     };
-    loadPageData = () => {
-        api.Group.List(this, data => this.setState({ list: data }));
-    };
-
     onEditSave = (err, values) => {
-        api.Group.Save(this, values, this.loadPageData);
-    }
+        api.JobTitle.Save(this, values, json => {
+            this.loadData();
+        });
+        return false;
+    };
+    loadData = () => {
+        api.JobTitle.List(this, data => {
+            this.setState({ list: data })
+        });
+    };
     getFormItems = record => {
-        record = record || { ID: 0, Name: '' };
+        record = record || { ID: 0, ParentId: 0, Name: '' };
         return [{
             name: 'ID',
             defaultValue: record.ID,
             render: <Input type="hidden" />
         }, {
-            title: '名称',
+            title: '职称',
             name: 'Name',
             defaultValue: record.Name,
             render: <Input />
+        }, {
+            title: '上级',
+            name: 'ParentId',
+            defaultValue: record.ParentId.toString(),
+            render: <Select name="ParentId">
+                <Select.Option value='0'>无</Select.Option>
+                {this.state.list.map(item => <Select.Option key={item.ID}>{item.Name}</Select.Option>)}
+            </Select>
         }];
     };
+
     render() {
+        if (!this.state.list) return null;
 
         return <div>
             <Affix offsetTop={0} className="toolbar">
                 <Button.Group>
                     <EditModal
-                        name="添加分组"
-                        children={this.getFormItems()}
-                        trigger={<Button type="primary" icon="file">添加分组</Button>}
+                        name="职称"
+                        trigger={<Button type="primary" icon="file">添加职称</Button>}
                         onSubmit={this.onEditSave}
+                        children={this.getFormItems()}
                     />
                 </Button.Group>
             </Affix>
@@ -50,28 +63,28 @@ export default class GroupList extends React.Component {
                 loading={this.state.loading}
                 columns={[
                     { title: 'ID', dataIndex: 'ID', width: 50 },
-                    { title: '分组名称', dataIndex: 'Name' },
+                    { title: '名称', dataIndex: 'Name', },
                     {
                         title: '操作', width: 200,
                         render: (text, item) => (
-                            <Button.Group>
+                            <span>
                                 <EditModal
-                                    name="编辑分组"
+                                    name="职称"
                                     onSubmit={this.onEditSave}
-                                    children={this.getFormItems(item)}
+                                    record={item}
                                     trigger={<Button icon="edit">编辑</Button>}
+                                    children={this.getFormItems(item)}
                                 />
                                 <Popconfirm placement="topRight" title="你确定要删除吗？"
-                                    onConfirm={() => api.Group.Delete(this, item.ID, this.loadPageData)}
+                                    onConfirm={() => api.Department.Delete(this, item.ID, this.loadPageData)}
                                     okText="是" cancelText="否">
                                     <Button type="danger" icon="delete">删除</Button>
                                 </Popconfirm>
-                            </Button.Group>
+                            </span>
                         )
                     }
                 ]}
                 dataSource={this.state.list}
-                pagination={false}
             >
             </Table>
         </div>;

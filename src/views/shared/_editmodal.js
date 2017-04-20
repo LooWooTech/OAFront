@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
-import { Modal, Form, Input } from 'antd';
+import { Modal, Form } from 'antd';
 
-const FormItem = Form.Item;
-
-class FlowEditForm extends Component {
+class DepartmentEditForm extends Component {
 
     state = { visible: false, };
+
     showModelHandler = (e) => {
         if (e) e.stopPropagation();
         this.setState({ visible: true, });
     };
+
     hideModelHandler = () => {
         this.setState({ visible: false, });
     };
@@ -24,38 +24,30 @@ class FlowEditForm extends Component {
     }
 
     render() {
-        const { children } = this.props;
-        const { getFieldDecorator } = this.props.form;
-        const { ID, Name } = this.props.record || {};
+        const { children, trigger } = this.props;
         const formItemLayout = {
             labelCol: { span: 6 },
             wrapperCol: { span: 14 },
         };
+        const { getFieldDecorator } = this.props.form;
 
         return (
             <span>
                 <span onClick={this.showModelHandler}>
-                    {children}
+                    {trigger}
                 </span>
-                <Modal title={ID ? '编辑流程' : '新建流程'}
+                <Modal title={this.props.name || ''}
                     visible={this.state.visible}
                     onOk={this.handleSubmit}
                     onCancel={this.hideModelHandler}
-
                 >
                     <Form layout="horizontal" onSubmit={this.handleSubmit}>
-                        {
-                            getFieldDecorator('ID', {
-                                initialValue: ID
-                            })(<Input type="hidden" />)
-                        }
-                        <FormItem {...formItemLayout} label="名称" >
-                            {
-                                getFieldDecorator('name', {
-                                    initialValue: Name,
-                                })(<Input />)
-                            }
-                        </FormItem>
+                        {children.map((item, key) =>
+                            item.title ? <Form.Item key={key} label={item.title} {...(item.layout ? item.layout : formItemLayout) }>
+                                {getFieldDecorator(item.name, { initialValue: item.defaultValue })(item.render)}
+                            </Form.Item>
+                                : <span key={key}>{getFieldDecorator(item.name, { initialValue: item.defaultValue })(item.render)}</span>
+                        )}
                     </Form>
                 </Modal>
             </span>
@@ -63,4 +55,4 @@ class FlowEditForm extends Component {
     }
 }
 
-export default Form.create()(FlowEditForm);
+export default Form.create()(DepartmentEditForm);

@@ -133,7 +133,7 @@ export default class MissiveEdit extends Component {
                     <Button onClick={() => utils.Redirect('/missive/sendlist?status=' + (this.state.status || 0))} type="" icon="arrow-left" htmlType="button">返回</Button>
                 </Button.Group>
             </Affix>
-            <Tabs style={{ position: 'absolute', left: '200px', top: '50px', bottom: '0', right: '0' }}>
+            <Tabs style={{ position: 'absolute', left: '200px', top: '50px', bottom: '0', right: '0', overflow: 'auto', overflowX: 'hidden' }}>
                 <Tabs.TabPane tab="拟稿表单" key="1">
                     <FormTab data={model} canEdit={this.state.canEdit} ref={instance => {
                         if (!instance) return;
@@ -144,7 +144,7 @@ export default class MissiveEdit extends Component {
                 </Tabs.TabPane>
                 {showPreview ?
                     <Tabs.TabPane tab="附件预览" key="2">
-                        <div style={{ position: 'absolute', left: '0', top: '50px', bottom: '0', right: '0' }}>
+                        <div style={{ position: 'absolute', left: '10px', top: '50px', bottom: '10px', right: '0' }}>
                             <ContentTab file={model.Data.Pdf} />
                         </div>
                     </Tabs.TabPane>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Table, Pagination, Popconfirm } from 'antd';
+import { Button, Table, Popconfirm } from 'antd';
 import api from '../../models/api';
 import auth from '../../models/auth';
 

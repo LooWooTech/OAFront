@@ -51,6 +51,7 @@ const sideMenuData = {
                 { path: '/flow/list', icon: 'fa fa-check-square-o', text: '流程管理' },
                 { path: '/group/list', icon: 'fa fa-users', text: '群组管理' },
                 { path: '/department/list', icon: 'fa fa-sitemap', text: '部门管理' },
+                { path: '/jobtitle/list', icon: 'fa fa-vcard', text: '职称管理' },
                 { path: '/category/list', icon: 'fa fa-list', text: '分类管理' },
             ]
         }
@@ -69,6 +70,7 @@ const getSideMenuData = (path) => {
             if (item.path.indexOf(path) === 0) {
                 selected = groups;
             }
+            return item;
         }));
         if (selected.length === 0) {
             if (path.replace('/', '').indexOf(key) === 0) {

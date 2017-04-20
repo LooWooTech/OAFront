@@ -1,29 +1,29 @@
 .container {
-  text-align: center;
+    text-align: center;
 }
 
 .login-panel {
-  position: absolute;
-  /* right: 40%; */
-  bottom: 40%;
-  background: #ddd;
-  width: 100%;
-  padding: 20px;
-  text-align: center;
-  height: 120px;
-  overflow: hidden;
+    position: absolute;
+    /* right: 40%; */
+    bottom: 40%;
+    background: #ddd;
+    width: 100%;
+    padding: 20px;
+    text-align: center;
+    height: 120px;
+    overflow: hidden;
 }
 
 .login-form {
-  width: 600px;
-  margin:20px auto;
-  display: inline-block;
+    width: 600px;
+    margin: 20px auto;
+    display: inline-block;
 }
 
 .login-form-forgot {
-  float: right;
+    float: right;
 }
 
 .login-form-button {
-  width: 100%;
+    width: 100%;
 }

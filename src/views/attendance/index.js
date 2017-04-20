@@ -47,7 +47,7 @@ export default class AttendanceIndex extends React.Component {
         if (date.month() !== this.state.selectedDate.month()) {
             this.onPanelChange(date);
         } else {
-            
+
         }
     };
 

@@ -1,13 +1,11 @@
 import React from 'react';
-import { Affix, Table, Button, Popconfirm } from 'antd';
-import EditModal from './edit';
+import { Affix, Table, Button, Popconfirm, Input } from 'antd';
+import EditModal from '../shared/_editmodal';
 import api from '../../models/api';
 
 export default class DepartmentList extends React.Component {
-    state = { list: [] };
-
     componentDidMount() {
-        this.loadPageData();
+        this.loadData();
     };
     componentWillUnmount() {
         api.Abort();
@@ -15,20 +13,40 @@ export default class DepartmentList extends React.Component {
 
     onEditSave = (err, values) => {
         api.Department.Save(this, values, json => {
-            this.loadPageData();
+            this.loadData();
         });
         return false;
     };
-    loadPageData = () => {
+    loadData = () => {
         api.Department.List(this, data => {
             this.setState({ list: data })
         });
     };
+    getFormItems = record => {
+        record = record || { ID: 0, Name: '' };
+        return [{
+            name: 'ID',
+            defaultValue: record.ID,
+            render: <Input type="hidden" />
+        }, {
+            title: '名称',
+            name: 'Name',
+            defaultValue: record.Name,
+            render: <Input />
+        }];
+    };
     render() {
+        if (!this.state) return null;
+
         return <div>
             <Affix offsetTop={0} className="toolbar">
                 <Button.Group>
-                    <EditModal children={<Button type="primary" icon="file">新建部门</Button>} onSubmit={this.onEditSave} />
+                   <EditModal
+                        name="添加部门"
+                        children={this.getFormItems()}
+                        trigger={<Button type="primary" icon="file">添加部门</Button>}
+                        onSubmit={this.onEditSave}
+                    />
                 </Button.Group>
             </Affix>
             <Table
@@ -41,7 +59,12 @@ export default class DepartmentList extends React.Component {
                         title: '操作', width: 200,
                         render: (text, item) => (
                             <span>
-                                <EditModal onOk={this.loadPageData} record={item} children={<Button icon="edit">编辑</Button>} />
+                                <EditModal
+                                    name="编辑部门"
+                                    onSubmit={this.onEditSave}
+                                    children={this.getFormItems(item)}
+                                    trigger={<Button icon="edit">编辑</Button>}
+                                />
                                 <Popconfirm placement="topRight" title="你确定要删除吗？"
                                     onConfirm={() => api.Department.Delete(this, item.ID, this.loadPageData)}
                                     okText="是" cancelText="否">
@@ -52,7 +75,6 @@ export default class DepartmentList extends React.Component {
                     }
                 ]}
                 dataSource={this.state.list}
-                pagination={false}
             >
             </Table>
         </div>;
