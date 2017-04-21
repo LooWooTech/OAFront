@@ -46,14 +46,15 @@ export default class UserList extends React.Component {
 
     };
 
-    onEditSave = (err, values) => {
+    onEditSave = (values) => {
         var data = values;
         api.User.Save(this, data, this.loadPageData);
+        return true;
     }
 
     getFormItems = record => {
         record = record || { ID: 0, Username: '', RealName: '', DepartmentId: 0, GroupIds: [], JobTitleId: 0 };
-        console.log(record);
+
         return [{
             name: 'ID',
             defaultValue: record.ID,

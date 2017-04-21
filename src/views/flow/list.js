@@ -16,12 +16,11 @@ export default class FlowList extends React.Component {
         api.Abort();
     };
 
-    onEditSave = (err, values) => {
+    onEditSave = (values) => {
         api.Flow.Save(this, values, this.loadData);
-        return false;
     };
 
-    onNodeSave = (err, values) => {
+    onNodeSave = (values) => {
         api.Flow.SaveNode(this, values, this.loadData);
     };
 
@@ -38,6 +37,7 @@ export default class FlowList extends React.Component {
             title: '名称',
             name: 'Name',
             defaultValue: record.Name,
+            rules: [{ required: true, message: '请填写名称' }],
             render: <Input />
         }];
     };
@@ -75,7 +75,10 @@ export default class FlowList extends React.Component {
                     defaultActiveFirstOption={false}
                     showArrow={false}
                     filterOption={false}
-                    onSearch={this.onSearchChange}
+                    onSearch={value => {
+                        if (!value) return;
+                        api.User.List(this, { searchKey: value }, json => this.setState({ users: json.List }))
+                    }}
                     placeholder="请输入姓名"
                     optionLabelProp="children"
                 >
@@ -138,8 +141,7 @@ export default class FlowList extends React.Component {
             name: 'FreeFlow.LimitMode',
             defaultValue: record.LimitMode,
             render:
-            <Radio.Group defaultValue={record.LimitMode.toString()}
-                onChange={e => this.setState({ limitMode: e.target.value })}>
+            <Radio.Group onChange={e => this.setState({ limitMode: e.target.value })}>
                 <Radio value={1}>指定部门</Radio>
                 <Radio value={2}>当前部门</Radio>
                 <Radio value={3}>拟稿人部门</Radio>
@@ -169,16 +171,9 @@ export default class FlowList extends React.Component {
             title: '跨级别',
             name: 'FreeFlow.CrossLevel',
             defaultValue: record.CrossLevel,
-            render: <Checkbox defaultChecked={record.CrossDepartment}> 可跨级别</Checkbox>
+            render: <Checkbox defaultChecked={record.CrossLevel}> 可跨级别</Checkbox>
         });
         return items;
-    };
-
-    onSearchChange = (value) => {
-        if (!value) return;
-        api.User.List(this, { searchKey: value }, json => {
-            this.setState({ users: json.List });
-        });
     };
 
     flowNodeList = (record) => {
@@ -216,8 +211,7 @@ export default class FlowList extends React.Component {
     };
 
     render() {
-        if (!this.state.list) return null;
-        console.log(this.state.list);
+        if (!this.state.list || !this.state.departments || !this.state.groups || !this.state.titles) return null;
         return <div>
             <Affix offsetTop={0} className="toolbar">
                 <Button.Group>

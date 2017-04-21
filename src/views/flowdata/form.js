@@ -1,17 +1,27 @@
 import React, { Component } from 'react';
-import { Modal, Form, Input, Button, message } from 'antd';
-import SelectUserModal from './users';
-import SelectBackModal from './back';
+import { Select, Input, Checkbox, message } from 'antd';
+import FormModal from '../shared/_editmodal'
 import api from '../../models/api';
 
-class SubmitForm extends Component {
-    state = { visible: false, };
-    handleSubmit = (result, toUserId = 0) => {
-        let data = this.props.form.getFieldsValue();
-        data.Result = result;
-        if (!result && !confirm('你确定要退回吗？')) return false;
+class FlowForm extends Component {
+    state = { isBack: false };
 
-        api.FlowData.Submit(this, toUserId, data.InfoId, data, json => {
+    componentWillMount() {
+        this.loadUsers();
+    }
+
+    handleSubmit = (data) => {
+        const canComplete = this.props.canComplete;
+
+        if (!canComplete && !this.state.isBack && !data.ToUserId) {
+            message.error("请先选择发送人");
+            return false;
+        }
+
+        data.Result = !this.state.isBack;
+        if (!data.Result && !confirm('你确定要退回吗？')) return false;
+
+        api.FlowData.Submit(this, data.ToUserId, data.InfoId, data, json => {
             this.setState({ visible: false });
             message.success("提交成功");
 
@@ -21,66 +31,74 @@ class SubmitForm extends Component {
             }
         });
     };
-    handleBack = () => {
-        this.handleSubmit(false)
+
+    loadUsers = () => {
+        const { flowData, record, canComplete } = this.props;
+        if (canComplete) return;
+        api.FlowData.UserList(this, flowData.InfoId, record.FlowNodeId, json => this.setState({ users: json }));
     };
-    showModal = () => {
-        this.setState({ visible: true });
-    };
+    getFormItems = (model, flowData, users) => {
+        const { canBack, canComplete } = this.props;
+        var items = [
+            { name: 'InfoId', defaultValue: flowData.InfoId, render: <Input type="hidden" /> },
+            { name: 'FlowNodeId', defaultValue: model.FlowNodeId, render: <Input type="hidden" /> },
+            { name: 'FlowDataId', defaultValue: model.FlowDataId, render: <Input type="hidden" /> },
+            { name: 'ID', defaultValue: model.ID, render: <Input type="hidden" /> },
+            {
+                title: '意见', name: 'Content', defaultValue: model.Content,
+                render: <Input type="textarea" autosize={{ minRows: 2, maxRows: 6 }} />
+            },
+        ];
+        //如果可以结束，且同意，则不需要选择发送人
+        if (!canComplete && !this.state.isBack) {
+            items.push({
+                title: '选择发送人',
+                name: 'ToUserId',
+                render:
+                <Select
+                    showSearch={true}
+                    defaultActiveFirstOption={false}
+                    showArrow={false}
+                    filterOption={false}
+                    onSearch={value => this.loadUsers(model.ID, value)}>
+                    {users.map(user =>
+                        <Select.Option key={user.ID}>
+                            {user.RealName}
+                        </Select.Option>)}
+                </Select>
+            })
+        }
+
+        if (canBack) {
+            var defaultChecked = this.state.isBack;
+            items.push({
+                title: '是否退回', name: 'IsBack', defaultValue: defaultChecked,
+                render: <Checkbox defaultChecked={defaultChecked} onChange={e => this.setState({ isBack: e.target.checked })}>退回</Checkbox>
+            });
+        } else {
+            items.push({ name: 'Result', defaultValue: true, render: <Input type="hidden" /> });
+        }
+        return items;
+    }
 
     render() {
-        let { children, canSubmit, info } = this.props;
-        if (info == null) {
+        const { children, flowData, record } = this.props;
+        const model = record;
+        const users = this.state.users || [];
+        if (flowData == null || model == null) {
             return null;
         }
-        const model = this.props.record || {};
-        const { getFieldDecorator } = this.props.form;
-        const canBack = info.FlowDataId > 0 && info.FlowData.Nodes.length > 1 && model.Result === null;
+
         return (
             <span>
-                <span onClick={this.showModal}>
-                    {children}
-                </span>
-                <Modal title="提交流程"
-                    visible={this.state.visible}
-                    onCancel={() => this.setState({ visible: false })}
-                    footer={<div>
-                        {canSubmit ?
-                            <SelectUserModal
-                                infoId={info.ID || 0}
-                                onOk={this.handleSubmit}
-                                flowNodeId={model.FlowNodeId || 0}
-                                dataId={info.FlowDataId}
-                                nodeDataId={model.ID}
-                                children={<Button type="primary" icon="check" htmlType="button">同意</Button>}
-                            /> : null}
-                        {canBack ? <Button type="danger" icon="rollback" htmlType="button" onClick={this.handleBack}>退回</Button> : null}
-                        {
-                            // canBack ?
-                            //     <SelectBackModal
-                            //         infoId={info.ID || 0}
-                            //         onOk={this.handleSubmit}
-                            //         flowNodeId={model.FlowNodeId || 0}
-                            //         children={<Button type="danger" icon="rollback" htmlType="button">退回</Button>}
-                            //     /> : null
-                        }
-                    </div>}
-                >
-                    <Form layout="horizontal" onSubmit={this.handlerSubmit} disabled={!canSubmit}>
-                        {getFieldDecorator("ID", { initialValue: model.ID })(<Input type="hidden" />)}
-                        {getFieldDecorator("InfoId", { initialValue: info.ID })(<Input type="hidden" />)}
-                        {getFieldDecorator("FlowNodeId", { initialValue: info.FlowNodeId })(<Input type="hidden" />)}
-                        {getFieldDecorator("FlowDataId", { initialValue: info.FlowDataId })(<Input type="hidden" />)}
-                        <Form.Item label="意见" >
-                            {getFieldDecorator("Content", { initialValue: model.Content })(
-                                <Input type="textarea" autosize={{ minRows: 2, maxRows: 6 }} />
-                            )}
-                        </Form.Item>
-
-                    </Form>
-                </Modal>
+                <FormModal
+                    name="提交审批流程"
+                    trigger={children}
+                    children={this.getFormItems(model, flowData, users)}
+                    onSubmit={this.handleSubmit}
+                />
             </span>
         )
     }
 }
-export default Form.create()(SubmitForm)
+export default FlowForm

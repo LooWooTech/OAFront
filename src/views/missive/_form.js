@@ -56,13 +56,7 @@ class MissiveEditForm extends React.Component {
         const data = model.Data || {};
         const word = this.state.word ? this.state.word : data.Word || {};
         const pdf = this.state.pdf ? this.state.pdf : data.Pdf;
-        const defaultWords = word.ID > 0 ? [{
-            uid: word.ID,
-            name: word.FileName,
-            status: 'done',
-            response: word,
-            url: api.File.FileUrl(word.ID)
-        }] : [];
+        
         const defaultExcels = (data.Excels || []).map(v => {
             return {
                 uid: v.ID,

@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
 import { Affix, Button, Tabs, message } from 'antd';
 import api from '../../models/api';
-import auth from '../../models/auth';
 import FormTab from './_form';
 import ResultTab from './_result';
 import ContentTab from './_content';
 import FlowList from '../flowdata/list';
 import SubmitFlowModal from '../flowdata/form';
+import SubmitFreeFlowModal from '../freeflow/form';
 import utils from '../../utils';
 
-let MissiveEditForm = null;
 export default class MissiveEdit extends Component {
     componentWillMount() {
         this.loadData();
@@ -36,30 +35,24 @@ export default class MissiveEdit extends Component {
         else {
             api.FormInfo.Model(this, id, data => {
 
-                if (data.model.FlowData && data.model.FlowData.Nodes) {
-                    var user = auth.getUser();
-                    data.flowNodeData = data.model.FlowData.Nodes.sort((a, b) => a.ID < b.ID).find(n => n.UserId === user.ID);
+                if (data.flowNodeData) {
+                    data.flowNodeData = data.model.FlowData.Nodes.find(n => n.$id === data.flowNodeData.$ref);
                 }
 
-                this.setState({
-                    model: data.model,
-                    canEdit: data.canEdit,
-                    canSubmit: data.canSubmit,
-                    canCancel: data.canCancel,
-                    flowNodeData: data.flowNodeData,
-                    status: data.status || 0
-                });
+                if (data.freeFlowNodeData) {
+                    data.freeFlowNodeData = data.flowNodeData.Nodes.find(n => n.$id === data.freeFlowNodeData.$ref);
+                }
+                this.setState({ ...data });
             });
         }
     };
 
     handleSave = e => {
-        if (!MissiveEditForm) return;
         if (!this.state.canEdit) {
             message.error("不可编辑");
             return;
         }
-        var model = MissiveEditForm.getFieldsValue();
+        var model = this.refs.form.getFieldsValue();
         model.Title = model.Data.WJ_BT;
         model.Keywords = model.Data.GW_WH + "," + model.Data.GW_ZTC;
         model.Data.FW_RQ = model.Data.FW_RQ ? model.Data.FW_RQ.format() : '';
@@ -111,8 +104,8 @@ export default class MissiveEdit extends Component {
     render() {
         const model = this.state.model;
         if (!model) return null;
-        const showFlow = !!model.FlowDataId;
         const showResult = !!model.FlowDataId;
+        const showFlow = !!model.FlowDataId;
         const showPreview = model.Data.Word && model.Data.Word.ID > 0 && model.Data.Pdf && model.Data.Pdf.ID > 0;
         return <div>
             <Affix offsetTop={0} className="toolbar">
@@ -120,13 +113,23 @@ export default class MissiveEdit extends Component {
                     {this.state.canEdit ?
                         <Button onClick={this.handleSave} type="primary" icon="save" htmlType="submit">保存</Button>
                         : null}
-                    {this.state.canSubmit ?
+                    {this.state.canSubmitFlow ?
                         <SubmitFlowModal
                             callback={this.handleSubmitFlow}
-                            canSubmit={this.state.canSubmit}
-                            info={model}
+                            canComplete={this.state.canComplete}
+                            flowData={model.FlowData}
                             record={this.state.flowNodeData}
-                            children={<Button type="success" icon="check" htmlType="button">提交</Button>}
+                            children={<Button type="success" icon="check" htmlType="button">提交主流程</Button>}
+                        />
+                        : null}
+                    {this.state.canSubmitFreeFlow ?
+                        <SubmitFreeFlowModal
+                            callback={this.handleSubmitFlow}
+                            canSubmit={true}
+                            infoId={model.ID}
+                            flowNodeData={this.state.flowNodeData}
+                            record={this.state.freeFlowNodeData}
+                            children={<Button type="success" icon="retweet" htmlType="button">提交自由流程</Button>}
                         />
                         : null}
                     {this.state.canCancel ? <Button type="danger" icon="rollback" htmlType="button" onClick={this.handleCancel}>撤销</Button> : null}
@@ -135,12 +138,7 @@ export default class MissiveEdit extends Component {
             </Affix>
             <Tabs style={{ position: 'absolute', left: '200px', top: '50px', bottom: '0', right: '0', overflow: 'auto', overflowX: 'hidden' }}>
                 <Tabs.TabPane tab="拟稿表单" key="1">
-                    <FormTab data={model} canEdit={this.state.canEdit} ref={instance => {
-                        if (!instance) return;
-                        var form = instance.getForm();
-                        MissiveEditForm = form;
-                        //this.setState({ form: form });
-                    }} />
+                    <FormTab data={model} canEdit={this.state.canEdit} ref="form" />
                 </Tabs.TabPane>
                 {showPreview ?
                     <Tabs.TabPane tab="附件预览" key="2">

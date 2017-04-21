@@ -1,36 +1,29 @@
-import React, { Component } from 'react';
-import { Modal, Form } from 'antd';
+import React, { Component } from 'react'
+import { Modal, message } from 'antd'
+import Form from './_form'
 
-class DepartmentEditForm extends Component {
-
-    state = { visible: false, };
-
+class SharedFormModal extends Component {
+    state = { visible: false, }
     showModelHandler = (e) => {
-        if (e) e.stopPropagation();
-        this.setState({ visible: true, });
-    };
-
+        if (e) e.stopPropagation()
+        this.setState({ visible: true, })
+    }
     hideModelHandler = () => {
-        this.setState({ visible: false, });
-    };
-
+        this.setState({ visible: false, })
+    }
     handleSubmit = () => {
-        this.props.form.validateFields((err, values) => {
-            if (!err) {
-                this.props.onSubmit(err, values);
-                this.hideModelHandler();
+        this.refs.form.validateFields((errs, values) => {
+            if (errs) {
+                message.error(errs);
+            } else {
+                if (this.props.onSubmit(values) !== false) {
+                    this.hideModelHandler();
+                }
             }
         });
     }
-
     render() {
-        const { children, trigger } = this.props;
-        const formItemLayout = {
-            labelCol: { span: 6 },
-            wrapperCol: { span: 14 },
-        };
-        const { getFieldDecorator } = this.props.form;
-
+        const { children, trigger } = this.props
         return (
             <span>
                 <span onClick={this.showModelHandler}>
@@ -41,18 +34,19 @@ class DepartmentEditForm extends Component {
                     onOk={this.handleSubmit}
                     onCancel={this.hideModelHandler}
                 >
-                    <Form layout="horizontal" onSubmit={this.handleSubmit}>
-                        {children.map((item, key) =>
-                            item.title ? <Form.Item key={key} label={item.title} {...(item.layout ? item.layout : formItemLayout) }>
-                                {getFieldDecorator(item.name, { initialValue: item.defaultValue })(item.render)}
-                            </Form.Item>
-                                : <span key={key}>{getFieldDecorator(item.name, { initialValue: item.defaultValue })(item.render)}</span>
-                        )}
-                    </Form>
+                    <Form
+                        ref="form"
+                        onSubmit={this.handleSubmit}
+                        children={children}
+                    />
                 </Modal>
             </span>
-        );
+        )
     }
 }
-
-export default Form.create()(DepartmentEditForm);
+SharedFormModal.propTypes = {
+    trigger: React.PropTypes.element.isRequired,
+    children: React.PropTypes.array.isRequired,
+    onSubmit: React.PropTypes.func.isRequired
+}
+export default SharedFormModal

@@ -20,10 +20,8 @@ class ResultTab extends Component {
                 </div>
             </div>
         };
-        const getZWGK = () => {
-            var texts = ['主动公开', '依申请公开', '不公开'].map((text, key) => (model.Data.ZWGK === (key + 1) ? '√' : '□') + text);
-            return texts.map(text => <span>{text}&nbsp;&nbsp;&nbsp;&nbsp;</span>)
-        }
+        const getZWGK = () => ['主动公开', '依申请公开', '不公开'].map((text, key) => <span key={key}>{model.Data.ZWGK === (key + 1) ? '√' : '□' + text}&nbsp;&nbsp;&nbsp;&nbsp;</span>);
+        
         return (
             <div className="missive_result">
                 <h1>舟山市国土资源局定海分局发文拟稿纸

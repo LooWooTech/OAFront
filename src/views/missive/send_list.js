@@ -35,7 +35,7 @@ export default class MissiveSendList extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         const status = nextProps.location.query.status;
-        if (status != this.state.status) {
+        if (status !== this.state.status) {
             this.loadData(this.state.page.current, this.state.searchKey, status);
         }
     }

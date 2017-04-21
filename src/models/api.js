@@ -158,6 +158,14 @@ module.exports = {
             invokeApi(component, 'flowdata/backlist', HTTP_GET, { infoId, backId }, cb, err)
         }
     },
+    FreeFlowData: {
+        Submit: (component, toUserIds, data, cb, err) => {
+            invokeApi(component, `freeflowdata/submit?infoId=${data.InfoId}&toUserIds=${toUserIds}`, HTTP_POST, data, cb, err);
+        },
+        UserList: (component, flowNodeDataId, key, cb, err) => {
+            invokeApi(component, `freeflowdata/userlist?flownodedataId=${flowNodeDataId}&key=${key}`, HTTP_GET, null, cb, err);
+        }
+    },
     Group: {
         List: (component, cb, err) => {
             invokeApi(component, 'group/list', HTTP_GET, null, cb, err);

@@ -11,11 +11,10 @@ export default class DepartmentList extends React.Component {
         api.Abort();
     };
 
-    onEditSave = (err, values) => {
+    onEditSave = (values) => {
         api.Department.Save(this, values, json => {
             this.loadData();
         });
-        return false;
     };
     loadData = () => {
         api.Department.List(this, data => {

@@ -124,19 +124,33 @@ hr {
     right: 10px;
 }
 
-.ant-timeline .flownode-name {
-    display: inline-block;
-    min-width: 100px;
-}
 
 .ant-timeline .flownode-sign {
     color: #108ee9;
     display: inline-block;
-    min-width: 100px;
 }
-
+.ant-timeline .flownode-datetime {
+    display: inline-block;
+    margin-left: 20px;
+}
 .ant-timeline .flownode-content {
     display: block;
     font-size: 1rem;
     color: #111;
+}
+
+.sub-timeline {
+    padding: 10px;
+    padding-left: 20px;
+    background: #eee;
+    border-radius: 5px;
+    margin: 10px;
+}
+
+.sub-timeline .ant-timeline-item {
+    padding: 0;
+}
+
+.sub-timeline .ant-timeline-item-last .ant-timeline-item-content {
+    min-height: 20px;
 }

@@ -16,7 +16,7 @@ export default class GroupList extends React.Component {
         api.Group.List(this, data => this.setState({ list: data }));
     };
 
-    onEditSave = (err, values) => {
+    onEditSave = (values) => {
         api.Group.Save(this, values, this.loadPageData);
     }
     getFormItems = record => {
