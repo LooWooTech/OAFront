@@ -21,7 +21,7 @@ export default class AttendanceIndex extends React.Component {
     };
 
     onLeaveFormSubmit = (error, values) => {
-        api.Leave.Save(this, values, json => {
+        api.Leave.Save(values, json => {
 
         })
     };
@@ -33,10 +33,10 @@ export default class AttendanceIndex extends React.Component {
     loadData = date => {
 
         date = date || moment();
-        api.Attendance.List(this, { year: date.year(), month: date.month() }, json => {
+        api.Attendance.List({ year: date.year(), month: date.month() }, json => {
             this.setState({ statistics: json });
         });
-        api.Attendance.Statistics(this, { year: date.year(), month: date.month() }, json => {
+        api.Attendance.Statistics({ year: date.year(), month: date.month() }, json => {
             this.setState({ statistics: json })
         });
     }

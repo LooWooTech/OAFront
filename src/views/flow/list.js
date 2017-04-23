@@ -6,9 +6,9 @@ import api from '../../models/api';
 export default class FlowList extends React.Component {
     state = {};
     componentWillMount() {
-        api.Department.List(this, data => this.setState({ departments: data }));
-        api.Group.List(this, data => this.setState({ groups: data }));
-        api.JobTitle.List(this, data => this.setState({ titles: data }));
+        api.Department.List(data => this.setState({ departments: data }));
+        api.Group.List(data => this.setState({ groups: data }));
+        api.JobTitle.List(data => this.setState({ titles: data }));
         this.loadData();
     };
 
@@ -17,15 +17,15 @@ export default class FlowList extends React.Component {
     };
 
     onEditSave = (values) => {
-        api.Flow.Save(this, values, this.loadData);
+        api.Flow.Save(values, this.loadData);
     };
 
     onNodeSave = (values) => {
-        api.Flow.SaveNode(this, values, this.loadData);
+        api.Flow.SaveNode(values, this.loadData);
     };
 
     loadData = () => {
-        api.Flow.List(this, data => this.setState({ list: data }));
+        api.Flow.List(data => this.setState({ list: data }));
     };
     getFlowFormItems = (record) => {
         record = record || { ID: 0, Name: '' };
@@ -77,7 +77,7 @@ export default class FlowList extends React.Component {
                     filterOption={false}
                     onSearch={value => {
                         if (!value) return;
-                        api.User.List(this, { searchKey: value }, json => this.setState({ users: json.List }))
+                        api.User.List({ searchKey: value }, json => this.setState({ users: json.List }))
                     }}
                     placeholder="请输入姓名"
                     optionLabelProp="children"
@@ -152,7 +152,7 @@ export default class FlowList extends React.Component {
             items.push({
                 title: '选择指定部门',
                 name: 'FreeFlow.DepartmentIds',
-                defaultValue: record.DepartmentIds.map(id => id.toString()),
+                defaultValue: (record.DepartmentIds || []).map(id => id.toString()),
                 render:
                 <Select mode="multiple">
                     {this.state.departments.map(item =>
@@ -198,7 +198,7 @@ export default class FlowList extends React.Component {
                             <Popconfirm
                                 placement="topRight"
                                 title="你确定要删除吗？"
-                                onConfirm={() => api.Flow.DeleteNode(this, item.ID, this.loadData)}
+                                onConfirm={() => api.Flow.DeleteNode(item.ID, this.loadData)}
                                 okText="是"
                                 cancelText="否"
                             >
@@ -249,7 +249,7 @@ export default class FlowList extends React.Component {
                                 <Popconfirm
                                     placement="topRight"
                                     title="你确定要删除吗？"
-                                    onConfirm={() => api.Flow.Delete(this, item.ID, this.loadData)}
+                                    onConfirm={() => api.Flow.Delete(item.ID, this.loadData)}
                                     okText="是"
                                     cancelText="否"
                                 >

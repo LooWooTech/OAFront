@@ -13,11 +13,11 @@ export default class GroupList extends React.Component {
         api.Abort();
     };
     loadPageData = () => {
-        api.Group.List(this, data => this.setState({ list: data }));
+        api.Group.List(data => this.setState({ list: data }));
     };
 
     onEditSave = (values) => {
-        api.Group.Save(this, values, this.loadPageData);
+        api.Group.Save(values, this.loadPageData);
     }
     getFormItems = record => {
         record = record || { ID: 0, Name: '' };
@@ -62,7 +62,7 @@ export default class GroupList extends React.Component {
                                     trigger={<Button icon="edit">编辑</Button>}
                                 />
                                 <Popconfirm placement="topRight" title="你确定要删除吗？"
-                                    onConfirm={() => api.Group.Delete(this, item.ID, this.loadPageData)}
+                                    onConfirm={() => api.Group.Delete(item.ID, this.loadPageData)}
                                     okText="是" cancelText="否">
                                     <Button type="danger" icon="delete">删除</Button>
                                 </Popconfirm>

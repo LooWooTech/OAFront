@@ -10,6 +10,7 @@ import SubmitFreeFlowModal from '../freeflow/form';
 import utils from '../../utils';
 
 export default class MissiveEdit extends Component {
+    state = {}
     componentWillMount() {
         this.loadData();
     };
@@ -30,10 +31,11 @@ export default class MissiveEdit extends Component {
                 canEdit: true,
                 canSubmit: false,
                 canCancel: false,
+                canBack: false
             });
         }
         else {
-            api.FormInfo.Model(this, id, data => {
+            api.FormInfo.Model(id, data => {
 
                 if (data.flowNodeData) {
                     data.flowNodeData = data.model.FlowData.Nodes.find(n => n.$id === data.flowNodeData.$ref);
@@ -74,7 +76,7 @@ export default class MissiveEdit extends Component {
             model.Data.Excels = model.Excels || [];
         }
         var isAdd = model.ID === 0;
-        api.FormInfo.Save(this, model, json => {
+        api.FormInfo.Save(model, json => {
             message.success('保存成功');
             //如果id=0，则需要更新附件的infoId
             if (isAdd) {
@@ -83,9 +85,9 @@ export default class MissiveEdit extends Component {
                     fileIds.push(this.state.word.ID);
                 }
                 this.state.excels.map(v => fileIds.push(v.ID));
-                api.File.UpdateRelation(this, fileIds, json.ID);
+                api.File.UpdateRelation(fileIds, json.ID);
             }
-            utils.Redirect('/missive/sendlist?status=0');
+            utils.Redirect('/missive/sendlist?status=1');
         });
 
     };
@@ -94,7 +96,7 @@ export default class MissiveEdit extends Component {
 
     handleCancel = e => {
         if (!confirm('你确定要撤销流程吗?')) return false;
-        api.FlowData.Cancel(this, this.state.model.ID, data => {
+        api.FlowData.Cancel(this.state.model.ID, data => {
             this.loadData();
         });
     };
@@ -117,6 +119,7 @@ export default class MissiveEdit extends Component {
                         <SubmitFlowModal
                             callback={this.handleSubmitFlow}
                             canComplete={this.state.canComplete}
+                            canBack={this.state.canBack}
                             flowData={model.FlowData}
                             record={this.state.flowNodeData}
                             children={<Button type="success" icon="check" htmlType="button">提交主流程</Button>}

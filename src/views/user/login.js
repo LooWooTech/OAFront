@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router'
-import { Form, Icon, Input, Button, Spin } from 'antd';
+import { Form, Icon, Input, Button } from 'antd';
 import '../../css/login.css'
 
 import auth from '../../models/auth'
@@ -14,15 +14,16 @@ function hasErrors(fieldsError) {
 class Login extends Component {
     state = { loading: false }
     handleSubmit = (e) => {
+        this.setState({ loading: true });
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                api.User.Login(this, values, json => {
+                api.User.Login(values, json => {
                     auth.login(json);
                     utils.Redirect('/');
                 })
             } else {
-                console.log(err);
+                this.setState({ loading: false });
             }
         });
     }

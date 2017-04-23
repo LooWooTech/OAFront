@@ -18,15 +18,15 @@ class HolidayList extends Component {
     };
 
     loadPageData = (page = 1) => {
-        api.Holiday.List(this, page, json => {
+        api.Holiday.List(page, json => {
             let { current, total, pageSize } = json.Page;
             let list = json.List;
             this.setState({ current, total, pageSize, list });
         })
     };
-    onEditSave = (err, values) => api.Holiday.Save(this, values, json => this.loadPageData);
-    onDelete = id => api.Holiday.Delete(this, id, this.loadPageData);
-    onGenerateWeek = year => api.Holiday.GenerateWeeks(this, year, json => this.loadPageData);
+    onEditSave = (err, values) => api.Holiday.Save(values, json => this.loadPageData);
+    onDelete = id => api.Holiday.Delete(id, this.loadPageData);
+    onGenerateWeek = year => api.Holiday.GenerateWeeks(year, json => this.loadPageData);
 
     render() {
 

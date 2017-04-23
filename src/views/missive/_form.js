@@ -26,7 +26,7 @@ class MissiveEditForm extends React.Component {
             return;
         }
 
-        api.File.ConvertToPdf(this, response.ID, pdf => {
+        api.File.ConvertToPdf(response.ID, pdf => {
             this.setState({ word: response, pdf });
             this.toggleSpin(false);
         });
@@ -45,7 +45,7 @@ class MissiveEditForm extends React.Component {
             return;
         }
         var dbFile = file.response || { ID: file.uid };
-        api.File.Delete(this, dbFile.ID);
+        api.File.Delete(dbFile.ID);
         return true;
     };
 

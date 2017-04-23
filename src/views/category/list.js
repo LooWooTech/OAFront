@@ -35,17 +35,17 @@ export default class DepartmentList extends React.Component {
     };
 
     onEditSave = (err, values) => {
-        api.Category.Save(this, values, json => {
+        api.Category.Save(values, json => {
             this.loadPageData();
         });
         return false;
     };
     onDelete = item => {
-        api.Category.Delete(this, item.ID, this.loadPageData);
+        api.Category.Delete(item.ID, this.loadPageData);
     };
     loadPageData = () => {
         let formId = this.props.location.query.formId || 0;
-        api.Category.List(this, { formId }, data => {
+        api.Category.List({ formId }, data => {
             var tree = buildTreeData(data);
             this.setState({ list: tree })
         });

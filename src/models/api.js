@@ -6,9 +6,8 @@ const HTTP_POST = "POST"
 const HTTP_DELETE = "DELETE"
 const HTTP_PUT = "PUT"
 
-const host = 'http://localhost:8012/api/'
-function invokeApi(component, path, method, data, callback, onError, async = true) {
-    component.setState({ loading: true });
+const host = '/api/'
+function invokeApi(path, method, data, callback, onError, async = true) {
     var url = host + path;
     var postData = jsonToQueryString(data);
     if (method === HTTP_GET || method === HTTP_DELETE) {
@@ -19,12 +18,10 @@ function invokeApi(component, path, method, data, callback, onError, async = tru
     }
 
     utils.Request(url, method, data, json => {
-        component.setState({ loading: false });
         if (callback) {
             callback(json);
         }
     }, error => {
-        component.setState({ loading: false });
         if (onError) {
             onError(error);
         } else {
@@ -32,7 +29,6 @@ function invokeApi(component, path, method, data, callback, onError, async = tru
         }
         console.log("ERROR:", error);
     }, async);
-
 }
 function jsonToQueryString(json) {
     if (!json)
@@ -58,27 +54,27 @@ module.exports = {
         return host + path;
     },
     User: {
-        Login: (component, data, cb, err) => invokeApi(component, 'user/login', HTTP_GET, data, cb, err),
+        Login: (data, cb, err) => invokeApi('user/login', HTTP_GET, data, cb, err),
         //找回密码
-        FindPasswordSendMail: (component, data, cb, err) => {
-            invokeApi(component, 'user/sendpasswordemail', HTTP_GET, data, cb, err);
+        FindPasswordSendMail: (data, cb, err) => {
+            invokeApi('user/sendpasswordemail', HTTP_GET, data, cb, err);
         },
-        List: (component, data, cb, err) => {
-            invokeApi(component, 'user/list', HTTP_GET, data, cb, err);
+        List: (data, cb, err) => {
+            invokeApi('user/list', HTTP_GET, data, cb, err);
         },
-        Save: (component, data, cb, err) => {
-            invokeApi(component, 'user/save?groupIds=' + (data.GroupIds || []).join(), HTTP_POST, data, cb, err);
+        Save: (data, cb, err) => {
+            invokeApi('user/save?groupIds=' + (data.GroupIds || []).join(), HTTP_POST, data, cb, err);
         },
-        Delete: (component, id, cb, err) => {
-            invokeApi(component, 'user/delete?id=' + id, HTTP_DELETE, null, cb, err);
+        Delete: (id, cb, err) => {
+            invokeApi('user/delete?id=' + id, HTTP_DELETE, null, cb, err);
         }
     },
     Form: {
-        Model: (component, formId, cb) => {
-            invokeApi(component, 'form/model?id=' + formId, HTTP_GET, null, cb, null);
+        Model: (formId, cb) => {
+            invokeApi('form/model?id=' + formId, HTTP_GET, null, cb, null);
         },
-        List: (component, cb, err) => {
-            invokeApi(component, 'form/list', HTTP_GET, null, cb, err);
+        List: (cb, err) => {
+            invokeApi('form/list', HTTP_GET, null, cb, err);
         }
     },
     File: {
@@ -88,173 +84,173 @@ module.exports = {
         UploadUrl: (fileId = 0, infoId = 0, name = null) => {
             return `${host}file/upload?infoId=${infoId}&id=${fileId}&name=${name}`;
         },
-        Upload: (component, fileId, cb, err) => {
-            invokeApi(component, 'file/upload', HTTP_PUT, fileId, cb, err);
+        Upload: (fileId, cb, err) => {
+            invokeApi('file/upload', HTTP_PUT, fileId, cb, err);
         },
-        Delete: (component, fileId, cb, err) => {
-            invokeApi(component, 'file/delete?id=' + fileId, HTTP_DELETE, null, cb, err);
+        Delete: (fileId, cb, err) => {
+            invokeApi('file/delete?id=' + fileId, HTTP_DELETE, null, cb, err);
         },
-        UpdateRelation: (component, fileIds, infoId, cb, err) => {
-            invokeApi(component, 'file/UpdateRelation', HTTP_POST, {
+        UpdateRelation: (fileIds, infoId, cb, err) => {
+            invokeApi('file/UpdateRelation', HTTP_POST, {
                 fileIds,
                 infoId
             }, cb, err);
         },
-        ConvertToPdf: (component, id, cb, err) => {
-            invokeApi(component, 'file/converttopdf?id=' + id, HTTP_GET, null, cb, err);
+        ConvertToPdf: (id, cb, err) => {
+            invokeApi('file/converttopdf?id=' + id, HTTP_GET, null, cb, err);
         }
     },
     FormInfo: {
-        List: (component, parameters, cb, err) => {
-            invokeApi(component, 'FormInfo/list', HTTP_GET, parameters, cb, err);
+        List: (parameters, cb, err) => {
+            invokeApi('FormInfo/list', HTTP_GET, parameters, cb, err);
         },
-        Save: (component, data, cb, err) => {
-            invokeApi(component, 'FormInfo/save', HTTP_POST, data, cb, err);
+        Save: (data, cb, err) => {
+            invokeApi('FormInfo/save', HTTP_POST, data, cb, err);
         },
-        Model: (component, id, cb, err) => {
-            invokeApi(component, 'FormInfo/model?id=' + id, HTTP_GET, null, cb, err);
+        Model: (id, cb, err) => {
+            invokeApi('FormInfo/model?id=' + id, HTTP_GET, null, cb, err);
         },
-        Delete: (component, id, cb, err) => {
-            invokeApi(component, 'FormInfo/delete?id=' + id, HTTP_DELETE, null, cb, err);
+        Delete: (id, cb, err) => {
+            invokeApi('FormInfo/delete?id=' + id, HTTP_DELETE, null, cb, err);
         }
     },
     Flow: {
-        List: (component, cb, err) => {
-            invokeApi(component, 'flow/list', HTTP_GET, null, cb, err);
+        List: (cb, err) => {
+            invokeApi('flow/list', HTTP_GET, null, cb, err);
         },
-        Save: (component, data, cb, err) => {
-            invokeApi(component, 'flow/save', HTTP_POST, data, cb, err);
+        Save: (data, cb, err) => {
+            invokeApi('flow/save', HTTP_POST, data, cb, err);
         },
-        Delete: (component, id, cb, err) => {
-            invokeApi(component, 'flow/delete?id=' + id, HTTP_DELETE, null, cb, err);
+        Delete: (id, cb, err) => {
+            invokeApi('flow/delete?id=' + id, HTTP_DELETE, null, cb, err);
         },
-        SaveNode: (component, data, cb, err) => {
-            invokeApi(component, 'flow/savenode', HTTP_POST, data, cb, err);
+        SaveNode: (data, cb, err) => {
+            invokeApi('flow/savenode', HTTP_POST, data, cb, err);
         },
-        DeleteNode: (component, id, cb, err) => {
-            invokeApi(component, 'flow/deletenode?id=' + id, HTTP_DELETE, null, cb, err);
+        DeleteNode: (id, cb, err) => {
+            invokeApi('flow/deletenode?id=' + id, HTTP_DELETE, null, cb, err);
         }
     },
     FlowData: {
-        Model: (component, flowDataId, cb, err) => {
-            invokeApi(component, 'flowdata/model?id=' + flowDataId, HTTP_GET, null, cb, err);
+        Model: (flowDataId, cb, err) => {
+            invokeApi('flowdata/model?id=' + flowDataId, HTTP_GET, null, cb, err);
         },
-        Submit: (component, toUserId, infoId, data, cb, err) => {
-            invokeApi(component, 'flowdata/submit?toUserId=' + toUserId + '&infoId=' + infoId, HTTP_POST, data, cb, err);
+        Submit: (toUserId, infoId, data, cb, err) => {
+            invokeApi('flowdata/submit?toUserId=' + toUserId + '&infoId=' + infoId, HTTP_POST, data, cb, err);
         },
-        Back: (component, infoId, cb, err) => {
-            invokeApi(component, 'flowdata/submit?infoId=' + infoId, HTTP_POST, null, cb, err);
+        Back: (infoId, cb, err) => {
+            invokeApi('flowdata/submit?infoId=' + infoId, HTTP_POST, null, cb, err);
         },
-        CanComplete: (component, flowDataId, nodeDataId, cb, err) => {
-            invokeApi(component, 'flowdata/CanComplete?flowdataId=' + flowDataId + "&nodedataId=" + nodeDataId, HTTP_GET, null, cb, err);
+        CanComplete: (flowDataId, nodeDataId, cb, err) => {
+            invokeApi('flowdata/CanComplete?flowdataId=' + flowDataId + "&nodedataId=" + nodeDataId, HTTP_GET, null, cb, err);
         },
-        Cancel: (component, infoId, cb, err) => {
-            invokeApi(component, 'flowdata/Cancel?infoId=' + infoId, HTTP_GET, null, cb, err);
+        Cancel: (infoId, cb, err) => {
+            invokeApi('flowdata/Cancel?infoId=' + infoId, HTTP_GET, null, cb, err);
         },
-        UserList: (component, infoId, nodeId, cb, err) => {
-            invokeApi(component, 'flowdata/userlist', HTTP_GET, { infoId, nodeId }, cb, err);
+        UserList: (infoId, nodeId, cb, err) => {
+            invokeApi('flowdata/userlist', HTTP_GET, { infoId, nodeId }, cb, err);
         },
-        BackList: (component, infoId, backId, cb, err) => {
-            invokeApi(component, 'flowdata/backlist', HTTP_GET, { infoId, backId }, cb, err)
+        BackList: (infoId, backId, cb, err) => {
+            invokeApi('flowdata/backlist', HTTP_GET, { infoId, backId }, cb, err)
         }
     },
     FreeFlowData: {
-        Submit: (component, toUserIds, data, cb, err) => {
-            invokeApi(component, `freeflowdata/submit?infoId=${data.InfoId}&toUserIds=${toUserIds}`, HTTP_POST, data, cb, err);
+        Submit: (toUserIds, data, cb, err) => {
+            invokeApi(`freeflowdata/submit?infoId=${data.InfoId}&toUserIds=${toUserIds}`, HTTP_POST, data, cb, err);
         },
-        UserList: (component, flowNodeDataId, key, cb, err) => {
-            invokeApi(component, `freeflowdata/userlist?flownodedataId=${flowNodeDataId}&key=${key}`, HTTP_GET, null, cb, err);
+        UserList: (flowNodeDataId, key, cb, err) => {
+            invokeApi(`freeflowdata/userlist?flownodedataId=${flowNodeDataId}&key=${key}`, HTTP_GET, null, cb, err);
         }
     },
     Group: {
-        List: (component, cb, err) => {
-            invokeApi(component, 'group/list', HTTP_GET, null, cb, err);
+        List: (cb, err) => {
+            invokeApi('group/list', HTTP_GET, null, cb, err);
         },
-        Save: (component, data, cb, err) => {
-            invokeApi(component, 'group/save', HTTP_POST, data, cb, err);
+        Save: (data, cb, err) => {
+            invokeApi('group/save', HTTP_POST, data, cb, err);
         },
-        Delete: (component, id, cb, err) => {
-            invokeApi(component, 'group/delete?id=' + id, HTTP_DELETE, null, cb, err);
+        Delete: (id, cb, err) => {
+            invokeApi('group/delete?id=' + id, HTTP_DELETE, null, cb, err);
         }
     },
     Department: {
-        List: (component, cb, err) => {
-            invokeApi(component, 'department/list', HTTP_GET, null, cb, err);
+        List: (cb, err) => {
+            invokeApi('department/list', HTTP_GET, null, cb, err);
         },
-        Save: (component, data, cb, err) => {
-            invokeApi(component, 'department/save', HTTP_POST, data, cb, err);
+        Save: (data, cb, err) => {
+            invokeApi('department/save', HTTP_POST, data, cb, err);
         },
-        Delete: (component, id, cb, err) => {
-            invokeApi(component, 'department/delete?id=' + id, HTTP_DELETE, null, cb, err);
+        Delete: (id, cb, err) => {
+            invokeApi('department/delete?id=' + id, HTTP_DELETE, null, cb, err);
         }
     },
     JobTitle: {
-        List: (component, cb, err) => {
-            invokeApi(component, 'jobtitle/list', HTTP_GET, null, cb, err);
+        List: (cb, err) => {
+            invokeApi('jobtitle/list', HTTP_GET, null, cb, err);
         },
-        Save: (component, data, cb, err) => {
-            invokeApi(component, 'jobtitle/save', HTTP_POST, data, cb, err);
+        Save: (data, cb, err) => {
+            invokeApi('jobtitle/save', HTTP_POST, data, cb, err);
         },
-        Delete: (component, id, cb, err) => {
-            invokeApi(component, 'jobtitle/delete?id=' + id, HTTP_DELETE, null, cb, err);
+        Delete: (id, cb, err) => {
+            invokeApi('jobtitle/delete?id=' + id, HTTP_DELETE, null, cb, err);
         }
     },
     Category: {
-        List: (component, data, cb, err) => {
-            invokeApi(component, 'Category/list', HTTP_GET, data, cb, err);
+        List: (data, cb, err) => {
+            invokeApi('Category/list', HTTP_GET, data, cb, err);
         },
-        Save: (component, data, cb, err) => {
-            invokeApi(component, 'Category/save', HTTP_POST, data, cb, err);
+        Save: (data, cb, err) => {
+            invokeApi('Category/save', HTTP_POST, data, cb, err);
         },
-        Delete: (component, id, cb, err) => {
-            invokeApi(component, 'Category/delete?id=' + id, HTTP_DELETE, null, cb, err);
+        Delete: (id, cb, err) => {
+            invokeApi('Category/delete?id=' + id, HTTP_DELETE, null, cb, err);
         }
     },
     Holiday: {
-        List: (component, page, cb, err) => {
-            invokeApi(component, 'Holiday/list?page=' + page, HTTP_GET, null, cb, err);
+        List: (page, cb, err) => {
+            invokeApi('Holiday/list?page=' + page, HTTP_GET, null, cb, err);
         },
-        Save: (component, data, cb, err) => {
-            invokeApi(component, 'Holiday/save', HTTP_POST, data, cb, err);
+        Save: (data, cb, err) => {
+            invokeApi('Holiday/save', HTTP_POST, data, cb, err);
         },
-        Delete: (component, id, cb, err) => {
-            invokeApi(component, 'Holiday/delete?id=' + id, HTTP_DELETE, null, cb, err);
+        Delete: (id, cb, err) => {
+            invokeApi('Holiday/delete?id=' + id, HTTP_DELETE, null, cb, err);
         },
-        GenerateWeeks: (component, year, cb, err) => {
-            invokeApi(component, 'Holiday/generateweeks?year=' + year, HTTP_GET, null, cb, err);
+        GenerateWeeks: (year, cb, err) => {
+            invokeApi('Holiday/generateweeks?year=' + year, HTTP_GET, null, cb, err);
         }
     },
     Task: {
-        List: (component, parameters, cb, err) => {
-            invokeApi(component, 'Task/list', HTTP_GET, parameters, cb, err);
+        List: (parameters, cb, err) => {
+            invokeApi('Task/list', HTTP_GET, parameters, cb, err);
         },
-        Model: (component, id, cb, err) => {
-            invokeApi(component, 'Task/model?id=' + id, HTTP_GET, null, cb, err);
+        Model: (id, cb, err) => {
+            invokeApi('Task/model?id=' + id, HTTP_GET, null, cb, err);
         },
-        Save: (component, data, cb, err) => {
-            invokeApi(component, 'task/save', HTTP_POST, data, cb, err);
+        Save: (data, cb, err) => {
+            invokeApi('task/save', HTTP_POST, data, cb, err);
         },
-        Delete: (component, id, cb, err) => {
-            invokeApi(component, 'task/delete?id=' + id, HTTP_DELETE, null, cb, err);
+        Delete: (id, cb, err) => {
+            invokeApi('task/delete?id=' + id, HTTP_DELETE, null, cb, err);
         }
     },
     Leave: {
-        List: (component, parameters, cb, err) => {
-            invokeApi(component, 'Leave/list', HTTP_GET, parameters, cb, err);
+        List: (parameters, cb, err) => {
+            invokeApi('Leave/list', HTTP_GET, parameters, cb, err);
         },
-        Save: (component, data, cb, err) => {
-            invokeApi(component, 'Leave/save', HTTP_POST, data, cb, err);
+        Save: (data, cb, err) => {
+            invokeApi('Leave/save', HTTP_POST, data, cb, err);
         },
-        Delete: (component, id, cb, err) => {
-            invokeApi(component, 'Leave/delete?id=' + id, HTTP_DELETE, null, cb, err);
+        Delete: (id, cb, err) => {
+            invokeApi('Leave/delete?id=' + id, HTTP_DELETE, null, cb, err);
         }
     },
     Attendance: {
-        List: (component, parameters, cb, err) => {
-            invokeApi(component, 'Attendance/list', HTTP_GET, parameters, cb, err);
+        List: (parameters, cb, err) => {
+            invokeApi('Attendance/list', HTTP_GET, parameters, cb, err);
         },
-        Statistics: (component, parameters, cb, err) => {
-            invokeApi(component, 'Attendance/Statistics', HTTP_GET, parameters, cb, err);
+        Statistics: (parameters, cb, err) => {
+            invokeApi('Attendance/Statistics', HTTP_GET, parameters, cb, err);
         }
     }
 };

@@ -21,7 +21,7 @@ class FlowForm extends Component {
         data.Result = !this.state.isBack;
         if (!data.Result && !confirm('你确定要退回吗？')) return false;
 
-        api.FlowData.Submit(this, data.ToUserId, data.InfoId, data, json => {
+        api.FlowData.Submit(data.ToUserId, data.InfoId, data, json => {
             this.setState({ visible: false });
             message.success("提交成功");
 
@@ -35,7 +35,7 @@ class FlowForm extends Component {
     loadUsers = () => {
         const { flowData, record, canComplete } = this.props;
         if (canComplete) return;
-        api.FlowData.UserList(this, flowData.InfoId, record.FlowNodeId, json => this.setState({ users: json }));
+        api.FlowData.UserList(flowData.InfoId, record.FlowNodeId, json => this.setState({ users: json }));
     };
     getFormItems = (model, flowData, users) => {
         const { canBack, canComplete } = this.props;
@@ -70,14 +70,14 @@ class FlowForm extends Component {
         }
 
         if (canBack) {
-            var defaultChecked = this.state.isBack;
             items.push({
-                title: '是否退回', name: 'IsBack', defaultValue: defaultChecked,
-                render: <Checkbox defaultChecked={defaultChecked} onChange={e => this.setState({ isBack: e.target.checked })}>退回</Checkbox>
+                title: '是否退回', 
+                name: 'IsBack', 
+                render: <Checkbox defaultChecked={this.state.isBack} onChange={e => this.setState({ isBack: e.target.checked })}>
+                    退回
+                </Checkbox>
             });
-        } else {
-            items.push({ name: 'Result', defaultValue: true, render: <Input type="hidden" /> });
-        }
+        } 
         return items;
     }
 

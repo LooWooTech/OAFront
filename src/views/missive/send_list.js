@@ -16,7 +16,7 @@ export default class MissiveSendList extends React.Component {
         data: []
     };
     loadData = (page, searchKey = '', status) => {
-        api.FormInfo.List(this, {
+        api.FormInfo.List({
             formId: api.FormType.Missive,
             page: page || this.state.page.current || 1,
             rows: this.state.page.pageSize,

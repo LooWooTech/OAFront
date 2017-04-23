@@ -12,7 +12,7 @@ class FreeFlowForm extends Component {
     }
 
     loadUsers = (id, key) => {
-        api.FreeFlowData.UserList(this, id, key, json => this.setState({ users: json }))
+        api.FreeFlowData.UserList(id, key, json => this.setState({ users: json }))
     }
 
     handleSubmit = (data) => {
@@ -21,7 +21,7 @@ class FreeFlowForm extends Component {
             return false;
         }
         var toUserIds = data.ToUsers.map(e => e.key).join();
-        api.FreeFlowData.Submit(this, toUserIds, data, json => {
+        api.FreeFlowData.Submit(toUserIds, data, json => {
             message.success("提交成功");
             const callback = this.props.callback;
             if (callback) {
@@ -29,10 +29,7 @@ class FreeFlowForm extends Component {
             }
         });
     };
-    render() {
-        const { flowNodeData, infoId } = this.props;
-        if (!flowNodeData) return null;
-
+    getFormItems = (flowNodeData) => {
         const model = this.props.record || {};
         let users = this.state.users || [];
         let parent = flowNodeData.Nodes.find(e => e.ID === model.ParentId)
@@ -40,38 +37,47 @@ class FreeFlowForm extends Component {
             users.push({ ID: parent.UserId, RealName: parent.Signature });
         }
         if (users.length === 0) return null;
+        var items = [
+            { name: 'InfoId', defaultValue: this.props.infoId, render: <Input type="hidden" /> },
+            { name: 'FlowNodeDataId', defaultValue: flowNodeData.ID, render: <Input type="hidden" /> },
+            { name: 'ID', defaultValue: model.ID, render: <Input type="hidden" /> },
+            {
+                title: '选择发送人',
+                name: 'ToUsers',
+                render:
+                <Select mode="multiple"
+                    showSearch={true}
+                    labelInValue={true}
+                    defaultActiveFirstOption={false}
+                    showArrow={false}
+                    filterOption={false}
+                    onSearch={value => this.loadUsers(flowNodeData.ID, value)}>
+                    {users.map(user =>
+                        <Select.Option key={user.ID}>
+                            {user.RealName}
+                        </Select.Option>)}
+                </Select>
+            },
+        ];
+        //如果当前是节点发起人第一次发给别人，则不需要填写content
+        if (flowNodeData.Nodes.length > 0) {
+            items.push({
+                title: '意见', name: 'Content', defaultValue: model.Content,
+                render: <Input type="textarea" autosize={{ minRows: 2, maxRows: 6 }} />
+            });
+        }
+        return items;
+    };
+    render() {
+        const { flowNodeData } = this.props;
+        if (!flowNodeData) return null;
 
         return (
             <FormModal
                 name="提交自由流程"
                 trigger={this.props.children}
                 onSubmit={this.handleSubmit}
-                children={[
-                    { name: 'InfoId', defaultValue: infoId, render: <Input type="hidden" /> },
-                    { name: 'FlowNodeDataId', defaultValue: flowNodeData.ID, render: <Input type="hidden" /> },
-                    { name: 'ID', defaultValue: model.ID, render: <Input type="hidden" /> },
-                    {
-                        title: '选择发送人',
-                        name: 'ToUsers',
-                        render:
-                        <Select mode="multiple"
-                            showSearch={true}
-                            labelInValue={true}
-                            defaultActiveFirstOption={false}
-                            showArrow={false}
-                            filterOption={false}
-                            onSearch={value => this.loadUsers(flowNodeData.ID, value)}>
-                            {users.map(user =>
-                                <Select.Option key={user.ID}>
-                                    {user.RealName}
-                                </Select.Option>)}
-                        </Select>
-                    },
-                    {
-                        title: '意见', name: 'Content', defaultValue: model.Content,
-                        render: <Input type="textarea" autosize={{ minRows: 2, maxRows: 6 }} />
-                    },
-                ]}
+                children={this.getFormItems(flowNodeData)}
             />
         )
     }

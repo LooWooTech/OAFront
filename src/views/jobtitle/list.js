@@ -12,13 +12,13 @@ export default class DepartmentList extends React.Component {
         api.Abort();
     };
     onEditSave = (err, values) => {
-        api.JobTitle.Save(this, values, json => {
+        api.JobTitle.Save(values, json => {
             this.loadData();
         });
         return false;
     };
     loadData = () => {
-        api.JobTitle.List(this, data => {
+        api.JobTitle.List(data => {
             this.setState({ list: data })
         });
     };
@@ -76,7 +76,7 @@ export default class DepartmentList extends React.Component {
                                     children={this.getFormItems(item)}
                                 />
                                 <Popconfirm placement="topRight" title="你确定要删除吗？"
-                                    onConfirm={() => api.Department.Delete(this, item.ID, this.loadPageData)}
+                                    onConfirm={() => api.Department.Delete(item.ID, this.loadPageData)}
                                     okText="是" cancelText="否">
                                     <Button type="danger" icon="delete">删除</Button>
                                 </Popconfirm>

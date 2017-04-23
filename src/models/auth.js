@@ -12,7 +12,7 @@ module.exports = {
 
   login(user) {
     localStorage.user = JSON.stringify(user);
-    cookie.save("token", user.Token, { domain: 'localhost' });
+    cookie.save("token", user.Token);
     this.getToken();
   },
 

@@ -18,7 +18,7 @@ class LeaveList extends Component {
     };
 
     loadData = (page) => {
-        api.FormInfo.List(this, {
+        api.FormInfo.List({
             formId: api.FormType.Leave,
             page: page || this.state.page.current || 1,
             rows: this.state.page.pageSize

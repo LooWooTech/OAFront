@@ -20,7 +20,7 @@ class MyLeaveList extends Component {
     }
 
     loadData = (page) => {
-        api.FormInfo.List(this, {
+        api.FormInfo.List({
             formId: api.FormType.Leave,
             postUserId: auth.getUser().ID,
             page: page || this.state.page.current || 1,
@@ -30,8 +30,8 @@ class MyLeaveList extends Component {
         });
     };
 
-    onEditSave = (err, values) => api.Leave.Save(this, values, this.loadData);
-    onDelete = id => api.FormInfo.Delete(this, id, this.loadData)
+    onEditSave = (err, values) => api.Leave.Save(values, this.loadData);
+    onDelete = id => api.FormInfo.Delete(id, this.loadData)
 
     render() {
         const columns = [

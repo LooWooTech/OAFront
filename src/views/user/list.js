@@ -19,9 +19,9 @@ export default class UserList extends React.Component {
 
     componentWillMount() {
         this.loadPageData();
-        api.Department.List(this, data => this.setState({ departments: data }));
-        api.Group.List(this, data => this.setState({ groups: data }))
-        api.JobTitle.List(this, data => this.setState({ titles: data }))
+        api.Department.List(data => this.setState({ departments: data }));
+        api.Group.List(data => this.setState({ groups: data }))
+        api.JobTitle.List(data => this.setState({ titles: data }))
     }
 
     componentWillReceiveProps(nextProps) {
@@ -31,7 +31,7 @@ export default class UserList extends React.Component {
         api.Abort();
     };
     loadPageData = (page, searchKey) => {
-        api.User.List(this, {
+        api.User.List({
             page: page || this.state.page.current || 1,
             rows: this.state.page.pageSize,
             searchKey: searchKey || this.state.searchKey,
@@ -48,7 +48,7 @@ export default class UserList extends React.Component {
 
     onEditSave = (values) => {
         var data = values;
-        api.User.Save(this, data, this.loadPageData);
+        api.User.Save(data, this.loadPageData);
         return true;
     }
 
@@ -66,7 +66,7 @@ export default class UserList extends React.Component {
             render: <Input />
         }, {
             title: '姓名',
-            name: 'Username',
+            name: 'RealName',
             defaultValue: record.RealName,
             render: <Input />
         }, {
@@ -133,7 +133,7 @@ export default class UserList extends React.Component {
                                     trigger={<Button icon="edit">编辑</Button>}
                                 />
                                 <Popconfirm placement="topRight" title="你确定要删除吗？"
-                                    onConfirm={() => api.Group.Delete(this, item.ID, this.loadPageData)}
+                                    onConfirm={() => api.Group.Delete(item.ID, this.loadPageData)}
                                     okText="是" cancelText="否">
                                     <Button type="danger" icon="delete">删除</Button>
                                 </Popconfirm>
