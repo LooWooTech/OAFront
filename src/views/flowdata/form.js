@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Select, Input, Checkbox, message } from 'antd';
-import FormModal from '../shared/_editmodal'
+import FormModal from '../shared/_formmodal';
 import api from '../../models/api';
 
 class FlowForm extends Component {
@@ -47,8 +47,17 @@ class FlowForm extends Component {
             {
                 title: '意见', name: 'Content', defaultValue: model.Content,
                 render: <Input type="textarea" autosize={{ minRows: 2, maxRows: 6 }} />
-            },
+            }
         ];
+        if (canBack) {
+            items.push({
+                title: '是否退回',
+                name: 'IsBack',
+                render: <Checkbox defaultChecked={this.state.isBack} onChange={e => this.setState({ isBack: e.target.checked })}>
+                    退回
+                </Checkbox>
+            });
+        }
         //如果可以结束，且同意，则不需要选择发送人
         if (!canComplete && !this.state.isBack) {
             items.push({
@@ -63,23 +72,14 @@ class FlowForm extends Component {
                     onSearch={value => this.loadUsers(model.ID, value)}>
                     {users.map(user =>
                         <Select.Option key={user.ID}>
-                            {user.RealName}
+                            {user.RealName} - {user.Department.Name}
                         </Select.Option>)}
                 </Select>
             })
         }
-
-        if (canBack) {
-            items.push({
-                title: '是否退回', 
-                name: 'IsBack', 
-                render: <Checkbox defaultChecked={this.state.isBack} onChange={e => this.setState({ isBack: e.target.checked })}>
-                    退回
-                </Checkbox>
-            });
-        } 
         return items;
     }
+    handleBack = isChecked => this.setState({ isBack: isChecked })
 
     render() {
         const { children, flowData, record } = this.props;

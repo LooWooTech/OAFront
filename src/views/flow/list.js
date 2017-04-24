@@ -1,6 +1,6 @@
 import React from 'react';
 import { Affix, Table, Button, Popconfirm, Input, Select, Checkbox, Radio } from 'antd';
-import EditModal from '../shared/_editmodal';
+import EditModal from '../shared/_formmodal';
 import api from '../../models/api';
 
 export default class FlowList extends React.Component {
@@ -100,7 +100,7 @@ export default class FlowList extends React.Component {
                         </Select.Option>)}
                 </Select>
             }, {
-                title: '受理职称',
+                title: '受理职务',
                 name: 'JobTitleId',
                 defaultValue: record.JobTitleId.toString(),
                 render:

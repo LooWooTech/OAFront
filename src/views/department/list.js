@@ -1,6 +1,6 @@
 import React from 'react';
 import { Affix, Table, Button, Popconfirm, Input } from 'antd';
-import EditModal from '../shared/_editmodal';
+import EditModal from '../shared/_formmodal';
 import api from '../../models/api';
 
 export default class DepartmentList extends React.Component {

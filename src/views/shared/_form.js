@@ -14,7 +14,7 @@ class SharedForm extends Component {
             wrapperCol: { span: 14 },
         };
         const { getFieldDecorator } = this.props.form;
-        const getControl = item => getFieldDecorator(item.name, { initialValue: item.defaultValue, rules: item.rules || [] }, )(item.render);
+        const getControl = item => item.name ? getFieldDecorator(item.name, { initialValue: item.defaultValue, rules: item.rules || [] }, )(item.render) : item.render;
         return (
             <Form layout="horizontal" onSubmit={this.handleSubmit}>
                 {children.map((item, key) =>

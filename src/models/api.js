@@ -6,7 +6,9 @@ const HTTP_POST = "POST"
 const HTTP_DELETE = "DELETE"
 const HTTP_PUT = "PUT"
 
-const host = '/api/'
+
+const host = process.env.NODE_ENV === 'production' ? '/api/' : 'http://localhost:8012/api/';
+
 function invokeApi(path, method, data, callback, onError, async = true) {
     var url = host + path;
     var postData = jsonToQueryString(data);

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Affix, Table, Button, Popconfirm, Input, Select } from 'antd';
-import EditModal from '../shared/_editmodal';
+import EditModal from '../shared/_formmodal';
 import api from '../../models/api';
 
 export default class UserList extends React.Component {

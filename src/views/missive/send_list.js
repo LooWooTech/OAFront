@@ -6,6 +6,7 @@ import api from '../../models/api';
 
 export default class MissiveSendList extends React.Component {
     state = {
+        loading: true,
         searchKey: '',
         status: this.props.location.query.status,
         page: {
@@ -24,6 +25,7 @@ export default class MissiveSendList extends React.Component {
             status: status || this.state.status,
         }, data => {
             this.setState({
+                loading: false,
                 data: data.List,
                 page: data.Page,
                 searchKey,
@@ -50,7 +52,8 @@ export default class MissiveSendList extends React.Component {
     };
 
     render() {
-        if (!this.state.request) return null;
+        console.log(this.state);
+        //if (!this.state.request) return null;
         return (
             <div>
                 <Affix offsetTop={0} className="toolbar">

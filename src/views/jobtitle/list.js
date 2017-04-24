@@ -1,6 +1,6 @@
 import React from 'react';
 import { Affix, Table, Button, Popconfirm, Input, Select } from 'antd';
-import EditModal from '../shared/_editmodal';
+import EditModal from '../shared/_formmodal';
 import api from '../../models/api';
 
 export default class DepartmentList extends React.Component {
@@ -29,7 +29,7 @@ export default class DepartmentList extends React.Component {
             defaultValue: record.ID,
             render: <Input type="hidden" />
         }, {
-            title: '职称',
+            title: '职务',
             name: 'Name',
             defaultValue: record.Name,
             render: <Input />
@@ -51,8 +51,8 @@ export default class DepartmentList extends React.Component {
             <Affix offsetTop={0} className="toolbar">
                 <Button.Group>
                     <EditModal
-                        name="职称"
-                        trigger={<Button type="primary" icon="file">添加职称</Button>}
+                        name="职务"
+                        trigger={<Button type="primary" icon="file">添加职务</Button>}
                         onSubmit={this.onEditSave}
                         children={this.getFormItems()}
                     />
@@ -69,7 +69,7 @@ export default class DepartmentList extends React.Component {
                         render: (text, item) => (
                             <span>
                                 <EditModal
-                                    name="职称"
+                                    name="职务"
                                     onSubmit={this.onEditSave}
                                     record={item}
                                     trigger={<Button icon="edit">编辑</Button>}

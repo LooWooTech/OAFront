@@ -65,16 +65,7 @@ export default class MissiveEdit extends Component {
         } else {
             model.Data.Word = model.Word || {};
         }
-        if (model.Excels && model.Excels.fileList) {
-            var files = [];
-            model.Excels.fileList.map(file => {
-                files.push(file.response);
-            });
-            model.Data.Excels = files;
-        }
-        else {
-            model.Data.Excels = model.Excels || [];
-        }
+        
         var isAdd = model.ID === 0;
         api.FormInfo.Save(model, json => {
             message.success('保存成功');

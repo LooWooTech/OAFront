@@ -1,23 +1,23 @@
 import React from 'react';
 import { Affix, Table, Button, Popconfirm, Input } from 'antd';
-import EditModal from '../shared/_editmodal';
+import EditModal from '../shared/_formmodal';
 import api from '../../models/api';
 
 export default class GroupList extends React.Component {
     state = { list: [] };
 
     componentDidMount() {
-        this.loadPageData();
+        this.loadData();
     };
     componentWillUnmount() {
         api.Abort();
     };
-    loadPageData = () => {
+    loadData = () => {
         api.Group.List(data => this.setState({ list: data }));
     };
 
     onEditSave = (values) => {
-        api.Group.Save(values, this.loadPageData);
+        api.Group.Save(values, this.loadData);
     }
     getFormItems = record => {
         record = record || { ID: 0, Name: '' };
@@ -62,7 +62,7 @@ export default class GroupList extends React.Component {
                                     trigger={<Button icon="edit">编辑</Button>}
                                 />
                                 <Popconfirm placement="topRight" title="你确定要删除吗？"
-                                    onConfirm={() => api.Group.Delete(item.ID, this.loadPageData)}
+                                    onConfirm={() => api.Group.Delete(item.ID, this.loadData)}
                                     okText="是" cancelText="否">
                                     <Button type="danger" icon="delete">删除</Button>
                                 </Popconfirm>
