@@ -31,9 +31,9 @@ class Login extends Component {
         const { getFieldDecorator, getFieldsError, getFieldError, isFieldTouched } = this.props.form;
 
         // Only show error after a field is touched.
-        const userNameError = isFieldTouched('name') && getFieldError('name');
+        const userNameError = isFieldTouched('username') && getFieldError('username');
         const passwordError = isFieldTouched('password') && getFieldError('password');
-        const userNameDecorator = getFieldDecorator('name', { rules: [{ required: true, message: '请填写用户名' }], });
+        const userNameDecorator = getFieldDecorator('username', { rules: [{ required: true, message: '请填写用户名' }], });
         const passwordDecorator = getFieldDecorator('password', { rules: [{ required: true, message: '请填写密码' }], });
         return (
             <div className="container">

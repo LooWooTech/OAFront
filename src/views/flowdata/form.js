@@ -44,6 +44,7 @@ class FlowForm extends Component {
             { name: 'FlowNodeId', defaultValue: model.FlowNodeId, render: <Input type="hidden" /> },
             { name: 'FlowDataId', defaultValue: model.FlowDataId, render: <Input type="hidden" /> },
             { name: 'ID', defaultValue: model.ID, render: <Input type="hidden" /> },
+            { name: 'UserId', defaultValue: model.UserId, render: <Input type="hidden" /> },
             {
                 title: '意见', name: 'Content', defaultValue: model.Content,
                 render: <Input type="textarea" autosize={{ minRows: 2, maxRows: 6 }} />

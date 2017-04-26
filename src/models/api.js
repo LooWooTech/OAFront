@@ -83,6 +83,9 @@ module.exports = {
         FileUrl: (fileId) => {
             return `${host}file/index?id=${fileId}`;
         },
+        List: (infoId, cb, err) => {
+            invokeApi('file/list', HTTP_GET, { infoId, page: 1, rows: 100 }, cb, err);
+        },
         UploadUrl: (fileId = 0, infoId = 0, name = null) => {
             return `${host}file/upload?infoId=${infoId}&id=${fileId}&name=${name}`;
         },
@@ -92,11 +95,11 @@ module.exports = {
         Delete: (fileId, cb, err) => {
             invokeApi('file/delete?id=' + fileId, HTTP_DELETE, null, cb, err);
         },
+        Update: (file, cb, err) => {
+            invokeApi('file/update', HTTP_POST, file, cb, err);
+        },
         UpdateRelation: (fileIds, infoId, cb, err) => {
-            invokeApi('file/UpdateRelation', HTTP_POST, {
-                fileIds,
-                infoId
-            }, cb, err);
+            invokeApi('file/UpdateRelation', HTTP_POST, { fileIds, infoId }, cb, err);
         },
         ConvertToPdf: (id, cb, err) => {
             invokeApi('file/converttopdf?id=' + id, HTTP_GET, null, cb, err);

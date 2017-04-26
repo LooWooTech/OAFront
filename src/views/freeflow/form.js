@@ -40,7 +40,6 @@ class FreeFlowForm extends Component {
                     //DepartmentId: 0, DepartmentName: '默认', children: [{ ID: parent.UserId, RealName: parent.Signature }]
                 });
             }
-            console.log(treeData);
             this.setState({ treeData })
         })
     }

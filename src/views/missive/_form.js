@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Input, DatePicker, Radio, Checkbox, Upload, Button, Icon, Row, Col, Spin, message } from 'antd';
+import { Form, Input, DatePicker, Radio, Checkbox, Upload, Icon, Row, Col, Spin, message } from 'antd';
 import moment from 'moment';
 import api from '../../models/api';
 
@@ -59,7 +59,6 @@ class MissiveEditForm extends React.Component {
 
         const disabled = !this.props.canEdit;
         const { getFieldDecorator } = this.props.form;
-        const defaultItemConfig = { labelCol: { span: 4 }, wrapperCol: { span: 12 } };
 
         return <Form>
             {getFieldDecorator("ID", { initialValue: model.ID })(<Input type="hidden" />)}
@@ -82,12 +81,11 @@ class MissiveEditForm extends React.Component {
                     ><Spin tip="上传中" spinning={this.state.uploading}>
                             {word.ID > 0 ?
                                 word.FileName :
-                                <div>
-                                    <p className="ant-upload-drag-icon">
-                                        <Icon type="inbox" />
-                                    </p>
-                                    <p className="ant-upload-text">点击或拖拽文件到此处</p>
-                                    <p className="ant-upload-hint">仅支持Word文件上传，此文件为公文内容文件。</p>
+                                <div style={{ textAlign: 'left', padding: '10px' }}>
+                                    <p className="ant-upload-text">
+                                        <i className="fa fa-file-word-o fa-2x"></i>
+                                        &nbsp;&nbsp;
+                                        请选择公文内容文档</p>
                                 </div>
                             }
                         </Spin>
@@ -126,7 +124,7 @@ class MissiveEditForm extends React.Component {
                     <Input disabled={disabled} />
                 )}
             </Form.Item>
-            <Form.Item label="主题词"  labelCol={{ span: 4 }} wrapperCol={{ span: 9 }} >
+            <Form.Item label="主题词" labelCol={{ span: 4 }} wrapperCol={{ span: 9 }} >
                 {getFieldDecorator("Data.GW_ZTC", { initialValue: data.GW_ZTC })(
                     <Input disabled={disabled} />
                 )}

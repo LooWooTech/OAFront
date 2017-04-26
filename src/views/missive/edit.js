@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import { Affix, Button, Tabs, message } from 'antd';
 import api from '../../models/api';
 import FormTab from './_form';
-import ResultTab from './_result';
+//import ResultTab from './_result';
 import ContentTab from './_content';
-import FlowList from '../flowdata/list';
+import FlowListTab from '../flowdata/list';
+import FileListTab from '../file/info_file_list';
+
 import SubmitFlowModal from '../flowdata/form';
 import SubmitFreeFlowModal from '../freeflow/form';
 import utils from '../../utils';
@@ -22,10 +24,7 @@ export default class MissiveEdit extends Component {
                 activeItem: 'info',
                 model: {
                     FormId: api.FormType.Missive,
-                    Data: {
-                        Word: {},
-                        Excels: []
-                    }
+                    Data: { Word: {}, }
                 },
                 canView: true,
                 canEdit: true,
@@ -65,31 +64,27 @@ export default class MissiveEdit extends Component {
         } else {
             model.Data.Word = model.Word || {};
         }
-        
-        var isAdd = model.ID === 0;
+
         api.FormInfo.Save(model, json => {
             message.success('保存成功');
-            //如果id=0，则需要更新附件的infoId
-            if (isAdd) {
-                var fileIds = [];
-                if (this.state.word.ID > 0) {
-                    fileIds.push(this.state.word.ID);
-                }
-                this.state.excels.map(v => fileIds.push(v.ID));
-                api.File.UpdateRelation(fileIds, json.ID);
-            }
             utils.Redirect('/missive/sendlist?status=1');
         });
 
+        if (model.Data.Word.InfoId === 0) {
+            model.Data.Word.InfoId = model.ID;
+            model.Data.Word.Inline = true;
+
+            api.File.Update(model.Data.Word, json => {
+                api.FormInfo.Save(model);
+            });
+        }
     };
 
     handleExport = e => { };
 
     handleCancel = e => {
         if (!confirm('你确定要撤销流程吗?')) return false;
-        api.FlowData.Cancel(this.state.model.ID, data => {
-            this.loadData();
-        });
+        api.FlowData.Cancel(this.state.model.ID, this.loadData);
     };
     handleSubmitFlow = () => {
         this.loadData();
@@ -97,7 +92,8 @@ export default class MissiveEdit extends Component {
     render() {
         const model = this.state.model;
         if (!model) return null;
-        const showResult = !!model.FlowDataId;
+        const showFiles = model.ID > 0;
+        //const showResult = !!model.FlowDataId;
         const showFlow = !!model.FlowDataId;
         const showPreview = model.Data.Word && model.Data.Word.ID > 0 && model.Data.Pdf && model.Data.Pdf.ID > 0;
         return <div>
@@ -135,26 +131,31 @@ export default class MissiveEdit extends Component {
                     <FormTab data={model} canEdit={this.state.canEdit} ref="form" />
                 </Tabs.TabPane>
                 {showPreview ?
-                    <Tabs.TabPane tab="附件预览" key="2">
+                    <Tabs.TabPane tab="文档预览" key="2">
                         <div style={{ position: 'absolute', left: '10px', top: '50px', bottom: '10px', right: '0' }}>
                             <ContentTab file={model.Data.Pdf} />
                         </div>
                     </Tabs.TabPane>
                     : null
                 }
-                {showFlow ?
-                    <Tabs.TabPane tab="审批流程" key="3">
-                        <div style={{ padding: '20px', marginLeft: '20px' }}>
-                            <FlowList data={model.FlowData} />
-                        </div>
+                {showFiles ?
+                    <Tabs.TabPane tab="附件清单" key="5">
+                        <FileListTab infoId={model.ID} formId={model.FormId} canEdit={this.state.canEdit} />
                     </Tabs.TabPane>
                     : null
                 }
-                {showResult ?
-                    <Tabs.TabPane tab="成果预览" key="4">
-                        <ResultTab data={model} />
+                {showFlow ?
+                    <Tabs.TabPane tab="审批流程" key="3">
+                        <FlowListTab data={model.FlowData} />
                     </Tabs.TabPane>
                     : null
+                }
+                {
+                    //   showResult ?
+                    //     <Tabs.TabPane tab="成果预览" key="4">
+                    //         <ResultTab data={model} />
+                    //     </Tabs.TabPane>
+                    //     : null
                 }
             </Tabs>
         </div>;

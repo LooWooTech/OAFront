@@ -52,8 +52,7 @@ export default class MissiveSendList extends React.Component {
     };
 
     render() {
-        console.log(this.state);
-        //if (!this.state.request) return null;
+
         return (
             <div>
                 <Affix offsetTop={0} className="toolbar">
