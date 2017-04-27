@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { Modal } from 'antd'
 
 class SharedModal extends Component {
@@ -36,8 +37,8 @@ class SharedModal extends Component {
     }
 }
 SharedModal.propTypes = {
-    trigger: React.PropTypes.element.isRequired,
-    children: React.PropTypes.element.isRequired,
-    onSubmit: React.PropTypes.func.isRequired
+    trigger: PropTypes.element.isRequired,
+    children: PropTypes.element.isRequired,
+    onSubmit: PropTypes.func.isRequired
 }
 export default SharedModal

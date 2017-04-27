@@ -49,7 +49,6 @@ export default class UserList extends React.Component {
     onEditSave = (values) => {
         var data = values;
         api.User.Save(data, this.loadPageData);
-        return true;
     }
 
     getFormItems = record => {
@@ -78,7 +77,7 @@ export default class UserList extends React.Component {
                 {this.state.departments.map(item => <Select.Option key={item.ID}>{item.Name}</Select.Option>)}
             </Select>
         }, {
-            title: '职称',
+            title: '职务',
             name: 'JobTitleId',
             defaultValue: record.JobTitleId.toString(),
             render: <Select name="JobTitleId">
@@ -121,7 +120,8 @@ export default class UserList extends React.Component {
                     {
                         title: '用户组', render: (text, item) => item.Groups.map(g => g.Name).join()
                     },
-                    { title: '部门', dataIndex: 'DepartmentName' },
+                    { title: '部门', dataIndex: 'Department' },
+                    { title: '职务', dataIndex: 'JobTitle' },
                     {
                         title: '操作', width: 200,
                         render: (text, item) => (

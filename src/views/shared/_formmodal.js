@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import SharedModal from './_modal'
 import SharedForm from './_form'
 
@@ -24,8 +25,8 @@ class SharedFormModal extends Component {
     }
 }
 SharedFormModal.propTypes = {
-    trigger: React.PropTypes.element.isRequired,
-    children: React.PropTypes.array.isRequired,
-    onSubmit: React.PropTypes.func.isRequired
+    trigger: PropTypes.element.isRequired,
+    children: PropTypes.array.isRequired,
+    onSubmit: PropTypes.func.isRequired
 }
 export default SharedFormModal

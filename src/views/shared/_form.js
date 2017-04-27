@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { Form } from 'antd'
 
 class SharedForm extends Component {
@@ -9,6 +10,7 @@ class SharedForm extends Component {
 
     render() {
         const children = this.props.children || [];
+
         const formItemLayout = {
             labelCol: { span: 6 },
             wrapperCol: { span: 14 },
@@ -19,10 +21,10 @@ class SharedForm extends Component {
             <Form layout="horizontal" onSubmit={this.handleSubmit}>
                 {children.map((item, key) =>
                     item.title ?
-                        <Form.Item key={key} label={item.title} {...(item.layout ? item.layout : formItemLayout) }>
+                        <Form.Item key={item.name || key} label={item.title} {...(item.layout ? item.layout : formItemLayout) }>
                             {getControl(item)}
                         </Form.Item>
-                        : <span key={key}>{getControl(item)}</span>
+                        : <span key={item.name || key}>{getControl(item)}</span>
                 )}
             </Form>
         )

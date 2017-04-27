@@ -83,8 +83,12 @@ module.exports = {
         FileUrl: (fileId) => {
             return `${host}file/index?id=${fileId}`;
         },
-        List: (infoId, cb, err) => {
-            invokeApi('file/list', HTTP_GET, { infoId, page: 1, rows: 100 }, cb, err);
+        List: (infoId, inline, cb, err) => {
+            var data = { infoId, page: 1, rows: 100 };
+            if (inline !== undefined) {
+                data.inline = inline;
+            }
+            invokeApi('file/list', HTTP_GET, data, cb, err);
         },
         UploadUrl: (fileId = 0, infoId = 0, name = null) => {
             return `${host}file/upload?infoId=${infoId}&id=${fileId}&name=${name}`;

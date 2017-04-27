@@ -1,44 +1,44 @@
-import React, { Component } from 'react';
-import { Select, Input, Checkbox, message } from 'antd';
-import FormModal from '../shared/_formmodal';
-import api from '../../models/api';
+import React, { Component } from 'react'
+import { Select, Input, Checkbox, message } from 'antd'
+import FormModal from '../shared/_formmodal'
+import api from '../../models/api'
 
 class FlowForm extends Component {
-    state = { isBack: false };
+    state = { isBack: false }
 
     componentWillMount() {
-        this.loadUsers();
+        this.loadUsers()
     }
 
     handleSubmit = (data) => {
-        const canComplete = this.props.canComplete;
+        const canComplete = this.props.canComplete
 
         if (!canComplete && !this.state.isBack && !data.ToUserId) {
-            message.error("请先选择发送人");
-            return false;
+            message.error("请先选择发送人")
+            return false
         }
 
-        data.Result = !this.state.isBack;
-        if (!data.Result && !confirm('你确定要退回吗？')) return false;
+        data.Result = !this.state.isBack
+        if (!data.Result && !confirm('你确定要退回吗？')) return false
 
         api.FlowData.Submit(data.ToUserId, data.InfoId, data, json => {
-            this.setState({ visible: false });
-            message.success("提交成功");
+            this.setState({ visible: false })
+            message.success("提交成功")
 
-            const callback = this.props.callback;
+            const callback = this.props.callback
             if (callback) {
-                callback(json);
+                callback(json)
             }
-        });
-    };
+        })
+    }
 
     loadUsers = () => {
-        const { flowData, record, canComplete } = this.props;
-        if (canComplete) return;
-        api.FlowData.UserList(flowData.InfoId, record.FlowNodeId, json => this.setState({ users: json }));
-    };
+        const { flowData, record, canComplete } = this.props
+        if (canComplete) return
+        api.FlowData.UserList(flowData.InfoId, record.FlowNodeId, json => this.setState({ users: json }))
+    }
     getFormItems = (model, flowData, users) => {
-        const { canBack, canComplete } = this.props;
+        const { canBack, canComplete } = this.props
         var items = [
             { name: 'InfoId', defaultValue: flowData.InfoId, render: <Input type="hidden" /> },
             { name: 'FlowNodeId', defaultValue: model.FlowNodeId, render: <Input type="hidden" /> },
@@ -49,7 +49,7 @@ class FlowForm extends Component {
                 title: '意见', name: 'Content', defaultValue: model.Content,
                 render: <Input type="textarea" autosize={{ minRows: 2, maxRows: 6 }} />
             }
-        ];
+        ]
         if (canBack) {
             items.push({
                 title: '是否退回',
@@ -57,7 +57,7 @@ class FlowForm extends Component {
                 render: <Checkbox defaultChecked={this.state.isBack} onChange={e => this.setState({ isBack: e.target.checked })}>
                     退回
                 </Checkbox>
-            });
+            })
         }
         //如果可以结束，且同意，则不需要选择发送人
         if (!canComplete && !this.state.isBack) {
@@ -78,16 +78,16 @@ class FlowForm extends Component {
                 </Select>
             })
         }
-        return items;
+        return items
     }
     handleBack = isChecked => this.setState({ isBack: isChecked })
 
     render() {
-        const { children, flowData, record } = this.props;
-        const model = record;
-        const users = this.state.users || [];
+        const { children, flowData, record } = this.props
+        const model = record
+        const users = this.state.users || []
         if (flowData == null || model == null) {
-            return null;
+            return null
         }
 
         return (

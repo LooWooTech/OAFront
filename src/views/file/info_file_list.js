@@ -13,7 +13,8 @@ class FileList extends Component {
 
     loadData = () => {
         const infoId = this.props.infoId || 0;
-        api.File.List(infoId, json => this.setState({ list: json.List }))
+        const inline = this.props.inline;
+        api.File.List(infoId, inline, json => this.setState({ list: json.List }))
     }
     handleUpload = ({ file }) => {
         if (file.status === 'done') {

@@ -140,7 +140,7 @@ export default class MissiveEdit extends Component {
                 }
                 {showFiles ?
                     <Tabs.TabPane tab="附件清单" key="5">
-                        <FileListTab infoId={model.ID} formId={model.FormId} canEdit={this.state.canEdit} />
+                        <FileListTab infoId={model.ID} formId={model.FormId} canEdit={this.state.canEdit} inline={false} />
                     </Tabs.TabPane>
                     : null
                 }
