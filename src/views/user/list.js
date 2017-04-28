@@ -118,7 +118,7 @@ export default class UserList extends React.Component {
                     { title: '姓名', dataIndex: 'RealName', },
                     { title: '用户名', dataIndex: 'Username' },
                     {
-                        title: '用户组', render: (text, item) => item.Groups.map(g => g.Name).join()
+                        title: '用户组', render: (text, item) => (item.Groups || []).map(g => g.Name).join()
                     },
                     { title: '部门', dataIndex: 'Department' },
                     { title: '职务', dataIndex: 'JobTitle' },

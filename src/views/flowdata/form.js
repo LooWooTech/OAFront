@@ -73,7 +73,7 @@ class FlowForm extends Component {
                     onSearch={value => this.loadUsers(model.ID, value)}>
                     {users.map(user =>
                         <Select.Option key={user.ID}>
-                            {user.RealName} - {user.Department.Name}
+                            {user.RealName} - {user.Department}
                         </Select.Option>)}
                 </Select>
             })

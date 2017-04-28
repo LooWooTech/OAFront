@@ -20,9 +20,9 @@ class FreeFlowForm extends Component {
             json.map(user => {
                 var item = treeData.find(e => e.value === 'parent' + user.DepartmentId);
                 if (!item) {
-                    item = { value: 'parent' + user.DepartmentId, label: user.DepartmentName, selectable: false, children: [] }
-                    //item = { DepartmentId: user.DepartmentId, DepartmentName: user.DepartmentName, selectable: false, children: [] }
-                    if (record.DepartmentName === user.DepartmentName) {
+                    item = { value: 'parent' + user.DepartmentId, label: user.Department, selectable: false, children: [] }
+                    //item = { DepartmentId: user.DepartmentId, Department: user.Department, selectable: false, children: [] }
+                    if (record.Department === user.Department) {
                         treeData.splice(0, 0, item);
                     }
                     else {
@@ -37,7 +37,7 @@ class FreeFlowForm extends Component {
             if (parent) {
                 treeData.splice(0, 0, {
                     value: '0', label: '默认', selectable: false, children: [{ value: parent.UserId.toString(), label: parent.Signature }]
-                    //DepartmentId: 0, DepartmentName: '默认', children: [{ ID: parent.UserId, RealName: parent.Signature }]
+                    //DepartmentId: 0, Department: '默认', children: [{ ID: parent.UserId, RealName: parent.Signature }]
                 });
             }
             this.setState({ treeData })

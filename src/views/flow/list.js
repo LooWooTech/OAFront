@@ -50,9 +50,9 @@ export default class FlowList extends React.Component {
             pagination={false}
             columns={[
                 { title: '节点名称', dataIndex: 'Name' },
-                { title: '审核部门', dataIndex: 'Department.Name' },
-                { title: '审核人', dataIndex: 'User.Username' },
-                { title: '审核角色', dataIndex: 'Group.Name' },
+                { title: '审核部门', dataIndex: 'Department' },
+                { title: '审核人', dataIndex: 'RealName' },
+                { title: '审核职务', dataIndex: 'JobTitle' },
                 {
                     title: '操作', dataIndex: 'ID', width: 200, render: (text, item) =>
                         <Button.Group>
