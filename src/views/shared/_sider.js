@@ -16,16 +16,28 @@ const sideMenuData = {
     missive: [
         {
             title: '发文', items: [
-                { path: '/missive/sendlist?status=1', icon: 'fa fa-envelope-open-o', text: '收件箱' },
-                { path: '/missive/sendlist?status=2', icon: 'fa fa-send', text: '已办箱' },
-                { path: '/missive/sendlist?status=0', icon: 'fa fa-envelope-o', text: '草稿箱' },
-                { path: '/missive/sendlist?status=3', icon: 'fa fa-envelope', text: '完结箱' },
-                { path: '/missive/sendlist?status=4', icon: 'fa fa-reply', text: '退回箱' },
+                { path: '/missive/?status=1', icon: 'fa fa-envelope-open-o', text: '收件箱' },
+                { path: '/missive/?status=2', icon: 'fa fa-send', text: '已办箱' },
+                { path: '/missive/?status=0', icon: 'fa fa-envelope-o', text: '草稿箱' },
+                { path: '/missive/?status=3', icon: 'fa fa-envelope', text: '完结箱' },
+                { path: '/missive/?status=4', icon: 'fa fa-reply', text: '退回箱' },
             ]
         },
         {
             title: '收文', items: [
                 { path: '/missive/receivelist', icon: 'fa fa-envelope-open-o', text: '收文查询' },
+            ]
+        }
+    ],
+    car: [
+        {
+            title: '申请', items: [
+                { path: '/car/', icon: 'fa fa-car', text: '车辆查询' },
+                { path: '/car/apply/{UserId}', icon: 'fa fa-inbox', text: '我的申请' }
+            ]
+        }, {
+            title: '审批', role: 2, items: [
+                { path: '/car/approvals', icon: 'fa fa-check', text: '申请审批' }
             ]
         }
     ],
@@ -86,30 +98,33 @@ const getSideMenuData = (path) => {
 
 class Sider extends React.Component {
 
-    handleMenuClick = e => {
-        if (this.props.pathname === e.key) {
+    handleMenuClick = (e, user) => {
+        var item = e.item.props.item;
+        if (this.props.pathname === item.path) {
             return false;
         }
-        utils.Redirect(e.key);
+        let path = item.path;
+        path = item.path.replace('{UserId}', user.ID);
+
+        utils.Redirect(path);
     };
 
     render() {
-
-        const groups = getSideMenuData(this.props.pathname);
         const user = auth.getUser();
+        const groups = getSideMenuData(this.props.pathname);
         const pathname = this.props.pathname;
         const search = this.props.search;
         const url = pathname + search;
 
         return groups.length > 0 ?
             <div id='sider'>
-                <Menu onClick={this.handleMenuClick} selectedKeys={[pathname, url]} >
+                <Menu onClick={e => this.handleMenuClick(e, user)} selectedKeys={[pathname, url]} >
                     {groups.map((group, key) => {
                         var show = true;// group.role && user.Role >= group.role;
-                        return show ? <Menu.ItemGroup title={group.title} key={key}>
-                            {group.items.map(item => {
+                        return show ? <Menu.ItemGroup title={group.title || ''} key={key}>
+                            {group.items.map((item, key) => {
                                 var show = true//item.role && user.Role >= item.role;
-                                return show ? <Menu.Item key={item.path}>
+                                return show ? <Menu.Item key={item.path + key} item={item}>
                                     <i className={item.icon} />&nbsp;{item.text}
                                 </Menu.Item> : null
                             })}

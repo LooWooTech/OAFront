@@ -4,6 +4,11 @@ import { Form } from 'antd'
 
 class SharedForm extends Component {
     handleSubmit = () => {
+        var errors = this.props.form.getFieldsError();
+        console.log(errors);
+        if (errors) {
+            return false;
+        }
         var data = this.props.form.getFieldsValue();
         this.props.onSubmit(data);
     }

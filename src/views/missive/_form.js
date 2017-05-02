@@ -62,7 +62,7 @@ class MissiveEditForm extends React.Component {
 
         return <Form>
             {getFieldDecorator("ID", { initialValue: model.ID })(<Input type="hidden" />)}
-            {getFieldDecorator("FormId", { initialValue: 1 })(<Input type="hidden" />)}
+            {getFieldDecorator("FormId", { initialValue: api.Form.ID.Missive })(<Input type="hidden" />)}
             {getFieldDecorator("CategoryId", { initialValue: model.CategoryId })(<Input type="hidden" />)}
             {getFieldDecorator("FlowDataId", { initialValue: model.FlowDataId })(<Input type="hidden" />)}
 

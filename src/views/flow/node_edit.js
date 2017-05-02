@@ -6,7 +6,6 @@ class EditNodeModal extends Component {
     state = {}
 
     getNodeFormItems = (record, nodes) => {
-        record = record || { ID: 0, Name: '', FlowId: 0, PrevId: '0', UserId: 0, DepartmentId: 0, GroupId: 0, FreeFlowId: 0, JobTitleId: 0, LimitMode: 1 };
         record.FreeFlow = record.FreeFlow || { ID: 0, LimitMode: 2, DepartmentIds: [], CrossDepartment: false, CrossLevel: false };
 
         const openFreeFlow = this.state.openFreeFlow === undefined ? record.FreeFlowId > 0 : this.state.openFreeFlow;
@@ -69,7 +68,7 @@ class EditNodeModal extends Component {
                 render:
                 <Radio.Group onChange={e => this.setState({ limitMode: e.target.value })}>
                     <Radio value={0}>指定部门</Radio>
-                    <Radio value={1}>拟稿人部门</Radio>
+                    <Radio value={1}>发起人部门</Radio>
                 </Radio.Group>
             }];
 
@@ -108,7 +107,7 @@ class EditNodeModal extends Component {
             render:
             <Radio.Group onChange={e => this.setState({ freeFlowLimitMode: e.target.value })}>
                 <Radio value={0}>指定部门</Radio>
-                <Radio value={1}>拟稿人部门</Radio>
+                <Radio value={1}>发起人部门</Radio>
                 <Radio value={2}>当前部门</Radio>
             </Radio.Group>
         }];

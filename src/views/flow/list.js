@@ -1,5 +1,5 @@
 import React from 'react';
-import { Affix, Table, Button, Popconfirm, Input } from 'antd';
+import { Affix, Table, Button, Popconfirm, Input, Checkbox } from 'antd';
 import FlowEditModal from '../shared/_formmodal';
 import NodeEditModal from './node_edit';
 import api from '../../models/api';
@@ -30,17 +30,11 @@ export default class FlowList extends React.Component {
     };
     getFlowFormItems = (record) => {
         record = record || { ID: 0, Name: '' };
-        return [{
-            name: 'ID',
-            defaultValue: record.ID,
-            render: <Input type="hidden" />
-        }, {
-            title: '名称',
-            name: 'Name',
-            defaultValue: record.Name,
-            rules: [{ required: true, message: '请填写名称' }],
-            render: <Input />
-        }];
+        return [
+            { name: 'ID', defaultValue: record.ID, render: <Input type="hidden" /> },
+            { title: '名称', name: 'Name', defaultValue: record.Name, rules: [{ required: true, message: '请填写名称' }], render: <Input /> },
+            { title: '可否退回', name: 'CanBack', defaultValue: record.CanBack || false, render: <Checkbox defaultChecked={record.CanBack || false}>不同意可以退回到发起人</Checkbox> }
+        ];
     };
 
     flowNodeList = (record) => {
@@ -111,6 +105,7 @@ export default class FlowList extends React.Component {
                                     departments={this.state.departments}
                                     titles={this.state.titles}
                                     nodes={item.Nodes}
+                                    record={{ ID: 0, Name: '', FlowId: item.ID, PrevId: '0', UserId: 0, DepartmentId: 0, GroupId: 0, FreeFlowId: 0, JobTitleId: 0, LimitMode: 1 }}
                                 />
                                 <FlowEditModal
                                     title="修改流程"

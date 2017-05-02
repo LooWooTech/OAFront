@@ -67,7 +67,7 @@ export default class MissiveEdit extends Component {
 
         api.FormInfo.Save(model, json => {
             message.success('保存成功');
-            utils.Redirect('/missive/sendlist?status=1');
+            utils.Redirect('/missive/?status=1');
         });
 
         if (model.Data.Word.InfoId === 0) {
@@ -123,7 +123,7 @@ export default class MissiveEdit extends Component {
                         />
                         : null}
                     {this.state.canCancel ? <Button type="danger" icon="rollback" htmlType="button" onClick={this.handleCancel}>撤销</Button> : null}
-                    <Button onClick={() => utils.Redirect('/missive/sendlist?status=' + (this.state.status || 0))} type="" icon="arrow-left" htmlType="button">返回</Button>
+                    <Button onClick={() => utils.Redirect('/missive/?status=' + (this.state.status || 0))} type="" icon="arrow-left" htmlType="button">返回</Button>
                 </Button.Group>
             </Affix>
             <Tabs style={{ position: 'absolute', left: '200px', top: '50px', bottom: '0', right: '0', overflow: 'auto', overflowX: 'hidden' }}>

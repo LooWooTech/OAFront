@@ -44,12 +44,6 @@ function jsonToQueryString(json) {
 }
 
 module.exports = {
-    //formId
-    FormType: {
-        Missive: 1,
-        Leave: 2,
-        Task: 3
-    },
     //断开请求
     Abort: utils.AbortRequest,
     ApiUrl: (path) => {
@@ -72,6 +66,12 @@ module.exports = {
         }
     },
     Form: {
+        ID: {
+            Missive: 1,
+            Car: 2,
+            Leave: 3,
+            Task: 4,
+        },
         Model: (formId, cb) => {
             invokeApi('form/model?id=' + formId, HTTP_GET, null, cb, null);
         },
@@ -110,8 +110,8 @@ module.exports = {
         }
     },
     FormInfo: {
-        List: (parameters, cb, err) => {
-            invokeApi('FormInfo/list', HTTP_GET, parameters, cb, err);
+        List: (formId, postUserId, status, searchKey, page, rows, cb, err) => {
+            invokeApi('FormInfo/list', HTTP_GET, { formId, postUserId, status, searchKey, page, rows }, cb, err);
         },
         Save: (data, cb, err) => {
             invokeApi('FormInfo/save', HTTP_POST, data, cb, err);
@@ -124,6 +124,12 @@ module.exports = {
         }
     },
     Flow: {
+        ID: {
+            Missive: 1,
+            Car: 2,
+            Leave: 3,
+            Task: 4,
+        },
         List: (cb, err) => {
             invokeApi('flow/list', HTTP_GET, null, cb, err);
         },
@@ -156,8 +162,8 @@ module.exports = {
         Cancel: (infoId, cb, err) => {
             invokeApi('flowdata/Cancel?infoId=' + infoId, HTTP_GET, null, cb, err);
         },
-        UserList: (infoId, nodeId, cb, err) => {
-            invokeApi('flowdata/userlist', HTTP_GET, { infoId, nodeId }, cb, err);
+        UserList: (flowId, nodeId, flowDataId, cb, err) => {
+            invokeApi('flowdata/userlist', HTTP_GET, { flowId, nodeId, flowDataId }, cb, err);
         },
         BackList: (infoId, backId, cb, err) => {
             invokeApi('flowdata/backlist', HTTP_GET, { infoId, backId }, cb, err)
@@ -227,6 +233,23 @@ module.exports = {
         },
         GenerateWeeks: (year, cb, err) => {
             invokeApi('Holiday/generateweeks?year=' + year, HTTP_GET, null, cb, err);
+        }
+    },
+    Car: {
+        List: (cb, err) => {
+            invokeApi('Car/list', HTTP_GET, null, cb, err);
+        },
+        Save: (data, cb, err) => {
+            invokeApi('car/save', HTTP_POST, data, cb, err);
+        },
+        Apply: (carId, data, cb, err) => {
+            invokeApi('car/apply?carId=' + carId, HTTP_POST, data, cb, err);
+        },
+        UpdateStatus: (carId, status, cb, err) => {
+            invokeApi('car/update?carId=' + carId + '&status=' + status, HTTP_GET, null, cb, err);
+        },
+        Approval: (id, cb, err) => {
+            invokeApi('car/approval', HTTP_GET, null, cb, err);
         }
     },
     Task: {

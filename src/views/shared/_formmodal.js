@@ -1,26 +1,49 @@
 import React, { Component } from 'react'
+import { Modal } from 'antd'
 import PropTypes from 'prop-types'
-import SharedModal from './_modal'
 import SharedForm from './_form'
 
 class SharedFormModal extends Component {
+    state = { visible: false }
+    showModal = (e) => {
+        if (e) e.stopPropagation()
+        this.setState({ visible: true, })
+    }
+    hideModal = () => {
+        this.setState({ visible: false, })
+    }
     handleSubmit = () => {
-        const values = this.refs.form.getFieldsValue();
-        return this.props.onSubmit(values);
+        var form = this.refs.form;
+        form.validateFields((err, values) => {
+            if (err) {
+                return false;
+            }
+            else {
+                this.props.onSubmit(values)//, this.hideModal);
+                this.hideModal();
+            }
+        });
     }
 
     render() {
-        const { name, title, children, trigger } = this.props
+        const { children, trigger } = this.props
         return (
-            <SharedModal title={name || title || ''}
-                trigger={trigger}
-                onSubmit={this.handleSubmit}
-                children={<SharedForm
-                    ref="form"
-                    onSubmit={this.handleSubmit}
-                    children={children}
-                />}
-            />
+            <span>
+                <span onClick={this.showModal}>
+                    {trigger}
+                </span>
+                <Modal title={this.props.title || this.props.name || ''}
+                    visible={this.state.visible}
+                    onOk={this.handleSubmit}
+                    onCancel={this.hideModal}
+                >
+                    <SharedForm
+                        ref="form"
+                        onSubmit={this.handleSubmit}
+                        children={children}
+                    />
+                </Modal>
+            </span>
         )
     }
 }

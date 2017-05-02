@@ -17,22 +17,23 @@ export default class MissiveSendList extends React.Component {
         data: []
     };
     loadData = (page, searchKey = '', status) => {
-        api.FormInfo.List({
-            formId: api.FormType.Missive,
-            page: page || this.state.page.current || 1,
-            rows: this.state.page.pageSize,
-            searchKey: searchKey || this.state.searchKey,
-            status: status || this.state.status,
-        }, data => {
-            this.setState({
-                loading: false,
-                data: data.List,
-                page: data.Page,
-                searchKey,
-                status,
-                request: true
+        api.FormInfo.List(
+            api.Form.ID.Missive, 
+            0,
+            status || this.state.status,
+            searchKey || this.state.searchKey,
+            page || this.state.page.current || 1,
+            this.state.page.pageSize,
+            data => {
+                this.setState({
+                    loading: false,
+                    data: data.List,
+                    page: data.Page,
+                    searchKey,
+                    status,
+                    request: true
+                });
             });
-        });
     };
 
     componentWillReceiveProps(nextProps) {
@@ -41,7 +42,6 @@ export default class MissiveSendList extends React.Component {
             this.loadData(this.state.page.current, this.state.searchKey, status);
         }
     }
-
 
     componentWillMount() {
         this.loadData();
