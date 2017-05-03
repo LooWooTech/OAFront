@@ -124,15 +124,16 @@ hr {
     right: 10px;
 }
 
-
 .ant-timeline .flownode-sign {
     color: #108ee9;
     display: inline-block;
 }
+
 .ant-timeline .flownode-datetime {
     display: inline-block;
     margin-left: 20px;
 }
+
 .ant-timeline .flownode-content {
     display: block;
     font-size: 1rem;
@@ -153,4 +154,19 @@ hr {
 
 .sub-timeline .ant-timeline-item-last .ant-timeline-item-content {
     min-height: 20px;
+}
+
+.car-image {
+    overflow: hidden;
+    background: #eee;
+}
+
+.car-image img {
+    width: 100%;
+    height: 120px;
+}
+
+.cardbar {
+    text-align: center;
+    padding: 10px;
 }

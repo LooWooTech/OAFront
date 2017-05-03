@@ -27,7 +27,10 @@ function invokeApi(path, method, data, callback, onError, async = true) {
         if (onError) {
             onError(error);
         } else {
-            message.error(error.Message);
+            let msg = error.ExceptionMessage || error.Message;
+            if (msg) {
+                message.error(msg);
+            }
         }
         console.log("ERROR:", error);
     }, async);
@@ -110,8 +113,8 @@ module.exports = {
         }
     },
     FormInfo: {
-        List: (formId, postUserId, status, searchKey, page, rows, cb, err) => {
-            invokeApi('FormInfo/list', HTTP_GET, { formId, postUserId, status, searchKey, page, rows }, cb, err);
+        List: (parameters, cb, err) => {
+            invokeApi('FormInfo/list', HTTP_GET, parameters, cb, err);
         },
         Save: (data, cb, err) => {
             invokeApi('FormInfo/save', HTTP_POST, data, cb, err);
@@ -242,8 +245,8 @@ module.exports = {
         Save: (data, cb, err) => {
             invokeApi('car/save', HTTP_POST, data, cb, err);
         },
-        Apply: (carId, data, cb, err) => {
-            invokeApi('car/apply?carId=' + carId, HTTP_POST, data, cb, err);
+        Apply: (carId, toUserId, data, cb, err) => {
+            invokeApi('car/apply?carId=' + carId + '&toUserId=' + toUserId, HTTP_POST, data, cb, err);
         },
         UpdateStatus: (carId, status, cb, err) => {
             invokeApi('car/update?carId=' + carId + '&status=' + status, HTTP_GET, null, cb, err);

@@ -78,6 +78,7 @@ class MissiveEditForm extends React.Component {
                         withCredentials={true}
                         showUploadList={false}
                         accept=".doc,.docx"
+                        disabled={disabled}
                     ><Spin tip="上传中" spinning={this.state.uploading}>
                             {word.ID > 0 ?
                                 word.FileName :
@@ -96,10 +97,11 @@ class MissiveEditForm extends React.Component {
                         <a href={api.File.FileUrl(word.ID)} target="_blank">
                             <Icon type="download" /> 下载
                         </a>
+                        
                         &nbsp;&nbsp;&nbsp;&nbsp;
-                        <a onClick={() => confirm('你确定要删除吗？') ? this.setState({ word: {} }) : false}>
+                        {disabled?null:<a onClick={() => confirm('你确定要删除吗？') ? this.setState({ word: {} }) : false}>
                             <Icon type="delete" /> 删除
-                        </a>
+                        </a>}
                     </span> : null
                 }
             </Form.Item>

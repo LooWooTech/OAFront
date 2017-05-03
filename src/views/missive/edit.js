@@ -23,7 +23,7 @@ export default class MissiveEdit extends Component {
             this.setState({
                 activeItem: 'info',
                 model: {
-                    FormId: api.FormType.Missive,
+                    FormId: api.Form.ID.Missive,
                     Data: { Word: {}, }
                 },
                 canView: true,
@@ -86,9 +86,7 @@ export default class MissiveEdit extends Component {
         if (!confirm('你确定要撤销流程吗?')) return false;
         api.FlowData.Cancel(this.state.model.ID, this.loadData);
     };
-    handleSubmitFlow = () => {
-        this.loadData();
-    };
+
     render() {
         const model = this.state.model;
         if (!model) return null;
@@ -104,17 +102,14 @@ export default class MissiveEdit extends Component {
                         : null}
                     {this.state.canSubmitFlow ?
                         <SubmitFlowModal
-                            callback={this.handleSubmitFlow}
-                            canComplete={this.state.canComplete}
-                            canBack={this.state.canBack}
-                            flowData={model.FlowData}
-                            record={this.state.flowNodeData}
+                            flowDataId={model.FlowDataId}
+                            callback={this.loadData}
                             children={<Button type="success" icon="check" htmlType="button">提交主流程</Button>}
                         />
                         : null}
                     {this.state.canSubmitFreeFlow ?
                         <SubmitFreeFlowModal
-                            callback={this.handleSubmitFlow}
+                            callback={this.loadData}
                             canSubmit={true}
                             infoId={model.ID}
                             flowNodeData={this.state.flowNodeData}
@@ -127,12 +122,12 @@ export default class MissiveEdit extends Component {
                 </Button.Group>
             </Affix>
             <Tabs style={{ position: 'absolute', left: '200px', top: '50px', bottom: '0', right: '0', overflow: 'auto', overflowX: 'hidden' }}>
-                <Tabs.TabPane tab="拟稿表单" key="1">
+                <Tabs.TabPane tab="拟稿表单" key="1" style={{ zIndex: 2 }}>
                     <FormTab data={model} canEdit={this.state.canEdit} ref="form" />
                 </Tabs.TabPane>
                 {showPreview ?
                     <Tabs.TabPane tab="文档预览" key="2">
-                        <div style={{ position: 'absolute', left: '10px', top: '50px', bottom: '10px', right: '0' }}>
+                        <div style={{ position: 'absolute', left: '10px', top: '50px', bottom: '10px', right: '0', zIndex: 1 }}>
                             <ContentTab file={model.Data.Pdf} />
                         </div>
                     </Tabs.TabPane>

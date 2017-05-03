@@ -17,13 +17,13 @@ export default class MissiveSendList extends React.Component {
         data: []
     };
     loadData = (page, searchKey = '', status) => {
-        api.FormInfo.List(
-            api.Form.ID.Missive, 
-            0,
-            status || this.state.status,
-            searchKey || this.state.searchKey,
-            page || this.state.page.current || 1,
-            this.state.page.pageSize,
+        api.FormInfo.List({
+            formId: api.Form.ID.Missive,
+            status: status || this.state.status,
+            searchKey: searchKey || this.state.searchKey,
+            page: page || this.state.page.current || 1,
+            rows: this.state.page.pageSize
+        },
             data => {
                 this.setState({
                     loading: false,

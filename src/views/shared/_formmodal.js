@@ -19,8 +19,9 @@ class SharedFormModal extends Component {
                 return false;
             }
             else {
-                this.props.onSubmit(values)//, this.hideModal);
-                this.hideModal();
+                if (this.props.onSubmit(values) !== false) {
+                    this.hideModal();
+                }
             }
         });
     }
