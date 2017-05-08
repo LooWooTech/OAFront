@@ -62,7 +62,7 @@ module.exports = {
             invokeApi('user/list', HTTP_GET, data, cb, err);
         },
         Save: (data, cb, err) => {
-            invokeApi('user/save?groupIds=' + (data.GroupIds || []).join(), HTTP_POST, data, cb, err);
+            invokeApi('user/save', HTTP_POST, data, cb, err);
         },
         Delete: (id, cb, err) => {
             invokeApi('user/delete?id=' + id, HTTP_DELETE, null, cb, err);
@@ -109,7 +109,7 @@ module.exports = {
             invokeApi('file/UpdateRelation', HTTP_POST, { fileIds, infoId }, cb, err);
         },
         ConvertToPdf: (id, cb, err) => {
-            invokeApi('file/converttopdf?id=' + id, HTTP_GET, null, cb, err);
+            invokeApi('file/converttopdf?id=' + id + '&redtilte=true', HTTP_GET, null, cb, err);
         }
     },
     FormInfo: {

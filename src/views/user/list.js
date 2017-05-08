@@ -48,6 +48,8 @@ export default class UserList extends React.Component {
 
     onEditSave = (values) => {
         var data = values;
+        console.log(data);
+        return false;
         api.User.Save(data, this.loadPageData);
     }
 
@@ -69,26 +71,25 @@ export default class UserList extends React.Component {
             defaultValue: record.RealName,
             render: <Input />
         }, {
-            title: '部门',
-            name: 'DepartmentId',
-            defaultValue: record.DepartmentId.toString(),
-            render: <Select name="DepartmentId">
-                <Select.Option value='0'>无</Select.Option>
-                {this.state.departments.map(item => <Select.Option key={item.ID}>{item.Name}</Select.Option>)}
-            </Select>
-        }, {
             title: '职务',
             name: 'JobTitleId',
             defaultValue: record.JobTitleId.toString(),
-            render: <Select name="JobTitleId">
+            render: <Select>
                 <Select.Option value='0'>无</Select.Option>
                 {this.state.titles.map(item => <Select.Option key={item.ID}>{item.Name}</Select.Option>)}
+            </Select>
+        }, {
+            title: '部门',
+            name: 'DepartmentIds',
+            defaultValue: (record.Departments || []).map(d => d.ID.toString()),
+            render: <Select mode="multiple">
+                {this.state.departments.map(item => <Select.Option key={item.ID}>{item.Name}</Select.Option>)}
             </Select>
         }, {
             title: '用户组',
             name: 'GroupIds',
             defaultValue: (record.Groups || []).map(g => g.ID.toString()),
-            render: <Select name="GroupIds" mode="multiple">
+            render: <Select mode="multiple">
                 {this.state.groups.map(item => <Select.Option key={item.ID}>{item.Name}</Select.Option>)}
             </Select>
         }];
@@ -117,10 +118,8 @@ export default class UserList extends React.Component {
                     { title: 'ID', dataIndex: 'ID', width: 50 },
                     { title: '姓名', dataIndex: 'RealName', },
                     { title: '用户名', dataIndex: 'Username' },
-                    {
-                        title: '用户组', render: (text, item) => (item.Groups || []).map(g => g.Name).join()
-                    },
-                    { title: '部门', dataIndex: 'Department' },
+                    { title: '用户组', render: (text, item) => (item.Groups || []).map(g => g.Name).join() },
+                    { title: '部门', render: (text, item) => (item.Departments || []).map(d => d.Name).join() },
                     { title: '职务', dataIndex: 'JobTitle' },
                     {
                         title: '操作', width: 200,

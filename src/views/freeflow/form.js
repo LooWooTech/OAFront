@@ -17,27 +17,20 @@ class FreeFlowForm extends Component {
             if (key) {
                 json = json.filter(e => e.RealName.indexOf(key) > -1);
             }
-            json.map(user => {
-                var item = treeData.find(e => e.value === 'parent' + user.DepartmentId);
+            json.map(user => user.Departments.map(d => {
+                var item = treeData.find(e => e.value === 'parent' + d.ID);
                 if (!item) {
-                    item = { value: 'parent' + user.DepartmentId, label: user.Department, selectable: false, children: [] }
-                    //item = { DepartmentId: user.DepartmentId, Department: user.Department, selectable: false, children: [] }
-                    if (record.Department === user.Department) {
-                        treeData.splice(0, 0, item);
-                    }
-                    else {
-                        treeData.push(item);
-                    }
+                    item = { value: 'parent' + d.ID, label: d.Name, selectable: false, children: [] }
                 }
                 item.children.push({ value: user.ID.toString(), label: user.RealName })
-                //item.children.push(user);
-                return item;
-            });
+                treeData.push(item);
+                return d;
+            }));
+            console.log(treeData);
             let parent = flowNodeData.Nodes.find(e => e.ID === record.ParentId)
             if (parent) {
                 treeData.splice(0, 0, {
                     value: '0', label: '默认', selectable: false, children: [{ value: parent.UserId.toString(), label: parent.Signature }]
-                    //DepartmentId: 0, Department: '默认', children: [{ ID: parent.UserId, RealName: parent.Signature }]
                 });
             }
             this.setState({ treeData })
@@ -45,7 +38,6 @@ class FreeFlowForm extends Component {
     }
 
     handleSubmit = (data) => {
-        console.log(this.refs.selectform)
         if (!data.ToUsers || data.ToUsers.length === 0) {
             message.error("请选择要发送的人")
             return false
@@ -73,6 +65,7 @@ class FreeFlowForm extends Component {
                     showSearch={true}
                     allowClear={true}
                     multiple={true}
+                    treeCheckable={true}
                     treeData={this.state.treeData}
                     treeDefaultExpandedKeys={['0']}
                 />

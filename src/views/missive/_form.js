@@ -54,7 +54,7 @@ class MissiveEditForm extends React.Component {
         if (!model) return null;
 
         const data = model.Data || {};
-        const word = this.state.word ? this.state.word : data.Word || {};
+        const word = this.state.word ? this.state.word : data.Word;
         const pdf = this.state.pdf ? this.state.pdf : data.Pdf;
 
         const disabled = !this.props.canEdit;
@@ -69,9 +69,9 @@ class MissiveEditForm extends React.Component {
 
             {getFieldDecorator("Pdf", { initialValue: pdf })(<Input type="hidden" />)}
             <Form.Item label="公文文档" labelCol={{ span: 4 }} wrapperCol={{ span: 9 }} >
-                {getFieldDecorator("Word", { initialValue: data.Word })(
+                {getFieldDecorator("Word", { initialValue: data.Word, rules: [{ required: true }] })(
                     <Upload.Dragger
-                        action={api.File.UploadUrl(word.ID, model.ID, 'word')}
+                        action={api.File.UploadUrl(word ? word.ID : 0, model.ID, 'word')}
                         onChange={this.handleUploadWord}
                         name="word"
                         onRemove={this.handleDeleteFile}
@@ -80,7 +80,7 @@ class MissiveEditForm extends React.Component {
                         accept=".doc,.docx"
                         disabled={disabled}
                     ><Spin tip="上传中" spinning={this.state.uploading}>
-                            {word.ID > 0 ?
+                            {word && word.ID > 0 ?
                                 word.FileName :
                                 <div style={{ textAlign: 'left', padding: '10px' }}>
                                     <p className="ant-upload-text">
@@ -92,14 +92,14 @@ class MissiveEditForm extends React.Component {
                         </Spin>
                     </Upload.Dragger>
                 )}
-                {word.ID > 0 ?
+                {word && word.ID > 0 ?
                     <span>
                         <a href={api.File.FileUrl(word.ID)} target="_blank">
                             <Icon type="download" /> 下载
                         </a>
-                        
+
                         &nbsp;&nbsp;&nbsp;&nbsp;
-                        {disabled?null:<a onClick={() => confirm('你确定要删除吗？') ? this.setState({ word: {} }) : false}>
+                        {disabled ? null : <a onClick={() => confirm('你确定要删除吗？') ? this.setState({ word: {} }) : false}>
                             <Icon type="delete" /> 删除
                         </a>}
                     </span> : null
@@ -122,7 +122,7 @@ class MissiveEditForm extends React.Component {
                 </Col>
             </Row>
             <Form.Item label="文件标题" labelCol={{ span: 4 }} wrapperCol={{ span: 9 }} >
-                {getFieldDecorator("Data.WJ_BT", { initialValue: data.WJ_BT })(
+                {getFieldDecorator("Data.WJ_BT", { initialValue: data.WJ_BT, rules: [{ required: true, message: '请填写文件标题' }] })(
                     <Input disabled={disabled} />
                 )}
             </Form.Item>

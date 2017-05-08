@@ -53,31 +53,38 @@ export default class MissiveEdit extends Component {
             message.error("不可编辑");
             return;
         }
-        var model = this.refs.form.getFieldsValue();
-        model.Title = model.Data.WJ_BT;
-        model.Keywords = model.Data.GW_WH + "," + model.Data.GW_ZTC;
-        model.Data.FW_RQ = model.Data.FW_RQ ? model.Data.FW_RQ.format() : '';
-        model.Data.QX_RQ = model.Data.QX_RQ ? model.Data.QX_RQ.format('YYYY-MM-DD') : '';
-        model.Data.Pdf = model.Pdf;
-        if (model.Word && model.Word.file) {
-            model.Data.Word = model.Word.file.response;
-        } else {
-            model.Data.Word = model.Word || {};
-        }
+        this.refs.form.validateFields((err, formData) => {
+            if(!formData.Word.ID){
+                message.error("请上传公文内容文件");
+                return false;
+            }
+            if (err) return false;
+            var model = formData;
+            model.Title = model.Data.WJ_BT;
+            model.Keywords = model.Data.GW_WH + "," + model.Data.GW_ZTC;
+            model.Data.FW_RQ = model.Data.FW_RQ ? model.Data.FW_RQ.format() : '';
+            model.Data.QX_RQ = model.Data.QX_RQ ? model.Data.QX_RQ.format('YYYY-MM-DD') : '';
+            model.Data.Pdf = model.Pdf;
+            if (model.Word && model.Word.file) {
+                model.Data.Word = model.Word.file.response;
+            } else {
+                model.Data.Word = model.Word || {};
+            }
 
-        api.FormInfo.Save(model, json => {
-            message.success('保存成功');
-            utils.Redirect('/missive/?status=1');
-        });
-
-        if (model.Data.Word.InfoId === 0) {
-            model.Data.Word.InfoId = model.ID;
-            model.Data.Word.Inline = true;
-
-            api.File.Update(model.Data.Word, json => {
-                api.FormInfo.Save(model);
+            api.FormInfo.Save(model, json => {
+                message.success('保存成功');
+                utils.Redirect('/missive/?status=1');
             });
-        }
+
+            if (model.Data.Word.InfoId === 0) {
+                model.Data.Word.InfoId = model.ID;
+                model.Data.Word.Inline = true;
+
+                api.File.Update(model.Data.Word, json => {
+                    api.FormInfo.Save(model);
+                });
+            }
+        })
     };
 
     handleExport = e => { };
