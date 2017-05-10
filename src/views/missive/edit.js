@@ -54,22 +54,23 @@ export default class MissiveEdit extends Component {
             return;
         }
         this.refs.form.validateFields((err, formData) => {
-            if(!formData.Word.ID){
-                message.error("请上传公文内容文件");
-                return false;
-            }
             if (err) return false;
             var model = formData;
-            model.Title = model.Data.WJ_BT;
-            model.Keywords = model.Data.GW_WH + "," + model.Data.GW_ZTC;
-            model.Data.FW_RQ = model.Data.FW_RQ ? model.Data.FW_RQ.format() : '';
-            model.Data.QX_RQ = model.Data.QX_RQ ? model.Data.QX_RQ.format('YYYY-MM-DD') : '';
-            model.Data.Pdf = model.Pdf;
             if (model.Word && model.Word.file) {
                 model.Data.Word = model.Word.file.response;
             } else {
                 model.Data.Word = model.Word || {};
             }
+            console.log(model)
+            if (!model.Data.Word.ID) {
+                message.error("请上传公文内容文件");
+                return false;
+            }
+            model.Title = model.Data.WJ_BT;
+            model.Keywords = model.Data.GW_WH + "," + model.Data.GW_ZTC;
+            model.Data.FW_RQ = model.Data.FW_RQ ? model.Data.FW_RQ.format() : '';
+            model.Data.QX_RQ = model.Data.QX_RQ ? model.Data.QX_RQ.format('YYYY-MM-DD') : '';
+            model.Data.Pdf = model.Pdf;
 
             api.FormInfo.Save(model, json => {
                 message.success('保存成功');

@@ -25,6 +25,8 @@ import HolidayList from '../attendance/holidays'
 import LeaveList from '../attendance/leave_list'
 import LeaveHistory from '../attendance/leave_history'
 
+import FeedIndex from '../feed/index'
+
 
 import TaskIndex from '../task/index'
 import TaskList from '../task/list'
@@ -42,7 +44,7 @@ export default class Routes extends React.Component {
     render() {
         return <Router history={hashHistory}>
             <Route path='/' component={Layout} onEnter={authorize}>
-                <IndexRoute component={Home} />
+                <IndexRoute component={FeedIndex} />
                 <Route path="missive">
                     <IndexRoute component={MissiveSendList} />
                     <Route path="edit" component={MissiveEdit} />

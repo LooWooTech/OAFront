@@ -26,7 +26,7 @@ class FreeFlowForm extends Component {
                 treeData.push(item);
                 return d;
             }));
-            console.log(treeData);
+
             let parent = flowNodeData.Nodes.find(e => e.ID === record.ParentId)
             if (parent) {
                 treeData.splice(0, 0, {

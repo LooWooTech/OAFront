@@ -255,6 +255,14 @@ module.exports = {
             invokeApi('car/approval', HTTP_GET, null, cb, err);
         }
     },
+    Feed: {
+        List: (userId, page, rows, cb, err) => {
+            invokeApi('feed/list', HTTP_GET, { userId, page, rows }, cb, err);
+        },
+        Delete: (id, cb, err) => {
+            invokeApi('feed/delete?id=' + id, HTTP_GET, null, cb, err);
+        },
+    },
     Task: {
         List: (parameters, cb, err) => {
             invokeApi('Task/list', HTTP_GET, parameters, cb, err);

@@ -34,8 +34,8 @@ class CarApproval extends Component {
         api.FormInfo.List(parameter, data => {
             this.setState({
                 loading: false,
-                userId: userId,
-                completed: completed,
+                userId: parameter.userId,
+                completed: parameter.completed,
                 data: data.List,
                 page: data.Page,
             })

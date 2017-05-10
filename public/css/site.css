@@ -170,3 +170,17 @@ hr {
     text-align: center;
     padding: 10px;
 }
+
+.feeds .ant-card {
+    margin: 30px 20px;
+}
+
+.feeds .ant-card-head-title {
+    font-size: .8rem;
+    color: #999;
+}
+
+.feeds .ant-card-head-title span {
+    display: inline-block;
+    padding: 0 10px;
+}

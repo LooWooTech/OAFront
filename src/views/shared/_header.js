@@ -29,25 +29,24 @@ const NavItem = (item, key) => {
 };
 
 const getCurrentPathName = (path) => {
-    var name = path.substring(1);
-    if (name === '') return 'home';
-    headerNavData.map(item => {
-        if ((item.path || '').indexOf(path) === 0) {
+    var paths = path.substring(1).split('/');
+    var name = paths[0];
+    if (name === '') return ['home'];
+
+    return headerNavData.map(item => {
+        if (item.name === name || (item.path || '').indexOf(path) === 0) {
             name = item.name;
-            return item;
+            return item.name;
         }
         return null;
     });
-    return name;
 }
 
 export default class TopNav extends React.Component {
-    state = { current: (getCurrentPathName(this.context.router.location.pathname) || 'home').replace('/', '') };
+    state = { current: '' };
+
     handleLeftMenuClick = e => {
-        if (this.state.current === e.key) {
-            return false;
-        }
-        this.setState({ current: e.key });
+        
         headerNavData.map(item => {
             if (item.name === e.key) {
                 utils.Redirect(item.path || '/' + item.name);
@@ -68,10 +67,13 @@ export default class TopNav extends React.Component {
     };
 
     render() {
+
+        const names = getCurrentPathName(this.context.router.location.pathname);
+
         return (
 
             <div className="navbar fixed">
-                <Menu theme="dark" mode="horizontal" selectedKeys={[this.state.current]} onClick={this.handleLeftMenuClick} className="left">
+                <Menu theme="dark" mode="horizontal" selectedKeys={names} onClick={this.handleLeftMenuClick} className="left">
                     {headerNavData.map((item, key) => NavItem(item, key))}
                 </Menu>
                 <Menu theme="dark" mode="horizontal" className="right" onClick={this.handleRightMenuClick}>

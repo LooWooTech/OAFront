@@ -124,7 +124,7 @@ class Sider extends React.Component {
                         return show ? <Menu.ItemGroup title={group.title || ''} key={key}>
                             {group.items.map((item, key) => {
                                 var show = true//item.role && user.Role >= item.role;
-                                return show ? <Menu.Item key={item.path + key} item={item}>
+                                return show ? <Menu.Item key={item.path} item={item}>
                                     <i className={item.icon} />&nbsp;{item.text}
                                 </Menu.Item> : null
                             })}

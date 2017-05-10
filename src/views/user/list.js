@@ -1,10 +1,11 @@
 import React from 'react';
-import { Affix, Table, Button, Popconfirm, Input, Select } from 'antd';
+import { Table, Button, Popconfirm, Input, Select } from 'antd';
 import EditModal from '../shared/_formmodal';
 import api from '../../models/api';
 
 export default class UserList extends React.Component {
     state = {
+        loading: true,
         searchKey: '',
         page: {
             pageSize: 20,
@@ -31,6 +32,7 @@ export default class UserList extends React.Component {
         api.Abort();
     };
     loadPageData = (page, searchKey) => {
+        this.setState({ loading: true })
         api.User.List({
             page: page || this.state.page.current || 1,
             rows: this.state.page.pageSize,
@@ -38,9 +40,9 @@ export default class UserList extends React.Component {
         },
             data => {
                 this.setState({
+                    loading: false,
                     data: data.List,
                     page: data.Page,
-                    request: true
                 })
             });
 
@@ -48,9 +50,7 @@ export default class UserList extends React.Component {
 
     onEditSave = (values) => {
         var data = values;
-        console.log(data);
-        return false;
-        api.User.Save(data, this.loadPageData);
+        api.User.Save(data, data => this.loadPageData());
     }
 
     getFormItems = record => {
@@ -96,21 +96,15 @@ export default class UserList extends React.Component {
     };
 
     render() {
-        if (!this.state.request) {
-            return null;
-        }
-
-        return <div>
-            <Affix offsetTop={0} className="toolbar">
-                <Button.Group>
-                    <EditModal
-                        name="用户"
-                        trigger={<Button type="primary" icon="file">添加用户</Button>}
-                        onSubmit={this.onEditSave}
-                        children={this.getFormItems()}
-                    />
-                </Button.Group>
-            </Affix>
+        return <div className="toolbar">
+            <Button.Group>
+                <EditModal
+                    name="用户"
+                    trigger={<Button type="primary" icon="file">添加用户</Button>}
+                    onSubmit={this.onEditSave}
+                    children={this.getFormItems()}
+                />
+            </Button.Group>
             <Table
                 rowKey="ID"
                 loading={this.state.loading}
@@ -132,7 +126,7 @@ export default class UserList extends React.Component {
                                     trigger={<Button icon="edit">编辑</Button>}
                                 />
                                 <Popconfirm placement="topRight" title="你确定要删除吗？"
-                                    onConfirm={() => api.Group.Delete(item.ID, this.loadPageData)}
+                                    onConfirm={() => api.Group.Delete(item.ID, () => this.loadPageData())}
                                     okText="是" cancelText="否">
                                     <Button type="danger" icon="delete">删除</Button>
                                 </Popconfirm>
