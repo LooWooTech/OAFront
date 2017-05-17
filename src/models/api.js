@@ -8,20 +8,23 @@ const HTTP_PUT = "PUT"
 
 
 const host = process.env.NODE_ENV === 'production' ? '/api/' : 'http://localhost:8012/api/';
-
+const FormId = {
+    Missive: 1,
+    ReceiveMissive: 2,
+    Car: 3,
+    Task: 4,
+    Leave: 5,
+};
 function invokeApi(path, method, data, callback, onError, async = true) {
     var url = host + path;
-    var postData = jsonToQueryString(data);
-    if (method === HTTP_GET || method === HTTP_DELETE) {
-        url += (postData
-            ? "?" + postData
-            : '')
-        data = null;
+    if (data && (method === HTTP_GET || method === HTTP_DELETE)) {
+        url += (url.indexOf('?') > 0 ? '&' : '?') + jsonToQueryString(data)
+        data = null
     }
 
     utils.Request(url, method, data, json => {
         if (callback) {
-            callback(json);
+            callback(json)
         }
     }, error => {
         if (onError) {
@@ -45,8 +48,8 @@ function jsonToQueryString(json) {
         })
         .join('&');
 }
-
 module.exports = {
+    FormId,
     //断开请求
     Abort: utils.AbortRequest,
     ApiUrl: (path) => {
@@ -69,12 +72,6 @@ module.exports = {
         }
     },
     Form: {
-        ID: {
-            Missive: 1,
-            Car: 2,
-            Leave: 3,
-            Task: 4,
-        },
         Model: (formId, cb) => {
             invokeApi('form/model?id=' + formId, HTTP_GET, null, cb, null);
         },
@@ -93,8 +90,8 @@ module.exports = {
             }
             invokeApi('file/list', HTTP_GET, data, cb, err);
         },
-        UploadUrl: (fileId = 0, infoId = 0, name = null) => {
-            return `${host}file/upload?infoId=${infoId}&id=${fileId}&name=${name}`;
+        UploadUrl: (fileId = 0, infoId = 0, name = null, inline = false) => {
+            return `${host}file/upload?infoId=${infoId}&id=${fileId}&name=${name}&inline=${inline}`;
         },
         Upload: (fileId, cb, err) => {
             invokeApi('file/upload', HTTP_PUT, fileId, cb, err);
@@ -236,6 +233,24 @@ module.exports = {
         },
         GenerateWeeks: (year, cb, err) => {
             invokeApi('Holiday/generateweeks?year=' + year, HTTP_GET, null, cb, err);
+        }
+    },
+    Missive: {
+        List: (formId, parameters, cb, err) => {
+            if (!formId) return
+            invokeApi('missive/list?formId=' + formId, HTTP_GET, parameters, cb, err);
+        },
+        Get: (infoId, cb, err) => {
+            invokeApi('missive/get?id=' + infoId, HTTP_GET, null, cb, err);
+        },
+        DeleteWord: (infoId, cb, err) => {
+            invokeApi('missive/deleteWord?id=' + infoId, HTTP_GET, null, cb, err);
+        },
+        Save: (data, cb, err) => {
+            invokeApi('missive/save?formId=' + data.FormId, HTTP_POST, data, cb, err);
+        },
+        GetPdf: (infoId, cb, err) => {
+
         }
     },
     Car: {

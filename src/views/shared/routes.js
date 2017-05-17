@@ -14,7 +14,7 @@ import CategoryList from '../category/list'
 import SystemConfig from '../system/config'
 import FlowList from '../flow/list'
 
-import MissiveSendList from '../missive/send_list'
+import MissiveList from '../missive/list'
 import MissiveEdit from '../missive/edit'
 
 import CarIndex from '../car/index'
@@ -29,7 +29,7 @@ import FeedIndex from '../feed/index'
 
 
 import TaskIndex from '../task/index'
-import TaskList from '../task/list'
+import TaskEdit from '../task/edit'
 
 const authorize = (nextState, replace) => {
     if (!auth.hasLogin()) {
@@ -45,8 +45,8 @@ export default class Routes extends React.Component {
         return <Router history={hashHistory}>
             <Route path='/' component={Layout} onEnter={authorize}>
                 <IndexRoute component={FeedIndex} />
-                <Route path="missive">
-                    <IndexRoute component={MissiveSendList} />
+                <Route path="missive/:formId">
+                    <IndexRoute component={MissiveList} />
                     <Route path="edit" component={MissiveEdit} />
                 </Route>
                 <Route path="car">
@@ -55,8 +55,10 @@ export default class Routes extends React.Component {
                     <Route path="approvals" component={CarApprovalList} />
                 </Route>
 
-                <Route path="task/index" component={TaskIndex} />
-                <Route path="task/list" component={TaskList} />
+                <Route path="task">
+                    <IndexRoute component={TaskIndex} />
+                    <Route path="edit" component={TaskEdit} />
+                </Route>
 
                 <Route path="attendance">
                     <IndexRoute component={AttendanceIndex} />

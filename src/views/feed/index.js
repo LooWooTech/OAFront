@@ -8,6 +8,7 @@ import auth from '../../models/auth'
 class FeedIndex extends Component {
 
     state = {
+        scope: 'all',
         loading: true,
         userId: this.props.params.userId || 0,
         list: [],
@@ -17,19 +18,42 @@ class FeedIndex extends Component {
             total: 0
         },
     }
+
     componentWillMount() {
         this.loadData(this.state.userId);
     }
 
-    loadData = (userId = 0, page = 1) =>
+    componentWillReceiveProps(nextProps) {
+        var scope = nextProps.location.query.scope;
+        if (scope !== this.props.location.query.scope) {
+           this.loadData(scope)
+        }
+    }
+
+
+    loadData = (scope, userId = 0, page = 1) => {
+        scope = scope || this.state.scope
+        switch (scope) {
+            default:
+            case 'all':
+                break;
+            case 'my':
+                userId = auth.getUser().ID
+                break;
+            case 'star':
+
+                break;
+        }
         api.Feed.List(userId, page, this.state.page.pageSize, data => {
             this.setState({
                 loading: false,
-                userId: userId,
+                scope: scope,
+                fromUserId: userId,
                 list: data.List,
                 page: data.Page
             })
         })
+    }
 
     handleDelete = id => api.Feed.Delete(id, json => this.loadData())
 
@@ -38,6 +62,8 @@ class FeedIndex extends Component {
 
         var link = null;
         switch (item.FormType) {
+            default:
+                return null
             case "Missive":
                 link = "/missive/edit?id=" + item.InfoId;
                 break;
@@ -72,9 +98,9 @@ class FeedIndex extends Component {
                     </Card>
                 )}
                 <Pagination defaultCurrent={1} {...this.state.page} onChange={page => {
-                    this.loadData(null, page)
+                    this.loadData(null, null, page)
                 }}
-                    style={{ padding: '20px' ,float:'right'}}
+                    style={{ padding: '20px', float: 'right' }}
                 />
             </div>
         )

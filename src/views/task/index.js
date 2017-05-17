@@ -1,55 +1,87 @@
-import React, { Component } from 'react';
-import { Button, Table, Tabs, Icon } from 'antd';
+import React from 'react';
+import { Link } from 'react-router';
+import { Affix, Button, Input, Table } from 'antd';
+import utils from '../../utils';
 import api from '../../models/api';
 
-class TaskIndex extends Component {
+export default class TaskIndex extends React.Component {
     state = {
-        sends: [],
-        receives: [],
-        completed: [],
+        loading: true,
+        searchKey: '',
+        status: this.props.location.query.status,
+        page: {
+            pageSize: 20,
+            current: this.props.location.query.page || 1,
+            total: 0
+        },
+        data: []
     };
-    componentWillMount() {
-        this.loadPageData();
+    loadData = (page, searchKey = '', status) => {
+        api.FormInfo.List({
+            formId: api.FormId.Task,
+            status: status || this.state.status,
+            searchKey: searchKey || this.state.searchKey,
+            page: page || this.state.page.current || 1,
+            rows: this.state.page.pageSize
+        },
+            data => {
+                this.setState({
+                    loading: false,
+                    data: data.List,
+                    page: data.Page,
+                    searchKey,
+                    status,
+                    request: true
+                });
+            }, err => this.setState({ loading: false }));
     };
 
-    loadPageData = (page = 1, userId = 0) => {
-        api.Task.List(this, { page, userId }, json => {
-            let { current, total, pageSize } = json.Page;
-            let list = json.List;
-            this.setState({ current, total, pageSize, list });
-        })
-    };
-    onCreateClick = () => {
-
-    };
-    onTaskClick = (item) => {
-
+    componentWillReceiveProps(nextProps) {
+        const status = nextProps.location.query.status;
+        if (status !== this.props.location.query.status) {
+            this.loadData(this.state.page.current, this.state.searchKey, status);
+        }
     }
+
+    componentWillMount() {
+        this.loadData();
+    }
+
+    handleSearch = searchKey => {
+        this.loadData(1, searchKey);
+    };
 
     render() {
+
         return (
             <div>
-                <Tabs defaultActiveKey="2">
-                    <Tabs.Pane tab={<span><Icon type="check" />我指派的任务</span>} key="1">
-                        Tab 1
-                    </Tabs.Pane>
-                    <Tabs.Pane tab={<span><Icon type="android" />我收到的任务</span>} key="2">
-                        Tab 2
-                    </Tabs.Pane>
-                </Tabs>
-                <div className="toolbar">
-                    <Button icon="new">新建任务</Button>
-                </div>
+                <Affix offsetTop={0} className="toolbar">
+                    <Button.Group>
+                        <Button type="primary" icon="file" onClick={() => utils.Redirect('/task/edit')}>新建任务</Button>
+                        {/*<Button type="danger" icon="export">导出公文</Button>*/}
+                    </Button.Group>
+                    <div className="right">
+                        <Input.Search onSearch={this.handleSearch} placeholder="标题..." />
+                    </div>
+
+                </Affix>
                 <Table
                     rowKey="ID"
+                    loading={this.state.loading}
                     columns={[
-                        { title: '任务名称', dataIndex: 'Name', render: (text, item) => <a onClick={this.onTaskClick(item)}>{item.Name}</a> },
-                        { title: '' }
+                        { title: '任务名称', dataIndex: 'Title', render: (text, item) => <Link to={`/task/edit?id=${item.InfoId}`}>{text}</Link> },
+                        { title: '审批流程', dataIndex: 'FlowStep' },
+                        { title: '处理日期', dataIndex: 'UpdateTime' },
                     ]}
+                    dataSource={this.state.data}
+                    pagination={{
+                        size: 5, ...this.state.page,
+                        onChange: (page, pageSize) => {
+                            this.loadData(page)
+                        },
+                    }}
                 />
             </div>
-        );
+        )
     }
 }
-
-export default TaskIndex;

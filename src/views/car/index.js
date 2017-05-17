@@ -6,7 +6,7 @@ import EditFormModal from './edit'
 
 class CarIndex extends Component {
 
-    state = { list: [], flowId: api.Flow.ID.Car }
+    state = { list: [], flowId: api.FormId.Car }
 
     componentWillMount() {
         this.loadData()

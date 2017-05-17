@@ -1,7 +1,8 @@
-import React from 'react';
-import { Menu } from 'antd';
-import auth from '../../models/auth';
-import utils from '../../utils';
+import React from 'react'
+import { Menu } from 'antd'
+import auth from '../../models/auth'
+import utils from '../../utils'
+import api from '../../models/api'
 
 const sideMenuData = {
     feed: [
@@ -16,16 +17,18 @@ const sideMenuData = {
     missive: [
         {
             title: '发文', items: [
-                { path: '/missive/?status=1', icon: 'fa fa-envelope-open-o', text: '收件箱' },
-                { path: '/missive/?status=2', icon: 'fa fa-send', text: '已办箱' },
-                { path: '/missive/?status=0', icon: 'fa fa-envelope-o', text: '草稿箱' },
-                { path: '/missive/?status=3', icon: 'fa fa-envelope', text: '完结箱' },
-                { path: '/missive/?status=4', icon: 'fa fa-reply', text: '退回箱' },
+                { path: `/missive/${api.FormId.Missive}/?status=1`, icon: 'fa fa-envelope-open-o', text: '收件箱' },
+                { path: `/missive/${api.FormId.Missive}/?status=2`, icon: 'fa fa-send', text: '已办箱' },
+                { path: `/missive/${api.FormId.Missive}/?status=0`, icon: 'fa fa-envelope-o', text: '草稿箱' },
+                { path: `/missive/${api.FormId.Missive}/?status=3`, icon: 'fa fa-envelope', text: '完结箱' },
+                { path: `/missive/${api.FormId.Missive}/?status=4`, icon: 'fa fa-reply', text: '退回箱' },
             ]
         },
         {
             title: '收文', items: [
-                { path: '/missive/receivelist', icon: 'fa fa-envelope-open-o', text: '收文查询' },
+                { path: `/missive/${api.FormId.ReceiveMissive}/?status=1`, icon: 'fa fa-envelope-open-o', text: '未读箱' },
+                { path: `/missive/${api.FormId.ReceiveMissive}/?status=2`, icon: 'fa fa-send', text: '已读箱' },
+                { path: `/missive/${api.FormId.ReceiveMissive}/?status=3`, icon: 'fa fa-envelope', text: '归档箱' },
             ]
         }
     ],
@@ -38,6 +41,17 @@ const sideMenuData = {
         }, {
             title: '审批', role: 2, items: [
                 { path: '/car/approvals', icon: 'fa fa-check', text: '申请审批' }
+            ]
+        }
+    ],
+    task: [
+        {
+            title: '任务', items: [
+                { path: '/task/', icon: 'fa fa-tasks', text: '我的任务' },
+            ]
+        }, {
+            title: '审批', items: [
+                { path: '/task/approvals', icon: 'fa fa-check', text: '任务审批' }
             ]
         }
     ],
@@ -107,6 +121,7 @@ class Sider extends React.Component {
         path = item.path.replace('{UserId}', user.ID);
 
         utils.Redirect(path);
+        document.title = item.text
     };
 
     render() {

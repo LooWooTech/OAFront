@@ -1,11 +1,12 @@
-import React from 'react';
-import auth from '../../models/auth';
-import { Menu, Icon, Badge } from 'antd';
-import utils from '../../utils';
+import React from 'react'
+import auth from '../../models/auth'
+import { Menu, Icon, Badge } from 'antd'
+import api from '../../models/api'
+import utils from '../../utils'
 
 const headerNavData = [
     { name: 'home', active: true, path: '/?scope=all', icon: 'fa fa-commenting', text: '动态' },
-    { name: 'missive', path: '/missive/?status=1', icon: 'fa fa-file-o', text: '公文' },
+    { name: 'missive', path: `/missive/${api.FormId.Missive}/?status=1`, icon: 'fa fa-file-o', text: '公文' },
     { name: 'calendar', icon: 'fa fa-calendar', text: '日程' },
     { name: 'task', icon: 'fa fa-clock-o', text: '任务' },
     { name: 'news', icon: 'fa fa-newspaper-o', text: '信息' },
@@ -50,6 +51,7 @@ export default class TopNav extends React.Component {
         headerNavData.map(item => {
             if (item.name === e.key) {
                 utils.Redirect(item.path || '/' + item.name);
+                document.title = item.text
             }
             return null;
         })

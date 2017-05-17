@@ -4,24 +4,31 @@ import { Form } from 'antd'
 
 class SharedForm extends Component {
     handleSubmit = () => {
-        var errors = this.props.form.getFieldsError();
-        console.log(errors);
-        if (errors) {
-            return false;
-        }
-        var data = this.props.form.getFieldsValue();
-        this.props.onSubmit(data);
+        this.props.form.validateFields((err, values) => {
+            if (err) {
+                console.log(err);
+                return false;
+            }
+            this.props.onSubmit(values);
+        })
     }
 
     render() {
         const children = this.props.children || [];
 
-        const formItemLayout = {
+        const formItemLayout = this.props.layout || {
             labelCol: { span: 6 },
             wrapperCol: { span: 14 },
         };
         const { getFieldDecorator } = this.props.form;
-        const getControl = item => item.name ? getFieldDecorator(item.name, { initialValue: item.defaultValue, rules: item.rules || [] }, )(item.render) : item.render;
+        const getControl = item => {
+            var getField = true
+            if (item.getField === false) getField = false
+            if (!item.name) getField = false
+            return getField ?
+                getFieldDecorator(item.name, { initialValue: item.defaultValue, rules: item.rules || [] }, )(item.render)
+                : item.render;
+        }
         return (
             <Form layout="horizontal" onSubmit={this.handleSubmit}>
                 {children.map((item, key) =>

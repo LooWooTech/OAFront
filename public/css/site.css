@@ -184,3 +184,10 @@ hr {
     display: inline-block;
     padding: 0 10px;
 }
+
+.toolbar h2 {
+    display: block;
+    float: left;
+    font-weight: 500;
+    margin-right: 20px;
+}

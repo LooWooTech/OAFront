@@ -23,7 +23,7 @@ class CarApproval extends Component {
 
     loadData = (userId, completed, page) => {
         let parameter = {
-            formId: api.Form.ID.Car,
+            formId: api.FormId.Car,
             postUserId: userId || 0,
             status: completed ? '' : userId > 0 ? 2 : 1,
             completed: completed || false,

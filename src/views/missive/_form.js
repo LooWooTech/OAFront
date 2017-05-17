@@ -1,183 +1,189 @@
-import React from 'react';
-import { Form, Input, DatePicker, Radio, Checkbox, Upload, Icon, Row, Col, Spin, message } from 'antd';
-import moment from 'moment';
-import api from '../../models/api';
+import React from 'react'
+import { Input, DatePicker, Radio, Checkbox, Upload, Icon, message } from 'antd'
+import Form from '../shared/_form'
+import moment from 'moment'
+import api from '../../models/api'
+import utils from '../../utils'
 
 class MissiveEditForm extends React.Component {
     state = {
-        uploading: false,
+        info: this.props.info || {},
+        model: {},
     }
 
     componentWillMount() {
-        const model = this.props.data;
-        if (model && model.Data) {
-            this.setState({ word: model.Data.Word });
+        if (this.state.info.ID > 0) {
+            api.Missive.Get(this.state.info.ID || 0, data => {
+                this.setState({ model: data })
+            })
         }
     }
 
+
+    handleSubmit = () => {
+        this.refs.form.validateFields((err, values) => {
+            if (err) {
+                console.log(err)
+                return false
+            }
+            let formData = values
+            //如果上传了word文档
+            if (!formData.WordId) {
+                message.error("请上传公文内容文件")
+                return false
+            }
+
+            formData.FW_RQ = formData.FW_RQ ? formData.FW_RQ.format() : ''
+            formData.QX_RQ = formData.QX_RQ ? formData.QX_RQ.format('YYYY-MM-DD') : ''
+            if (!formData.FormId) {
+                message.error("缺少参数FormId")
+                console.log(formData)
+                return false
+            }
+            api.Missive.Save(formData, json => {
+                message.success('保存成功')
+                utils.Redirect(`/missive/${this.state.info.FormId}/?status=1`)
+            });
+        })
+    }
 
     handleUploadWord = ({ file, fileList }) => {
-        if (!file || !file.response) return;
-        this.toggleSpin(true);
-        var response = file.response;
+        if (!file || !file.response) return
+        var response = file.response
+
         if (response.Message) {
             alert(response.Message)
-            this.toggleSpin(false);
             return;
         }
-
-        api.File.ConvertToPdf(response.ID, pdf => {
-            this.setState({ word: response, pdf });
-            this.toggleSpin(false);
-        });
-    };
-    handleUploadExcel = ({ file, fileList }) => {
-    };
-
-    toggleSpin = (value) => {
-        this.setState({ uploading: value });
+        this.setState({ upload: response })
+        // api.File.ConvertToPdf(response.ID, pdf => {
+        //     this.setState({ word: response, pdf });
+        //     this.toggleSpin(false);
+        // }, () => { this.toggleSpin(false) });
     }
 
-    handleDeleteFile = (file) => {
-        var canDelete = this.props.canEdit;
-        if (!canDelete) {
+    handleDeleteWord = () => {
+        if (this.props.disabled) {
             message.error('不能删除');
             return;
         }
-        var dbFile = file.response || { ID: file.uid };
-        api.File.Delete(dbFile.ID);
-        return true;
+        let model = this.state.model || {}
+        let wordId = this.refs.form.getFieldValue('WordId')
+        api.File.Delete(wordId, json => {
+            model.Word = null;
+            if (model.WordId == wordId) {
+                model.WordId = 0
+                api.Missive.DeleteWord(model.ID, () => {
+                    this.setState({ upload: null, model })
+                })
+            } else {
+                this.setState({ upload: null })
+            }
+        });
+        //this.setState({})
+        //需要更新missive，因为删除了word文件
+
     };
 
+    getItems = () => {
+        const model = this.state.model
+        const word = this.state.upload || model.Word || {}
+        const disabled = this.props.disabled
+        var items = [
+            { name: 'ID', defaultValue: model.ID || 0, render: <Input type="hidden" /> },
+            { name: 'FormId', defaultValue: this.state.info.FormId || 0, render: <Input type="hidden" /> },
+            { name: 'WordId', defaultValue: word.ID || 0, render: <Input type="hidden" /> },
+            {
+                name: 'Word',
+                title: '公文文档',
+                defaultValue: word,
+                getField: !word.ID,
+                rules: [{ required: true }],
+                render: !word.ID ? <Upload.Dragger
+                    action={api.File.UploadUrl(0, model.ID, 'word', true)}
+                    onChange={this.handleUploadWord}
+                    name="word"
+                    onRemove={this.handleDeleteFile}
+                    withCredentials={true}
+                    showUploadList={false}
+                    accept=".doc,.docx"
+                    disabled={disabled}
+                ><div style={{ textAlign: 'left', padding: '10px' }}>
+                        <p className="ant-upload-text">
+                            <i className="fa fa-file-word-o fa-2x"></i>
+                            &nbsp;&nbsp; 请选择公文内容文档
+                        </p>
+                    </div>
+                </Upload.Dragger> :
+                    <div>
+                        {word.FileName}
+                        &nbsp;&nbsp;&nbsp;&nbsp;{disabled ? null : <a onClick={this.handleDeleteWord}><Icon type="delete" />&nbsp;删除</a>}
+                    </div>
+            },
+            {
+                name: 'FW_RQ', title: '发文日期', defaultValue: model.FW_RQ ? moment(model.FW_RQ) : null,
+                render: <DatePicker placeholder="选择日期" format="YYYY-MM-DD" disabled={disabled} />
+            },
+            {
+                name: 'WH', title: '公文文号', defaultValue: model.WH,
+                layout: { labelCol: { span: 4 }, wrapperCol: { span: 4 } },
+                render: <Input disabled={disabled} />
+            },
+            {
+                name: 'WJ_BT', title: '文件标题', defaultValue: model.WJ_BT, rules: [{ required: true, message: '请填写文件标题' }],
+                render: <Input disabled={disabled} />
+            }, {
+                name: 'ZTC', title: '主题词', defaultValue: model.ZTC,
+                render: <Input disabled={disabled} />
+            },
+            {
+                name: 'ZWGK', title: '政务公开', defaultValue: model.ZWGK,
+                render: <Radio.Group disabled={disabled} >
+                    <Radio value={1} >主动公开</Radio>
+                    <Radio value={2} >依申请公开</Radio>
+                    <Radio value={3} >不公开</Radio>
+                </Radio.Group>
+            },
+            {
+                name: 'HLW_FB', title: '是否上互联网发布', defaultValue: model.HLW_FB,
+                render: <Checkbox defaultChecked={model.HLW_FB} disabled={disabled} >是</Checkbox>
+            },
+            {
+                name: 'MJ', title: '公文密级', defaultValue: model.MJ,
+                render: <Radio.Group disabled={disabled} >
+                    <Radio value={1}>密级1</Radio>
+                    <Radio value={2}>密级2</Radio>
+                    <Radio value={3}>密级3</Radio>
+                </Radio.Group>
+            },
+            {
+                name: 'ZRR', title: '责任人', defaultValue: model.ZRR,
+                layout: { labelCol: { span: 4 }, wrapperCol: { span: 3 } },
+                render: <Input disabled={disabled} />
+            },
+            {
+                name: 'QX_RQ', title: '期限', defaultValue: model.QX_RQ ? moment(model.QX_RQ) : null,
+                render: <DatePicker placeholder="选择日期" disabled={disabled} />
+            }
+        ];
+        if (this.state.info.FormId === api.FormId.ReceiveMissive) {
+            items.push({
+                name: 'LY', title: '公文来源', defaultValue: model.LY, rules: [{ required: true, message: '请填写公文来源' }],
+                render: <Input />
+            })
+        }
+
+        return items;
+    }
+
     render() {
-        const model = this.props.data;
-        if (!model) return null;
-
-        const data = model.Data || {};
-        const word = this.state.word ? this.state.word : data.Word;
-        const pdf = this.state.pdf ? this.state.pdf : data.Pdf;
-
-        const disabled = !this.props.canEdit;
-        const { getFieldDecorator } = this.props.form;
-
-        return <Form>
-            {getFieldDecorator("ID", { initialValue: model.ID })(<Input type="hidden" />)}
-            {getFieldDecorator("FormId", { initialValue: api.Form.ID.Missive })(<Input type="hidden" />)}
-            {getFieldDecorator("CategoryId", { initialValue: model.CategoryId })(<Input type="hidden" />)}
-            {getFieldDecorator("FlowDataId", { initialValue: model.FlowDataId })(<Input type="hidden" />)}
-
-
-            {getFieldDecorator("Pdf", { initialValue: pdf })(<Input type="hidden" />)}
-            <Form.Item label="公文文档" labelCol={{ span: 4 }} wrapperCol={{ span: 9 }} >
-                {getFieldDecorator("Word", { initialValue: data.Word, rules: [{ required: true }] })(
-                    <Upload.Dragger
-                        action={api.File.UploadUrl(word ? word.ID : 0, model.ID, 'word')}
-                        onChange={this.handleUploadWord}
-                        name="word"
-                        onRemove={this.handleDeleteFile}
-                        withCredentials={true}
-                        showUploadList={false}
-                        accept=".doc,.docx"
-                        disabled={disabled}
-                    ><Spin tip="上传中" spinning={this.state.uploading}>
-                            {word && word.ID > 0 ?
-                                word.FileName :
-                                <div style={{ textAlign: 'left', padding: '10px' }}>
-                                    <p className="ant-upload-text">
-                                        <i className="fa fa-file-word-o fa-2x"></i>
-                                        &nbsp;&nbsp;
-                                        请选择公文内容文档</p>
-                                </div>
-                            }
-                        </Spin>
-                    </Upload.Dragger>
-                )}
-                {word && word.ID > 0 ?
-                    <span>
-                        <a href={api.File.FileUrl(word.ID)} target="_blank">
-                            <Icon type="download" /> 下载
-                        </a>
-
-                        &nbsp;&nbsp;&nbsp;&nbsp;
-                        {disabled ? null : <a onClick={() => confirm('你确定要删除吗？') ? this.setState({ word: {} }) : false}>
-                            <Icon type="delete" /> 删除
-                        </a>}
-                    </span> : null
-                }
-            </Form.Item>
-            <Row>
-                <Col span={8}>
-                    <Form.Item label="发文日期" labelCol={{ span: 12 }} >
-                        {getFieldDecorator("Data.FW_RQ", { initialValue: moment(data.FW_RQ) })(
-                            <DatePicker placeholder="选择日期" format="YYYY-MM-DD" disabled={disabled} />
-                        )}
-                    </Form.Item>
-                </Col>
-                <Col span={8}>
-                    <Form.Item label="公文文号" labelCol={{ span: 6 }} wrapperCol={{ span: 9 }} >
-                        {getFieldDecorator("Data.GW_WH", { initialValue: data.GW_WH })(
-                            <Input disabled={disabled} />
-                        )}
-                    </Form.Item>
-                </Col>
-            </Row>
-            <Form.Item label="文件标题" labelCol={{ span: 4 }} wrapperCol={{ span: 9 }} >
-                {getFieldDecorator("Data.WJ_BT", { initialValue: data.WJ_BT, rules: [{ required: true, message: '请填写文件标题' }] })(
-                    <Input disabled={disabled} />
-                )}
-            </Form.Item>
-            <Form.Item label="主题词" labelCol={{ span: 4 }} wrapperCol={{ span: 9 }} >
-                {getFieldDecorator("Data.GW_ZTC", { initialValue: data.GW_ZTC })(
-                    <Input disabled={disabled} />
-                )}
-            </Form.Item>
-            <Form.Item label="政务公开" labelCol={{ span: 4 }}  >
-                {getFieldDecorator("Data.ZWGK", { initialValue: data.ZWGK || 1 })(
-                    <Radio.Group disabled={disabled} >
-                        <Radio value={1} >主动公开</Radio>
-                        <Radio value={2} >依申请公开</Radio>
-                        <Radio value={3} >不公开</Radio>
-                    </Radio.Group>
-                )}
-            </Form.Item>
-            <Row>
-                <Col span={8}>
-                    <Form.Item label="是否上互联网发布" labelCol={{ span: 12 }} wrapperCol={{ span: 8 }} >
-                        {getFieldDecorator("Data.HLW_FB", { initialValue: data.HLW_FB })(
-                            <Checkbox defaultChecked={data.HLW_FB} disabled={disabled} >是</Checkbox>
-                        )}
-                    </Form.Item>
-                </Col>
-                <Col span={8}>
-                    <Form.Item label="密级" labelCol={{ span: 4 }}  >
-                        {getFieldDecorator("Data.GW_MJ", { initialValue: data.GW_MJ || 2 })(
-                            <Radio.Group disabled={disabled} >
-                                <Radio value={1}>密级1</Radio>
-                                <Radio value={2}>密级2</Radio>
-                                <Radio value={3}>密级3</Radio>
-                            </Radio.Group>
-                        )}
-                    </Form.Item>
-                </Col>
-            </Row>
-            <Row>
-                <Col span={8}>
-                    <Form.Item label="责任人" labelCol={{ span: 12 }} wrapperCol={{ span: 8 }} >
-                        {getFieldDecorator("Data.ZRR", { initialValue: data.ZRR })(
-                            <Input disabled={disabled} />
-                        )}
-                    </Form.Item>
-                </Col>
-                <Col span={8}>
-                    <Form.Item label="期限" labelCol={{ span: 5 }} wrapperCol={{ span: 12 }}  >
-                        {getFieldDecorator("Data.QX_RQ", { initialValue: data.QX_RQ ? moment(data.QX_RQ) : null })(
-                            <DatePicker placeholder="选择日期" disabled={disabled} />
-                        )}
-                    </Form.Item>
-                </Col>
-            </Row>
-        </Form>;
+        return <Form
+            ref="form"
+            onSubmit={this.handleSubmit}
+            children={this.getItems()}
+            layout={{ labelCol: { span: 4 }, wrapperCol: { span: 8 } }}
+        />
     }
 }
 
-export default Form.create()(MissiveEditForm)
+export default MissiveEditForm
