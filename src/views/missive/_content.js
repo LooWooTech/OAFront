@@ -1,29 +1,23 @@
 import React, { Component } from 'react'
+import { Alert } from 'antd'
 import api from '../../models/api';
-
-
 class ContentTab extends Component {
-    state = { info: this.props.info, fileId: 0 }
-
-    componentWillMount() {
-        let infoId = this.state.info.ID
-        console.log(infoId)
-        if (infoId) {
-            api.Missive.GetPdf(infoId, data => {
-                this.setState({ fileId: data.ID })
-            })
-        }
-    }
 
     render() {
-        return this.state.fileId ?
-            <iframe src={api.File.FileUrl(this.state.fileId)} style={{
+        const infoId = (this.props.info || {}).ID || 0
+        const fileUrl = infoId ? api.File.GetPreviewFileUrl(infoId) : null
+        if (fileUrl) {
+            return <iframe src={fileUrl} style={{
                 border: "none",
                 width: "100%", height: "100%",
             }} />
-            : <div>
-                请先上传Word文档。
-            </div>
+        } else {
+            return <Alert
+                message="错误"
+                description="无法预览或者您还未上传附件"
+                type="error"
+            />
+        }
     }
 }
 

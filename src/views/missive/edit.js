@@ -63,7 +63,17 @@ export default class MissiveEdit extends Component {
     };
 
     handleCloseFreeFlow = () => {
-        api.FreeFlowData.Complete(this.state.freeFlowNodeData.ID)
+        if (confirm("你确定要提前结束该流程吗？")) {
+            let flowNodeData = this.state.flowNodeData
+            api.FreeFlowData.Complete(flowNodeData.ID, () => {
+                flowNodeData.FreeFlowData.Completed = true
+                this.setState({
+                    flowNodeData,
+                    canSubmitFreeFlow: false,
+                    canCompleteFreeFlow: false
+                })
+            })
+        }
     }
 
     render() {

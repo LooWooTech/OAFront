@@ -105,8 +105,8 @@ module.exports = {
         UpdateRelation: (fileIds, infoId, cb, err) => {
             invokeApi('file/UpdateRelation', HTTP_POST, { fileIds, infoId }, cb, err);
         },
-        ConvertToPdf: (id, cb, err) => {
-            invokeApi('file/converttopdf?id=' + id + '&redtilte=true', HTTP_GET, null, cb, err);
+        GetPreviewFileUrl: (infoId) => {
+            return host + 'file/GetPreviewFile/?infoId=' + infoId
         }
     },
     FormInfo: {
@@ -252,8 +252,8 @@ module.exports = {
         Save: (data, cb, err) => {
             invokeApi('missive/save?formId=' + data.FormId, HTTP_POST, data, cb, err);
         },
-        GetPdf: (infoId, cb, err) => {
-
+        GetPreviewFileUrl: (infoId) => {
+            return 'file/GetPreviewFileUrl?id=' + infoId
         }
     },
     Car: {
