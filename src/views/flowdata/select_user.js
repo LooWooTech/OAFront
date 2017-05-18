@@ -11,7 +11,6 @@ class SelectUserComponent extends Component {
     }
 
     loadUsers = (flowId, nodeId = 0, flowDataId = 0) => {
-        console.log(flowId);
         api.FlowData.UserList(flowId, nodeId, flowDataId, json => this.setState({ users: json }))
     }
 
@@ -41,7 +40,7 @@ class SelectUserComponent extends Component {
                 onSearch={value => this.loadUsers(flowId, nodeId, flowDataId, value)}>
                 {users.map(user =>
                     <Select.Option key={user.ID}>
-                        {user.RealName} - {user.Department}
+                        {user.RealName}
                     </Select.Option>)}
             </Select>
         )

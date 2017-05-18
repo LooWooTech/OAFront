@@ -21,6 +21,8 @@ class Login extends Component {
                 api.User.Login(values, json => {
                     auth.login(json);
                     utils.Redirect('/');
+                },()=>{
+                this.setState({ loading: false });
                 })
             } else {
                 this.setState({ loading: false });

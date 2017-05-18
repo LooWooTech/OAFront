@@ -170,11 +170,14 @@ module.exports = {
         }
     },
     FreeFlowData: {
-        Submit: (toUserIds, data, cb, err) => {
-            invokeApi(`freeflowdata/submit?infoId=${data.InfoId}&toUserIds=${toUserIds}`, HTTP_POST, data, cb, err);
+        Submit: (flowNodeDataId, toUserIds, data, cb, err) => {
+            invokeApi(`freeflowdata/submit?flowNodeDataId=${flowNodeDataId}&infoId=${data.InfoId}&toUserIds=${toUserIds}`, HTTP_POST, data, cb, err);
         },
         UserList: (flowNodeDataId, key, cb, err) => {
             invokeApi(`freeflowdata/userlist?flownodedataId=${flowNodeDataId}&key=${key}`, HTTP_GET, null, cb, err);
+        },
+        Complete: (freeFlowDataId, cb, err) => {
+            invokeApi(`freeflowdata/complete?id=${freeFlowDataId}`, HTTP_GET, null, cb, err)
         }
     },
     Group: {

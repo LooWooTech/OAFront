@@ -12,10 +12,10 @@ class FlowDataList extends Component {
             return <span>流程尚未开始</span>;
         }
         const getContent = content => content ? content.split('\n').map((str, key) => <span key={key}>{str}<br /></span>) : null;
-        const freeList = nodes =>
+        const getFreeList = freeflowData =>
             <div className="sub-timeline">
                 <Timeline>
-                    {nodes.map(item => {
+                    {freeflowData.Nodes.map(item => {
                         var color = item.Submited ? 'green' : 'blue';
                         var icon = item.Submited ? 'check' : 'clock-circle-o';
                         return <Timeline.Item color={color} icon={icon} key={item.ID}>
@@ -38,7 +38,7 @@ class FlowDataList extends Component {
                             （<span className="flownode-name">{item.FlowNodeName}</span>）
                         <span className="flownode-datetime">{item.UpdateTime ? moment(item.UpdateTime).format('YYYY-MM-DD HH:mm') : ''}</span>
                         <div className="flownode-content">{getContent(item.Content)}</div>
-                        {item.Nodes && item.Nodes.length > 0 ? freeList(item.Nodes) : null}
+                        {item.FreeFlowData ? getFreeList(item.FreeFlowData) : null}
                     </Timeline.Item>
                 })}
             </Timeline>

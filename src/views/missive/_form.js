@@ -6,14 +6,11 @@ import api from '../../models/api'
 import utils from '../../utils'
 
 class MissiveEditForm extends React.Component {
-    state = {
-        info: this.props.info || {},
-        model: {},
-    }
+    state = { model: {} }
 
     componentWillMount() {
-        if (this.state.info.ID > 0) {
-            api.Missive.Get(this.state.info.ID || 0, data => {
+        if (this.props.info.ID > 0) {
+            api.Missive.Get(this.props.info.ID || 0, data => {
                 this.setState({ model: data })
             })
         }
@@ -42,7 +39,7 @@ class MissiveEditForm extends React.Component {
             }
             api.Missive.Save(formData, json => {
                 message.success('保存成功')
-                utils.Redirect(`/missive/${this.state.info.FormId}/?status=1`)
+                utils.Redirect(`/missive/${this.props.info.FormId}/?status=1`)
             });
         })
     }
@@ -89,9 +86,10 @@ class MissiveEditForm extends React.Component {
         const model = this.state.model
         const word = this.state.upload || model.Word || {}
         const disabled = this.props.disabled
+        const info = this.props.info
         var items = [
             { name: 'ID', defaultValue: model.ID || 0, render: <Input type="hidden" /> },
-            { name: 'FormId', defaultValue: this.state.info.FormId || 0, render: <Input type="hidden" /> },
+            { name: 'FormId', defaultValue: info.FormId || 0, render: <Input type="hidden" /> },
             { name: 'WordId', defaultValue: word.ID || 0, render: <Input type="hidden" /> },
             {
                 name: 'Word',
@@ -166,7 +164,7 @@ class MissiveEditForm extends React.Component {
                 render: <DatePicker placeholder="选择日期" disabled={disabled} />
             }
         ];
-        if (this.state.info.FormId === api.FormId.ReceiveMissive) {
+        if (info.FormId === api.FormId.ReceiveMissive.toString()) {
             items.push({
                 name: 'LY', title: '公文来源', defaultValue: model.LY, rules: [{ required: true, message: '请填写公文来源' }],
                 render: <Input />

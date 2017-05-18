@@ -21,10 +21,6 @@ export default class FlowList extends React.Component {
         api.Flow.Save(values, this.loadData);
     };
 
-    onNodeSave = (values) => {
-        api.Flow.SaveNode(values, this.loadData);
-    };
-
     loadData = () => {
         api.Flow.List(data => this.setState({ list: data }));
     };
@@ -52,7 +48,7 @@ export default class FlowList extends React.Component {
                         <Button.Group>
                             <NodeEditModal
                                 title="修改节点"
-                                onSubmit={this.onNodeSave}
+                                onSubmit={this.loadData}
                                 trigger={<Button icon="edit">编辑</Button>}
                                 departments={this.state.departments}
                                 titles={this.state.titles}
@@ -101,7 +97,7 @@ export default class FlowList extends React.Component {
                                 <NodeEditModal
                                     title="添加节点"
                                     onSubmit={this.onNodeSave}
-                                    trigger={<Button icon="add">添加节点</Button>}
+                                    trigger={<Button icon="plus">添加节点</Button>}
                                     departments={this.state.departments}
                                     titles={this.state.titles}
                                     nodes={item.Nodes}

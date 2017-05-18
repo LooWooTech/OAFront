@@ -1,14 +1,24 @@
 import React, { Component } from 'react'
-import { Input, Select, Checkbox, Radio } from 'antd'
+import { Input, Select, Button, Radio } from 'antd'
 import SharedModal from '../shared/_formmodal'
+import FreeNodeModal from './freenode_edit'
 import api from '../../models/api';
 class EditNodeModal extends Component {
     state = {}
 
-    getNodeFormItems = (record, nodes) => {
-        record.FreeFlow = record.FreeFlow || { ID: 0, LimitMode: 2, DepartmentIds: [], CrossDepartment: false, CrossLevel: false };
+    handleFreeNodeSubmit = data => {
+        this.setState({ freeFlow: data })
+    }
 
-        const openFreeFlow = this.state.openFreeFlow === undefined ? record.FreeFlowId > 0 : this.state.openFreeFlow;
+    handleSubmit = data => {
+        data.FreeFlow = this.state.freeFlow === undefined ? data.FreeFlow : this.state.freeFlow
+        api.Flow.SaveNode(data, this.props.onSubmit)
+    }
+
+
+    getNodeFormItems = (record, nodes) => {
+        record.FreeFlow = this.state.freeFlow === undefined ? record.FreeFlow : this.state.freeFlow || { ID: 0, LimitMode: 2, DepartmentIds: [], CrossDepartment: false, CrossLevel: false }
+        const openFreeFlow = this.state.openFreeFlow === undefined ? record.FreeFlowId > 0 : this.state.openFreeFlow
         nodes = nodes || [];
         var items = [
             { name: 'ID', defaultValue: record.ID, render: <Input type="hidden" /> },
@@ -67,13 +77,14 @@ class EditNodeModal extends Component {
                 defaultValue: record.LimitMode,
                 render:
                 <Radio.Group onChange={e => this.setState({ limitMode: e.target.value })}>
-                    <Radio value={0}>指定部门</Radio>
-                    <Radio value={1}>发起人部门</Radio>
+                    <Radio value={0}>不限制</Radio>
+                    <Radio value={1}>指定部门</Radio>
+                    <Radio value={2}>发起人部门</Radio>
                 </Radio.Group>
             }];
 
         var limitMode = this.state.limitMode === undefined ? record.LimitMode : this.state.limitMode;
-        if (limitMode === 0) {
+        if (limitMode === 1) {
             items.push(items.length - 2, 0, {
                 title: '受理部门',
                 name: 'DepartmentIds',
@@ -88,55 +99,19 @@ class EditNodeModal extends Component {
             });
         }
         items.push({
-            title: '开启自由流程',
-            name: 'OpenFreeFlow',
-            render: <Checkbox defaultChecked={openFreeFlow} onChange={e => this.setState({ openFreeFlow: e.target.checked })} >开启</Checkbox>
-        });
-        if (openFreeFlow) {
-            items = items.concat(this.getFreeFlowFormItems(record.FreeFlow));
-        }
-        return items;
-    };
-
-    getFreeFlowFormItems = (record) => {
-        record = record || { ID: 0, LimitMode: 2, DepartmentIds: [], CrossDepartment: false, CrossLevel: false };
-        var items = [{
-            title: '限制部门',
-            name: 'FreeFlow.LimitMode',
-            defaultValue: record.LimitMode,
+            title: '自由流程',
             render:
-            <Radio.Group onChange={e => this.setState({ freeFlowLimitMode: e.target.value })}>
-                <Radio value={0}>指定部门</Radio>
-                <Radio value={1}>发起人部门</Radio>
-                <Radio value={2}>当前部门</Radio>
-            </Radio.Group>
-        }];
-        var limitMode = this.state.freeFlowLimitMode === undefined ? record.LimitMode : this.state.freeFlowLimitMode;
-        if (limitMode === 0) {
-            items.push({
-                title: '选择指定部门',
-                name: 'FreeFlow.DepartmentIds',
-                defaultValue: (record.DepartmentIds || []).map(id => id.toString()),
-                render:
-                <Select mode="multiple">
-                    {this.props.departments.map(item =>
-                        <Select.Option key={item.ID}>{item.Name}</Select.Option>
-                    )}
-                </Select>
-            })
-        }
-        items.push({
-            title: '跨部门',
-            defaultValue: record.CrossDepartment,
-            name: 'FreeFlow.CrossDepartment',
-            render: <Checkbox defaultChecked={record.CrossDepartment}> 可跨部门</Checkbox>
+            <div>
+                {record.FreeFlowId > 0 || this.state.freeFlow ? '已开启' : '未开启'} &nbsp;&nbsp;
+                <FreeNodeModal
+                    record={record.FreeFlow}
+                    departments={this.props.departments}
+                    titles={this.props.titles}
+                    onSubmit={this.handleFreeNodeSubmit}
+                    trigger={<Button>设置自由流程</Button>} />
+            </div>
         });
-        items.push({
-            title: '跨级别',
-            name: 'FreeFlow.CrossLevel',
-            defaultValue: record.CrossLevel,
-            render: <Checkbox defaultChecked={record.CrossLevel}> 可跨级别</Checkbox>
-        });
+
         return items;
     };
 
@@ -148,7 +123,7 @@ class EditNodeModal extends Component {
             <SharedModal
                 title={title}
                 trigger={trigger}
-                onSubmit={onSubmit}
+                onSubmit={this.handleSubmit}
                 children={this.getNodeFormItems(record, nodes)}
             />
         )

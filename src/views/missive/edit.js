@@ -42,7 +42,7 @@ export default class MissiveEdit extends Component {
                 }
 
                 if (data.freeFlowNodeData) {
-                    data.freeFlowNodeData = data.flowNodeData.Nodes.find(n => n.$id === data.freeFlowNodeData.$ref);
+                    data.freeFlowNodeData = data.flowNodeData.FreeFlowData.Nodes.find(n => n.$id === data.freeFlowNodeData.$ref);
                 }
                 this.setState({ ...data });
             });
@@ -62,6 +62,10 @@ export default class MissiveEdit extends Component {
         api.FlowData.Cancel(this.state.model.ID, this.loadData);
     };
 
+    handleCloseFreeFlow = () => {
+        api.FreeFlowData.Complete(this.state.freeFlowNodeData.ID)
+    }
+
     render() {
         const model = this.state.model;
         if (!model) return null;
@@ -77,19 +81,20 @@ export default class MissiveEdit extends Component {
                         <SubmitFlowModal
                             flowDataId={model.FlowDataId}
                             callback={this.loadData}
-                            children={<Button type="success" icon="check" htmlType="button">提交主流程</Button>}
+                            children={<Button type="success" icon="check" htmlType="button">提交审批</Button>}
                         />
                         : null}
-                    {this.state.canSubmitFreeFlow && model.FormId == api.FormId.Missive ?
+                    {this.state.canSubmitFreeFlow ?
                         <SubmitFreeFlowModal
                             callback={this.loadData}
                             canSubmit={true}
                             infoId={model.ID}
                             flowNodeData={this.state.flowNodeData}
                             record={this.state.freeFlowNodeData}
-                            children={<Button type="success" icon="retweet" htmlType="button">提交自由流程</Button>}
+                            children={<Button type="danger" icon="check" htmlType="button">{this.state.canSubmitFlow ? '创建传阅流程' : '审阅'}</Button>}
                         />
                         : null}
+                    {this.state.canCompleteFreeFlow ? <Button type="danger" icon="close" onClick={this.handleCloseFreeFlow}>结束传阅流程</Button> : null}
                     {this.state.canCancel ? <Button type="danger" icon="rollback" htmlType="button" onClick={this.handleCancel}>撤销</Button> : null}
                     <Button onClick={utils.GoBack} type="" icon="arrow-left" htmlType="button">返回</Button>
                 </Button.Group>

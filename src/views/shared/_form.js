@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Form } from 'antd'
+import { Form, Tooltip, Icon } from 'antd'
 
 class SharedForm extends Component {
     handleSubmit = () => {
@@ -29,11 +29,17 @@ class SharedForm extends Component {
                 getFieldDecorator(item.name, { initialValue: item.defaultValue, rules: item.rules || [] }, )(item.render)
                 : item.render;
         }
+        const getLabel = item => {
+            if (item.tips) {
+                return <Tooltip title={item.tips}>{item.title}<Icon type="question-circle" /></Tooltip>
+            }
+            return item.title
+        }
         return (
             <Form layout="horizontal" onSubmit={this.handleSubmit}>
                 {children.map((item, key) =>
                     item.title ?
-                        <Form.Item key={item.name || key} label={item.title} {...(item.layout ? item.layout : formItemLayout) }>
+                        <Form.Item key={item.name || key} label={getLabel(item)} {...(item.layout ? item.layout : formItemLayout) }>
                             {getControl(item)}
                         </Form.Item>
                         : <span key={item.name || key}>{getControl(item)}</span>
