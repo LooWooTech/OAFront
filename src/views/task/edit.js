@@ -20,7 +20,7 @@ export default class TaskEdit extends Component {
         if (id === 0) {
             this.setState({
                 activeItem: 'info',
-                model: { FormId: api.FormId.Task, },
+                model: { FormId: api.Forms.Task.ID, },
                 canView: true,
                 canEdit: true,
                 canSubmit: false,

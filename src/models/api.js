@@ -8,12 +8,12 @@ const HTTP_PUT = "PUT"
 
 
 const host = process.env.NODE_ENV === 'production' ? '/api/' : 'http://localhost:8012/api/';
-const FormId = {
-    Missive: 1,
-    ReceiveMissive: 2,
-    Car: 3,
-    Task: 4,
-    Leave: 5,
+const Forms = {
+    Missive: { ID: 1, Name: '公文发文' },
+    ReceiveMissive: { ID: 2, Name: '公文收文' },
+    Car: { ID: 3, Name: '公车申请' },
+    Task: { ID: 4, Name: '任务' },
+    Leave: { ID: 5, Name: '请假' },
 };
 function invokeApi(path, method, data, callback, onError, async = true) {
     var url = host + path;
@@ -49,7 +49,7 @@ function jsonToQueryString(json) {
         .join('&');
 }
 module.exports = {
-    FormId,
+    Forms,
     //断开请求
     Abort: utils.AbortRequest,
     ApiUrl: (path) => {
@@ -239,9 +239,9 @@ module.exports = {
         }
     },
     Missive: {
-        List: (formId, parameters, cb, err) => {
-            if (!formId) return
-            invokeApi('missive/list?formId=' + formId, HTTP_GET, parameters, cb, err);
+        List: (parameters, cb, err) => {
+            if (!parameters.formId) return
+            invokeApi('missive/list', HTTP_GET, parameters, cb, err);
         },
         Get: (infoId, cb, err) => {
             invokeApi('missive/get?id=' + infoId, HTTP_GET, null, cb, err);

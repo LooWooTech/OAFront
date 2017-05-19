@@ -18,7 +18,7 @@ export default class TaskIndex extends React.Component {
     };
     loadData = (page, searchKey = '', status) => {
         api.FormInfo.List({
-            formId: api.FormId.Task,
+            formId: api.Forms.Task.ID,
             status: status || this.state.status,
             searchKey: searchKey || this.state.searchKey,
             page: page || this.state.page.current || 1,

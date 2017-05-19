@@ -27,7 +27,7 @@ export default class MissiveList extends React.Component {
             rows: this.state.page.pageSize
         };
 
-        api.Missive.List(parameter.formId, parameter,
+        api.Missive.List(parameter,
             data => {
                 this.setState({
                     loading: false,
@@ -64,7 +64,7 @@ export default class MissiveList extends React.Component {
                 <div className="toolbar">
                     <Button.Group>
                         <Button type="primary" icon="file" onClick={() => utils.Redirect(`/missive/${this.state.formId}/edit`)}>
-                            新建{this.state.formId === api.FormId.Missive.toString() ? '发文拟稿' : '收文文档'}
+                            新建{this.state.formId === api.Forms.Missive.ID.toString() ? '发文拟稿' : '收文文档'}
                         </Button>
                         {/*<Button type="danger" icon="export">导出公文</Button>*/}
                     </Button.Group>

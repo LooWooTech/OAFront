@@ -164,7 +164,7 @@ class MissiveEditForm extends React.Component {
                 render: <DatePicker placeholder="选择日期" disabled={disabled} />
             }
         ];
-        if (info.FormId === api.FormId.ReceiveMissive.toString()) {
+        if (info.FormId === api.Forms.ReceiveMissive.ID.toString()) {
             items.push({
                 name: 'LY', title: '公文来源', defaultValue: model.LY, rules: [{ required: true, message: '请填写公文来源' }],
                 render: <Input />

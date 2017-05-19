@@ -6,7 +6,7 @@ import utils from '../../utils'
 
 const headerNavData = [
     { name: 'home', active: true, path: '/?scope=all', icon: 'fa fa-commenting', text: '动态' },
-    { name: 'missive', path: `/missive/${api.FormId.Missive}/?status=1`, icon: 'fa fa-file-o', text: '公文' },
+    { name: 'missive', path: `/missive/${api.Forms.Missive.ID}/?status=1`, icon: 'fa fa-file-o', text: '公文' },
     { name: 'calendar', icon: 'fa fa-calendar', text: '日程' },
     { name: 'task', icon: 'fa fa-clock-o', text: '任务' },
     { name: 'news', icon: 'fa fa-newspaper-o', text: '信息' },

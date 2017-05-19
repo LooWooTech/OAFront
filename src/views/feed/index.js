@@ -61,13 +61,14 @@ class FeedIndex extends Component {
         //if (!item.) return null;
 
         var link = null;
-        switch (item.FormType) {
+        switch (item.FormId) {
             default:
                 return null
-            case "Missive":
-                link = "/missive/edit?id=" + item.InfoId;
+            case api.Forms.Missive.ID:
+            case api.Forms.ReceiveMissive.ID:
+                link = `/missive/${item.FormId}/edit?id=${item.InfoId}`
                 break;
-            case "Car":
+            case api.Forms.Car.ID:
                 link = "/car/history?id=" + item.InfoId;
                 break;
         }
@@ -84,7 +85,7 @@ class FeedIndex extends Component {
                     <Card key={item.ID}
                         title={<div className="title">
                             <a href="#">{item.FromUser}</a>
-                            {item.Action}了{item.FormName}
+                            {item.Action}了{item.FormName}{item.Type}
                             <span className="datetime"> {moment(item.CreateTime).format('lll')}</span>
                         </div>}
                         extra={<Dropdown overlay={<Menu>

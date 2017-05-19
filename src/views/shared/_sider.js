@@ -17,18 +17,18 @@ const sideMenuData = {
     missive: [
         {
             title: '发文', items: [
-                { path: `/missive/${api.FormId.Missive}/?status=1`, icon: 'fa fa-envelope-open-o', text: '收件箱' },
-                { path: `/missive/${api.FormId.Missive}/?status=2`, icon: 'fa fa-send', text: '已办箱' },
-                { path: `/missive/${api.FormId.Missive}/?status=0`, icon: 'fa fa-envelope-o', text: '草稿箱' },
-                { path: `/missive/${api.FormId.Missive}/?status=3`, icon: 'fa fa-envelope', text: '完结箱' },
-                { path: `/missive/${api.FormId.Missive}/?status=4`, icon: 'fa fa-reply', text: '退回箱' },
+                { path: `/missive/${api.Forms.Missive.ID}/?status=1`, icon: 'fa fa-envelope-open-o', text: '收件箱' },
+                { path: `/missive/${api.Forms.Missive.ID}/?status=2`, icon: 'fa fa-send', text: '已办箱' },
+                { path: `/missive/${api.Forms.Missive.ID}/?status=0`, icon: 'fa fa-envelope-o', text: '草稿箱' },
+                { path: `/missive/${api.Forms.Missive.ID}/?status=3`, icon: 'fa fa-envelope', text: '完结箱' },
+                { path: `/missive/${api.Forms.Missive.ID}/?status=4`, icon: 'fa fa-reply', text: '退回箱' },
             ]
         },
         {
             title: '收文', items: [
-                { path: `/missive/${api.FormId.ReceiveMissive}/?status=1`, icon: 'fa fa-envelope-open-o', text: '未读箱' },
-                { path: `/missive/${api.FormId.ReceiveMissive}/?status=2`, icon: 'fa fa-send', text: '已读箱' },
-                { path: `/missive/${api.FormId.ReceiveMissive}/?status=3`, icon: 'fa fa-envelope', text: '归档箱' },
+                { path: `/missive/${api.Forms.ReceiveMissive.ID}/?status=1`, icon: 'fa fa-envelope-open-o', text: '未读箱' },
+                { path: `/missive/${api.Forms.ReceiveMissive.ID}/?status=2`, icon: 'fa fa-send', text: '已读箱' },
+                { path: `/missive/${api.Forms.ReceiveMissive.ID}/?status=3`, icon: 'fa fa-envelope', text: '归档箱' },
             ]
         }
     ],

@@ -42,7 +42,7 @@ class CarApplyModal extends Component {
                 onSubmit={this.handleSubmit}
                 children={[
                     { name: 'Data.CarId', defaultValue: car.ID, render: <Input type="hidden" /> },
-                    { name: 'FormId', defaultValue: api.FormId.Car, render: <Input type="hidden" /> },
+                    { name: 'FormId', defaultValue: api.Forms.Car.ID, render: <Input type="hidden" /> },
                     { title: '申请车辆', name: 'Data.Name', defaultValue: car.Name, render: <Input disabled={true} /> },
                     { title: '车牌号码', name: 'Data.Number', defaultValue: car.Number, render: <Input disabled={true} /> },
                     { title: '开始日期', name: 'BeginDate', render: <DatePicker />, rules: [{ required: true, message: '请选择开始日期' }], },
