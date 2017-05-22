@@ -6,16 +6,9 @@ import api from '../../models/api'
 import utils from '../../utils'
 
 class MissiveEditForm extends React.Component {
-    state = { model: {} }
-
-    componentWillMount() {
-        if (this.props.info.ID > 0) {
-            api.Missive.Get(this.props.info.ID || 0, data => {
-                this.setState({ model: data })
-            })
-        }
+    state = {
+        model: this.props.model,
     }
-
 
     handleSubmit = () => {
         this.refs.form.validateFields((err, values) => {
@@ -39,7 +32,7 @@ class MissiveEditForm extends React.Component {
             }
             api.Missive.Save(formData, json => {
                 message.success('保存成功')
-                utils.Redirect(`/missive/${this.props.info.FormId}/?status=1`)
+                utils.Redirect(`/missive/${this.props.formId}/?status=1`)
             });
         })
     }
@@ -83,17 +76,19 @@ class MissiveEditForm extends React.Component {
     };
 
     getItems = () => {
+        const formId = parseInt(this.props.formId, 10)
+        const formName = formId === api.Forms.Missive.ID ? '发文' : '收文'
         const model = this.state.model
+        if (!model) return []
         const word = this.state.upload || model.Word || {}
         const disabled = this.props.disabled
-        const info = this.props.info
         var items = [
             { name: 'ID', defaultValue: model.ID || 0, render: <Input type="hidden" /> },
-            { name: 'FormId', defaultValue: info.FormId || 0, render: <Input type="hidden" /> },
+            { name: 'FormId', defaultValue: formId || 0, render: <Input type="hidden" /> },
             { name: 'WordId', defaultValue: word.ID || 0, render: <Input type="hidden" /> },
             {
                 name: 'Word',
-                title: '公文文档',
+                title: formName + '文档',
                 defaultValue: word,
                 getField: !word.ID,
                 rules: [{ required: true }],
@@ -104,12 +99,12 @@ class MissiveEditForm extends React.Component {
                     onRemove={this.handleDeleteFile}
                     withCredentials={true}
                     showUploadList={false}
-                    accept=".doc,.docx"
+                    accept=".doc,.docx,.pdf,.tiff,tif"
                     disabled={disabled}
                 ><div style={{ textAlign: 'left', padding: '10px' }}>
                         <p className="ant-upload-text">
-                            <i className="fa fa-file-word-o fa-2x"></i>
-                            &nbsp;&nbsp; 请选择公文内容文档
+                            <i className="fa fa-file-o fa-2x"></i>
+                            &nbsp;&nbsp; 仅限Word、Pdf、Tiff文件格式
                         </p>
                     </div>
                 </Upload.Dragger> :
@@ -119,11 +114,11 @@ class MissiveEditForm extends React.Component {
                     </div>
             },
             {
-                name: 'FW_RQ', title: '发文日期', defaultValue: model.FW_RQ ? moment(model.FW_RQ) : null,
+                name: 'FW_RQ', title: formName + '日期', defaultValue: model.FW_RQ ? moment(model.FW_RQ) : null,
                 render: <DatePicker placeholder="选择日期" format="YYYY-MM-DD" disabled={disabled} />
             },
             {
-                name: 'WH', title: '公文文号', defaultValue: model.WH,
+                name: 'WH', title: formName + '文号', defaultValue: model.WH,
                 layout: { labelCol: { span: 4 }, wrapperCol: { span: 4 } },
                 render: <Input disabled={disabled} />
             },
@@ -135,7 +130,7 @@ class MissiveEditForm extends React.Component {
                 render: <Input disabled={disabled} />
             },
             {
-                name: 'ZWGK', title: '政务公开', defaultValue: model.ZWGK,
+                name: 'ZWGK', title: '政务公开', defaultValue: model.ZWGK || 1,
                 render: <Radio.Group disabled={disabled} >
                     <Radio value={1} >主动公开</Radio>
                     <Radio value={2} >依申请公开</Radio>
@@ -143,28 +138,27 @@ class MissiveEditForm extends React.Component {
                 </Radio.Group>
             },
             {
-                name: 'HLW_FB', title: '是否上互联网发布', defaultValue: model.HLW_FB,
-                render: <Checkbox defaultChecked={model.HLW_FB} disabled={disabled} >是</Checkbox>
+                name: 'GKFB', title: '是否公开发布', defaultValue: model.GKFB,
+                render: <Checkbox defaultChecked={model.GKFB} disabled={disabled} >是</Checkbox>
             },
             {
-                name: 'MJ', title: '公文密级', defaultValue: model.MJ,
+                name: 'MJ', title: '公文密级', defaultValue: model.MJ || 0,
                 render: <Radio.Group disabled={disabled} >
-                    <Radio value={1}>密级1</Radio>
-                    <Radio value={2}>密级2</Radio>
-                    <Radio value={3}>密级3</Radio>
+                    <Radio.Button value={0}>无</Radio.Button>
+                    <Radio.Button value={1}>保密</Radio.Button>
                 </Radio.Group>
             },
-            {
-                name: 'ZRR', title: '责任人', defaultValue: model.ZRR,
-                layout: { labelCol: { span: 4 }, wrapperCol: { span: 3 } },
-                render: <Input disabled={disabled} />
-            },
+            // {
+            //     name: 'ZRR', title: '责任人', defaultValue: model.ZRR,
+            //     layout: { labelCol: { span: 4 }, wrapperCol: { span: 3 } },
+            //     render: <Input disabled={disabled} />
+            // },
             {
                 name: 'QX_RQ', title: '期限', defaultValue: model.QX_RQ ? moment(model.QX_RQ) : null,
                 render: <DatePicker placeholder="选择日期" disabled={disabled} />
             }
         ];
-        if (info.FormId === api.Forms.ReceiveMissive.ID.toString()) {
+        if (formId === api.Forms.ReceiveMissive.ID) {
             items.push({
                 name: 'LY', title: '公文来源', defaultValue: model.LY, rules: [{ required: true, message: '请填写公文来源' }],
                 render: <Input />
@@ -175,6 +169,8 @@ class MissiveEditForm extends React.Component {
     }
 
     render() {
+        const formId = this.props.formId
+        if (!formId) return null
         return <Form
             ref="form"
             onSubmit={this.handleSubmit}

@@ -25,9 +25,6 @@ export default class UserList extends React.Component {
         api.JobTitle.List(data => this.setState({ titles: data }))
     }
 
-    componentWillReceiveProps(nextProps) {
-    }
-
     componentWillUnmount() {
         api.Abort();
     };
@@ -48,7 +45,13 @@ export default class UserList extends React.Component {
 
     };
 
-    onEditSave = (values) => {
+    handleDelete = (item) => {
+        api.User.Delete(item.ID, () => {
+            this.loadPageData()
+        })
+    }
+
+    handleSubmit = (values) => {
         var data = values;
         api.User.Save(data, data => this.loadPageData());
     }
@@ -101,7 +104,7 @@ export default class UserList extends React.Component {
                 <EditModal
                     name="用户"
                     trigger={<Button type="primary" icon="file">添加用户</Button>}
-                    onSubmit={this.onEditSave}
+                    onSubmit={this.handleSubmit}
                     children={this.getFormItems()}
                 />
             </Button.Group>
@@ -121,12 +124,12 @@ export default class UserList extends React.Component {
                             <span>
                                 <EditModal
                                     name="用户"
-                                    onSubmit={this.onEditSave}
+                                    onSubmit={this.handleSubmit}
                                     children={this.getFormItems(item)}
                                     trigger={<Button icon="edit">编辑</Button>}
                                 />
                                 <Popconfirm placement="topRight" title="你确定要删除吗？"
-                                    onConfirm={() => api.Group.Delete(item.ID, () => this.loadPageData())}
+                                    onConfirm={this.handleDelete}
                                     okText="是" cancelText="否">
                                     <Button type="danger" icon="delete">删除</Button>
                                 </Popconfirm>

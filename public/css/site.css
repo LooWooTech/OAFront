@@ -191,3 +191,20 @@ hr {
     font-weight: 500;
     margin-right: 20px;
 }
+
+.freeflow {
+    margin-left: 30px;
+    margin-top: 30px;
+}
+
+.freeflow .title {
+    border-bottom: solid 1px #ddd;
+    line-height: 1.5rem;
+    font-weight: bold;
+}
+
+.freeflow .content {
+    padding: 5px;
+    border-bottom: 1px #ddd;
+    border-bottom-style: dashed;
+}

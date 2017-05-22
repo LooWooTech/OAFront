@@ -4,7 +4,7 @@ import api from '../../models/api';
 class ContentTab extends Component {
 
     render() {
-        const infoId = (this.props.info || {}).ID || 0
+        const infoId = (this.props.missive || {}).ID || 0
         const fileUrl = infoId ? api.File.GetPreviewFileUrl(infoId) : null
         if (fileUrl) {
             return <iframe src={fileUrl} style={{

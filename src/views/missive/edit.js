@@ -5,6 +5,7 @@ import FormTab from './_form';
 import ContentTab from './_content';
 import FlowListTab from '../flowdata/list';
 import FileListTab from '../file/info_file_list';
+import ResultTab from './_result'
 
 import SubmitFlowModal from '../flowdata/form';
 import SubmitFreeFlowModal from '../freeflow/form';
@@ -13,16 +14,18 @@ import utils from '../../utils';
 export default class MissiveEdit extends Component {
     state = {
         id: this.props.location.query.id || 0,
-        formId: this.props.params.formId,
+        formId: parseInt(this.props.params.formId, 10),
     }
     componentWillMount() {
         this.loadData();
     };
 
     loadData = () => {
-        let id = this.state.id
+        const { id, formId } = this.state
+
         if (!id) {
             this.setState({
+                missive: {},
                 activeItem: 'info',
                 canView: true,
                 canEdit: true,
@@ -30,8 +33,8 @@ export default class MissiveEdit extends Component {
                 canCancel: false,
                 canBack: false,
                 model: {
-                    ID: this.state.id,
-                    FormId: this.state.formId
+                    ID: id,
+                    FormId: formId
                 }
             });
         }
@@ -46,6 +49,9 @@ export default class MissiveEdit extends Component {
                 }
                 this.setState({ ...data });
             });
+            api.Missive.Get(id, data => {
+                this.setState({ missive: data })
+            })
         }
     };
 
@@ -77,10 +83,12 @@ export default class MissiveEdit extends Component {
     }
 
     render() {
-        const model = this.state.model;
-        if (!model) return null;
-        const showFiles = model.ID > 0;
-        const showFlow = !!model.FlowDataId;
+        const model = this.state.model
+        const missive = this.state.missive
+        if (!model) return null
+        const showFiles = model.ID > 0
+        const showFlow = !!model.FlowDataId
+
         return <div>
             <Affix offsetTop={0} className="toolbar">
                 <Button.Group>
@@ -111,11 +119,11 @@ export default class MissiveEdit extends Component {
             </Affix>
             <Tabs style={{ position: 'absolute', left: '210px', top: '55px', bottom: '10px', right: '10px', overflow: 'auto', overflowX: 'hidden' }}>
                 <Tabs.TabPane tab="拟稿表单" key="1" style={{ zIndex: 2 }}>
-                    <FormTab info={model} disabled={!this.state.canEdit} ref="form" />
+                    <FormTab model={missive} formId={this.state.formId} disabled={!this.state.canEdit} ref="form" />
                 </Tabs.TabPane>
                 <Tabs.TabPane tab="文档预览" key="2">
                     <div style={{ position: 'absolute', left: '10px', top: '50px', bottom: '10px', right: '0', zIndex: 1 }}>
-                        <ContentTab info={model} />
+                        <ContentTab missive={missive} />
                     </div>
                 </Tabs.TabPane>
                 {showFiles ?
@@ -127,6 +135,12 @@ export default class MissiveEdit extends Component {
                 {showFlow ?
                     <Tabs.TabPane tab="审批流程" key="3">
                         <FlowListTab data={model.FlowData} />
+                    </Tabs.TabPane>
+                    : null
+                }
+                {showFlow && model.FormId === api.Forms.Missive.ID ?
+                    <Tabs.TabPane tab="成果预览" key="4">
+                        <ResultTab flowData={model.FlowData} missive={missive} />
                     </Tabs.TabPane>
                     : null
                 }

@@ -13,10 +13,11 @@ class FreeFlowForm extends Component {
         const flowNodeData = this.props.flowNodeData;
         api.FreeFlowData.UserList(flowNodeData.ID, '', json => {
             var treeData = [];
+            var list = json
             if (key) {
-                json = json.filter(e => e.RealName.indexOf(key) > -1);
+                list = list.filter(e => e.RealName.indexOf(key) > -1 || e.Username.indexOf(key) > -1)
             }
-            json.map(user => user.Departments.map(d => {
+            list.map(user => user.Departments.map(d => {
                 var item = treeData.find(e => e.value === 'parent' + d.ID);
                 if (!item) {
                     item = { value: 'parent' + d.ID, label: d.Name, selectable: false, children: [] }
@@ -65,6 +66,7 @@ class FreeFlowForm extends Component {
                 allowClear={true}
                 multiple={true}
                 treeCheckable={true}
+                filterTreeNode={(val, node) => node.props.title.indexOf(val) > -1}
                 treeData={this.state.treeData}
                 treeDefaultExpandedKeys={['0']}
             />

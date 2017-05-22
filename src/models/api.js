@@ -162,8 +162,8 @@ module.exports = {
         Cancel: (infoId, cb, err) => {
             invokeApi('flowdata/Cancel?infoId=' + infoId, HTTP_GET, null, cb, err);
         },
-        UserList: (flowId, nodeId, flowDataId, cb, err) => {
-            invokeApi('flowdata/userlist', HTTP_GET, { flowId, nodeId, flowDataId }, cb, err);
+        UserList: (parameters, cb, err) => {
+            invokeApi('flowdata/userlist', HTTP_GET, parameters, cb, err);
         },
         BackList: (infoId, backId, cb, err) => {
             invokeApi('flowdata/backlist', HTTP_GET, { infoId, backId }, cb, err)
