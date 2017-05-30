@@ -37,34 +37,26 @@ class EditNodeModal extends Component {
                         disabled={node.ID === record.ID}>
                         {node.Name}</Select.Option>)}
                 </Select>
-            }, {
+            }, 
+            {
                 title: '受理人',
-                name: 'UserId',
-                defaultValue: record.UserId === 0 ? '' : record.UserId.toString(),
+                name: 'UserIds',
+                defaultValue: (record.UserIds || []).map(id => id.toString()),
                 render:
-                <Select mode="combobox" showSearch={true}
-                    defaultActiveFirstOption={false}
-                    showArrow={false}
-                    filterOption={false}
-                    onSearch={value => {
-                        if (!value) return;
-                        api.User.List({ searchKey: value }, json => this.setState({ users: json.List }))
-                    }}
-                    placeholder="请输入姓名"
-                    optionLabelProp="children"
+                <Select mode="multiple" 
                 >
                     {(this.props.users || []).map((item, key) =>
                         <Select.Option key={key} value={(item.ID || '').toString()}>
                             {item.RealName}
                         </Select.Option>)}
                 </Select>
-            }, {
+            }, 
+            {
                 title: '受理职务',
-                name: 'JobTitleId',
-                defaultValue: record.JobTitleId.toString(),
+                name: 'JobTitleIds',
+                defaultValue: (record.JobTitleIds || []).map(id => id.toString()),
                 render:
-                <Select>
-                    <Select.Option key={0}>无</Select.Option>
+                <Select mode="multiple">
                     {this.props.titles.map((item, key) =>
                         <Select.Option key={item.ID}>
                             {item.Name}

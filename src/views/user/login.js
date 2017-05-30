@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router'
-import { Form, Icon, Input, Button } from 'antd';
+import { Form, Icon, Input, Button, message } from 'antd';
 import '../../css/login.css'
 
 import auth from '../../models/auth'
@@ -21,8 +21,9 @@ class Login extends Component {
                 api.User.Login(values, json => {
                     auth.login(json);
                     utils.Redirect('/');
-                },()=>{
-                this.setState({ loading: false });
+                }, (err) => {
+                    message.error(err.Message)
+                    this.setState({ loading: false });
                 })
             } else {
                 this.setState({ loading: false });

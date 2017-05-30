@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import { Button, Input, Table } from 'antd';
 import utils from '../../utils';
 import api from '../../models/api';
+import moment from 'moment'
 
 export default class MissiveList extends React.Component {
     state = {
@@ -45,7 +46,7 @@ export default class MissiveList extends React.Component {
         const nextFormId = nextProps.params.formId
 
         if (nextStatus !== this.props.location.query.status || nextFormId !== this.props.params.formId) {
-            this.loadData(nextFormId, this.state.page.current, this.state.searchKey, nextStatus);
+            this.loadData(nextFormId, 1, this.state.searchKey, nextStatus);
         }
     }
 
@@ -56,6 +57,19 @@ export default class MissiveList extends React.Component {
     handleSearch = searchKey => {
         this.loadData(this.state.formId, this.state.page.current, searchKey);
     };
+
+    getColumns = () => {
+        let items = [
+            { title: '文号', dataIndex: 'WJ_ZH' },
+            { title: '标题', dataIndex: 'WJ_BT', render: (text, item) => <Link to={`/missive/${this.state.formId}/edit?id=${item.ID}`}>{text}</Link> },
+            { title: '密级', dataIndex: 'WJ_MJ' },
+            { title: '主送机关', dataIndex: 'ZS_JG' },
+            { title: '办理期限', dataIndex: 'QX_RQ', render: (text, item) => text ? moment(text).format('ll') : null },
+            { title: '所在流程', dataIndex: 'FlowStep' },
+            { title: '处理日期', dataIndex: 'UpdateTime', render: (text, item) => text ? moment(text).format('ll') : null },
+        ];
+        return items
+    }
 
     render() {
         if (!this.state.formId) return <span>参数异常，缺少FormId</span>
@@ -71,20 +85,11 @@ export default class MissiveList extends React.Component {
                     <div className="right">
                         <Input.Search onSearch={this.handleSearch} placeholder="文号、标题..." />
                     </div>
-
                 </div>
                 <Table
                     rowKey="ID"
                     loading={this.state.loading}
-                    columns={[
-                        { title: '文号', dataIndex: 'WH' },
-                        { title: '标题', dataIndex: 'WJ_BT', render: (text, item) => <Link to={`/missive/${this.state.formId}/edit?id=${item.ID}`}>{text}</Link> },
-                        { title: '密级', dataIndex: 'MJ' },
-                        { title: '主送机关', dataIndex: 'ZS_JG' },
-                        { title: '期限', dataIndex: 'QX_RQ' },
-                        { title: '审批流程', dataIndex: 'FlowStep' },
-                        { title: '处理日期', dataIndex: 'UpdateTime' },
-                    ]}
+                    columns={this.getColumns()}
                     dataSource={this.state.data}
                     pagination={{
                         size: 5, ...this.state.page,

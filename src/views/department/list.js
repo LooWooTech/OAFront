@@ -1,8 +1,8 @@
 import React from 'react';
-import { Affix, Table, Button, Popconfirm, Input } from 'antd';
+import { Affix, Table, Button, Popconfirm, Input, TreeSelect } from 'antd';
 import EditModal from '../shared/_formmodal';
 import api from '../../models/api';
-
+const TreeNode = TreeSelect.TreeNode;
 export default class DepartmentList extends React.Component {
     componentDidMount() {
         this.loadData();
@@ -18,9 +18,24 @@ export default class DepartmentList extends React.Component {
     };
     loadData = () => {
         api.Department.List(data => {
-            this.setState({ list: data })
+            let roots = data.filter(e => e.ParentId == 0)
+            roots = roots.map(node => this.buildTreeData(node, data))
+            console.log(roots)
+            this.setState({ list: roots })
         });
     };
+
+    buildTreeData = (node, list) => {
+        node.children = list.filter(e => e.ParentId == node.ID)
+        console.log(node.children)
+        node.children.map(child => this.buildTreeData(child, list))
+        return node
+    }
+
+    getTreeNode = (node) => <TreeNode value={node.ID.toString()} title={node.Name} key={node.ID}>
+        {node.children && node.children.length > 0 ? node.children.map(child => this.getTreeNode(child)) : null}
+    </TreeNode>
+
     getFormItems = record => {
         record = record || { ID: 0, Name: '' };
         return [{
@@ -32,7 +47,18 @@ export default class DepartmentList extends React.Component {
             name: 'Name',
             defaultValue: record.Name,
             render: <Input />
-        }];
+        }, {
+            title: '所属部门',
+            name: 'ParentId',
+            defaultValue: (record.ParentId || '').toString(),
+            render: <TreeSelect
+                dropdownStyle={{ maxHeight: '400px' }}
+                treeDefaultExpandAll={true}
+            >
+                {this.getTreeNode({ ID: 0, Name: '定海国土局', children: this.state.list.filter(e => e.ParentId == 0) })}
+            </TreeSelect>
+        }
+        ];
     };
     render() {
         if (!this.state) return null;
@@ -40,7 +66,7 @@ export default class DepartmentList extends React.Component {
         return <div>
             <Affix offsetTop={0} className="toolbar">
                 <Button.Group>
-                   <EditModal
+                    <EditModal
                         name="添加部门"
                         children={this.getFormItems()}
                         trigger={<Button type="primary" icon="file">添加部门</Button>}
@@ -51,8 +77,8 @@ export default class DepartmentList extends React.Component {
             <Table
                 rowKey="ID"
                 loading={this.state.loading}
+                indentSize={30}
                 columns={[
-                    { title: 'ID', dataIndex: 'ID', width: 50 },
                     { title: '部门名称', dataIndex: 'Name', },
                     {
                         title: '操作', width: 200,
@@ -74,6 +100,7 @@ export default class DepartmentList extends React.Component {
                     }
                 ]}
                 dataSource={this.state.list}
+                pagination={false}
             >
             </Table>
         </div>;

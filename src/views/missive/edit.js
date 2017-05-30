@@ -69,9 +69,9 @@ export default class MissiveEdit extends Component {
     };
 
     handleCloseFreeFlow = () => {
-        if (confirm("你确定要提前结束该流程吗？")) {
+        if (confirm("你确定要提前结束传阅流程吗？")) {
             let flowNodeData = this.state.flowNodeData
-            api.FreeFlowData.Complete(flowNodeData.ID, () => {
+            api.FreeFlowData.Complete(flowNodeData.ID, this.state.model.ID, () => {
                 flowNodeData.FreeFlowData.Completed = true
                 this.setState({
                     flowNodeData,
@@ -99,7 +99,7 @@ export default class MissiveEdit extends Component {
                         <SubmitFlowModal
                             flowDataId={model.FlowDataId}
                             callback={this.loadData}
-                            children={<Button type="success" icon="check" htmlType="button">提交审批</Button>}
+                            children={<Button type="success" icon="check" htmlType="button">提交流程</Button>}
                         />
                         : null}
                     {this.state.canSubmitFreeFlow ?
@@ -109,10 +109,10 @@ export default class MissiveEdit extends Component {
                             infoId={model.ID}
                             flowNodeData={this.state.flowNodeData}
                             record={this.state.freeFlowNodeData}
-                            children={<Button type="danger" icon="check" htmlType="button">{this.state.canSubmitFlow ? '创建传阅流程' : '审阅'}</Button>}
+                            children={<Button type="danger" icon="check" htmlType="button">{this.state.canSubmitFlow ? '传阅授权' : '审阅'}</Button>}
                         />
                         : null}
-                    {this.state.canCompleteFreeFlow ? <Button type="danger" icon="close" onClick={this.handleCloseFreeFlow}>结束传阅流程</Button> : null}
+                    {this.state.canCompleteFreeFlow ? <Button type="danger" icon="close" onClick={this.handleCloseFreeFlow}>结束传阅</Button> : null}
                     {this.state.canCancel ? <Button type="danger" icon="rollback" htmlType="button" onClick={this.handleCancel}>撤销</Button> : null}
                     <Button onClick={utils.GoBack} type="" icon="arrow-left" htmlType="button">返回</Button>
                 </Button.Group>

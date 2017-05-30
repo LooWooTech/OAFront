@@ -4,6 +4,8 @@ import { Menu, Icon, Badge } from 'antd'
 import api from '../../models/api'
 import utils from '../../utils'
 
+import EditPasswordModal from '../user/editpassword'
+
 const headerNavData = [
     { name: 'home', active: true, path: '/?scope=all', icon: 'fa fa-commenting', text: '动态' },
     { name: 'missive', path: `/missive/${api.Forms.Missive.ID}/?status=1`, icon: 'fa fa-file-o', text: '公文' },
@@ -47,7 +49,7 @@ export default class TopNav extends React.Component {
     state = { current: '' };
 
     handleLeftMenuClick = e => {
-        
+
         headerNavData.map(item => {
             if (item.name === e.key) {
                 utils.Redirect(item.path || '/' + item.name);
@@ -62,6 +64,9 @@ export default class TopNav extends React.Component {
             case 'logout':
                 auth.logout();
                 utils.Redirect('/user/login');
+                break;
+            case 'editpassword':
+
                 break;
             default:
                 break;
@@ -86,7 +91,11 @@ export default class TopNav extends React.Component {
                     </Menu.Item>
                     <Menu.SubMenu title={<span><Icon type="user" /> {auth.getUser().RealName || 'Administrator'} </span>}>
                         <Menu.Item>个人资料</Menu.Item>
-                        <Menu.Item>修改密码</Menu.Item>
+                        <Menu.Item key="editpassword">
+                            <EditPasswordModal
+                                trigger="修改密码"
+                            />
+                        </Menu.Item>
                         <Menu.Divider />
                         <Menu.Item>通讯录</Menu.Item>
                         <Menu.Item>消息设置</Menu.Item>

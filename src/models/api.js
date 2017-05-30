@@ -15,6 +15,12 @@ const Forms = {
     Task: { ID: 4, Name: '任务' },
     Leave: { ID: 5, Name: '请假' },
 };
+function getExceptionMessage(ex) {
+    if (ex.InnerException) {
+        return getExceptionMessage(ex.InnerException)
+    }
+    return ex.ExceptionMessage || ex.Message || '未知错误'
+}
 function invokeApi(path, method, data, callback, onError, async = true) {
     var url = host + path;
     if (data && (method === HTTP_GET || method === HTTP_DELETE)) {
@@ -30,10 +36,7 @@ function invokeApi(path, method, data, callback, onError, async = true) {
         if (onError) {
             onError(error);
         } else {
-            let msg = error.ExceptionMessage || error.Message;
-            if (msg) {
-                message.error(msg);
-            }
+            message.error(getExceptionMessage(error));
         }
         console.log("ERROR:", error);
     }, async);
@@ -57,6 +60,7 @@ module.exports = {
     },
     User: {
         Login: (data, cb, err) => invokeApi('user/login', HTTP_GET, data, cb, err),
+        EditPassword: (data, cb, err) => invokeApi('user/UpdatePassword', HTTP_GET, data, cb, err),
         //找回密码
         FindPasswordSendMail: (data, cb, err) => {
             invokeApi('user/sendpasswordemail', HTTP_GET, data, cb, err);
@@ -176,8 +180,8 @@ module.exports = {
         UserList: (flowNodeDataId, key, cb, err) => {
             invokeApi(`freeflowdata/userlist?flownodedataId=${flowNodeDataId}&key=${key}`, HTTP_GET, null, cb, err);
         },
-        Complete: (freeFlowDataId, cb, err) => {
-            invokeApi(`freeflowdata/complete?id=${freeFlowDataId}`, HTTP_GET, null, cb, err)
+        Complete: (freeFlowDataId, infoId, cb, err) => {
+            invokeApi(`freeflowdata/complete?id=${freeFlowDataId}&infoId=${infoId}`, HTTP_GET, null, cb, err)
         }
     },
     Group: {
