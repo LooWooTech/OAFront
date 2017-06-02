@@ -31,7 +31,7 @@ class SharedForm extends Component {
         }
         const getLabel = item => {
             if (item.tips) {
-                return <Tooltip title={item.tips}>{item.title}<Icon type="question-circle" /></Tooltip>
+                return <Tooltip title={item.tips}><Icon type="question-circle" /> {item.title} </Tooltip>
             }
             return item.title
         }
@@ -41,8 +41,9 @@ class SharedForm extends Component {
                     item.title ?
                         <Form.Item key={item.name || key} label={getLabel(item)} {...(item.layout ? item.layout : formItemLayout) }>
                             {getControl(item)}
+                            {item.extend}
                         </Form.Item>
-                        : <span key={item.name || key}>{getControl(item)}</span>
+                        : <span key={item.name || key}>{getControl(item)}{item.extend}</span>
                 )}
             </Form>
         )

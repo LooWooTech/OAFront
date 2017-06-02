@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import { Input, Radio, message } from 'antd'
 import FormModal from '../shared/_formmodal'
-import SelectUser from './select_user'
+import SelectUser from '../shared/_select_user'
 import api from '../../models/api'
 
 class FlowForm extends Component {
-    state = { result: true, flowDataId: this.props.flowDataId }
+    state = { result: true, flowDataId: this.props.flowDataId, toUser: {} }
 
 
     componentWillMount() {
@@ -19,11 +19,18 @@ class FlowForm extends Component {
 
 
     handleSubmit = (data) => {
-
+        data.ToUserId = this.state.toUser.ID || 0
         if (!this.state.canComplete && this.state.result && !data.ToUserId) {
-            message.error("请先选择发送人")
-            return false
+            let users = this.refs.selectUserForm.getSelectedUsers()
+            if (users.length > 0) {
+                data.ToUserId = users[0].ID
+            }
+            else {
+                message.error("请先选择发送人")
+                return false
+            }
         }
+        
         data.Result = this.state.result;
         if (!data.Result && !confirm('你确定要退回吗？')) return false
 
@@ -36,6 +43,14 @@ class FlowForm extends Component {
                 callback(json)
             }
         })
+    }
+
+    handleSelect = (users) => {
+        if (!this.state.canComplete && this.state.result && users && users.length === 0) {
+            message.error("请先选择发送人")
+            return false
+        }
+        this.setState({ toUser: users[0] })
     }
 
     getFormItems = () => {
@@ -61,19 +76,19 @@ class FlowForm extends Component {
                 </Radio.Group>
             })
         }
+
         //如果可以结束，且同意，则不需要选择发送人
         if (!canComplete && this.state.result) {
-            items.push({ name: 'ToUserId', defaultValue: this.state.toUserId, render: <Input type="hidden" /> });
             items.push({
-                title: '选择发送人',
+                title: '选择发送人员',
                 render:
                 <SelectUser
-                    flowId={flowData.FlowId}
-                    nodeId={flowNodeData.FlowNodeId}
-                    nodeDataId={flowNodeData.ID}
-                    flowDataId={flowNodeData.FlowDataId}
-                    onChange={value => this.setState({ toUserId: value })}
-                />
+                    ref="selectUserForm"
+                    flowNodeDataId={flowNodeData.ID}
+                    onSubmit={this.handleSelect}
+                    formType="flow"
+                />,
+                extend: <span>{(this.state.toUser || {}).ID > 0 ? ' 已选 ' + this.state.toUser.RealName : ''}</span>
             })
         }
         return items

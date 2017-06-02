@@ -109,7 +109,7 @@ export default class MissiveEdit extends Component {
                             infoId={model.ID}
                             flowNodeData={this.state.flowNodeData}
                             record={this.state.freeFlowNodeData}
-                            children={<Button type="danger" icon="check" htmlType="button">{this.state.canSubmitFlow ? '传阅授权' : '审阅'}</Button>}
+                            children={<Button type="danger" icon="check" htmlType="button">{this.state.canSubmitFlow ? '自由发送' : '审阅'}</Button>}
                         />
                         : null}
                     {this.state.canCompleteFreeFlow ? <Button type="danger" icon="close" onClick={this.handleCloseFreeFlow}>结束传阅</Button> : null}

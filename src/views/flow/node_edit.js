@@ -43,9 +43,17 @@ class EditNodeModal extends Component {
                 name: 'UserIds',
                 defaultValue: (record.UserIds || []).map(id => id.toString()),
                 render:
-                <Select mode="multiple" 
+                <Select mode="multiple"
+                    showSearch={true}
+                    defaultActiveFirstOption={false}
+                    showArrow={false}
+                    filterOption={false}
+                    onSearch={value => {
+                        if (!value) return;
+                        api.User.List({ searchKey: value }, json => this.setState({ users: json.List }))
+                    }}
                 >
-                    {(this.props.users || []).map((item, key) =>
+                    {(this.state.users || []).map((item, key) =>
                         <Select.Option key={key} value={(item.ID || '').toString()}>
                             {item.RealName}
                         </Select.Option>)}
@@ -109,7 +117,7 @@ class EditNodeModal extends Component {
 
     render() {
         const { record, departments, titles, nodes } = this.props;
-        const { title, trigger, onSubmit } = this.props;
+        const { title, trigger } = this.props;
         if (!departments || !titles || !nodes) return null;
         return (
             <SharedModal

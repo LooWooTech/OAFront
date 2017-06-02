@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
 import { Input, DatePicker, Button, message } from 'antd'
 import FormModal from '../shared/_formmodal'
-import SelectUser from '../flowdata/select_user'
+import SelectUser from '../shared/_select_user'
 import api from '../../models/api'
-
 
 class CarApplyModal extends Component {
     state = {}
@@ -48,7 +47,7 @@ class CarApplyModal extends Component {
                     { title: '开始日期', name: 'BeginDate', render: <DatePicker />, rules: [{ required: true, message: '请选择开始日期' }], },
                     { title: '结束日期', name: 'EndDate', render: <DatePicker />, rules: [{ required: true, message: '请选择结束日期' }], },
                     { title: '申请用途', name: 'Data.Reason', render: <Input type="textarea" autosize={{ minRows: 2, maxRows: 4 }} />, rules: [{ required: true, message: '请填写车辆申请用途' }] },
-                    { title: '审批人', render: <SelectUser onChange={value => this.setState({ toUserId: value })} flowId={this.props.flowId} />, },
+                    { title: '审批人', render: <SelectUser formType="carflow" flowId={this.props.flowId} />, },
                 ]}
             />
         )

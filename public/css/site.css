@@ -140,22 +140,6 @@ hr {
     color: #111;
 }
 
-.sub-timeline {
-    padding: 10px;
-    padding-left: 20px;
-    background: #eee;
-    border-radius: 5px;
-    margin: 10px;
-}
-
-.sub-timeline .ant-timeline-item {
-    padding: 0;
-}
-
-.sub-timeline .ant-timeline-item-last .ant-timeline-item-content {
-    min-height: 20px;
-}
-
 .car-image {
     overflow: hidden;
     background: #eee;

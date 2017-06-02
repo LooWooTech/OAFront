@@ -91,7 +91,7 @@ class MissiveEditForm extends React.Component {
                 onRemove={this.handleDeleteFile}
                 withCredentials={true}
                 showUploadList={false}
-                accept=".doc,.docx,.pdf,.tiff,tif"
+                accept=".doc,.docx,.pdf,.tiff,.tif"
                 disabled={disabled}
             >
                 <div style={{ textAlign: 'left', padding: '10px' }}>
@@ -106,9 +106,9 @@ class MissiveEditForm extends React.Component {
                 <div>
                     {word.FileName}
                     &nbsp;&nbsp;&nbsp;&nbsp;
-                        {disabled ? null :
+                    <a href={api.File.FileUrl(word.ID)} target="_blank"><Icon type="download" />&nbsp;下载</a>
+                    {disabled ? null :
                         <span>
-                            <a href={api.File.FileUrl(word.ID)} target="_blank"><Icon type="download" />&nbsp;下载</a>
                             &nbsp;&nbsp;&nbsp;&nbsp;
                                 <a onClick={this.handleDeleteWord}><Icon type="delete" />&nbsp;删除</a>
                         </span>
@@ -156,7 +156,7 @@ class MissiveEditForm extends React.Component {
                 {
                     name: 'WJ_LY', title: '来文单位', defaultValue: model.WJ_LY,
                     rules: [{ required: true, message: '请填写来文单位' }],
-                    render: <Input  disabled={disabled}/>
+                    render: <Input disabled={disabled} />
                 },
                 titleControl,
                 {

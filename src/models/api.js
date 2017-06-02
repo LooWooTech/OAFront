@@ -73,6 +73,9 @@ module.exports = {
         },
         Delete: (id, cb, err) => {
             invokeApi('user/delete?id=' + id, HTTP_DELETE, null, cb, err);
+        },
+        RecentList: (cb, err) => {
+            invokeApi('user/recentlist', HTTP_GET, null, cb, err)
         }
     },
     Form: {
@@ -166,8 +169,8 @@ module.exports = {
         Cancel: (infoId, cb, err) => {
             invokeApi('flowdata/Cancel?infoId=' + infoId, HTTP_GET, null, cb, err);
         },
-        UserList: (parameters, cb, err) => {
-            invokeApi('flowdata/userlist', HTTP_GET, parameters, cb, err);
+        UserList: (flowNodeDataId, cb, err) => {
+            invokeApi('flowdata/userlist?flowNodeDataId=' + flowNodeDataId, HTTP_GET, null, cb, err);
         },
         BackList: (infoId, backId, cb, err) => {
             invokeApi('flowdata/backlist', HTTP_GET, { infoId, backId }, cb, err)

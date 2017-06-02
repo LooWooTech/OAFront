@@ -13,7 +13,9 @@ class SharedModal extends Component {
     }
 
     handleSubmit = () => {
-        this.props.onSubmit();
+        if (!this.props.onSubmit()) {
+            this.hideModal()
+        }
     }
 
     render() {
