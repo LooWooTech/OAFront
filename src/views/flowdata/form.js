@@ -30,7 +30,7 @@ class FlowForm extends Component {
                 return false
             }
         }
-        
+
         data.Result = this.state.result;
         if (!data.Result && !confirm('你确定要退回吗？')) return false
 
@@ -55,17 +55,28 @@ class FlowForm extends Component {
 
     getFormItems = () => {
         let { flowNodeData, flowData, canBack, canComplete } = this.state;
+        let currentNode = flowData.Flow.Nodes.find(e => e.ID === flowNodeData.FlowNodeId)
+        let prevNode = currentNode ? flowData.Flow.Nodes.find(e => e.ID === currentNode.PrevId) : null
+        let nextNode = currentNode ? flowData.Flow.Nodes.find(e => e.PrevId === currentNode.ID) : null
         var items = [
             { name: 'InfoId', defaultValue: flowData.InfoId, render: <Input type="hidden" /> },
             { name: 'FlowNodeId', defaultValue: flowNodeData.FlowNodeId, render: <Input type="hidden" /> },
             { name: 'FlowDataId', defaultValue: flowNodeData.FlowDataId, render: <Input type="hidden" /> },
             { name: 'ID', defaultValue: flowNodeData.ID, render: <Input type="hidden" /> },
             { name: 'UserId', defaultValue: flowNodeData.UserId, render: <Input type="hidden" /> },
-            {
-                title: '意见', name: 'Content', defaultValue: flowNodeData.Content,
-                render: <Input type="textarea" autosize={{ minRows: 2, maxRows: 6 }} />
-            }
+
         ]
+        if (prevNode) {
+            items.push({ title: '上一环节', render: prevNode.Name })
+        }
+        if (currentNode) {
+            items.push({ title: '当前环节', render: currentNode.Name })
+        }
+
+        items.push({
+            title: '意见', name: 'Content', defaultValue: flowNodeData.Content,
+            render: <Input type="textarea" autosize={{ minRows: 2, maxRows: 6 }} />
+        });
         if (canBack) {
             items.push({
                 title: '审批结果',
@@ -75,6 +86,9 @@ class FlowForm extends Component {
                     <Radio.Button value={false}>不同意</Radio.Button>
                 </Radio.Group>
             })
+        }
+        if (nextNode) {
+            items.push({ title: '下一环节', render: nextNode.Name })
         }
 
         //如果可以结束，且同意，则不需要选择发送人

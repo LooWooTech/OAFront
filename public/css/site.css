@@ -176,19 +176,20 @@ hr {
     margin-right: 20px;
 }
 
-.freeflow {
-    margin-left: 30px;
-    margin-top: 30px;
-}
 
-.freeflow .title {
-    border-bottom: solid 1px #ddd;
-    line-height: 1.5rem;
-    font-weight: bold;
+.freeflow .datetime {
+    font-size: .8rem;
+    color: #999;
+    display: inline-block;
+    margin-left: 10px;
 }
 
 .freeflow .content {
-    padding: 5px;
-    border-bottom: 1px #ddd;
-    border-bottom-style: dashed;
+    padding: 5px 10px;
+    font-size: 1rem;
+    margin-left: 10px;
+}
+
+.ant-form-inline >span{
+    display: inline-block;
 }

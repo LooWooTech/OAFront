@@ -5,11 +5,11 @@ import FormModal from '../shared/_formmodal'
 import api from '../../models/api'
 
 class FreeFlowForm extends Component {
-    state = { }
+    state = {}
 
     handleSubmit = (data) => {
         var toUserIds = this.refs.selectUserForm.getSelectedUsers().map(e => e.ID).join()
-        api.FreeFlowData.Submit(data.FlowNodeDataID, toUserIds, data, json => {
+        api.FreeFlowData.Submit(data.FlowNodeDataID, data.InfoId, toUserIds, data, json => {
             message.success("提交成功")
             const callback = this.props.callback
             if (callback) {

@@ -15,11 +15,14 @@ class SharedForm extends Component {
 
     render() {
         const children = this.props.children || [];
-
-        const formItemLayout = this.props.layout || {
+        const style = this.props.style || {}
+        const formItemLayout = this.props.itemLayout || {
             labelCol: { span: 6 },
             wrapperCol: { span: 14 },
         };
+
+        const layout = this.props.layout || 'horizontal'
+
         const { getFieldDecorator } = this.props.form;
         const getControl = item => {
             var getField = true
@@ -36,7 +39,7 @@ class SharedForm extends Component {
             return item.title
         }
         return (
-            <Form layout="horizontal" onSubmit={this.handleSubmit}>
+            <Form layout={layout} onSubmit={this.handleSubmit} style={style}>
                 {children.map((item, key) =>
                     item.title ?
                         <Form.Item key={item.name || key} label={getLabel(item)} {...(item.layout ? item.layout : formItemLayout) }>

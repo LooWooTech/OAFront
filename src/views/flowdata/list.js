@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Timeline, Icon, Tree, Popover, Tag } from 'antd';
+import { Timeline, Icon, Tree, Badge, Tag } from 'antd';
 const TreeNode = Tree.TreeNode
 import moment from 'moment';
 
@@ -11,7 +11,7 @@ class FlowDataList extends Component {
         let nodes = freeflowData.Nodes.filter(e => e.ParentId === 0)
         return (
             <div className="sub-timeline">
-                <Tree>
+                <Tree defaultExpandAll={true}>
                     {nodes.map(node => this.getTreeNode(node, freeflowData.Nodes))}
                 </Tree>
 
@@ -20,12 +20,18 @@ class FlowDataList extends Component {
 
     getTreeNode = (node, list) => {
         let children = list.filter(e => e.ParentId === node.ID)
-        let treeNodeTitle = <Popover
-            title={node.UpdateTime ? moment(node.UpdateTime).format('YYYY-MM-DD HH:mm') : ''}
-            content={node.Content || node.UpdateTime ? '阅' : ''}
-            trigger="hover">
-            <Tag color={node.UpdateTime ? 'green' : ''}>{node.Signature}</Tag>
-        </Popover>
+        // let treeNodeTitle = <Popover
+        //     title={node.UpdateTime ? moment(node.UpdateTime).format('YYYY-MM-DD HH:mm') : ''}
+        //     content={node.Content || node.UpdateTime ? '阅' : ''}
+        //     trigger="hover">
+        //     <Tag color={node.UpdateTime ? 'green' : ''}>{node.Signature}</Tag>
+        // </Popover>
+        let treeNodeTitle = <div className="freeflow">
+            <span className="signature"><Badge status={node.UpdateTime ? 'success' : 'default'} />{node.Signature}</span>
+            <span className="datetime">{node.UpdateTime ? moment(node.UpdateTime).format('YYYY-MM-DD HH:mm') : ''}</span>
+            <div className="content">{node.Content || node.UpdateTime ? '阅' : ''}</div>            
+            
+        </div>
         if (children && children.length > 0) {
             return <TreeNode title={treeNodeTitle} key={node.ID}>
                 {children.map(child => this.getTreeNode(child, list))}

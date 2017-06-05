@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Affix, Button, Tabs, message } from 'antd';
+import { Affix, Button, Tabs, message, Modal } from 'antd';
 import api from '../../models/api';
 import FormTab from './_form';
 import ContentTab from './_content';
@@ -69,15 +69,30 @@ export default class MissiveEdit extends Component {
     };
 
     handleCloseFreeFlow = () => {
-        if (confirm("你确定要提前结束传阅流程吗？")) {
-            let flowNodeData = this.state.flowNodeData
-            api.FreeFlowData.Complete(flowNodeData.ID, this.state.model.ID, () => {
-                flowNodeData.FreeFlowData.Completed = true
-                this.setState({
-                    flowNodeData,
-                    canSubmitFreeFlow: false,
-                    canCompleteFreeFlow: false
+        Modal.confirm({
+            title: '结束自由发送',
+            content: '你确定要提前结束自由发送流程吗？',
+            onOk: () => {
+                let flowNodeData = this.state.flowNodeData
+                api.FreeFlowData.Complete(flowNodeData.ID, this.state.model.ID, () => {
+                    flowNodeData.FreeFlowData.Completed = true
+                    this.setState({
+                        flowNodeData,
+                        canSubmitFreeFlow: false,
+                        canCompleteFreeFlow: false
+                    })
                 })
+            }
+        })
+    }
+
+    handleSubmitFreeFlow = () => {
+        if (confirm("你确定提交此次传阅吗？")) {
+            let flowNodeData = this.state.flowNodeData
+            api.FreeFlowData.Submit(flowNodeData.ID, this.state.model.ID, '', {
+                ID: this.state.freeFlowNodeData.ID,
+            }, json => {
+                this.setState({ reload: Math.random() })
             })
         }
     }
@@ -102,6 +117,10 @@ export default class MissiveEdit extends Component {
                             children={<Button type="success" icon="check" htmlType="button">提交流程</Button>}
                         />
                         : null}
+                    {this.state.canSubmitFreeFlow && this.state.freeFlowNodeData && !this.state.freeFlowNodeData.UpdateTime ?
+                        <Button icon="check" type="primary" onClick={this.handleSubmitFreeFlow}>已阅</Button>
+                        : null
+                    }
                     {this.state.canSubmitFreeFlow ?
                         <SubmitFreeFlowModal
                             callback={this.loadData}
@@ -109,10 +128,10 @@ export default class MissiveEdit extends Component {
                             infoId={model.ID}
                             flowNodeData={this.state.flowNodeData}
                             record={this.state.freeFlowNodeData}
-                            children={<Button type="danger" icon="check" htmlType="button">{this.state.canSubmitFlow ? '自由发送' : '审阅'}</Button>}
+                            children={<Button type="danger" icon="retweet" htmlType="button">自由发送</Button>}
                         />
                         : null}
-                    {this.state.canCompleteFreeFlow ? <Button type="danger" icon="close" onClick={this.handleCloseFreeFlow}>结束传阅</Button> : null}
+                    {this.state.canCompleteFreeFlow ? <Button type="danger" icon="close" onClick={this.handleCloseFreeFlow}>结束自由发送</Button> : null}
                     {this.state.canCancel ? <Button type="danger" icon="rollback" htmlType="button" onClick={this.handleCancel}>撤销</Button> : null}
                     <Button onClick={utils.GoBack} type="" icon="arrow-left" htmlType="button">返回</Button>
                 </Button.Group>

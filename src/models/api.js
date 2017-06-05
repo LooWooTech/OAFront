@@ -177,8 +177,8 @@ module.exports = {
         }
     },
     FreeFlowData: {
-        Submit: (flowNodeDataId, toUserIds, data, cb, err) => {
-            invokeApi(`freeflowdata/submit?flowNodeDataId=${flowNodeDataId}&infoId=${data.InfoId}&toUserIds=${toUserIds}`, HTTP_POST, data, cb, err);
+        Submit: (flowNodeDataId, infoId, toUserIds, data, cb, err) => {
+            invokeApi(`freeflowdata/submit?flowNodeDataId=${flowNodeDataId}&infoId=${infoId}&toUserIds=${toUserIds}`, HTTP_POST, data, cb, err);
         },
         UserList: (flowNodeDataId, key, cb, err) => {
             invokeApi(`freeflowdata/userlist?flownodedataId=${flowNodeDataId}&key=${key}`, HTTP_GET, null, cb, err);

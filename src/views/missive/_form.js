@@ -224,7 +224,7 @@ class MissiveEditForm extends React.Component {
             ref="form"
             onSubmit={this.handleSubmit}
             children={this.getItems()}
-            layout={{ labelCol: { span: 4 }, wrapperCol: { span: 8 } }}
+            itemLayout={{ labelCol: { span: 4 }, wrapperCol: { span: 8 } }}
         />
     }
 }

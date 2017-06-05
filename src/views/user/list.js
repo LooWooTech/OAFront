@@ -1,6 +1,7 @@
 import React from 'react';
-import { Table, Button, Popconfirm, Input, Select } from 'antd';
+import { Table, Button, Popconfirm, Input, Select, Affix } from 'antd';
 import EditModal from '../shared/_formmodal';
+import Form from '../shared/_form'
 import api from '../../models/api';
 
 export default class UserList extends React.Component {
@@ -19,7 +20,7 @@ export default class UserList extends React.Component {
     };
 
     componentWillMount() {
-        this.loadPageData();
+        this.loadData();
         api.Department.List(data => this.setState({ departments: data }));
         api.Group.List(data => this.setState({ groups: data }))
         api.JobTitle.List(data => this.setState({ titles: data }))
@@ -28,16 +29,18 @@ export default class UserList extends React.Component {
     componentWillUnmount() {
         api.Abort();
     };
-    loadPageData = (page, searchKey) => {
+    loadData = (departmentId = 0, searchKey = '', page = 1) => {
         this.setState({ loading: true })
         api.User.List({
+            departmentId: departmentId || 0,
+            searchKey: searchKey || this.state.searchKey,
             page: page || this.state.page.current || 1,
             rows: this.state.page.pageSize,
-            searchKey: searchKey || this.state.searchKey,
         },
             data => {
                 this.setState({
                     loading: false,
+                    departmentId: departmentId,
                     data: data.List,
                     page: data.Page,
                 })
@@ -47,13 +50,17 @@ export default class UserList extends React.Component {
 
     handleDelete = (item) => {
         api.User.Delete(item.ID, () => {
-            this.loadPageData()
+            this.loadData()
         })
     }
 
     handleSubmit = (values) => {
         var data = values;
-        api.User.Save(data, data => this.loadPageData());
+        api.User.Save(data, data => this.loadData());
+    }
+    handleSearch = (data) => {
+        this.loadData(data.departmentId, data.searchKey)
+        return false
     }
 
     getFormItems = record => {
@@ -99,15 +106,35 @@ export default class UserList extends React.Component {
     };
 
     render() {
-        return <div className="toolbar">
-            <Button.Group>
-                <EditModal
-                    name="用户"
-                    trigger={<Button type="primary" icon="file">添加用户</Button>}
-                    onSubmit={this.handleSubmit}
-                    children={this.getFormItems()}
+        return <div>
+            <div className="toolbar">
+                <Button.Group>
+                    <EditModal
+                        name="用户"
+                        trigger={<Button type="primary" icon="file">添加用户</Button>}
+                        onSubmit={this.handleSubmit}
+                        children={this.getFormItems()}
+                    />
+                </Button.Group>
+                <Form
+                    onSubmit={this.handleSearch}
+                    style={{ maxWidth: '400px', position: 'absolute', right: '10px', top: '10px' }}
+                    layout="inline"
+                    children={[
+                        {
+                            name: 'departmentId', render: <Select
+                                style={{ width: '150px' }} placeholder="选择部门"
+                            >
+                                {this.state.departments.map(d => <Select.Option key={d.ID}>{d.Name}</Select.Option>)}
+                            </Select>
+                        }, {
+                            name: 'searchKey', render: <Input type="text" style={{ width: '120px' }} placeholder="姓名" />
+                        }, {
+                            render: <Button icon="search" type="primary" htmlType="submit" />
+                        }
+                    ]}
                 />
-            </Button.Group>
+            </div>
             <Table
                 rowKey="ID"
                 loading={this.state.loading}
@@ -141,7 +168,7 @@ export default class UserList extends React.Component {
                 pagination={{
                     size: 5, ...this.state.page,
                     onChange: (page, pageSize) => {
-                        this.loadPageData(page)
+                        this.loadData(this.state.departmentId, this.state.searchKey, page)
                     },
                 }}
             />
