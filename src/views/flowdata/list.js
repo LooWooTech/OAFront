@@ -20,6 +20,7 @@ class FlowDataList extends Component {
 
     getTreeNode = (node, list) => {
         let children = list.filter(e => e.ParentId === node.ID)
+        console.log(node.Content)
         // let treeNodeTitle = <Popover
         //     title={node.UpdateTime ? moment(node.UpdateTime).format('YYYY-MM-DD HH:mm') : ''}
         //     content={node.Content || node.UpdateTime ? '阅' : ''}
@@ -29,7 +30,7 @@ class FlowDataList extends Component {
         let treeNodeTitle = <div className="freeflow">
             <span className="signature"><Badge status={node.UpdateTime ? 'success' : 'default'} />{node.Signature}</span>
             <span className="datetime">{node.UpdateTime ? moment(node.UpdateTime).format('YYYY-MM-DD HH:mm') : ''}</span>
-            <div className="content">{node.Content || node.UpdateTime ? '阅' : ''}</div>            
+            <div className="content">{node.Content || (node.UpdateTime ? '阅' : '')}</div>            
             
         </div>
         if (children && children.length > 0) {

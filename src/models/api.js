@@ -270,6 +270,9 @@ module.exports = {
         Save: (data, cb, err) => {
             invokeApi('car/save', HTTP_POST, data, cb, err);
         },
+        ApplyList: (parameters, cb, err) => {
+            invokeApi('car/carapplies', HTTP_GET, parameters, cb, err);
+        },
         Apply: (carId, toUserId, data, cb, err) => {
             invokeApi('car/apply?carId=' + carId + '&toUserId=' + toUserId, HTTP_POST, data, cb, err);
         },

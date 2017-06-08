@@ -1,41 +1,27 @@
 import React, { Component } from 'react'
-import { Card, Spin, Table, Affix, Button, Tag } from 'antd'
+import { Menu, Affix, Button, Tag } from 'antd'
 import api from '../../models/api'
+import ApplyList from './_apply_list'
 import ApplyFormModal from './apply'
 import EditFormModal from './edit'
 
 class CarIndex extends Component {
 
-    state = { list: [], flowId: api.Forms.Car.ID }
+    state = {
+        list: [],
+        flowId: api.Forms.Car.ID,
+        carId: 0,
+    }
 
     componentWillMount() {
-        this.loadData()
-    }
-
-    loadData = () => {
-        api.Car.List(json => this.setState({ list: json, loading: false }))
-    }
-
-    getStatus = item => {
-        let name = '无法使用';
-        let color = 'gray';
-        switch (item.Status) {
-            case 0:
-                name = '闲置';
-                color = 'green';
-                break;
-            case 1:
-                name = '使用中';
-                color = 'red';
-                break;
-            default:
-                name = '维修中';
-                break;
-        }
-        return <Tag color={color}>{name}</Tag>
+        api.Car.List(json => {
+            var car1 = json.length > 0 ? json[0].ID : 0
+            this.setState({ list: json, carId: car1.ID })
+        })
     }
 
     render() {
+        if (this.state.loading) return null
 
         return (
             <div>
@@ -47,26 +33,19 @@ class CarIndex extends Component {
                         />
                     </Button.Group>
                 </Affix>
-                <Spin spinning={this.state.loading}>
+                <Menu
+                    mode="horizontal"
+                    onClick={({ item, key, keyPath }) => {
+                        this.setState({ carId: key })
+                    }}>
+
                     {this.state.list.map(item =>
-                        <Card key={item.ID} style={{ width: '240px', float: 'left', marginBottom: '20px', marginRight: '20px' }} bordered={false} bodyStyle={{ padding: 0 }} title={item.Name} extra={this.getStatus(item)}>
-                            <div className="car-image">
-                                <img alt={item.Number.toUpperCase()} src={item.PhotoId > 0 ? api.File.FileUrl(item.PhotoId) : `/static/images/car_${item.Type}.jpg`} />
-                            </div>
-                            <div className="cardbar">
-                                <Button.Group>
-                                    {item.Status === 0 && !item.Applied ? <ApplyFormModal flowId={this.state.flowId} car={item} onSubmit={this.loadData} /> : null}
-                                    <EditFormModal
-                                        title="修改车辆信息"
-                                        trigger={<Button icon="edit">修改</Button>}
-                                        record={item}
-                                        onSubmit={this.loadData}
-                                    />
-                                </Button.Group>
-                            </div>
-                        </Card>
+                        <Menu.Item key={item.ID}>
+                            <b>{item.Name}</b> （{item.Number}）
+                        </Menu.Item>
                     )}
-                </Spin>
+                </Menu>
+                <ApplyList carId={this.state.carId} />
             </div>
         )
     }

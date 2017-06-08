@@ -118,7 +118,11 @@ class MissiveEditForm extends React.Component {
         let numberControl = {
             name: 'WJ_ZH', title: '文件字号', defaultValue: model.WJ_ZH,
             layout: { labelCol: { span: 4 }, wrapperCol: { span: 4 } },
-            render: <Input disabled={disabled} />
+            render: <Input disabled={disabled} style={{ maxWidth: '200px' }} />,
+            extend: disabled ? null : <a onClick={() => {
+                var wjzh = document.getElementById("WJ_ZH");
+                wjzh.value = wjzh.value + '〔' + new Date().getFullYear() + '〕'
+            }}>〔{new Date().getFullYear()}〕</a>
         }
         let titleControl = {
             name: 'WJ_BT', title: '文件标题', defaultValue: model.WJ_BT, rules: [{ required: true, message: '请填写文件标题' }],
