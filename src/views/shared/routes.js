@@ -51,8 +51,7 @@ export default class Routes extends React.Component {
                 </Route>
                 <Route path="car">
                     <IndexRoute component={CarIndex} />
-                    <Route path="apply(/:userId)" component={CarApprovalList} />
-                    <Route path="approvals" component={CarApprovalList} />
+                    <Route path="approvals(/:userId)" component={CarApprovalList} />
                 </Route>
 
                 <Route path="task">
