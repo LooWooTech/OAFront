@@ -5,12 +5,16 @@ import SelectUser from '../shared/_select_user'
 import api from '../../models/api'
 
 class FlowForm extends Component {
-    state = { result: true, flowDataId: this.props.flowDataId, toUser: {} }
+    state = {
+        result: true,
+        flowDataId: this.props.flowDataId || 0,
+        infoId: this.props.infoId || 0,
+        toUser: {}
+    }
 
 
     componentWillMount() {
-
-        api.FlowData.Model(this.state.flowDataId, data => {
+        api.FlowData.Model(this.state.flowDataId, this.state.infoId, data => {
             var flowNodeDataId = data.flowNodeData.$ref;
             data.flowNodeData = data.flowData.Nodes.find(e => e.$id === flowNodeDataId);
             this.setState({ ...data })
@@ -109,6 +113,7 @@ class FlowForm extends Component {
     }
 
     render() {
+
         if (!this.state.flowData) return null;
         if (this.state.flowNodeData.Result != null) return null;
         return (

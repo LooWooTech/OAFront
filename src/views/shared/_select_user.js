@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Select, Button, Tabs, Tag, Tree, message } from 'antd';
+import { Select, Button, Tabs, Tag, Tree } from 'antd';
 const TreeNode = Tree.TreeNode
 import Modal from './_modal'
 import api from '../../models/api'
@@ -27,8 +27,11 @@ class SelectUser extends Component {
     }
 
     loadUsersForFlowData = (key) => {
-        const flowNodeDataId = this.props.flowNodeDataId;
-        api.FlowData.UserList(flowNodeDataId, json => {
+        const flowNodeDataId = this.props.flowNodeDataId || 0;
+        const flowId = this.props.flowId || 0;
+        const flowStep = this.props.flowStep || 1;
+
+        api.FlowData.UserList({ flowNodeDataId, flowId, flowStep }, json => {
             this.filterUsers(json, key)
         })
     }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Button, Popconfirm, Input, Select, Affix } from 'antd';
+import { Table, Button, Popconfirm, Input, Select } from 'antd';
 import EditModal from '../shared/_formmodal';
 import Form from '../shared/_form'
 import api from '../../models/api';

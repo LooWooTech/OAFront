@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import { Button, Radio } from 'antd'
+import { Radio } from 'antd'
 import ApplyList from './_apply_list'
 
 class CarApproval extends Component {
     state = {
-        userId: this.props.params.userId || 0,
+        userId: this.props.userId ||this.props.params.userId ||  0,
         status: 0,
     }
 
@@ -13,8 +13,7 @@ class CarApproval extends Component {
             <div>
                 <div className="toolbar">
                     <Radio.Group defaultChecked={this.state.status} onChange={e => {
-                        console.log(e)
-                        //this.setStatus({ status: e })
+                        
                     }}>
                         <Radio.Button value={0}>全部</Radio.Button>
                         <Radio.Button value={1}>待审批</Radio.Button>

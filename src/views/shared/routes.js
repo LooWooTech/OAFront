@@ -2,7 +2,6 @@ import React from 'react'
 import { Router, Route, IndexRoute, hashHistory } from 'react-router'
 import auth from '../../models/auth'
 import Layout from './_layout'
-import Home from '../home/index'
 import Login from '../user/login'
 import Logout from '../user/logout'
 
@@ -18,7 +17,8 @@ import MissiveList from '../missive/list'
 import MissiveEdit from '../missive/edit'
 
 import CarIndex from '../car/index'
-import CarApprovalList from '../car/approvals'
+import MyApplyList from '../car/my_apply_list'
+import ApplyList from '../car/apply_list'
 
 import AttendanceIndex from '../attendance/index'
 import HolidayList from '../attendance/holidays'
@@ -51,7 +51,8 @@ export default class Routes extends React.Component {
                 </Route>
                 <Route path="car">
                     <IndexRoute component={CarIndex} />
-                    <Route path="approvals(/:userId)" component={CarApprovalList} />
+                    <Route path="my" component={MyApplyList}/>
+                    <Route path="approvals(/:userId)" component={ApplyList} />
                 </Route>
 
                 <Route path="task">

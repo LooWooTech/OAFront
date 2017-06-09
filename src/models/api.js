@@ -154,8 +154,8 @@ module.exports = {
         }
     },
     FlowData: {
-        Model: (flowDataId, cb, err) => {
-            invokeApi('flowdata/model?id=' + flowDataId, HTTP_GET, null, cb, err);
+        Model: (flowDataId = 0, infoId = 0, cb, err) => {
+            invokeApi('flowdata/model', HTTP_GET, { id: flowDataId, infoId }, cb, err);
         },
         Submit: (toUserId, infoId, data, cb, err) => {
             invokeApi('flowdata/submit?toUserId=' + toUserId + '&infoId=' + infoId, HTTP_POST, data, cb, err);
@@ -169,8 +169,8 @@ module.exports = {
         Cancel: (infoId, cb, err) => {
             invokeApi('flowdata/Cancel?infoId=' + infoId, HTTP_GET, null, cb, err);
         },
-        UserList: (flowNodeDataId, cb, err) => {
-            invokeApi('flowdata/userlist?flowNodeDataId=' + flowNodeDataId, HTTP_GET, null, cb, err);
+        UserList: (parameters, cb, err) => {
+            invokeApi('flowdata/userlist', HTTP_GET, parameters, cb, err);
         },
         BackList: (infoId, backId, cb, err) => {
             invokeApi('flowdata/backlist', HTTP_GET, { infoId, backId }, cb, err)

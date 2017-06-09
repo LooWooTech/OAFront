@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
-import { Button, Input, DatePicker, Timeline, message } from 'antd';
+import { Button, Input, DatePicker, Timeline } from 'antd';
 import SharedForm from '../shared/_form'
 import moment from 'moment';
-import api from '../../models/api';
 
 class TaskForm extends Component {
 

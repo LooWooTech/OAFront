@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Input, DatePicker, Button, message } from 'antd'
+import { Input, DatePicker, Button, message, Select } from 'antd'
 import FormModal from '../shared/_formmodal'
 import SelectUser from '../shared/_select_user'
 import api from '../../models/api'
@@ -7,47 +7,70 @@ import api from '../../models/api'
 class CarApplyModal extends Component {
     state = {}
     handleSubmit = formData => {
-        if (!this.state.toUserId) {
-            message.error("请选择发送人");
-            return false;
+        let users = this.refs.selectUserForm.getSelectedUsers()
+        if (users.length > 0) {
+            formData.ToUserId = users[0].ID
         }
-        let carId = formData.Data.CarId;
+        else {
+            message.error("请先选择发送人")
+            return false
+        }
+
+        let carId = formData.CarId;
         if (!carId) {
             message.error("参数不正确");
             return false;
         }
-        if (!formData.BeginDate || !formData.EndDate) {
+        if (!formData.ScheduleBeginTime || !formData.ScheduleEndTime) {
             message.error("请选择使用日期")
             return false;
         }
-        formData.Data.BeginDate = formData.BeginDate.format()
-        formData.Data.EndDate = formData.EndDate.format()
-        formData.Title = "申请用车：" + formData.Data.Name;
-        formData.keywords = formData.Data.Name + ',' + formData.Data.Number;
-        formData.Description = formData.Data.Reason;
-        api.Car.Apply(carId, this.state.toUserId, formData, json => {
+        formData.ScheduleBeginTime = formData.ScheduleBeginTime.format()
+        formData.ScheduleEndTime = formData.ScheduleEndTime.format()
+
+        api.Car.Apply(carId, formData.ToUserId, formData, json => {
             this.props.onSubmit(json);
         })
     }
 
-    render() {
-        const { car, flowId } = this.props
-        if (!car || !flowId || !car.ID) return null
+    handleSelect = (users) => {
+        if (!this.state.canComplete && this.state.result && users && users.length === 0) {
+            message.error("请先选择发送人")
+            return false
+        }
+        this.setState({ toUser: users[0] })
+    }
 
+    render() {
+
+        const cars = this.props.cars || []
         return (
             <FormModal
                 title="申请用车"
-                trigger={<Button icon="check" type="primary">申请</Button>}
+                trigger={<Button icon="check" type="primary">申请用车</Button>}
                 onSubmit={this.handleSubmit}
                 children={[
-                    { name: 'Data.CarId', defaultValue: car.ID, render: <Input type="hidden" /> },
-                    { name: 'FormId', defaultValue: api.Forms.Car.ID, render: <Input type="hidden" /> },
-                    { title: '申请车辆', name: 'Data.Name', defaultValue: car.Name, render: <Input disabled={true} /> },
-                    { title: '车牌号码', name: 'Data.Number', defaultValue: car.Number, render: <Input disabled={true} /> },
-                    { title: '开始日期', name: 'BeginDate', render: <DatePicker />, rules: [{ required: true, message: '请选择开始日期' }], },
-                    { title: '结束日期', name: 'EndDate', render: <DatePicker />, rules: [{ required: true, message: '请选择结束日期' }], },
-                    { title: '申请用途', name: 'Data.Reason', render: <Input type="textarea" autosize={{ minRows: 2, maxRows: 4 }} />, rules: [{ required: true, message: '请填写车辆申请用途' }] },
-                    { title: '审批人', render: <SelectUser formType="carflow" flowId={this.props.flowId} />, },
+                    {
+                        title: '申请车辆', name: 'CarId', defaultValue: '',
+                        rules: [{ required: true, message: '请选择申请车辆' }],
+                        render: <Select>
+                            {cars.map(car => <Select.Option key={car.ID}>{car.Name}（{car.Number}）</Select.Option>)}
+                        </Select>
+                    },
+                    { title: '开始日期', name: 'ScheduleBeginTime', render: <DatePicker />, rules: [{ required: true, message: '请选择开始日期' }], },
+                    { title: '结束日期', name: 'ScheduleEndTime', render: <DatePicker />, rules: [{ required: true, message: '请选择结束日期' }], },
+                    { title: '申请用途', name: 'Reason', render: <Input type="textarea" autosize={{ minRows: 2, maxRows: 4 }} />, rules: [{ required: true, message: '请填写车辆申请用途' }] },
+                    {
+                        title: '审批人',
+                        render: <SelectUser
+                            formType="flow"
+                            flowId={api.Forms.Car.ID}
+                            flowStep={2}
+                            onSubmit={this.handleSelect}
+                            ref="selectUserForm"
+                        />,
+                        extend: <span>{(this.state.toUser || {}).ID > 0 ? ' 已选 ' + this.state.toUser.RealName : ''}</span>
+                    },
                 ]}
             />
         )

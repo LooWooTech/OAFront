@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Timeline, Icon, Tree, Badge, Tag } from 'antd';
+import { Timeline, Icon, Tree, Badge } from 'antd';
 const TreeNode = Tree.TreeNode
 import moment from 'moment';
 

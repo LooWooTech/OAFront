@@ -18,7 +18,7 @@ export default class DepartmentList extends React.Component {
     };
     loadData = () => {
         api.Department.List(data => {
-            let roots = data.filter(e => e.ParentId == 0)
+            let roots = data.filter(e => e.ParentId === 0)
             roots = roots.map(node => this.buildTreeData(node, data))
             console.log(roots)
             this.setState({ list: roots })
@@ -26,7 +26,7 @@ export default class DepartmentList extends React.Component {
     };
 
     buildTreeData = (node, list) => {
-        node.children = list.filter(e => e.ParentId == node.ID)
+        node.children = list.filter(e => e.ParentId === node.ID)
         console.log(node.children)
         node.children.map(child => this.buildTreeData(child, list))
         return node
@@ -55,7 +55,7 @@ export default class DepartmentList extends React.Component {
                 dropdownStyle={{ maxHeight: '400px' }}
                 treeDefaultExpandAll={true}
             >
-                {this.getTreeNode({ ID: 0, Name: '定海国土局', children: this.state.list.filter(e => e.ParentId == 0) })}
+                {this.getTreeNode({ ID: 0, Name: '定海国土局', children: this.state.list.filter(e => e.ParentId === 0) })}
             </TreeSelect>
         }
         ];

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Table, Button, Tag } from 'antd'
 import moment from 'moment'
 import api from '../../models/api'
+import auth from '../../models/auth'
 import SubmitFlowModal from '../flowdata/form'
 
 class CarApplyList extends Component {
@@ -52,16 +53,16 @@ class CarApplyList extends Component {
         var columns = []
         let carId = this.props.carId || 0;
         let userId = this.props.userId || 0;
-
+        let currentUser = auth.getUser() ;
         if (!carId) {
-            columns.push({ title: '车辆', render: (text, item) => <span>{item.Car.Name}（{item.Car.Number}）</span> })
+            columns.push({ title: '车辆', render: (text, item) => <span>{item.Car.Name}（{item.Car.Number}）<br />{item.Reason}</span> })
         }
         if (!userId) {
             columns.push({ title: '申请人', dataIndex: 'RealName' })
         }
         columns = columns.concat([
-            { title: '申请日期', dataIndex: 'CreateTime', render: (text, item) => moment(text).format('lll') },
-            { title: '使用时间范围', render: (text, item) => <span>{moment(item.Data.ScheduleBeginTime).format('l')} ~ {moment(item.Data.ScheduleEndTime).format('l')}</span> },
+            { title: '申请日期', dataIndex: 'CreateTime', render: (text, item) => moment(text).format('ll') },
+            { title: '使用时间范围', render: (text, item) => <span>{moment(item.ScheduleBeginTime).format('ll')} ~ {moment(item.ScheduleEndTime).format('ll')}</span> },
             {
                 title: '申请结果', dataIndex: 'Result', render: (text, item) => {
                     switch (text) {
@@ -74,20 +75,12 @@ class CarApplyList extends Component {
                     }
                 }
             },
-            { title: '处理日期', dataIndex: 'UpdateTime', render: (text, item) => moment(text).format('lll') },
+            { title: '处理日期', dataIndex: 'UpdateTime', render: (text, item) => text ? moment(text).format('ll') : null },
             {
                 title: '操作',
                 render: (text, item) => <span>
-                    {this.state.userId > 0 ?
-                        <span>
-
-                        </span> :
-                        <SubmitFlowModal
-                            callback={this.loadData}
-                            flowDataId={item.FlowDataId}
-                            children={<Button type="success" icon="check" htmlType="button">审批</Button>}
-                        />
-                    }
+                    {!item.Result && item.ApprovalUserId === currentUser.ID ? <SubmitFlowModal infoId={item.ID} trigger={<Button>审批</Button>} /> : null}
+                    {!item.RealEduTime && item.UserId === currentUser.ID ? <Button>还车</Button> : null}
                 </span>
             }
         ]);
@@ -102,7 +95,7 @@ class CarApplyList extends Component {
                     rowKey="ID"
                     loading={this.state.loading}
                     columns={this.getColumns()}
-                    dataSource={this.state.applies}
+                    dataSource={this.state.list}
                     pagination={{
                         size: 5, ...this.state.page,
                         onChange: (page) => {

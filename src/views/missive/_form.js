@@ -11,7 +11,6 @@ class MissiveEditForm extends React.Component {
     handleSubmit = () => {
         this.refs.form.validateFields((err, values) => {
             if (err) {
-                console.log(err)
                 return false
             }
             let formData = values
@@ -25,7 +24,6 @@ class MissiveEditForm extends React.Component {
             formData.QX_RQ = formData.QX_RQ ? formData.QX_RQ.format('YYYY-MM-DD') : ''
             if (!formData.FormId) {
                 message.error("缺少参数FormId")
-                console.log(formData)
                 return false
             }
             api.Missive.Save(formData, json => {
@@ -56,7 +54,7 @@ class MissiveEditForm extends React.Component {
         let wordId = this.refs.form.getFieldValue('WordId')
         api.File.Delete(wordId, json => {
             model.Word = null;
-            if (model.WordId == wordId) {
+            if (model.WordId === wordId) {
                 model.WordId = 0
                 api.Missive.DeleteWord(model.ID, () => {
                     this.setState({ upload: null, model })

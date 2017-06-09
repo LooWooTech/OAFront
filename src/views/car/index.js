@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
-import { Menu, Affix, Button, Tag } from 'antd'
+import { Menu } from 'antd'
 import api from '../../models/api'
 import ApplyList from './_apply_list'
 import ApplyFormModal from './apply'
-import EditFormModal from './edit'
 
 class CarIndex extends Component {
 
@@ -25,16 +24,12 @@ class CarIndex extends Component {
 
         return (
             <div>
-                <Affix offsetTop={0} className="toolbar">
-                    <Button.Group>
-                        <EditFormModal
-                            onSubmit={this.loadData}
-                            trigger={<Button type="primary" icon="plus">添加车辆</Button>}
-                        />
-                    </Button.Group>
-                </Affix>
+                <div className="toolbar">
+                    <ApplyFormModal cars={this.state.list} />
+                </div>
                 <Menu
                     mode="horizontal"
+                    defaultSelectedKeys={[this.state.carId || '']}
                     onClick={({ item, key, keyPath }) => {
                         this.setState({ carId: key })
                     }}>

@@ -36,7 +36,12 @@ const sideMenuData = {
         {
             title: '申请', items: [
                 { path: '/car/', icon: 'fa fa-car', text: '车辆查询' },
-                { path: '/car/approvals/{UserId}', icon: 'fa fa-inbox', text: '我的申请' }
+                { path: '/car/my', icon: 'fa fa-inbox', text: '我的申请' }
+            ]
+        }, {
+            title: '管理&审批', role: 2, items: [
+                { path: '/car/list', icon: 'fa fa-list', text: '车辆管理' },
+                { path: '/car/approvals', icon: 'fa fa-check', text: '车辆审批' }
             ]
         }
     ],
@@ -87,13 +92,24 @@ const getSideMenuData = (path) => {
     for (var key in sideMenuData) {
         if (!sideMenuData.hasOwnProperty(key)) continue;
         var groups = sideMenuData[key];
+        var selected = getSelectedGroups(groups)
+        if (selected && selected.length > 0) {
+            return selected;
+        }
+    }
+    return [];
+
+    function getSelectedGroups(groups) {
         var selected = [];
-        groups.map(group => group.items.map(item => {
-            if (item.path.indexOf(path) === 0) {
-                selected = groups;
-            }
-            return item;
-        }));
+        groups.map(group => {
+            group.items.map(item => {
+                if (item.path.indexOf(path) === 0) {
+                    selected = groups;
+                }
+                return item;
+            })
+            return group;
+        });
         if (selected.length === 0) {
             if (path.replace('/', '').indexOf(key) === 0) {
                 return groups;
@@ -103,7 +119,6 @@ const getSideMenuData = (path) => {
             return selected;
         }
     }
-    return [];
 }
 
 class Sider extends React.Component {
