@@ -90,7 +90,16 @@ module.exports = {
     },
     File: {
         FileUrl: (fileId) => {
-            return `${host}file/index?id=${fileId}`;
+            return `${apiHost}file/index?id=${fileId}`;
+        },
+        UploadUrl: (fileId = 0, infoId = 0, name = null, inline = false) => {
+            return `${apiHost}file/upload?infoId=${infoId}&id=${fileId}&name=${name}&inline=${inline}`;
+        },
+        PreviewUrl: (infoId) => {
+            return `${apiHost}file/GetPreviewFile?infoId=${infoId}`;
+        },
+        EditUrl: (fileId) => {
+            return `${host}word/get/?id=${fileId}`;
         },
         List: (infoId, inline, cb, err) => {
             var data = { infoId, page: 1, rows: 100 };
@@ -98,9 +107,6 @@ module.exports = {
                 data.inline = inline;
             }
             invokeApi('file/list', HTTP_GET, data, cb, err);
-        },
-        UploadUrl: (fileId = 0, infoId = 0, name = null, inline = false) => {
-            return `${apiHost}file/upload?infoId=${infoId}&id=${fileId}&name=${name}&inline=${inline}`;
         },
         Upload: (fileId, cb, err) => {
             invokeApi('file/upload', HTTP_PUT, fileId, cb, err);
@@ -114,9 +120,6 @@ module.exports = {
         UpdateRelation: (fileIds, infoId, cb, err) => {
             invokeApi('file/UpdateRelation', HTTP_POST, { fileIds, infoId }, cb, err);
         },
-        GetPreviewFileUrl: (fileId) => {
-            return host + 'word/get/?id=' + fileId
-        }
     },
     FormInfo: {
         List: (parameters, cb, err) => {
