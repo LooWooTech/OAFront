@@ -44,14 +44,13 @@ class MissiveEditForm extends React.Component {
         this.setState({ upload: response })
     }
 
-    handleDeleteWord = () => {
+    handleDeleteWord = (wordId) => {
         if (this.props.disabled) {
             message.error('不能删除');
             return;
         }
-        if (!confirm("你确定要删除吗？")) return
+        if (!confirm("你确定要删除吗？")) return false;
         let model = this.props.model || {}
-        let wordId = this.refs.form.getFieldValue('WordId')
         api.File.Delete(wordId, json => {
             model.Word = null;
             if (model.WordId === wordId) {
@@ -108,7 +107,7 @@ class MissiveEditForm extends React.Component {
                     {disabled ? null :
                         <span>
                             &nbsp;&nbsp;&nbsp;&nbsp;
-                                <a onClick={this.handleDeleteWord}><Icon type="delete" />&nbsp;删除</a>
+                                <a onClick={e => this.handleDeleteWord(word.ID)}><Icon type="delete" />&nbsp;删除</a>
                         </span>
                     }
                 </div>

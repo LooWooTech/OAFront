@@ -7,7 +7,9 @@ const HTTP_DELETE = "DELETE"
 const HTTP_PUT = "PUT"
 
 
-const host = process.env.NODE_ENV === 'production' ? '/api/' : 'http://localhost:8012/api/';
+const host = process.env.NODE_ENV === 'production' ? '/' : 'http://localhost:8012/';
+const apiPath = "api/";
+const apiHost = host + apiPath;
 const Forms = {
     Missive: { ID: 1, Name: '公文发文' },
     ReceiveMissive: { ID: 2, Name: '公文收文' },
@@ -22,7 +24,7 @@ function getExceptionMessage(ex) {
     return ex.ExceptionMessage || ex.Message || '未知错误'
 }
 function invokeApi(path, method, data, callback, onError, async = true) {
-    var url = host + path;
+    var url = host + apiPath + path;
     if (data && (method === HTTP_GET || method === HTTP_DELETE)) {
         url += (url.indexOf('?') > 0 ? '&' : '?') + jsonToQueryString(data)
         data = null
@@ -56,7 +58,7 @@ module.exports = {
     //断开请求
     Abort: utils.AbortRequest,
     ApiUrl: (path) => {
-        return host + path;
+        return host + apiPath + path;
     },
     User: {
         Login: (data, cb, err) => invokeApi('user/login', HTTP_GET, data, cb, err),
@@ -98,7 +100,7 @@ module.exports = {
             invokeApi('file/list', HTTP_GET, data, cb, err);
         },
         UploadUrl: (fileId = 0, infoId = 0, name = null, inline = false) => {
-            return `${host}file/upload?infoId=${infoId}&id=${fileId}&name=${name}&inline=${inline}`;
+            return `${apiHost}file/upload?infoId=${infoId}&id=${fileId}&name=${name}&inline=${inline}`;
         },
         Upload: (fileId, cb, err) => {
             invokeApi('file/upload', HTTP_PUT, fileId, cb, err);
@@ -112,8 +114,8 @@ module.exports = {
         UpdateRelation: (fileIds, infoId, cb, err) => {
             invokeApi('file/UpdateRelation', HTTP_POST, { fileIds, infoId }, cb, err);
         },
-        GetPreviewFileUrl: (infoId) => {
-            return host + 'file/GetPreviewFile/?infoId=' + infoId
+        GetPreviewFileUrl: (fileId) => {
+            return host + 'word/get/?id=' + fileId
         }
     },
     FormInfo: {
