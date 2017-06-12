@@ -4,13 +4,12 @@ import api from '../../models/api';
 class ContentTab extends Component {
 
     render() {
-        const infoId = (this.props.missive || {}).ID || 0
-        const fileUrl = infoId ? api.File.PreviewUrl(infoId) : null
-        if (fileUrl) {
-            return <iframe src={fileUrl} style={{
-                border: "none",
-                width: "100%", height: "100%",
-            }} />
+        // const infoId = (this.props.missive || {}).ID || 0
+        // const fileUrl = infoId ? api.File.PreviewUrl(infoId) : null
+        const wordId = (this.props.missive || {}).WordId || 0
+        const editUrl = wordId ? api.File.EditUrl(wordId) : null
+        if (editUrl) {
+            return <iframe src={editUrl} className="iframe-word" />
         } else {
             return <Alert
                 message="错误"

@@ -149,10 +149,29 @@ class SelectUser extends Component {
         }
 
         if (users.length < 10) {
-            return <Select mode={multiple ? 'multiple' : ''}>
+            return <Select mode={multiple ? 'multiple' : ''}
+                onSelect={value => {
+                    let userId = parseInt(value, 10)
+                    let selectUser = this.state.users.find(e => e.ID === userId);
+                    if (multiple) {
+                        let list = this.state.selected || []
+                        if (!list.find(user => user.ID === userId)) {
+                            list.push(selectUser);
+                        }
+                        this.setState({ selected: list })
+                    } else {
+                        this.setState({ selected: [selectUser] })
+                    }
+                }}
+                onDeselect={value => {
+                    let userId = parseInt(value, 10)
+                    let list = (this.state.selected || []).filter(user => user.ID !== userId)
+                    this.setState({ selected: list })
+                }}
+            >
                 {users.map(user =>
                     <Select.Option key={user.ID}>
-                        {user.Name}
+                        {user.RealName}
                     </Select.Option>)}
             </Select>
         }

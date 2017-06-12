@@ -27,14 +27,13 @@ class FlowForm extends Component {
         if (!this.state.canComplete && this.state.result && !data.ToUserId) {
             let users = this.refs.selectUserForm.getSelectedUsers()
             if (users.length > 0) {
-                data.ToUserId = users[0].ID
-            }
-            else {
-                message.error("请先选择发送人")
-                return false
+                data.ToUserId = users[0].ID || 0;
             }
         }
-
+        if (!data.ToUserId) {
+            message.error("请先选择发送人")
+            return false
+        }
         data.Result = this.state.result;
         if (!data.Result && !confirm('你确定要退回吗？')) return false
 

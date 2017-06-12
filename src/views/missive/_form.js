@@ -107,12 +107,6 @@ class MissiveEditForm extends React.Component {
                     {disabled ? null :
 
                         <span>
-                            {word.FileExt === '.doc' || word.FileExt === '.docx' ?
-                                <span>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;
-                            <a href={api.File.EditUrl(word.ID)} target="_blank"><Icon type="edit" />&nbsp;编辑</a>
-                                </span> : null}
-
                             &nbsp;&nbsp;&nbsp;&nbsp;
                                 <a onClick={e => this.handleDeleteWord(word.ID)}><Icon type="delete" />&nbsp;删除</a>
                         </span>

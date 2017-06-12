@@ -136,14 +136,12 @@ export default class MissiveEdit extends Component {
                     <Button onClick={utils.GoBack} type="" icon="arrow-left" htmlType="button">返回</Button>
                 </Button.Group>
             </Affix>
-            <Tabs style={{ position: 'absolute', left: '210px', top: '55px', bottom: '10px', right: '10px', overflow: 'auto', overflowX: 'hidden' }}>
+            <Tabs>
                 <Tabs.TabPane tab="拟稿表单" key="1" style={{ zIndex: 2 }}>
                     <FormTab model={missive} formId={this.state.formId} disabled={!this.state.canEdit} ref="form" />
                 </Tabs.TabPane>
                 <Tabs.TabPane tab="文档预览" key="2">
-                    <div style={{ position: 'absolute', left: '10px', top: '50px', bottom: '10px', right: '0', zIndex: 1 }}>
-                        <ContentTab missive={missive} />
-                    </div>
+                    <ContentTab missive={missive} />
                 </Tabs.TabPane>
                 {showFiles ?
                     <Tabs.TabPane tab="附件清单" key="5">
