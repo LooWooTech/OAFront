@@ -13,11 +13,17 @@ class CarIndex extends Component {
     }
 
     componentWillMount() {
+        this.loadData();
+    }
+
+    loadData = () => {
         api.Car.List(json => {
             var car1 = json.length > 0 ? json[0].ID : 0
             this.setState({ list: json, carId: car1.ID })
         })
     }
+
+    handleSubmit = () => this.loadData
 
     render() {
         if (this.state.loading) return null
@@ -25,7 +31,7 @@ class CarIndex extends Component {
         return (
             <div>
                 <div className="toolbar">
-                    <ApplyFormModal cars={this.state.list} />
+                    <ApplyFormModal cars={this.state.list} onSubmit={this.handleSubmit} />
                 </div>
                 <Menu
                     mode="horizontal"

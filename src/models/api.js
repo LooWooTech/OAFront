@@ -275,17 +275,23 @@ module.exports = {
         Save: (data, cb, err) => {
             invokeApi('car/save', HTTP_POST, data, cb, err);
         },
+        Delete: (id, cb, err) => {
+            invokeApi('car/delete?id=' + id, HTTP_DELETE, null, cb, err);
+        },
         ApplyList: (parameters, cb, err) => {
             invokeApi('car/carapplies', HTTP_GET, parameters, cb, err);
         },
-        Apply: (carId, toUserId, data, cb, err) => {
-            invokeApi('car/apply?carId=' + carId + '&toUserId=' + toUserId, HTTP_POST, data, cb, err);
+        Apply: (data, cb, err) => {
+            invokeApi('car/apply', HTTP_POST, data, cb, err);
         },
         UpdateStatus: (carId, status, cb, err) => {
             invokeApi('car/update?carId=' + carId + '&status=' + status, HTTP_GET, null, cb, err);
         },
-        Approval: (id, cb, err) => {
-            invokeApi('car/approval', HTTP_GET, null, cb, err);
+        Approval: (infoId, cb, err) => {
+            invokeApi('car/approval?infoId=' + infoId, HTTP_GET, null, cb, err);
+        },
+        Back: (infoId, cb, err) => {
+            invokeApi('car/back?infoId=' + infoId, HTTP_GET, null, cb, err);
         }
     },
     Feed: {

@@ -18,7 +18,7 @@ class CarApplyList extends Component {
 
 
     componentWillMount() {
-        this.loadData(this.state.carId, this.state.userId, this.state.status, 1)
+        this.loadData()
     }
 
     componentWillReceiveProps(nextProps) {
@@ -33,19 +33,31 @@ class CarApplyList extends Component {
         }
     }
 
-    loadData = (carId = 0, userId = 0, status = 0, page = 1) => {
-        api.Car.ApplyList({
-            carId, userId, page, status
-        }, json => {
-            this.setState({
-                list: json.List,
-                carId,
-                userId,
-                status,
-                page,
-                loading: false
-            })
+    loadData = (carId, userId, status, page) => {
+        let parameter = {
+            carId: carId === 0 ? 0 : (carId || this.state.carId || 0),
+            userId: userId === 0 ? 0 : (userId || this.state.userId || 0),
+            status: status === 0 ? 0 : (status || this.state.status || 0),
+            page: page || this.state.page || 1,
+        }
+        api.Car.ApplyList(parameter, json => {
+            this.setState({ list: json.List, ...parameter, loading: false })
         })
+    }
+
+    handleSubmitFlowCallback = flowData => {
+        if (!flowData) return;
+        api.Car.Approval(flowData.InfoId || 0, json => {
+            this.loadData();
+        });
+    }
+
+    handleBack = infoId => {
+        if (confirm("你确定要已归还车辆了吗？")) {
+            api.Car.Back(infoId, json => {
+                this.loadData();
+            })
+        }
     }
 
 
@@ -53,22 +65,22 @@ class CarApplyList extends Component {
         var columns = []
         let carId = this.props.carId || 0;
         let userId = this.props.userId || 0;
-        let currentUser = auth.getUser() ;
+        let currentUser = auth.getUser();
         if (!carId) {
             columns.push({ title: '车辆', render: (text, item) => <span>{item.Car.Name}（{item.Car.Number}）<br />{item.Reason}</span> })
         }
         if (!userId) {
-            columns.push({ title: '申请人', dataIndex: 'RealName' })
+            columns.push({ title: '申请人', dataIndex: 'ApplyUser' })
         }
         columns = columns.concat([
             { title: '申请日期', dataIndex: 'CreateTime', render: (text, item) => moment(text).format('ll') },
             { title: '使用时间范围', render: (text, item) => <span>{moment(item.ScheduleBeginTime).format('ll')} ~ {moment(item.ScheduleEndTime).format('ll')}</span> },
             {
                 title: '申请结果', dataIndex: 'Result', render: (text, item) => {
-                    switch (text) {
-                        case "True":
+                    switch (item.Result) {
+                        case true:
                             return <Tag color="green">通过</Tag>
-                        case "False":
+                        case false:
                             return <Tag color="red">失败</Tag>
                         default:
                             return <Tag>未审核</Tag>
@@ -79,8 +91,16 @@ class CarApplyList extends Component {
             {
                 title: '操作',
                 render: (text, item) => <span>
-                    {!item.Result && item.ApprovalUserId === currentUser.ID ? <SubmitFlowModal infoId={item.ID} trigger={<Button>审批</Button>} /> : null}
-                    {!item.RealEduTime && item.UserId === currentUser.ID ? <Button>还车</Button> : null}
+                    {item.Result === null && item.ApprovalUserId === currentUser.ID ?
+                        <SubmitFlowModal
+                            infoId={item.ID}
+                            trigger={<Button>审批</Button>}
+                            callback={this.handleSubmitFlowCallback}
+                        />
+                        : null}
+                    {item.Result === true && item.UserId === currentUser.ID && !item.RealEndTime ?
+                        <Button icon="reply" type="primary" onClick={() => this.handleBack(item.ID)}>还车</Button>
+                        : null}
                 </span>
             }
         ]);

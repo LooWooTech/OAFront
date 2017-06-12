@@ -9,7 +9,7 @@ class CarApplyModal extends Component {
     handleSubmit = formData => {
         let users = this.refs.selectUserForm.getSelectedUsers()
         if (users.length > 0) {
-            formData.ToUserId = users[0].ID
+            formData.ApprovalUserId = users[0].ID
         }
         else {
             message.error("请先选择发送人")
@@ -28,8 +28,10 @@ class CarApplyModal extends Component {
         formData.ScheduleBeginTime = formData.ScheduleBeginTime.format()
         formData.ScheduleEndTime = formData.ScheduleEndTime.format()
 
-        api.Car.Apply(carId, formData.ToUserId, formData, json => {
-            this.props.onSubmit(json);
+        api.Car.Apply(formData, json => {
+            if (this.props.onSubmit) {
+                this.props.onSubmit(json);
+            }
         })
     }
 

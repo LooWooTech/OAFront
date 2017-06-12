@@ -29,10 +29,10 @@ class FlowForm extends Component {
             if (users.length > 0) {
                 data.ToUserId = users[0].ID || 0;
             }
-        }
-        if (!data.ToUserId) {
-            message.error("请先选择发送人")
-            return false
+            if (!data.ToUserId) {
+                message.error("请先选择发送人")
+                return false
+            }
         }
         data.Result = this.state.result;
         if (!data.Result && !confirm('你确定要退回吗？')) return false
@@ -119,7 +119,7 @@ class FlowForm extends Component {
             <span>
                 <FormModal
                     name="提交审批流程"
-                    trigger={this.props.children}
+                    trigger={this.props.trigger}
                     children={this.getFormItems()}
                     onSubmit={this.handleSubmit}
                 />
