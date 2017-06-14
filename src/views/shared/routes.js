@@ -18,8 +18,9 @@ import MissiveEdit from '../missive/edit'
 
 import CarIndex from '../car/index'
 import CarList from '../car/list'
-import MyApplyList from '../car/my_apply_list'
-import ApplyList from '../car/apply_list'
+
+import MyApplyList from '../forminfo_extend1/my_apply_list'
+import ApplyList from '../forminfo_extend1/apply_list'
 
 import AttendanceIndex from '../attendance/index'
 import HolidayList from '../attendance/holidays'
@@ -52,11 +53,12 @@ export default class Routes extends React.Component {
                 </Route>
                 <Route path="car">
                     <IndexRoute component={CarIndex} />
-                    <Route path="my" component={MyApplyList}/>
-                    <Route path="approvals(/:userId)" component={ApplyList} />
                     <Route path="list" component={CarList} />
                 </Route>
-
+                <Route path="extend1/:formId">
+                    <IndexRoute component={ApplyList} />
+                    <Route path="my" component={MyApplyList} />
+                </Route>
                 <Route path="task">
                     <IndexRoute component={TaskIndex} />
                     <Route path="edit" component={TaskEdit} />

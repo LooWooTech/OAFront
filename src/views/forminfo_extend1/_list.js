@@ -1,21 +1,21 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { Table, Button, Tag } from 'antd'
 import moment from 'moment'
 import api from '../../models/api'
 import auth from '../../models/auth'
 import SubmitFlowModal from '../flowdata/form'
 
-class CarApplyList extends Component {
+class Extend1ListComponent extends Component {
 
     state = {
         list: [],
         loading: true,
         userId: this.props.userId || 0,
-        carId: this.props.carId || 0,
+        infoId: this.props.infoId || 0,
         status: this.props.status || 0,
         page: 1
     }
-
 
     componentWillMount() {
         this.loadData()
@@ -23,38 +23,38 @@ class CarApplyList extends Component {
 
     componentWillReceiveProps(nextProps) {
         let nextUserId = nextProps.userId
-        let nextCarId = nextProps.carId
+        let nextInfoId = nextProps.infoId
         let nextStatus = nextProps.status
         if (nextUserId !== this.state.userId
-            || nextCarId !== this.state.carId
+            || nextInfoId !== this.state.infoId
             || nextStatus !== this.state.status
         ) {
-            this.loadData(nextCarId, nextUserId, nextStatus, this.state.page)
+            this.loadData(nextInfoId, nextUserId, nextStatus, this.state.page)
         }
     }
 
-    loadData = (carId, userId, status, page) => {
+    loadData = (infoId, userId, status, page) => {
         let parameter = {
-            carId: carId === 0 ? 0 : (carId || this.state.carId || 0),
+            infoId: infoId === 0 ? 0 : (infoId || this.state.infoId || 0),
             userId: userId === 0 ? 0 : (userId || this.state.userId || 0),
             status: status === 0 ? 0 : (status || this.state.status || 0),
             page: page || this.state.page || 1,
         }
-        api.Car.ApplyList(parameter, json => {
+        api.FormInfoExtend1.List(parameter, json => {
             this.setState({ list: json.List, ...parameter, loading: false })
         })
     }
 
     handleSubmitFlowCallback = flowData => {
         if (!flowData) return;
-        api.Car.Approval(flowData.InfoId || 0, json => {
+        api.FormInfoExtend1.Approval(flowData.InfoId || 0, json => {
             this.loadData();
         });
     }
 
     handleBack = infoId => {
-        if (confirm("你确定要已归还车辆了吗？")) {
-            api.Car.Back(infoId, json => {
+        if (confirm(`你确定要已归还了吗？`)) {
+            api.FormInfoExtend1.Back(infoId, json => {
                 this.loadData();
             })
         }
@@ -63,11 +63,22 @@ class CarApplyList extends Component {
 
     getColumns = () => {
         var columns = []
-        let carId = this.props.carId || 0;
+        let infoId = this.props.infoId || 0;
         let userId = this.props.userId || 0;
+        let formId = this.props.formId || 0;
+        let formName = ''
+        for (var key in api.Forms) {
+            if (api.Forms.hasOwnProperty(key)) {
+                let form = api.Forms[key]
+                if (form.ID.toString() === formId) {
+                    formName = api.Forms[key].Name
+                }
+            }
+        }
+
         let currentUser = auth.getUser();
-        if (!carId) {
-            columns.push({ title: '车辆', render: (text, item) => <span>{item.Car.Name}（{item.Car.Number}）<br />{item.Reason}</span> })
+        if (!infoId) {
+            columns.push({ title: formName, render: (text, item) => <span>{item.Title}<br />{item.Reason}</span> })
         }
         if (!userId) {
             columns.push({ title: '申请人', dataIndex: 'ApplyUser' })
@@ -99,7 +110,7 @@ class CarApplyList extends Component {
                         />
                         : null}
                     {item.Result === true && item.UserId === currentUser.ID && !item.RealEndTime ?
-                        <Button icon="reply" type="primary" onClick={() => this.handleBack(item.ID)}>还车</Button>
+                        <Button icon="reply" type="primary" onClick={() => this.handleBack(item.ID)}>归还</Button>
                         : null}
                 </span>
             }
@@ -119,7 +130,7 @@ class CarApplyList extends Component {
                     pagination={{
                         size: 5, ...this.state.page,
                         onChange: (page) => {
-                            this.loadData(this.state.carId, this.state.userId, this.state.status, page)
+                            this.loadData(this.state.infoId, this.state.userId, this.state.status, page)
                         },
                     }}
                 />
@@ -128,4 +139,4 @@ class CarApplyList extends Component {
     }
 }
 
-export default CarApplyList;
+export default Extend1ListComponent;

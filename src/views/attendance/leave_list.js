@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Table, Popconfirm } from 'antd';
+import { Button, Table } from 'antd';
 import api from '../../models/api';
 
 class LeaveList extends Component {

@@ -16,6 +16,7 @@ const headerNavData = [
     { name: 'archive', icon: 'fa fa-tasks', text: '档案' },
     { name: 'meeting', icon: 'fa fa-television', text: '会议' },
     { name: 'car', icon: 'fa fa-car', text: '车辆' },
+    { name: 'cachet', icon: 'fa fa-cachet', text: '公章' },
     { name: 'file', icon: 'fa fa-files-o', text: '文档' },
     { name: 'system', path: '/user/list', icon: 'fa fa-gear', text: '系统设置', role: 3 }
 ];

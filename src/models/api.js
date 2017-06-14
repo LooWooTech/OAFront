@@ -268,6 +268,17 @@ module.exports = {
             return 'file/GetPreviewFileUrl?id=' + infoId
         }
     },
+    FormInfoExtend1: {
+        List: (parameters, cb, err) => {
+            invokeApi('FormInfoExtend1/List', HTTP_GET, parameters, cb, err);
+        },
+        Approval: (infoId, cb, err) => {
+            invokeApi('FormInfoExtend1/Approval?infoId=' + infoId, HTTP_GET, null, cb, err);
+        },
+        Back: (infoId, cb, err) => {
+            invokeApi('FormInfoExtend1/Back?infoId=' + infoId, HTTP_GET, null, cb, err);
+        }
+    },
     Car: {
         List: (cb, err) => {
             invokeApi('Car/list', HTTP_GET, null, cb, err);
@@ -278,20 +289,22 @@ module.exports = {
         Delete: (id, cb, err) => {
             invokeApi('car/delete?id=' + id, HTTP_DELETE, null, cb, err);
         },
-        ApplyList: (parameters, cb, err) => {
-            invokeApi('car/carapplies', HTTP_GET, parameters, cb, err);
-        },
         Apply: (data, cb, err) => {
             invokeApi('car/apply', HTTP_POST, data, cb, err);
+        }
+    },
+    MeetingRoom: {
+        List: (cb, err) => {
+            invokeApi('meetingroom/list', HTTP_GET, null, cb, err);
         },
-        UpdateStatus: (carId, status, cb, err) => {
-            invokeApi('car/update?carId=' + carId + '&status=' + status, HTTP_GET, null, cb, err);
+        Save: (data, cb, err) => {
+            invokeApi('meetingroom/save', HTTP_POST, data, cb, err);
         },
-        Approval: (infoId, cb, err) => {
-            invokeApi('car/approval?infoId=' + infoId, HTTP_GET, null, cb, err);
+        Delete: (id, cb, err) => {
+            invokeApi('meetingroom/delete?id=' + id, HTTP_DELETE, null, cb, err);
         },
-        Back: (infoId, cb, err) => {
-            invokeApi('car/back?infoId=' + infoId, HTTP_GET, null, cb, err);
+        Apply: (data, cb, err) => {
+            invokeApi('meetingroom/apply', HTTP_POST, data, cb, err);
         }
     },
     Feed: {
@@ -306,6 +319,7 @@ module.exports = {
         List: (parameters, cb, err) => {
             invokeApi('Task/list', HTTP_GET, parameters, cb, err);
         },
+
         Model: (id, cb, err) => {
             invokeApi('Task/model?id=' + id, HTTP_GET, null, cb, err);
         },

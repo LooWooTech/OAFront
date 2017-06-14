@@ -36,12 +36,12 @@ const sideMenuData = {
         {
             title: '申请', items: [
                 { path: '/car/', icon: 'fa fa-car', text: '车辆查询' },
-                { path: '/car/my', icon: 'fa fa-inbox', text: '我的申请' }
+                { path: `/extend1/${api.Forms.Car.ID}/my/`, icon: 'fa fa-inbox', text: '我的申请' }
             ]
         }, {
             title: '管理&审批', role: 2, items: [
                 { path: '/car/list', icon: 'fa fa-list', text: '车辆管理' },
-                { path: '/car/approvals', icon: 'fa fa-check', text: '车辆审批' }
+                { path: `/extend1/${api.Forms.Car.ID}/`, icon: 'fa fa-check', text: '车辆审批' }
             ]
         }
     ],

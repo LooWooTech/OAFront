@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Menu } from 'antd'
 import api from '../../models/api'
-import ApplyList from './_apply_list'
+import ApplyList from '../forminfo_extend1/_list'
 import ApplyFormModal from './apply'
 
 class CarIndex extends Component {
@@ -18,8 +18,8 @@ class CarIndex extends Component {
 
     loadData = () => {
         api.Car.List(json => {
-            var car1 = json.length > 0 ? json[0].ID : 0
-            this.setState({ list: json, carId: car1.ID })
+            var carId = json.length > 0 ? json[0].ID : 0
+            this.setState({ list: json, carId })
         })
     }
 
@@ -27,7 +27,7 @@ class CarIndex extends Component {
 
     render() {
         if (this.state.loading) return null
-
+        if (!this.state.carId) return null;
         return (
             <div>
                 <div className="toolbar">
@@ -35,7 +35,7 @@ class CarIndex extends Component {
                 </div>
                 <Menu
                     mode="horizontal"
-                    defaultSelectedKeys={[this.state.carId || '']}
+                    defaultSelectedKeys={[this.state.carId.toString() || '']}
                     onClick={({ item, key, keyPath }) => {
                         this.setState({ carId: key })
                     }}>
@@ -46,7 +46,7 @@ class CarIndex extends Component {
                         </Menu.Item>
                     )}
                 </Menu>
-                <ApplyList carId={this.state.carId} />
+                <ApplyList infoId={this.state.carId} />
             </div>
         )
     }
