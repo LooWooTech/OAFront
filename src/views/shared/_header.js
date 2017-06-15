@@ -14,9 +14,9 @@ const headerNavData = [
     { name: 'news', icon: 'fa fa-newspaper-o', text: '信息' },
     { name: 'attendace', path: '/attendance/index', icon: 'fa fa-calendar-check-o', text: '考勤' },
     { name: 'archive', icon: 'fa fa-tasks', text: '档案' },
-    { name: 'meeting', icon: 'fa fa-television', text: '会议' },
+    { name: 'meetingroom', icon: 'fa fa-television', text: '会议室' },
     { name: 'car', icon: 'fa fa-car', text: '车辆' },
-    { name: 'cachet', icon: 'fa fa-cachet', text: '公章' },
+    { name: 'seal', icon: 'fa fa-circle-o', text: '图章' },
     { name: 'file', icon: 'fa fa-files-o', text: '文档' },
     { name: 'system', path: '/user/list', icon: 'fa fa-gear', text: '系统设置', role: 3 }
 ];

@@ -15,7 +15,8 @@ const Forms = {
     ReceiveMissive: { ID: 2, Name: '公文收文' },
     Car: { ID: 3, Name: '公车申请' },
     Task: { ID: 4, Name: '任务' },
-    Leave: { ID: 5, Name: '请假' },
+    MeetingRoom: { ID: 5, Name: '请假' },
+    Seal: { ID: 6, Name: '图章' }
 };
 function getExceptionMessage(ex) {
     if (ex.InnerException) {
@@ -305,6 +306,20 @@ module.exports = {
         },
         Apply: (data, cb, err) => {
             invokeApi('meetingroom/apply', HTTP_POST, data, cb, err);
+        }
+    },
+    Seal: {
+        List: (cb, err) => {
+            invokeApi('seal/list', HTTP_GET, null, cb, err);
+        },
+        Save: (data, cb, err) => {
+            invokeApi('seal/save', HTTP_POST, data, cb, err);
+        },
+        Delete: (id, cb, err) => {
+            invokeApi('seal/delete?id=' + id, HTTP_DELETE, null, cb, err);
+        },
+        Apply: (data, cb, err) => {
+            invokeApi('seal/apply', HTTP_POST, data, cb, err);
         }
     },
     Feed: {

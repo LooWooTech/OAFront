@@ -45,6 +45,32 @@ const sideMenuData = {
             ]
         }
     ],
+    meetingroom: [
+        {
+            title: '申请', items: [
+                { path: '/meetingroom/', icon: 'fa fa-home', text: '会议室查询' },
+                { path: `/extend1/${api.Forms.MeetingRoom.ID}/my/`, icon: 'fa fa-inbox', text: '我的申请' }
+            ]
+        }, {
+            title: '管理&审批', role: 2, items: [
+                { path: '/meetingroom/list', icon: 'fa fa-list', text: '会议室管理' },
+                { path: `/extend1/${api.Forms.MeetingRoom.ID}/`, icon: 'fa fa-check', text: '会议室审批' }
+            ]
+        }
+    ],
+    seal: [
+        {
+            title: '申请', items: [
+                { path: '/seal/', icon: 'fa fa-circle-o', text: '图章查询' },
+                { path: `/extend1/${api.Forms.Seal.ID}/my/`, icon: 'fa fa-inbox', text: '我的申请' }
+            ]
+        }, {
+            title: '管理&审批', role: 2, items: [
+                { path: '/seal/list', icon: 'fa fa-list', text: '图章管理' },
+                { path: `/extend1/${api.Forms.Seal.ID}/`, icon: 'fa fa-check', text: '图章审批' }
+            ]
+        }
+    ],
     task: [
         {
             title: '任务', items: [
