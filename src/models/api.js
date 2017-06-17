@@ -256,8 +256,8 @@ module.exports = {
             if (!parameters.formId) return
             invokeApi('missive/list', HTTP_GET, parameters, cb, err);
         },
-        Get: (infoId, cb, err) => {
-            invokeApi('missive/get?id=' + infoId, HTTP_GET, null, cb, err);
+        Model: (infoId, cb, err) => {
+            invokeApi('missive/model?id=' + infoId, HTTP_GET, null, cb, err);
         },
         DeleteWord: (infoId, cb, err) => {
             invokeApi('missive/deleteWord?id=' + infoId, HTTP_GET, null, cb, err);
@@ -334,7 +334,9 @@ module.exports = {
         List: (parameters, cb, err) => {
             invokeApi('Task/list', HTTP_GET, parameters, cb, err);
         },
-
+        UpdateZRR: (infoId, cb, err) => {
+            invokeApi('task/updatezrr?id=' + infoId, HTTP_GET, null, cb, err);
+        },
         Model: (id, cb, err) => {
             invokeApi('Task/model?id=' + id, HTTP_GET, null, cb, err);
         },

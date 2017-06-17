@@ -43,10 +43,11 @@ class SharedForm extends Component {
                 {children.map((item, key) =>
                     item.title ?
                         <Form.Item key={item.name || key} label={getLabel(item)} {...(item.layout ? item.layout : formItemLayout) }>
-                            {getControl(item)}
-                            {item.extend}
+                            {item.before} 
+                            {getControl(item)} 
+                            {item.after}
                         </Form.Item>
-                        : <span key={item.name || key}>{getControl(item)}{item.extend}</span>
+                        : <span key={item.name || key}>{item.before} {getControl(item)} {item.after}</span>
                 )}
             </Form>
         )

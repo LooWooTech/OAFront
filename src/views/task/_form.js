@@ -1,49 +1,79 @@
-import React, { Component } from 'react'
-import { Button, Input, DatePicker, Timeline } from 'antd';
-import SharedForm from '../shared/_form'
-import moment from 'moment';
+import React from 'react'
+import { Input, DatePicker, Radio, AutoComplete, Icon, message } from 'antd'
+import Form from '../shared/_form'
+import moment from 'moment'
+import api from '../../models/api'
+import utils from '../../utils'
 
-class TaskForm extends Component {
-
-    state = { info: this.props.info || {} }
-    handleAddGZJZ = () => {
-        let gzjz = this.state.GZJZ || [];
-        let textarea = this.refs.gzjz.refs.input
-        let text = textarea.value;
-        if (!text) {
-            textarea.focus()
-            return false;
-        }
-        gzjz.push({ Content: text, CreateTime: moment().format() });
-        textarea.value = ''
-        this.setState({ GZJZ: gzjz })
+class TaskForm extends React.Component {
+    state = {
+        formId: api.Forms.Task.ID,
+        LY_LX: 1
     }
+
+    handleSubmit = () => {
+        this.refs.form.validateFields((err, values) => {
+            console.log(values)
+            if (err) {
+                return false
+            }
+            let formData = values
+            formData.JH_SJ = formData.JH_SJ ? formData.JH_SJ.format() : ''
+
+            api.Task.Save(formData, json => {
+                message.success('保存成功')
+                utils.Redirect(`/task/?status=1`)
+            });
+        })
+    }
+
     getItems = () => {
-        let model = this.state.model || {};
+        let model = this.props.model || {};
+        const disabled = this.props.disabled
         var items = [
             { name: 'ID', defaultValue: model.ID || 0, render: <Input type="hidden" /> },
-            { name: 'FormId', defaultValue: this.state.info.FormId, render: <Input type="hidden" /> },
-            { name: 'Data.MC', title: '任务事项', defaultValue: model.MC || '', render: <Input /> },
-            { name: 'Data.LY', title: '任务来源', defaultValue: model.LY || '', render: <Input /> },
-            { name: 'Data.GZMB', title: '工作目标任务', defaultValue: model.GZMB || '', render: <Input type="textarea" autosize={{ minRows: 2, maxRows: 6 }} /> },
-            { name: 'Data.JHWC_SJ', title: '计划完成时间', defaultValue: model.JHWC_SJ ? moment(model.JHWC_SJ) : null, render: <DatePicker /> },
-            { name: 'Data.ZRLD', title: '责任领导', defaultValue: model.ZRLD || '', render: <Input />, layout: { labelCol: { span: 4 }, wrapperCol: { span: 4 } } },
-            { name: 'Data.ZBDW', title: '主办单位', defaultValue: model.ZBDW || '', render: <Input />, layout: { labelCol: { span: 4 }, wrapperCol: { span: 6 } } },
-            { name: 'Data.XBDW', title: '协办单位', defaultValue: model.XBDW || '', render: <Input />, layout: { labelCol: { span: 4 }, wrapperCol: { span: 6 } } },
+            { name: 'FormId', defaultValue: this.state.formId, render: <Input type="hidden" /> },
             {
-                title: '工作进展情况', render: <div>
-                    <Input type="textarea" autosize={{ minRows: 2, maxRows: 6 }} ref="gzjz" />
-                    <Button icon="plus" onClick={this.handleAddGZJZ}>添加工作进展</Button>
-                    <Timeline>
-                        {(this.state.GZJZ || model.GZJZ || []).map((item, key) => <Timeline.Item key={key}>
-                            {moment(item.CreateTime).format('lll')}
-                            <p>
-                                {item.Content}
-                            </p>
-                        </Timeline.Item>)}
-                    </Timeline>
-                </div>,
+                name: 'MC', title: '任务事项', defaultValue: model.MC || '',
+                rules: [{ required: true, message: '请填写任务事项' }], render: <Input  disabled={disabled}/>
             },
+            {
+                name: 'LY', title: '任务来源', defaultValue: model.LY || '',
+                render: <Input  disabled={disabled}/>,
+                before: <Radio.Group defaultValue={this.state.LY_LX} onChange={e => {
+                    this.setState({ LY_LX: e.target.value })
+                }}  disabled={disabled}>
+                    <Radio.Button value={1}>省</Radio.Button>
+                    <Radio.Button value={2}>市</Radio.Button>
+                    <Radio.Button value={3}>区</Radio.Button>
+                </Radio.Group>
+            },
+            {
+                name: 'GZ_MB', title: '工作目标任务', defaultValue: model.GZ_MB || '',
+                rules: [{ required: true, message: '请填写任务内容' }],
+                render: <Input type="textarea" autosize={{ minRows: 2, maxRows: 6 }}  disabled={disabled}/>
+            },
+            {
+                name: 'JH_SJ', title: '计划完成时间', defaultValue: model.JH_SJ ? moment(model.JH_SJ) : null,
+                //rules: [{ required: true, message: '请选择计划完成时间' }],
+                render: <DatePicker  disabled={disabled}/>
+            },
+            // {
+            //     name: 'ZRR', title: '责任人', defaultValue: model.ZRR || '', layout: { labelCol: { span: 4 }, wrapperCol: { span: 3 } },
+            //     render: <AutoComplete
+            //         dataSource={this.state.searchResult}
+            //         onSearch={value => {
+            //             if (!value) return;
+            //             api.User.List({ searchKey: value }, json => {
+            //                 let datasource = json.List.map(user => { return { value: user.ID.toString(), text: user.RealName } })
+            //                 this.setState({ searchResult: datasource })
+            //             })
+            //         }}
+            //     ><Input suffix={<Icon type="search" className="certain-category-icon" />} />
+            //     </AutoComplete>
+            // },
+            { name: 'ZB_DW', title: '主办单位', defaultValue: model.ZB_DW || '', render: <Input  disabled={disabled}/>, },
+            { name: 'XB_DW', title: '协办单位', defaultValue: model.XB_DW || '', render: <Input  disabled={disabled}/>, }
         ];
 
         return items;
@@ -52,10 +82,11 @@ class TaskForm extends Component {
     render() {
         return (
             <div>
-                <SharedForm
-                    onSubmit={this.props.onSubmit}
+                <Form
+                    ref="form"
+                    onSubmit={this.handleSubmit}
                     children={this.getItems()}
-                    layout={{ labelCol: { span: 4 }, wrapperCol: { span: 8 } }}
+                    itemLayout={{ labelCol: { span: 4 }, wrapperCol: { span: 8 } }}
                 />
             </div>
         )

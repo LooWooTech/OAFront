@@ -105,7 +105,7 @@ class FlowForm extends Component {
                     onSubmit={this.handleSelect}
                     formType="flow"
                 />,
-                extend: <span>{(this.state.toUser || {}).ID > 0 ? ' 已选 ' + this.state.toUser.RealName : ''}</span>
+                before: <span>{(this.state.toUser || {}).ID > 0 ? ' 已选 ' + this.state.toUser.RealName : ''}</span>
             })
         }
         return items

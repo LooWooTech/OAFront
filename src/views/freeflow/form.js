@@ -51,7 +51,7 @@ class FreeFlowForm extends Component {
         return (
             <FormModal
                 name="提交自由流程"
-                trigger={this.props.children}
+                trigger={this.props.trigger}
                 onSubmit={this.handleSubmit}
                 children={this.getFormItems(flowNodeData)}
             />

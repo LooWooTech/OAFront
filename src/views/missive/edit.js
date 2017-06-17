@@ -49,7 +49,7 @@ export default class MissiveEdit extends Component {
                 }
                 this.setState({ ...data });
             });
-            api.Missive.Get(id, data => {
+            api.Missive.Model(id, data => {
                 this.setState({ missive: data })
             })
         }
@@ -114,7 +114,8 @@ export default class MissiveEdit extends Component {
                         <SubmitFlowModal
                             flowDataId={model.FlowDataId}
                             callback={this.loadData}
-                            children={<Button type="success" icon="check" htmlType="button">提交流程</Button>}
+                            infoId={model.ID}
+                            trigger={<Button type="success" icon="check" htmlType="button">提交流程</Button>}
                         />
                         : null}
                     {this.state.canSubmitFreeFlow && this.state.freeFlowNodeData && !this.state.freeFlowNodeData.UpdateTime ?
@@ -128,7 +129,7 @@ export default class MissiveEdit extends Component {
                             infoId={model.ID}
                             flowNodeData={this.state.flowNodeData}
                             record={this.state.freeFlowNodeData}
-                            children={<Button type="danger" icon="retweet" htmlType="button">自由发送</Button>}
+                            trigger={<Button type="danger" icon="retweet" htmlType="button">自由发送</Button>}
                         />
                         : null}
                     {this.state.canCompleteFreeFlow ? <Button type="danger" icon="close" onClick={this.handleCloseFreeFlow}>结束自由发送</Button> : null}

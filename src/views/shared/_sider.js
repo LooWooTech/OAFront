@@ -74,11 +74,9 @@ const sideMenuData = {
     task: [
         {
             title: '任务', items: [
-                { path: '/task/', icon: 'fa fa-tasks', text: '我的任务' },
-            ]
-        }, {
-            title: '审批', items: [
-                { path: '/task/approvals', icon: 'fa fa-check', text: '任务审批' }
+                { path: '/task/?status=1', icon: 'fa fa-envelope-open-o', text: '待办箱' },
+                { path: '/task/?status=2', icon: 'fa fa-send', text: '在办箱' },
+                { path: '/task/?status=3', icon: 'fa fa-envelope', text: '已办箱' },
             ]
         }
     ],

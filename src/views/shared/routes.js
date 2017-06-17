@@ -36,7 +36,7 @@ import LeaveHistory from '../attendance/leave_history'
 import FeedIndex from '../feed/index'
 
 
-import TaskIndex from '../task/index'
+import TaskIndex from '../task/list'
 import TaskEdit from '../task/edit'
 
 const authorize = (nextState, replace) => {

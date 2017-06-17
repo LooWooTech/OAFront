@@ -117,7 +117,7 @@ class MissiveEditForm extends React.Component {
             name: 'WJ_ZH', title: '文件字号', defaultValue: model.WJ_ZH,
             layout: { labelCol: { span: 4 }, wrapperCol: { span: 4 } },
             render: <Input disabled={disabled} style={{ maxWidth: '200px' }} />,
-            extend: disabled ? null : <a onClick={() => {
+            after: disabled ? null : <a onClick={() => {
                 var wjzh = document.getElementById("WJ_ZH");
                 wjzh.value = wjzh.value + '〔' + new Date().getFullYear() + '〕'
             }}>〔{new Date().getFullYear()}〕</a>
