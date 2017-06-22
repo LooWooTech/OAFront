@@ -102,7 +102,15 @@ export default class UserList extends React.Component {
             render: <Select mode="multiple">
                 {this.state.groups.map(item => <Select.Option key={item.ID}>{item.Name}</Select.Option>)}
             </Select>
-        }];
+        },
+        {
+            title: '排序',
+            name: 'Sort',
+            defaultValue: (record.Sort || 0),
+            layout: { labelCol: { span: 6 }, wrapperCol: { span: 3 } },
+            render: <Input />
+        }
+        ];
     };
 
     render() {

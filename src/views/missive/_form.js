@@ -1,5 +1,5 @@
 import React from 'react'
-import { Input, DatePicker, Radio, Checkbox, Upload, Icon, Spin, message } from 'antd'
+import { Input, DatePicker, AutoComplete, Radio, Checkbox, Upload, Icon, Spin, message } from 'antd'
 import Form from '../shared/_form'
 import moment from 'moment'
 import api from '../../models/api'
@@ -8,18 +8,25 @@ import utils from '../../utils'
 class MissiveEditForm extends React.Component {
     state = { uploading: false }
 
+    componentWillMount() {
+        api.Missive.RedTitleList(data => {
+            this.setState({ redTitles: data })
+        })
+    }
+
     handleSubmit = () => {
         this.refs.form.validateFields((err, values) => {
             if (err) {
                 return false
             }
             let formData = values
-            //如果上传了word文档
-            if (!formData.WordId) {
+            formData.RedTitleId = this.state.redTitleId || 0;
+            const content = this.state.upload || formData.Content || {}
+            if (!content.ID) {
                 message.error("请上传公文内容文件")
                 return false
             }
-
+            formData.Content = content;
             formData.FW_RQ = formData.FW_RQ ? formData.FW_RQ.format() : ''
             formData.QX_RQ = formData.QX_RQ ? formData.QX_RQ.format('YYYY-MM-DD') : ''
             if (!formData.FormId) {
@@ -28,12 +35,12 @@ class MissiveEditForm extends React.Component {
             }
             api.Missive.Save(formData, json => {
                 message.success('保存成功')
-                utils.Redirect(`/missive/${this.props.formId}/?status=1`)
+                utils.Redirect(`/missive/list/${this.props.formId}/?status=1`)
             });
         })
     }
 
-    handleUploadWord = ({ file, fileList }) => {
+    handleUploadContent = ({ file, fileList }) => {
         this.setState({ uploading: false })
         if (!file || !file.response) return
         var response = file.response
@@ -44,18 +51,18 @@ class MissiveEditForm extends React.Component {
         this.setState({ upload: response })
     }
 
-    handleDeleteWord = (wordId) => {
+    handleDeleteContent = (contentId) => {
         if (this.props.disabled) {
             message.error('不能删除');
             return;
         }
         if (!confirm("你确定要删除吗？")) return false;
         let model = this.props.model || {}
-        api.File.Delete(wordId, json => {
-            model.Word = null;
-            if (model.WordId === wordId) {
-                model.WordId = 0
-                api.Missive.DeleteWord(model.ID, () => {
+        api.File.Delete(contentId, json => {
+            model.Content = null;
+            if (model.ContentId === contentId) {
+                model.ContentId = 0
+                api.Missive.DeleteContent(model.ID, () => {
                     this.setState({ upload: null, model })
                 })
             } else {
@@ -63,64 +70,78 @@ class MissiveEditForm extends React.Component {
             }
         });
         //this.setState({})
-        //需要更新missive，因为删除了word文件
+        //需要更新missive，因为删除了content文件
 
     };
+
+    handleSelectRedTitle = (value) => {
+        var item = (this.state.redTitles || []).find(t => t.ID.toString() === value)
+        this.setState({ wjzh: item.Name + ` 〔${new Date().getFullYear()}〕` })
+    }
 
     getItems = () => {
         const formId = parseInt(this.props.formId, 10)
         //const formName = formId === api.Forms.Missive.ID ? '发文' : '收文'
         const model = this.props.model || {}
-        const word = this.state.upload || model.Word || {}
+        const content = this.state.upload || model.Content || {}
         const disabled = this.props.disabled
 
         let uploadControl = {
-            name: 'Word',
+            name: 'Content',
             title: '文档正文',
-            defaultValue: word,
-            getField: !word.ID,
+            defaultValue: content,
+            //getField: !content.ID,
             rules: [{ required: true }],
-            render: !word.ID ? <Upload.Dragger
-                action={api.File.UploadUrl(0, model.ID, 'word', true)}
-                beforeUpload={() => { this.setState({ uploading: true }) }}
-                onChange={this.handleUploadWord}
-                name="word"
-                onRemove={this.handleDeleteFile}
-                withCredentials={true}
-                showUploadList={false}
-                accept=".doc,.docx,.pdf,.tiff,.tif"
-                disabled={disabled}
-            >
-                <div style={{ textAlign: 'left', padding: '10px' }}>
-                    <Spin spinning={this.state.uploading}>
-                        <p className="ant-upload-text">
-                            <i className="fa fa-file-o fa-2x"></i>
-                            &nbsp;&nbsp; 仅限Word、Pdf、Tiff文件格式
-                        </p>
-                    </Spin>
-                </div>
-            </Upload.Dragger> :
-                <div>
-                    {word.FileName}
-                    &nbsp;&nbsp;&nbsp;&nbsp;
-                        <a href={api.File.FileUrl(word.ID)} target="_blank"><Icon type="download" />&nbsp;下载</a>
-                    {disabled ? null :
+            render: <span>
+                <Upload.Dragger
+                    action={api.File.UploadUrl(0, model.ID, 'content', true)}
+                    beforeUpload={() => { this.setState({ uploading: true }) }}
+                    onChange={this.handleUploadContent}
+                    name="content"
+                    onRemove={this.handleDeleteFile}
+                    withCredentials={true}
+                    showUploadList={false}
+                    accept=".doc,.docx,.pdf,.tiff,.tif"
+                    disabled={disabled}
+                >
+                    <div style={{ textAlign: 'left', padding: '0 10px' }}>
+                        <Spin spinning={this.state.uploading}>
+                            <p className="ant-upload-text">
+                                <i className="fa fa-file-o"></i>
+                                &nbsp;&nbsp; {content.ID ? content.FileName : '仅限Word、Pdf、Tiff文件格式'}
+                            </p>
+                        </Spin>
+                    </div>
+                </Upload.Dragger>
+                {content.ID ?
+                    <span>
+                        <a href={api.File.FileUrl(content.ID)} target="_blank"><Icon type="download" />&nbsp;下载</a>
+                        {disabled ? null :
 
-                        <span>
-                            &nbsp;&nbsp;&nbsp;&nbsp;
-                                <a onClick={e => this.handleDeleteWord(word.ID)}><Icon type="delete" />&nbsp;删除</a>
-                        </span>
-                    }
-                </div>
+                            <span>
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                <a onClick={e => this.handleDeleteContent(content.ID)}><Icon type="delete" />&nbsp;删除</a>
+                            </span>
+                        }
+                    </span>
+                    : null
+                }
+            </span>
         }
+
         let numberControl = {
             name: 'WJ_ZH', title: '文件字号', defaultValue: model.WJ_ZH,
-            layout: { labelCol: { span: 4 }, wrapperCol: { span: 4 } },
-            render: <Input disabled={disabled} style={{ maxWidth: '200px' }} />,
-            after: disabled ? null : <a onClick={() => {
-                var wjzh = document.getElementById("WJ_ZH");
-                wjzh.value = wjzh.value + '〔' + new Date().getFullYear() + '〕'
-            }}>〔{new Date().getFullYear()}〕</a>
+            layout: { labelCol: { span: 4 }, wrapperCol: { span: 6 } },
+            render: <AutoComplete
+                dataSource={(this.state.redTitles || []).filter(t => t.FormId === formId).map(t => { return { value: t.ID, text: t.Name + `〔${new Date().getFullYear()}〕` } })}
+                disabled={disabled}
+                defaultActiveFirstOption={false}
+                filterOption={(inputValue, option) => {
+                    return this.state.redTitles.find(t => t.Name.indexOf(inputValue.replace(/〔\d+〕/g, '')) > -1)
+                }}
+                onSelect={value => this.setState({ redTitleId: value })}
+                style={{ maxWidth: '200px' }}
+            />,
         }
         let titleControl = {
             name: 'WJ_BT', title: '文件标题', defaultValue: model.WJ_BT, rules: [{ required: true, message: '请填写文件标题' }],
@@ -141,7 +162,7 @@ class MissiveEditForm extends React.Component {
         let items = [
             { name: 'ID', defaultValue: model.ID || 0, render: <Input type="hidden" /> },
             { name: 'FormId', defaultValue: formId || 0, render: <Input type="hidden" /> },
-            { name: 'WordId', defaultValue: word.ID || 0, render: <Input type="hidden" /> },
+            { name: 'ContentId', defaultValue: content.ID || 0, render: <Input type="hidden" /> },
             //{
             //     name: 'ZTC', title: '主题词', defaultValue: model.ZTC,
             //     render: <Input disabled={disabled} />

@@ -20,7 +20,6 @@ class FlowDataList extends Component {
 
     getTreeNode = (node, list) => {
         let children = list.filter(e => e.ParentId === node.ID)
-        console.log(node.Content)
         // let treeNodeTitle = <Popover
         //     title={node.UpdateTime ? moment(node.UpdateTime).format('YYYY-MM-DD HH:mm') : ''}
         //     content={node.Content || node.UpdateTime ? '阅' : ''}

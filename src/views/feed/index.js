@@ -26,7 +26,7 @@ class FeedIndex extends Component {
     componentWillReceiveProps(nextProps) {
         var scope = nextProps.location.query.scope;
         if (scope !== this.props.location.query.scope) {
-           this.loadData(scope)
+            this.loadData(scope)
         }
     }
 
@@ -66,10 +66,10 @@ class FeedIndex extends Component {
                 return null
             case api.Forms.Missive.ID:
             case api.Forms.ReceiveMissive.ID:
-                link = `/missive/${item.FormId}/edit?id=${item.InfoId}`
+                link = `/missive/edit/${item.FormId}/?id=${item.InfoId}`
                 break;
             case api.Forms.Car.ID:
-                link = "/car/history?id=" + item.InfoId;
+                link = `/extend1/${item.FormId}/?id=${item.InfoId}&userId=${item.userId || 0}`;
                 break;
         }
         return <Link to={link}>{item.Title}</Link>

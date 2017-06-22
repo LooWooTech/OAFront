@@ -28,8 +28,14 @@ class SharedForm extends Component {
             var getField = true
             if (item.getField === false) getField = false
             if (!item.name) getField = false
+            let fieldParameter = {}
+            if (item.defaultValue)
+                fieldParameter.initialValue = item.defaultValue;
+            if (item.rules)
+                fieldParameter.rules = item.rules
+
             return getField ?
-                getFieldDecorator(item.name, { initialValue: item.defaultValue, rules: item.rules || [] }, )(item.render)
+                getFieldDecorator(item.name, fieldParameter)(item.render)
                 : item.render;
         }
         const getLabel = item => {
@@ -42,9 +48,14 @@ class SharedForm extends Component {
             <Form layout={layout} onSubmit={this.handleSubmit} style={style}>
                 {children.map((item, key) =>
                     item.title ?
-                        <Form.Item key={item.name || key} label={getLabel(item)} {...(item.layout ? item.layout : formItemLayout) }>
-                            {item.before} 
-                            {getControl(item)} 
+                        <Form.Item
+                            key={item.name || key}
+                            label={getLabel(item)}
+                            extra={item.extra}
+                            {...(item.layout ? item.layout : formItemLayout) }
+                        >
+                            {item.before}
+                            {getControl(item)}
                             {item.after}
                         </Form.Item>
                         : <span key={item.name || key}>{item.before} {getControl(item)} {item.after}</span>

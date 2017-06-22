@@ -15,6 +15,7 @@ import FlowList from '../flow/list'
 
 import MissiveList from '../missive/list'
 import MissiveEdit from '../missive/edit'
+import MissiveRedTitle from '../missive/red_title'
 
 import CarIndex from '../car/index'
 import CarList from '../car/list'
@@ -53,9 +54,10 @@ export default class Routes extends React.Component {
         return <Router history={hashHistory}>
             <Route path='/' component={Layout} onEnter={authorize}>
                 <IndexRoute component={FeedIndex} />
-                <Route path="missive/:formId">
-                    <IndexRoute component={MissiveList} />
-                    <Route path="edit" component={MissiveEdit} />
+                <Route path="missive">
+                    <Route path="list/:formId" component={MissiveList} />
+                    <Route path="edit/:formId" component={MissiveEdit} />
+                    <Route path='redtitle' component={MissiveRedTitle} />
                 </Route>
                 <Route path="car">
                     <IndexRoute component={CarIndex} />
@@ -70,7 +72,7 @@ export default class Routes extends React.Component {
                     <Route path="list" component={SealList} />
                 </Route>
                 <Route path="extend1/:formId">
-                    <IndexRoute component={ApplyList} />
+                    <IndexRoute path="" component={ApplyList} />
                     <Route path="my" component={MyApplyList} />
                 </Route>
                 <Route path="task">

@@ -4,13 +4,15 @@ import api from '../../models/api';
 class ContentTab extends Component {
 
     render() {
-        // const infoId = (this.props.missive || {}).ID || 0
-        // const fileUrl = infoId ? api.File.PreviewUrl(infoId) : null
-        const wordId = (this.props.missive || {}).WordId || 0
-        const editUrl = wordId ? api.File.EditUrl(wordId) : null
-        if (editUrl) {
-            return <iframe src={editUrl} className="iframe-word" />
-        } else {
+        const model = this.props.missive || {}
+        if (model.Content) {
+            var fileUrl = api.File.PreviewUrl(model.ID)
+            if (model.Content.IsWordFile) {
+                fileUrl = api.File.EditUrl(model.ContentId)
+            }
+            return <iframe src={fileUrl} className="iframe-word" />
+        }
+        else {
             return <Alert
                 message="错误"
                 description="无法预览或者您还未上传附件"

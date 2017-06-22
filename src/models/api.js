@@ -259,14 +259,23 @@ module.exports = {
         Model: (infoId, cb, err) => {
             invokeApi('missive/model?id=' + infoId, HTTP_GET, null, cb, err);
         },
-        DeleteWord: (infoId, cb, err) => {
-            invokeApi('missive/deleteWord?id=' + infoId, HTTP_GET, null, cb, err);
+        DeleteContent: (infoId, cb, err) => {
+            invokeApi('missive/deletecontent?id=' + infoId, HTTP_GET, null, cb, err);
         },
         Save: (data, cb, err) => {
             invokeApi('missive/save?formId=' + data.FormId, HTTP_POST, data, cb, err);
         },
         GetPreviewFileUrl: (infoId) => {
             return 'file/GetPreviewFileUrl?id=' + infoId
+        },
+        RedTitleList: (cb, err) => {
+            invokeApi('missive/redtitles', HTTP_GET, null, cb, err);
+        },
+        SaveRedTitle: (data, cb, err) => {
+            invokeApi('missive/saveredtitle', HTTP_POST, data, cb, err);
+        },
+        DeleteRedTitle: (id, cb, err) => {
+            invokeApi('missive/deleteredtitle?id=' + id, HTTP_DELETE, null, cb, err);
         }
     },
     FormInfoExtend1: {

@@ -61,7 +61,7 @@ export default class MissiveList extends React.Component {
     getColumns = () => {
         let items = [
             { title: '文号', dataIndex: 'WJ_ZH' },
-            { title: '标题', dataIndex: 'WJ_BT', render: (text, item) => <Link to={`/missive/${this.state.formId}/edit?id=${item.ID}`}>{text}</Link> },
+            { title: '标题', dataIndex: 'WJ_BT', render: (text, item) => <Link to={`/missive/edit/${this.state.formId}/?id=${item.ID}`}>{text}</Link> },
             { title: '密级', dataIndex: 'WJ_MJ' },
             { title: '主送机关', dataIndex: 'ZS_JG' },
             { title: '办理期限', dataIndex: 'QX_RQ', render: (text, item) => text ? moment(text).format('ll') : null },
@@ -77,7 +77,7 @@ export default class MissiveList extends React.Component {
             <div>
                 <div className="toolbar">
                     <Button.Group>
-                        <Button type="primary" icon="file" onClick={() => utils.Redirect(`/missive/${this.state.formId}/edit`)}>
+                        <Button type="primary" icon="file" onClick={() => utils.Redirect(`/missive/edit/${this.state.formId}/`)}>
                             新建{this.state.formId === api.Forms.Missive.ID.toString() ? '发文拟稿' : '收文文档'}
                         </Button>
                         {/*<Button type="danger" icon="export">导出公文</Button>*/}

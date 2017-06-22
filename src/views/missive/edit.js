@@ -92,7 +92,9 @@ export default class MissiveEdit extends Component {
             api.FreeFlowData.Submit(flowNodeData.ID, this.state.model.ID, '', {
                 ID: this.state.freeFlowNodeData.ID,
             }, json => {
-                this.setState({ reload: Math.random() })
+                let freeFlowNodeData = this.state.freeFlowNodeData;
+                freeFlowNodeData.UpdateTime = new Date();
+                this.setState({ freeFlowNodeData })
             })
         }
     }
