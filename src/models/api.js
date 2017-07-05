@@ -16,7 +16,8 @@ const Forms = {
     Car: { ID: 3, Name: '公车申请' },
     Task: { ID: 4, Name: '任务' },
     MeetingRoom: { ID: 5, Name: '请假' },
-    Seal: { ID: 6, Name: '图章' }
+    Seal: { ID: 6, Name: '图章' },
+    Leave: { ID: 7, Name: '请假' }
 };
 function getExceptionMessage(ex) {
     if (ex.InnerException) {
@@ -352,8 +353,14 @@ module.exports = {
         Save: (data, cb, err) => {
             invokeApi('task/save', HTTP_POST, data, cb, err);
         },
-        Delete: (id, cb, err) => {
-            invokeApi('task/delete?id=' + id, HTTP_DELETE, null, cb, err);
+        ProgressList: (taskId, cb, err) => {
+            invokeApi('task/ProgressList?taskId=' + taskId, HTTP_GET, null, cb, err);
+        },
+        SaveProgress: (data, cb, err) => {
+            invokeApi('task/saveprogress', HTTP_POST, data, cb, err);
+        },
+        DeleteProgress: (progressId, cb, err) => {
+            invokeApi('task/deleteprogress?id=' + progressId, HTTP_DELETE, null, cb, err);
         }
     },
     Leave: {
@@ -368,11 +375,11 @@ module.exports = {
         }
     },
     Attendance: {
-        List: (parameters, cb, err) => {
-            invokeApi('Attendance/list', HTTP_GET, parameters, cb, err);
+        Month: (year, month, cb, err) => {
+            invokeApi('Attendance/month', HTTP_GET, { year, month }, cb, err);
         },
-        Statistics: (parameters, cb, err) => {
-            invokeApi('Attendance/Statistics', HTTP_GET, parameters, cb, err);
+        CheckInOut: (cb, err) => {
+            invokeApi('attendance/checkinout', HTTP_GET, null, cb, err);
         }
     }
 };

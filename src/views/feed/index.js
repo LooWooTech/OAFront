@@ -68,7 +68,13 @@ class FeedIndex extends Component {
             case api.Forms.ReceiveMissive.ID:
                 link = `/missive/edit/${item.FormId}/?id=${item.InfoId}`
                 break;
+            case api.Forms.Task.ID:
+                link = `/task/edit/?id=${item.InfoId}`
+                break;
             case api.Forms.Car.ID:
+            case api.Forms.MeetingRoom.ID:
+            case api.Forms.Seal.ID:
+            case api.Forms.Leave.ID:
                 link = `/extend1/${item.FormId}/?id=${item.InfoId}&userId=${item.userId || 0}`;
                 break;
         }

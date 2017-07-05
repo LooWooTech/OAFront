@@ -94,7 +94,7 @@ class MissiveEditForm extends React.Component {
             rules: [{ required: true }],
             render: <span>
                 <Upload.Dragger
-                    action={api.File.UploadUrl(0, model.ID, 'content', true)}
+                    action={api.File.UploadUrl(content.ID || 0, 0, 'content', true)}
                     beforeUpload={() => { this.setState({ uploading: true }) }}
                     onChange={this.handleUploadContent}
                     name="content"

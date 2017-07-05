@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Table, Input, Upload, Radio, Button } from 'antd'
+import { Table,  Button } from 'antd'
 import EditModal from './_redtitle_edit'
 import api from '../../models/api'
 

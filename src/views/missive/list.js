@@ -1,8 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router';
-import { Button, Input, Table } from 'antd';
+import { Button, Input, Table, Popconfirm } from 'antd';
 import utils from '../../utils';
 import api from '../../models/api';
+import auth from '../../models/auth';
 import moment from 'moment'
 
 export default class MissiveList extends React.Component {
@@ -58,6 +59,12 @@ export default class MissiveList extends React.Component {
         this.loadData(this.state.formId, this.state.page.current, searchKey);
     };
 
+    handleDelete = item => {
+        api.FormInfo.Delete(item.ID, () => {
+            this.loadData()
+        })
+    }
+
     getColumns = () => {
         let items = [
             { title: '文号', dataIndex: 'WJ_ZH' },
@@ -67,6 +74,16 @@ export default class MissiveList extends React.Component {
             { title: '办理期限', dataIndex: 'QX_RQ', render: (text, item) => text ? moment(text).format('ll') : null },
             { title: '所在流程', dataIndex: 'FlowStep' },
             { title: '处理日期', dataIndex: 'UpdateTime', render: (text, item) => text ? moment(text).format('ll') : null },
+            {
+                title: '操作', render: (text, item) => {
+                    if (auth.isCurrentUser(item.PostUserId)) {
+
+                        return <Popconfirm title="删除后无法恢复，你确定要删除吗? " onConfirm={() => this.handleDelete(item)} >
+                            <Button type="danger" icon="remove">删除</Button>
+                        </Popconfirm>
+                    }
+                }
+            }
         ];
         return items
     }

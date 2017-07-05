@@ -200,3 +200,29 @@ hr {
     width: 100%;
     border:none;
 }
+
+.item-progress {
+    display: block;
+    /* background: #eee; */
+    margin: 5px;
+    padding: 10px;
+    border-bottom: solid 1px #eee;
+}
+.item-progress .item-header {
+    display: flex;
+}
+.item-progress .item-header span {
+    margin-right: 10px;
+}
+.item-progress .item-body {
+    padding: 10px;
+    font-size: 1rem;
+}
+
+.ant-btn.btn-checkInOut {
+    font-size: 1.5rem;
+    height: unset;
+    padding: 20px;
+    border-radius: 6px;
+    width: 100%;
+}

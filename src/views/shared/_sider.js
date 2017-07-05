@@ -88,13 +88,13 @@ const sideMenuData = {
     attendance: [
         {
             title: '考勤', items: [
-                { path: '/attendance/index', icon: 'fa fa-calendar-check-o', text: '考勤记录' },
-                { path: '/attendance/history', icon: 'fa fa-history', text: '我的请假记录' },
+                { path: '/attendance', icon: 'fa fa-calendar-check-o', text: '考勤记录' },
+                { path: `/extend1/${api.Forms.Leave.ID}/my/`, icon: 'fa fa-history', text: '我的请假记录' },
             ]
         },
         {
             title: '管理', role: 2, items: [
-                { path: '/attendance/leaves', icon: 'fa fa-list', text: '请假审批', },
+                { path: `/extend1/${api.Forms.Leave.ID}/`, icon: 'fa fa-list', text: '请假审批', },
                 { path: '/attendance/holidays', icon: 'fa fa-calendar', text: '节假日管理' }
             ]
         }

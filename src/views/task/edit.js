@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Affix, Button, Modal, Tabs, message } from 'antd';
 import api from '../../models/api';
-import auth from '../../models/auth';
 import FormTab from './_form';
+import ProgressTab from './_progress'
 import ResultTab from './_result';
 import FlowListTab from '../flowdata/list';
 import FileListTab from '../file/info_file_list';
@@ -45,7 +45,6 @@ export default class TaskEdit extends Component {
                     data.freeFlowNodeData = data.flowNodeData.Nodes.find(n => n.$id === data.freeFlowNodeData.$ref);
                 }
 
-                data.canEdit = data
                 this.setState({ ...data });
             });
             api.Task.Model(id, data => {
@@ -110,7 +109,6 @@ export default class TaskEdit extends Component {
         const model = this.state.model;
         const extendModel = this.state.extendModel;
         if (!model) return null;
-        console.log(model)
         const showFiles = model.ID > 0;
         const showFlow = !!model.FlowDataId;
         return <div>
@@ -147,9 +145,14 @@ export default class TaskEdit extends Component {
                 </Button.Group>
             </Affix>
             <Tabs>
-                <Tabs.TabPane tab="任务落实单" key="1" style={{ zIndex: 2 }}>
+                <Tabs.TabPane tab="任务落实单" key="1">
                     <FormTab model={extendModel} disabled={!this.state.canEdit} ref="form" />
                 </Tabs.TabPane>
+                {showFlow?
+                    <Tabs.TabPane tab="任务进度" key="2">
+                        <ProgressTab taskId={model.ID} />
+                    </Tabs.TabPane>
+                :null}
                 {showFiles ?
                     <Tabs.TabPane tab="附件清单" key="5">
                         <FileListTab infoId={model.ID} formId={model.FormId} canEdit={this.state.canEdit} inline={false} />
@@ -162,12 +165,12 @@ export default class TaskEdit extends Component {
                     </Tabs.TabPane>
                     : null
                 }
-                {showFlow ?
+                {/*showFlow ?
                     <Tabs.TabPane tab="成果预览" key="4">
                         <ResultTab data={model} />
                     </Tabs.TabPane>
                     : null
-                }
+                */}
             </Tabs>
         </div>;
     }

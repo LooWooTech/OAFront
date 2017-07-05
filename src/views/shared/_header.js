@@ -9,10 +9,10 @@ import EditPasswordModal from '../user/editpassword'
 const headerNavData = [
     { name: 'home', active: true, path: '/?scope=all', icon: 'fa fa-commenting', text: '动态' },
     { name: 'missive', path: `/missive/list/${api.Forms.Missive.ID}/?status=1`, icon: 'fa fa-file-o', text: '公文' },
-    { name: 'calendar', icon: 'fa fa-calendar', text: '日程' },
+    { name: 'attendance', icon: 'fa fa-calendar-check-o', text: '考勤' },
     { name: 'task', icon: 'fa fa-clock-o', text: '任务' },
+    { name: 'calendar', icon: 'fa fa-calendar', text: '日程' },
     { name: 'news', icon: 'fa fa-newspaper-o', text: '信息' },
-    { name: 'attendace', path: '/attendance/index', icon: 'fa fa-calendar-check-o', text: '考勤' },
     { name: 'archive', icon: 'fa fa-tasks', text: '档案' },
     { name: 'meetingroom', icon: 'fa fa-television', text: '会议室' },
     { name: 'car', icon: 'fa fa-car', text: '车辆' },

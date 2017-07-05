@@ -1,32 +1,31 @@
 import React, { Component } from 'react';
-import { Button, Table, Popconfirm, Pagination } from 'antd';
+import { Button, Table, Popconfirm } from 'antd';
 import moment from 'moment';
 import HolidayFormModal from './holiday_form';
 import api from '../../models/api';
 
 class HolidayList extends Component {
     state = {
-        current: 1,
-        page: 1,
-        pageSize: 20,
         total: 0,
-        list: []
+        list: [],
+        page: {}
     };
 
     componentWillMount() {
-        this.loadPageData();
+        this.loadData();
     };
 
-    loadPageData = (page = 1) => {
+    loadData = (page = 1) => {
         api.Holiday.List(page, json => {
-            let { current, total, pageSize } = json.Page;
-            let list = json.List;
-            this.setState({ current, total, pageSize, list });
+            this.setState(json);
         })
     };
-    onEditSave = (err, values) => api.Holiday.Save(values, json => this.loadPageData);
-    onDelete = id => api.Holiday.Delete(id, this.loadPageData);
-    onGenerateWeek = year => api.Holiday.GenerateWeeks(year, json => this.loadPageData);
+    handleDelete = id => api.Holiday.Delete(id, this.loadData);
+    handleGenerateWeek = year => {
+        api.Holiday.GenerateWeeks(year, json => {
+            this.loadData()
+        });
+    }
 
     render() {
 
@@ -34,13 +33,25 @@ class HolidayList extends Component {
         return (
             <div>
                 <div className="toolbar">
-                    <HolidayFormModal onSubmit={this.onEditSave}>
-                        <Button type="primary" icon="file" >添加节假日</Button>
-                    </HolidayFormModal>
+                    <HolidayFormModal
+                        title="添加节假日"
+                        onSubmit={this.loadData}
+                        trigger={<Button type="primary" icon="file" >添加节假日</Button>}
+                    />
                     &nbsp;&nbsp;
                     <Button.Group>
-                        <Button onClick={() => this.onGenerateWeek(year)}>自动生成 {year}年 周末</Button>
-                        <Button onClick={() => this.onGenerateWeek(year + 1)}>自动生成 {year + 1}年 周末</Button>
+                        <Popconfirm
+                            title="你确定要生成吗？"
+                            onConfirm={() => this.handleGenerateWeek(year)}
+                        >
+                            <Button>自动生成 {year}年 周末</Button>
+                        </Popconfirm>
+                        <Popconfirm
+                            title="你确定要生成吗？"
+                            onConfirm={() => this.handleGenerateWeek(year + 1)}
+                        >
+                            <Button>自动生成 {year + 1}年 周末</Button>
+                        </Popconfirm>
                     </Button.Group>
                 </div>
                 <Table
@@ -48,18 +59,24 @@ class HolidayList extends Component {
                     dataSource={this.state.list}
                     columns={[
                         { title: '名称', dataIndex: 'Name' },
-                        { title: '起止日期', render: (text, item) => <span>{item.BeginDate}~{item.EndDate}</span> },
+                        {
+                            title: '起止日期', render: (text, item) => <span>
+                                {moment(item.BeginDate).format('ll')} ~
+                                {moment(item.EndDate).format('ll')}
+                            </span>
+                        },
                         {
                             title: '操作', render: (text, item) => <span>
                                 <HolidayFormModal
                                     record={item}
-                                    onSubmit={this.onEditSave}
+                                    trigger={<Button icon="edit">修改</Button>}
+                                    onSubmit={this.loadData}
                                     children={<Button></Button>}
                                 />
                                 <Popconfirm
                                     placement="topRight"
                                     title="你确定要删除吗？"
-                                    onConfirm={() => this.onDelete(item.ID)}
+                                    onConfirm={() => this.handleDelete(item.ID)}
                                     okText="是"
                                     cancelText="否"
                                 >
@@ -68,7 +85,12 @@ class HolidayList extends Component {
                             </span>
                         }
                     ]}
-                    pagination={<Pagination total={this.state.total} pageSize={this.state.pageSize} onChange={page => this.loadPageData(page)} />}
+                    pagination={{
+                        size: 5, ...this.state.page,
+                        onChange: (page, pageSize) => {
+                            this.loadData(page)
+                        },
+                    }}
                 />
             </div>
         );

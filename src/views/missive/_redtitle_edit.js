@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Input, Upload, Radio, Button } from 'antd'
+import { Input, Upload, Radio } from 'antd'
 import FormModal from '../shared/_formmodal'
 import api from '../../models/api'
 
