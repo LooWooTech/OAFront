@@ -118,7 +118,7 @@ class FlowForm extends Component {
         return (
             <span>
                 <FormModal
-                    name="提交审批流程"
+                    title={this.props.title || "提交审批流程"}
                     trigger={this.props.trigger}
                     children={this.getFormItems()}
                     onSubmit={this.handleSubmit}

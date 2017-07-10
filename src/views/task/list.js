@@ -76,7 +76,7 @@ class TaskList extends Component {
                         { title: '任务事项', dataIndex: 'MC', render: (text, item) => <Link to={`/task/edit?id=${item.ID}`}>{text}</Link> },
                         {
                             title: '任务来源', render: (text, item) => <span>
-                                {item.LY_LX === 0 ? '省' : item.LY_LX === 1 ? '市' : '区'}
+                                {item.LY_LX === 1 ? '省' : item.LY_LX === 2 ? '市' : '区'}
                                 {item.LY}
                             </span>
                         },

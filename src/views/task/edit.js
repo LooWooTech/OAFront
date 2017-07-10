@@ -7,8 +7,8 @@ import ResultTab from './_result';
 import FlowListTab from '../flowdata/list';
 import FileListTab from '../file/info_file_list';
 
-import SubmitFlowModal from '../flowdata/form';
-import SubmitFreeFlowModal from '../freeflow/form';
+import FlowModal from '../flowdata/form';
+import FreeFlowModal from '../freeflow/form';
 import utils from '../../utils';
 
 export default class TaskEdit extends Component {
@@ -111,6 +111,7 @@ export default class TaskEdit extends Component {
         if (!model) return null;
         const showFiles = model.ID > 0;
         const showFlow = !!model.FlowDataId;
+        const isFirstNode = model && model.FlowData && model.FlowData.Nodes.length === 1;
         return <div>
             <Affix offsetTop={0} className="toolbar">
                 <Button.Group>
@@ -118,25 +119,27 @@ export default class TaskEdit extends Component {
                         <Button onClick={this.handleSave} type="primary" icon="save" htmlType="submit">保存</Button>
                         : null}
                     {this.state.canSubmitFlow ?
-                        <SubmitFlowModal
+                        <FlowModal
+                            title={isFirstNode ? "发布任务" : "完成任务"}
                             flowDataId={model.FlowDataId}
                             callback={this.handleSubmitFlow}
                             infoId={model.ID}
-                            trigger={<Button type="success" icon="check" htmlType="button">提交流程</Button>}
+                            trigger={<Button type="success" icon="check" htmlType="button">{isFirstNode ? "发布任务" : "完成任务"}</Button>}
                         />
                         : null}
                     {this.state.canSubmitFreeFlow && this.state.freeFlowNodeData && !this.state.freeFlowNodeData.UpdateTime ?
-                        <Button icon="check" type="primary" onClick={this.handleSubmitFreeFlow}>已阅</Button>
+                        <Button icon="check" type="primary" onClick={this.handleSubmitFreeFlow}>完成</Button>
                         : null
                     }
                     {this.state.canSubmitFreeFlow ?
-                        <SubmitFreeFlowModal
+                        <FreeFlowModal
+                            title="转发任务"
                             callback={this.loadData}
                             canSubmit={true}
                             infoId={model.ID}
                             flowNodeData={this.state.flowNodeData}
                             record={this.state.freeFlowNodeData}
-                            children={<Button type="danger" icon="retweet" htmlType="button">自由发送</Button>}
+                            trigger={<Button type="danger" icon="retweet" htmlType="button">转发任务</Button>}
                         />
                         : null}
                     {this.state.canCompleteFreeFlow ? <Button type="danger" icon="close" onClick={this.handleCloseFreeFlow}>结束自由发送</Button> : null}
@@ -148,11 +151,11 @@ export default class TaskEdit extends Component {
                 <Tabs.TabPane tab="任务落实单" key="1">
                     <FormTab model={extendModel} disabled={!this.state.canEdit} ref="form" />
                 </Tabs.TabPane>
-                {showFlow?
+                {showFlow ?
                     <Tabs.TabPane tab="任务进度" key="2">
                         <ProgressTab taskId={model.ID} />
                     </Tabs.TabPane>
-                :null}
+                    : null}
                 {showFiles ?
                     <Tabs.TabPane tab="附件清单" key="5">
                         <FileListTab infoId={model.ID} formId={model.FormId} canEdit={this.state.canEdit} inline={false} />

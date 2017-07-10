@@ -50,7 +50,7 @@ class FreeFlowForm extends Component {
         //if (this.state.treeData.length === 0) return null;
         return (
             <FormModal
-                name="提交自由流程"
+                title={this.props.title || "提交自由流程"}
                 trigger={this.props.trigger}
                 onSubmit={this.handleSubmit}
                 children={this.getFormItems(flowNodeData)}

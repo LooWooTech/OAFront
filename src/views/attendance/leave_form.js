@@ -3,6 +3,7 @@ import { Input, DatePicker, Button, message, Radio } from 'antd'
 import FormModal from '../shared/_formmodal'
 import SelectUser from '../shared/_select_user'
 import api from '../../models/api'
+import utils from '../../utils'
 
 class LeaveApplyForm extends Component {
     state = {}
@@ -27,6 +28,8 @@ class LeaveApplyForm extends Component {
             if (this.props.onSubmit) {
                 this.props.onSubmit(json);
             }
+            message.success("申请成功，请等待审核");
+            utils.Redirect(`/extend1/${api.Forms.Leave.ID}/my`)
         })
     }
 
@@ -54,8 +57,12 @@ class LeaveApplyForm extends Component {
                             <Radio value={4}>调休</Radio>
                         </Radio.Group>,
                     },
-                    { title: '开始日期', name: 'ScheduleBeginTime', render: <DatePicker />, rules: [{ required: true, message: '请选择开始日期' }], },
-                    { title: '结束日期', name: 'ScheduleEndTime', render: <DatePicker />, rules: [{ required: true, message: '请选择结束日期' }], },
+                    {
+                        title: '开始日期', name: 'ScheduleBeginTime',
+                        render: <DatePicker showTime format="YYYY-MM-DD HH:mm" />,
+                        rules: [{ required: true, message: '请选择开始日期' }],
+                    },
+                    { title: '结束日期', name: 'ScheduleEndTime', render: <DatePicker showTime format="YYYY-MM-DD HH:mm" />, rules: [{ required: true, message: '请选择结束日期' }], },
                     { title: '请假事由', name: 'Reason', render: <Input type="textarea" autosize={{ minRows: 2, maxRows: 4 }} />, rules: [{ required: true, message: '请填写车辆申请用途' }] },
                     {
                         title: '审批人',

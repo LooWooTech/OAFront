@@ -174,6 +174,7 @@ class MissiveEditForm extends React.Component {
             // },
         ];
         if (formId === api.Forms.ReceiveMissive.ID) {
+            console.log(model.JJ_DJ || 0)
             items = items.concat([
                 numberControl,
                 {

@@ -380,6 +380,9 @@ module.exports = {
         },
         CheckInOut: (cb, err) => {
             invokeApi('attendance/checkinout', HTTP_GET, null, cb, err);
-        }
+        },
+        Apply: (data, cb, err) => {
+            invokeApi('attendance/apply', HTTP_POST, data, cb, err);
+        },
     }
 };

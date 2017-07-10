@@ -20,6 +20,7 @@ class EditNodeModal extends Component {
         record.FreeFlow = this.state.freeFlow === undefined ? record.FreeFlow : this.state.freeFlow || { ID: 0, LimitMode: 2, DepartmentIds: [], CrossDepartment: false, CrossLevel: false }
         const openFreeFlow = this.state.openFreeFlow === undefined ? record.FreeFlowId > 0 : this.state.openFreeFlow
         nodes = nodes || [];
+        console.log(record.LimitMode)
         var items = [
             { name: 'ID', defaultValue: record.ID, render: <Input type="hidden" /> },
             { name: 'FlowId', defaultValue: record.FlowId, render: <Input type="hidden" /> },
@@ -37,7 +38,7 @@ class EditNodeModal extends Component {
                         disabled={node.ID === record.ID}>
                         {node.Name}</Select.Option>)}
                 </Select>
-            }, 
+            },
             {
                 title: '受理人',
                 name: 'UserIds',
@@ -58,7 +59,7 @@ class EditNodeModal extends Component {
                             {item.RealName}
                         </Select.Option>)}
                 </Select>
-            }, 
+            },
             {
                 title: '受理职务',
                 name: 'JobTitleIds',
@@ -77,9 +78,9 @@ class EditNodeModal extends Component {
                 defaultValue: record.LimitMode,
                 render:
                 <Radio.Group onChange={e => this.setState({ limitMode: e.target.value })}>
-                    <Radio value={0}>不限制</Radio>
-                    <Radio value={1}>指定部门</Radio>
-                    <Radio value={2}>发起人部门</Radio>
+                    <Radio value="0">不限制</Radio>
+                    <Radio value="1">指定部门</Radio>
+                    <Radio value="2">发起人部门</Radio>
                 </Radio.Group>
             }];
 

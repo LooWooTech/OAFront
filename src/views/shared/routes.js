@@ -31,8 +31,6 @@ import ApplyList from '../forminfo_extend1/apply_list'
 
 import AttendanceIndex from '../attendance/index'
 import HolidayList from '../attendance/holidays'
-import LeaveList from '../attendance/leave_list'
-import LeaveHistory from '../attendance/leave_history'
 
 import FeedIndex from '../feed/index'
 
@@ -83,8 +81,6 @@ export default class Routes extends React.Component {
                 <Route path="attendance">
                     <IndexRoute component={AttendanceIndex} />
                     <Route path="holidays" component={HolidayList} />
-                    <Route path="leaves" component={LeaveList} />
-                    <Route path="history" component={LeaveHistory} />
                 </Route>
 
                 <Route userRole={3}>

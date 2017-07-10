@@ -24,7 +24,7 @@ export default class MissiveList extends React.Component {
         let parameter = {
             formId: formId || this.state.formId,
             status: status || this.state.status,
-            searchKey: searchKey || this.state.searchKey,
+            searchKey: searchKey,
             page: page || this.state.page.current || 1,
             rows: this.state.page.pageSize
         };
@@ -47,7 +47,7 @@ export default class MissiveList extends React.Component {
         const nextFormId = nextProps.params.formId
 
         if (nextStatus !== this.props.location.query.status || nextFormId !== this.props.params.formId) {
-            this.loadData(nextFormId, 1, this.state.searchKey, nextStatus);
+            this.loadData(nextFormId, 1, '', nextStatus);
         }
     }
 
@@ -69,8 +69,6 @@ export default class MissiveList extends React.Component {
         let items = [
             { title: '文号', dataIndex: 'WJ_ZH' },
             { title: '标题', dataIndex: 'WJ_BT', render: (text, item) => <Link to={`/missive/edit/${this.state.formId}/?id=${item.ID}`}>{text}</Link> },
-            { title: '密级', dataIndex: 'WJ_MJ' },
-            { title: '主送机关', dataIndex: 'ZS_JG' },
             { title: '办理期限', dataIndex: 'QX_RQ', render: (text, item) => text ? moment(text).format('ll') : null },
             { title: '所在流程', dataIndex: 'FlowStep' },
             { title: '处理日期', dataIndex: 'UpdateTime', render: (text, item) => text ? moment(text).format('ll') : null },
@@ -100,7 +98,7 @@ export default class MissiveList extends React.Component {
                         {/*<Button type="danger" icon="export">导出公文</Button>*/}
                     </Button.Group>
                     <div className="right">
-                        <Input.Search onSearch={this.handleSearch} placeholder="文号、标题..." />
+                        <Input.Search defaultValue={this.state.searchKey} onSearch={this.handleSearch} placeholder="文号、标题..." />
                     </div>
                 </div>
                 <Table
@@ -111,7 +109,7 @@ export default class MissiveList extends React.Component {
                     pagination={{
                         size: 5, ...this.state.page,
                         onChange: (page, pageSize) => {
-                            this.loadData(this.state.formId, page)
+                            this.loadData(this.state.formId, page, this.state.searchKey)
                         },
                     }}
                 />

@@ -19,10 +19,8 @@ export default class AttendanceIndex extends React.Component {
         now: moment()
     };
 
-    onLeaveFormSubmit = (error, values) => {
-        api.Leave.Save(values, json => {
-
-        })
+    handleApplySubmit = (error, values) => {
+        
     };
 
     componentWillMount() {
@@ -81,7 +79,7 @@ export default class AttendanceIndex extends React.Component {
 
     handlePanelChange = (date, mode) => {
         if (mode === 'year') return;
-        this.setState({ date });
+        this.setState({ selectedDate: date });
         //获取当前月的统计
         this.loadData(date);
     };
@@ -157,7 +155,8 @@ export default class AttendanceIndex extends React.Component {
         else {
             return <Card>
                 <Button icon="clock" disabled={true} className="btn-checkInOut">
-                    {this.state.now.format('LTS')}
+                    {this.state.now.format('LTS')} <br />
+                    <span style={{fontSize:'0.8rem'}}>当前时间不能打卡</span>
                 </Button>
             </Card>;
         }
@@ -169,7 +168,7 @@ export default class AttendanceIndex extends React.Component {
             <div className="toolbar">
                 <Button.Group>
                     <LeaveFormModal
-                        onSubmit={this.onLeaveFormSubmit}
+                        onSubmit={this.handleApplySubmit}
                         children={<Button type="primary" icon="file" >申请假期</Button>}
                     />
                 </Button.Group>
