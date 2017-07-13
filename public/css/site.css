@@ -226,3 +226,41 @@ hr {
     border-radius: 6px;
     width: 100%;
 }
+.task-table {
+    padding: 20px;
+}
+
+.task-table h1 {
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: 500;
+    height: 40px;
+}
+.task-table .sub-title{
+    overflow: hidden;
+}
+.task-table .sub-title span {
+    font-size: .8rem;
+    display: block;
+}
+.task-table .sub-title span:first-child{
+    float: left;
+}
+.task-table .sub-title span:last-child{
+    float: right;
+}
+.task-table table {
+    width: 100%;
+    border: solid 1px #ccc;
+    border-spacing: 0;
+    /* margin: 20px; */
+}
+.task-table th {
+    background: #eee;
+    text-align: center;
+}
+.task-table td, .task-table th {
+    border-right: solid 1px #ccc;
+    border-bottom: solid 1px #ccc;
+    padding: 10px;
+}

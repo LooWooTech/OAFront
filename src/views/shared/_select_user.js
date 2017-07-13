@@ -33,6 +33,15 @@ class SelectUser extends Component {
         else if (formType === 'freeflow') {
             this.loadUsersForFreeFlowData()
         }
+        else {
+            this.loadAllUsers({ rows: 10000 })
+        }
+    }
+
+    loadAllUsers = (parameter) => {
+        api.User.List(parameter, json => {
+            this.filterUsers(json.List)
+        })
     }
 
     loadUsersForFlowData = () => {
@@ -73,6 +82,7 @@ class SelectUser extends Component {
         this.setState({ recents, users })
     }
 
+
     getSelectedUsers = () => {
         let nullable = this.props.nullable || false
         if (nullable) {
@@ -106,7 +116,7 @@ class SelectUser extends Component {
     getNodeTreeNode = (node, departments) => {
         let children = departments.filter(e => e.ParentId === node.ID)
         let users = this.state.users.filter(user => user.Departments.find(d => d.ID === node.ID))
-        .sort((a, b) => a.Sort < b.Sort)
+            .sort((a, b) => a.Sort < b.Sort)
         return (
             <TreeNode key={'d_' + node.ID} title={node.Name} isLeaf={false}>
                 {children.map(child => this.getNodeTreeNode(child, departments))}

@@ -353,6 +353,18 @@ module.exports = {
         Save: (data, cb, err) => {
             invokeApi('task/save', HTTP_POST, data, cb, err);
         },
+        TodoList: (taskId, cb, err) => {
+            invokeApi('task/todolist?taskid=' + taskId, HTTP_GET, null, cb, err);
+        },
+        SaveTodo: (data, cb, err) => {
+            invokeApi('task/savetodo', HTTP_POST, data, cb, err);
+        },
+        UpdateTodoStatus: (todoId, cb, err) => {
+            invokeApi('task/updatetodostatus?id=' + todoId, HTTP_GET, null, cb, err);
+        },
+        DeleteTodo: (todoId, cb, err) => {
+            invokeApi('task/deletetodo?id=' + todoId, cb, err);
+        },
         ProgressList: (taskId, cb, err) => {
             invokeApi('task/ProgressList?taskId=' + taskId, HTTP_GET, null, cb, err);
         },

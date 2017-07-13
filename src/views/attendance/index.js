@@ -197,7 +197,7 @@ export default class AttendanceIndex extends React.Component {
                         <Badge status="success" text={`公务请假次数：${this.state.total.OfficialLeave}次`} /><br />
                         <Badge status="processing" text={`私人请假次数：${this.state.total.PersonalLeave}次`} /><br />
                     </Card>
-                    <Card title="打卡记录" style={{ marginTop: "10px", maxHeight: '200px', overflow: 'auto' }}>
+                    <Card title="打卡记录" style={{ marginTop: "10px" }}>
                         {this.state.logsOfDate.length > 0 ?
                             <ul>
                                 {this.state.logsOfDate.map(item => <li key={item.ID}>

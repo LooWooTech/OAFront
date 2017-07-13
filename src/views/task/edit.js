@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Affix, Button, Modal, Tabs, message } from 'antd';
 import api from '../../models/api';
 import FormTab from './_form';
-import ProgressTab from './_progress'
+import TodoTab from './_todo'
 import ResultTab from './_result';
 import FlowListTab from '../flowdata/list';
 import FileListTab from '../file/info_file_list';
@@ -152,8 +152,8 @@ export default class TaskEdit extends Component {
                     <FormTab model={extendModel} disabled={!this.state.canEdit} ref="form" />
                 </Tabs.TabPane>
                 {showFlow ?
-                    <Tabs.TabPane tab="任务进度" key="2">
-                        <ProgressTab taskId={model.ID} />
+                    <Tabs.TabPane tab="任务明细" key="2">
+                        <TodoTab taskId={model.ID} />
                     </Tabs.TabPane>
                     : null}
                 {showFiles ?
@@ -168,12 +168,12 @@ export default class TaskEdit extends Component {
                     </Tabs.TabPane>
                     : null
                 }
-                {/*showFlow ?
+                {showFlow ?
                     <Tabs.TabPane tab="成果预览" key="4">
-                        <ResultTab data={model} />
+                        <ResultTab task={extendModel} flowData={model.FlowData}/>
                     </Tabs.TabPane>
                     : null
-                */}
+                }
             </Tabs>
         </div>;
     }
