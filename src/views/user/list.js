@@ -1,6 +1,6 @@
 import React from 'react';
 import { Table, Button, Popconfirm, Input, Select } from 'antd';
-import EditModal from '../shared/_formmodal';
+import EditModal from './_edit';
 import Form from '../shared/_form'
 import api from '../../models/api';
 
@@ -29,6 +29,7 @@ export default class UserList extends React.Component {
     componentWillUnmount() {
         api.Abort();
     };
+
     loadData = (departmentId = 0, searchKey = '', page = 1) => {
         this.setState({ loading: true })
         api.User.List({
@@ -54,74 +55,22 @@ export default class UserList extends React.Component {
         })
     }
 
-    handleSubmit = (values) => {
-        var data = values;
-        api.User.Save(data, data => this.loadData());
-    }
     handleSearch = (data) => {
         this.loadData(data.departmentId, data.searchKey)
         return false
     }
-
-    getFormItems = record => {
-        record = record || { ID: 0, Username: '', RealName: '', DepartmentId: 0, GroupIds: [], JobTitleId: 0 };
-
-        return [{
-            name: 'ID',
-            defaultValue: record.ID,
-            render: <Input type="hidden" />
-        }, {
-            title: '用户名',
-            name: 'Username',
-            defaultValue: record.Username,
-            render: <Input />
-        }, {
-            title: '姓名',
-            name: 'RealName',
-            defaultValue: record.RealName,
-            render: <Input />
-        }, {
-            title: '职务',
-            name: 'JobTitleId',
-            defaultValue: record.JobTitleId.toString(),
-            render: <Select>
-                <Select.Option value='0'>无</Select.Option>
-                {this.state.titles.map(item => <Select.Option key={item.ID}>{item.Name}</Select.Option>)}
-            </Select>
-        }, {
-            title: '部门',
-            name: 'DepartmentIds',
-            defaultValue: (record.Departments || []).map(d => d.ID.toString()),
-            render: <Select mode="multiple">
-                {this.state.departments.map(item => <Select.Option key={item.ID}>{item.Name}</Select.Option>)}
-            </Select>
-        }, {
-            title: '用户组',
-            name: 'GroupIds',
-            defaultValue: (record.Groups || []).map(g => g.ID.toString()),
-            render: <Select mode="multiple">
-                {this.state.groups.map(item => <Select.Option key={item.ID}>{item.Name}</Select.Option>)}
-            </Select>
-        },
-        {
-            title: '排序',
-            name: 'Sort',
-            defaultValue: (record.Sort || 0),
-            layout: { labelCol: { span: 6 }, wrapperCol: { span: 3 } },
-            render: <Input />
-        }
-        ];
-    };
 
     render() {
         return <div>
             <div className="toolbar">
                 <Button.Group>
                     <EditModal
-                        name="用户"
+                        title="添加用户"
+                        onSubmit={this.loadData}
+                        groups={this.groups}
+                        deparments={this.deparments}
+                        titles={this.titles}
                         trigger={<Button type="primary" icon="file">添加用户</Button>}
-                        onSubmit={this.handleSubmit}
-                        children={this.getFormItems()}
                     />
                 </Button.Group>
                 <Form
@@ -150,17 +99,21 @@ export default class UserList extends React.Component {
                     { title: 'ID', dataIndex: 'ID', width: 50 },
                     { title: '姓名', dataIndex: 'RealName', },
                     { title: '用户名', dataIndex: 'Username' },
-                    { title: '用户组', render: (text, item) => (item.Groups || []).map(g => g.Name).join() },
+                    { title: '手机', dataIndex: 'Mobile' },
                     { title: '部门', render: (text, item) => (item.Departments || []).map(d => d.Name).join() },
                     { title: '职务', dataIndex: 'JobTitle' },
+                    { title: '用户组', render: (text, item) => (item.Groups || []).map(g => g.Name).join() },
                     {
-                        title: '操作', width: 200,
+                        title: '操作', width: 210,
                         render: (text, item) => (
                             <span>
                                 <EditModal
-                                    name="用户"
-                                    onSubmit={this.handleSubmit}
-                                    children={this.getFormItems(item)}
+                                    title="修改用户"
+                                    onSubmit={this.loadData}
+                                    groups={this.state.groups}
+                                    departments={this.state.departments}
+                                    titles={this.state.titles}
+                                    model={item}
                                     trigger={<Button icon="edit">编辑</Button>}
                                 />
                                 <Popconfirm placement="topRight" title="你确定要删除吗？"

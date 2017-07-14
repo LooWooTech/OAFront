@@ -62,6 +62,11 @@ module.exports = {
     ApiUrl: (path) => {
         return host + apiPath + path;
     },
+    Config: {
+        List: (cb, err) => invokeApi('config/list', HTTP_GET, null, cb, err),
+        Save: (data, cb, err) => invokeApi('config/save', HTTP_POST, data, cb, err),
+        Delete: (key, cb, err) => invokeApi('config/delete?key=' + key, HTTP_DELETE, null, cb, err),
+    },
     User: {
         Login: (data, cb, err) => invokeApi('user/login', HTTP_GET, data, cb, err),
         EditPassword: (data, cb, err) => invokeApi('user/UpdatePassword', HTTP_GET, data, cb, err),
