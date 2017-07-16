@@ -71,7 +71,7 @@ class CarApplyModal extends Component {
                             onSubmit={this.handleSelect}
                             ref="selectUserForm"
                         />,
-                        extend: <span>{(this.state.toUser || {}).ID > 0 ? ' 已选 ' + this.state.toUser.RealName : ''}</span>
+                        after: <span>{(this.state.toUser || {}).ID > 0 ? ' 已选 ' + this.state.toUser.RealName : ''}</span>
                     },
                 ]}
             />

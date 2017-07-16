@@ -14,7 +14,7 @@ class TodoModal extends Component {
     }
     handleSelect = (users) => {
         let user = users.length > 0 ? users[0] : null;
-        this.setState({ toUser: user });
+        this.setState({ toUser: user || {} });
     }
     render() {
         const model = this.props.model || {}
@@ -34,10 +34,10 @@ class TodoModal extends Component {
                         render: <Input type="textarea" autosize={{ minRows: 2, maxRows: 6 }} />,
                         rules: [{ required: true, message: '请填写内容目标' }],
                     },
-                    { name: 'ToUserId', defaultValue: this.state.toUser.ID || model.ToUser ? model.ToUser.ID : 0, render: <Input type="hidden" /> },
+                    { name: 'ToUserId', defaultValue: this.state.toUser.ID || (model.ToUser ? model.ToUser.ID : 0), render: <Input type="hidden" /> },
                     {
                         title: '指派给',
-                        before: <span>{this.state.toUser.RealName || (model.ToUser ? model.ToUser.RealName : '未指派')}  </span>,
+                        before: <span>{this.state.toUser.RealName || model.ToUserName || '未指派'}  </span>,
                         render: <SelectUserModal
                             ref="selectUserForm"
                             onSubmit={this.handleSelect}

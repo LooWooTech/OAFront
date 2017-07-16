@@ -38,6 +38,7 @@ class TodoTab extends Component {
     }
 
     render() {
+
         return (
             <div>
                 <EditModal
@@ -57,18 +58,21 @@ class TodoTab extends Component {
                             title: '内容', dataIndex: 'Content',
                             render: text => text.split('\n').map((item, key) => <span key={key}>{item}<br /></span>)
                         },
-                        { title: '负责人', width: 100, render: (text, item) => item.ToUser ? item.ToUser.RealName : '' },
-                        { title: '创建时间', width: 150, dataIndex: 'CreateTime', render: (text) => (text) => text ? moment(text).format('ll') : '' },
+                        { title: '负责人', width: 100, dataIndex:'ToUserName' },
+                        { title: '创建时间', width: 150, dataIndex: 'CreateTime', render: (text) => text ? moment(text).format('lll') : '' },
                         { title: '计划完成时间', width: 150, dataIndex: 'ScheduleTime', render: (text) => text ? moment(text).format('ll') : '' },
                         {
-                            title: '操作', width: 180, render: (text, item) => <span>
-                                <Button onClick={() => this.handleUpdateStatus(item)}>{item.Completed ? '未完成' : '标记完成'}</Button>
+                            title: '操作', width: 240, render: (text, item) => <span>
+                                {(auth.isCurrentUser(item.ToUserId) || auth.isCurrentUser(item.CreatorId)) ?
+                                    <Button type="success" onClick={() => this.handleUpdateStatus(item)}>{item.Completed ? '未完成' : '标记完成'}</Button>
+                                    : null
+                                }
                                 <EditModal
                                     model={item}
                                     trigger={<Button>修改</Button>}
                                     onSubmit={this.loadData}
                                 />
-                                {auth.isCurrentUser(item.UserId) ? <Button onClick={() => this.handleDelete(item)}>删除</Button> : ''}
+                                {auth.isCurrentUser(item.CreatorId) ? <Button type="error" onClick={() => this.handleDelete(item)}>删除</Button> : ''}
                             </span>
                         }
                     ]}

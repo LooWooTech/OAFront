@@ -63,7 +63,7 @@ class LeaveApplyForm extends Component {
                         rules: [{ required: true, message: '请选择开始日期' }],
                     },
                     { title: '结束日期', name: 'ScheduleEndTime', render: <DatePicker showTime format="YYYY-MM-DD HH:mm" />, rules: [{ required: true, message: '请选择结束日期' }], },
-                    { title: '请假事由', name: 'Reason', render: <Input type="textarea" autosize={{ minRows: 2, maxRows: 4 }} />, rules: [{ required: true, message: '请填写车辆申请用途' }] },
+                    { title: '请假事由', name: 'Reason', render: <Input type="textarea" autosize={{ minRows: 2, maxRows: 4 }} />, rules: [{ required: true, message: '请填写请假理由' }] },
                     {
                         title: '审批人',
                         render: <SelectUser
@@ -73,7 +73,7 @@ class LeaveApplyForm extends Component {
                             onSubmit={this.handleSelect}
                             ref="selectUserForm"
                         />,
-                        extend: <span>{(this.state.toUser || {}).ID > 0 ? ' 已选 ' + this.state.toUser.RealName : ''}</span>
+                        after: <span>{(this.state.toUser || {}).ID > 0 ? ' 已选 ' + this.state.toUser.RealName : ''}</span>
                     },
                 ]}
             />

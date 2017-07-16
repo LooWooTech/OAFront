@@ -1,17 +1,44 @@
 import React, { Component } from 'react'
-import { Badge } from 'antd'
+import { Badge, Row, Col } from 'antd'
 import moment from 'moment'
+import api from '../../models/api'
 
 class ResultTab extends Component {
 
     state = {
         task: this.props.task || {},
-        todo: [],
+        todos: [],
         flowData: {}
     }
 
+    componentWillMount() {
+        api.Task.TodoList(this.state.task.ID, json => {
+            this.setState({ todos: json })
+        })
+    }
+
+
     render() {
         let task = this.props.task || {}
+
+        const flowData = this.props.flowData || {};
+        const nodes = (flowData.Nodes || []).sort((a, b) => a.ID < b.ID);
+        const GetFreeFlowData = freeFlowData => {
+            if (!freeFlowData) {
+                return null
+            }
+            return <div className="freeflow">
+                <div className="title">传阅审批：</div>
+                {freeFlowData.Nodes.map(data => data.UpdateTime ? <div key={data.ID}>
+                    <div className="header">
+                        <span className="signature">{data.Signature}</span>
+                        <span className="datetime">{moment(data.UpdateTime || data.CreateTime).format('lll')}</span>
+                    </div>
+                    <div className="content">{data.Content}</div>
+                </div> : <span></span>)}
+            </div>
+        }
+
         return (
             <div className="task-table">
                 <h1>定海分局具体工作任务落实单
@@ -54,13 +81,14 @@ class ResultTab extends Component {
                         </tr>
                         <tr>
                             <td colSpan="8">
-                                {this.state.todo.map(item => <div key={item.ID}>
-                                    <Badge status={item.Completed ? 'success' : moment() > moment(item.ScheduleTime) ? 'error' : 'default'} />
-                                    {item.content}
-                                    {item.ToUser ? <span>{item.ToUser.RealName}</span> : ''}
-                                    {item.ScheduleTime ? <span>{moment(item.ScheduleTime).format('ll')}</span> : ''}
-                                </div>)}
-
+                                {this.state.todos.map(item => <Row key={item.ID}>
+                                    <Col lg={13}>
+                                        <Badge status={item.Completed ? 'success' : moment() > moment(item.ScheduleTime) ? 'error' : 'default'} />
+                                        {item.Content}
+                                    </Col>
+                                    <Col lg={5}>{item.ToUser ? item.ToUser.RealName : ''}</Col>
+                                    <Col lg={6}>{item.ScheduleTime ? moment(item.ScheduleTime).format('ll') : ''}</Col>
+                                </Row>)}
                                 <div>
                                     经办人：
                                     责任人：{task.ZRR}
@@ -74,6 +102,7 @@ class ResultTab extends Component {
                                 <div>
                                     分管领导批示：
                                 </div>
+                                //TODO ：等流程确认之后才能制作
                             </td>
                         </tr>
                         <tr>
