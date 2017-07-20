@@ -31,11 +31,11 @@ const sideMenuData = {
                 { path: `/missive/list/${api.Forms.ReceiveMissive.ID}/?status=3`, icon: 'fa fa-archive', text: '归档箱' },
             ]
         },
-        {
-            title: '设置', items: [
-                { path: '/missive/redtitle', icon: 'fa fa-file', text: '文件红头' }
-            ]
-        }
+        // {
+        //     title: '设置', items: [
+        //         { path: '/missive/redtitle', icon: 'fa fa-file', text: '文件红头' }
+        //     ]
+        // }
     ],
     car: [
         {

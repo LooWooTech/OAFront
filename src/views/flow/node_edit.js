@@ -75,12 +75,12 @@ class EditNodeModal extends Component {
             {
                 title: '限制部门',
                 name: 'LimitMode',
-                defaultValue: record.LimitMode,
+                defaultValue: record.LimitMode || 0,
                 render:
                 <Radio.Group onChange={e => this.setState({ limitMode: e.target.value })}>
-                    <Radio value="0">不限制</Radio>
-                    <Radio value="1">指定部门</Radio>
-                    <Radio value="2">发起人部门</Radio>
+                    <Radio value={0}>不限制</Radio>
+                    <Radio value={1}>指定部门</Radio>
+                    <Radio value={2}>发起人部门</Radio>
                 </Radio.Group>
             }];
 

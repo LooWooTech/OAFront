@@ -115,7 +115,7 @@ class MissiveEditForm extends React.Component {
                 </Upload.Dragger>
                 {content.ID ?
                     <span>
-                        <a href={api.File.FileUrl(content.ID)} target="_blank"><Icon type="download" />&nbsp;下载</a>
+                        <a href={api.File.DownloadUrl(content.ID)} target="_blank"><Icon type="download" />&nbsp;下载</a>
                         {disabled ? null :
 
                             <span>

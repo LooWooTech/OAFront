@@ -109,7 +109,9 @@ export default class UserList extends React.Component {
                             <span>
                                 <EditModal
                                     title="修改用户"
-                                    onSubmit={this.loadData}
+                                    onSubmit={() => {
+                                        this.loadData(this.state.departmentId, this.state.searchKey, this.state.page.current);
+                                    }}
                                     groups={this.state.groups}
                                     departments={this.state.departments}
                                     titles={this.state.titles}
@@ -117,7 +119,7 @@ export default class UserList extends React.Component {
                                     trigger={<Button icon="edit">编辑</Button>}
                                 />
                                 <Popconfirm placement="topRight" title="你确定要删除吗？"
-                                    onConfirm={this.handleDelete}
+                                    onConfirm={() => this.handleDelete(item.ID)}
                                     okText="是" cancelText="否">
                                     <Button type="danger" icon="delete">删除</Button>
                                 </Popconfirm>

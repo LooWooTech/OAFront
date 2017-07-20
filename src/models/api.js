@@ -99,6 +99,9 @@ module.exports = {
         FileUrl: (fileId) => {
             return `${apiHost}file/index?id=${fileId}`;
         },
+        DownloadUrl: (fileId) => {
+            return `${apiHost}file/download?id=${fileId}`;
+        },
         UploadUrl: (fileId = 0, infoId = 0, name = null, inline = false) => {
             return `${apiHost}file/upload?infoId=${infoId}&id=${fileId}&name=${name}&inline=${inline}`;
         },
@@ -368,7 +371,7 @@ module.exports = {
             invokeApi('task/updatetodostatus?id=' + todoId, HTTP_GET, null, cb, err);
         },
         DeleteTodo: (todoId, cb, err) => {
-            invokeApi('task/deletetodo?id=' + todoId, cb, err);
+            invokeApi('task/deletetodo?id=' + todoId, HTTP_DELETE, null, cb, err);
         },
         ProgressList: (taskId, cb, err) => {
             invokeApi('task/ProgressList?taskId=' + taskId, HTTP_GET, null, cb, err);

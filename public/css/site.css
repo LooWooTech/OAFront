@@ -264,3 +264,8 @@ hr {
     border-bottom: solid 1px #ccc;
     padding: 10px;
 }
+
+.ant-table-tbody td {
+    font-size: 1rem;
+}
+button{font-size: .8rem;}

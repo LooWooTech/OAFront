@@ -18,8 +18,9 @@ class TodoModal extends Component {
     }
     render() {
         const model = this.props.model || {}
+        let today = new Date();
         function disabledDate(current) {
-            return current && current.valueOf() < Date.now();
+            return current && current.valueOf() < today.valueOf();
         }
 
         return (

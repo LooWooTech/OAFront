@@ -103,7 +103,7 @@ class SelectUser extends Component {
             }
             return d
         }))
-        return departments;
+        return departments.sort((a, b) => a.Sort > b.Sort);
     }
 
     getRootTreeNode = () => {

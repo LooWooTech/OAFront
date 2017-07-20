@@ -22,12 +22,10 @@ class TodoTab extends Component {
     }
 
     handleDelete = item => {
-        if (auth.isCurrentUser(item.UserId)) {
-            if (confirm("你确定要删除吗？")) {
-                api.Task.DeleteTodo(item.ID, () => {
-                    this.loadData()
-                })
-            }
+        if (confirm("你确定要删除吗？")) {
+            api.Task.DeleteTodo(item.ID, () => {
+                this.loadData()
+            })
         }
     }
 
@@ -58,7 +56,7 @@ class TodoTab extends Component {
                             title: '内容', dataIndex: 'Content',
                             render: text => text.split('\n').map((item, key) => <span key={key}>{item}<br /></span>)
                         },
-                        { title: '负责人', width: 100, dataIndex:'ToUserName' },
+                        { title: '负责人', width: 100, dataIndex: 'ToUserName' },
                         { title: '创建时间', width: 150, dataIndex: 'CreateTime', render: (text) => text ? moment(text).format('lll') : '' },
                         { title: '计划完成时间', width: 150, dataIndex: 'ScheduleTime', render: (text) => text ? moment(text).format('ll') : '' },
                         {

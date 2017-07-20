@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Table,  Button } from 'antd'
+import { Table, Button } from 'antd'
 import EditModal from './_redtitle_edit'
 import api from '../../models/api'
 
@@ -14,6 +14,8 @@ class MissiveRedTitleList extends Component {
             this.setState({ list: json })
         })
     }
+
+    handleDelete = id => api.Missive.DeleteRedTitle(id, this.loadData)
 
     render() {
         return (

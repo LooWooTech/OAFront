@@ -57,6 +57,12 @@ export default class DepartmentList extends React.Component {
             >
                 {this.getTreeNode({ ID: 0, Name: '定海国土局', children: this.state.list.filter(e => e.ParentId === 0) })}
             </TreeSelect>
+        }, {
+            title: '排序',
+            name: 'Sort',
+            defaultValue: (record.Sort || 0),
+            layout: { labelCol: { span: 6 }, wrapperCol: { span: 3 } },
+            render: <Input />
         }
         ];
     };
