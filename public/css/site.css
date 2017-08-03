@@ -53,7 +53,7 @@ hr {
     display: block;
     height: 48px;
     border-bottom: 1px solid #e9e9e9;
-    font-size: 1.2em;
+    font-size: 1.1em;
     width: 100%;
     background: #404040;
 }
@@ -89,7 +89,7 @@ hr {
 }
 
 .missive_result h1 span {
-    font-size: .5rem;
+    font-size: .6rem;
     color: #333;
     display: block;
     line-height: 20px;
@@ -136,7 +136,6 @@ hr {
 
 .ant-timeline .flownode-content {
     display: block;
-    font-size: 1rem;
     color: #111;
 }
 
@@ -160,7 +159,6 @@ hr {
 }
 
 .feeds .ant-card-head-title {
-    font-size: .8rem;
     color: #999;
 }
 
@@ -186,7 +184,6 @@ hr {
 
 .freeflow .content {
     padding: 5px 10px;
-    font-size: 1rem;
     margin-left: 10px;
 }
 
@@ -216,7 +213,6 @@ hr {
 }
 .item-progress .item-body {
     padding: 10px;
-    font-size: 1rem;
 }
 
 .ant-btn.btn-checkInOut {
@@ -240,7 +236,6 @@ hr {
     overflow: hidden;
 }
 .task-table .sub-title span {
-    font-size: .8rem;
     display: block;
 }
 .task-table .sub-title span:first-child{
@@ -265,7 +260,31 @@ hr {
     padding: 10px;
 }
 
-.ant-table-tbody td {
-    font-size: 1rem;
+.container {
+    text-align: center;
 }
-button{font-size: .8rem;}
+
+.login-panel {
+    position: absolute;
+    /* right: 40%; */
+    bottom: 40%;
+    background: #ddd;
+    width: 100%;
+    padding: 20px;
+    text-align: center;
+    height: 120px;
+    overflow: hidden;
+}
+
+.login-form {
+    margin: 20px auto;
+    display: inline-block;
+}
+
+.login-form-forgot {
+    float: right;
+}
+
+.login-form-button {
+    width: 100%;
+}

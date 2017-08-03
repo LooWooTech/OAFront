@@ -5,7 +5,7 @@ import Modal from './_modal'
 import api from '../../models/api'
 import auth from '../../models/auth'
 
-class SelectUser extends Component {
+class UserSelect extends Component {
     state = { users: [], recents: [], selected: [], inModal: false }
 
     componentWillMount() {
@@ -277,4 +277,4 @@ class SelectUser extends Component {
     }
 }
 
-export default SelectUser;
+export default UserSelect;

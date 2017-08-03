@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Input, DatePicker } from 'antd'
-import SelectUserModal from '../shared/_select_user'
+import UserSelect from '../shared/_user_select'
 import Modal from '../shared/_formmodal'
 import moment from 'moment'
 import api from '../../models/api'
@@ -29,7 +29,7 @@ class TodoModal extends Component {
                 trigger={this.props.trigger}
                 children={[
                     { name: 'ID', defaultValue: model.ID || 0, render: <Input type="hidden" /> },
-                    { name: 'TaskId', defaultValue: model.TaskId || 0, render: <Input type="hidden" /> },
+                    { name: 'SubTaskId', defaultValue: model.SubTaskId || 0, render: <Input type="hidden" /> },
                     {
                         title: '内容', name: 'Content', defaultValue: model.Content,
                         render: <Input type="textarea" autosize={{ minRows: 2, maxRows: 6 }} />,
@@ -39,14 +39,14 @@ class TodoModal extends Component {
                     {
                         title: '指派给',
                         before: <span>{this.state.toUser.RealName || model.ToUserName || '未指派'}  </span>,
-                        render: <SelectUserModal
+                        render: <UserSelect
                             ref="selectUserForm"
                             onSubmit={this.handleSelect}
                         />
                     },
                     {
-                        title: '计划完成时间', name: 'ScheduleTime',
-                        defaultValue: model.ScheduleTime ? moment(model.ScheduleTime) : '',
+                        title: '计划完成时间', name: 'ScheduleDate',
+                        defaultValue: model.ScheduleDate ? moment(model.ScheduleDate) : '',
                         render: <DatePicker format="YYYY-MM-DD" disabledDate={disabledDate} />
                     },
                 ]}

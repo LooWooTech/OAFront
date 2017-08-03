@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Input, DatePicker, Button, message, Select } from 'antd'
 import FormModal from '../shared/_formmodal'
-import SelectUser from '../shared/_select_user'
+import SelectUser from '../shared/_user_select'
 import api from '../../models/api'
 
 class CarApplyModal extends Component {

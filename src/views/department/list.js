@@ -20,14 +20,12 @@ export default class DepartmentList extends React.Component {
         api.Department.List(data => {
             let roots = data.filter(e => e.ParentId === 0)
             roots = roots.map(node => this.buildTreeData(node, data))
-            console.log(roots)
             this.setState({ list: roots })
         });
     };
 
     buildTreeData = (node, list) => {
         node.children = list.filter(e => e.ParentId === node.ID)
-        console.log(node.children)
         node.children.map(child => this.buildTreeData(child, list))
         return node
     }
@@ -84,6 +82,7 @@ export default class DepartmentList extends React.Component {
                 rowKey="ID"
                 loading={this.state.loading}
                 indentSize={30}
+                defaultExpandAllRows={true}
                 columns={[
                     { title: '部门名称', dataIndex: 'Name', },
                     {

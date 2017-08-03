@@ -352,17 +352,23 @@ module.exports = {
         List: (parameters, cb, err) => {
             invokeApi('Task/list', HTTP_GET, parameters, cb, err);
         },
-        UpdateZRR: (infoId, cb, err) => {
-            invokeApi('task/updatezrr?id=' + infoId, HTTP_GET, null, cb, err);
-        },
         Model: (id, cb, err) => {
             invokeApi('Task/model?id=' + id, HTTP_GET, null, cb, err);
         },
         Save: (data, cb, err) => {
             invokeApi('task/save', HTTP_POST, data, cb, err);
         },
-        TodoList: (taskId, cb, err) => {
-            invokeApi('task/todolist?taskid=' + taskId, HTTP_GET, null, cb, err);
+        SubTaskList: (taskId, cb, err) => {
+            invokeApi('task/SubTaskList?taskid=' + taskId, HTTP_GET, null, cb, err);
+        },
+        SaveSubTask: (data, cb, err) => {
+            invokeApi('task/savesubtask', HTTP_POST, data, cb, err);
+        },
+        DeleteSubTask: (subTaskId, cb, err) => {
+            invokeApi('task/DeleteSubTask?id=' + subTaskId, HTTP_DELETE, null, cb, err);
+        },
+        TodoList: (subTaskId, cb, err) => {
+            invokeApi('task/todolist?subTaskId=' + subTaskId, HTTP_GET, null, cb, err);
         },
         SaveTodo: (data, cb, err) => {
             invokeApi('task/savetodo', HTTP_POST, data, cb, err);
@@ -372,15 +378,6 @@ module.exports = {
         },
         DeleteTodo: (todoId, cb, err) => {
             invokeApi('task/deletetodo?id=' + todoId, HTTP_DELETE, null, cb, err);
-        },
-        ProgressList: (taskId, cb, err) => {
-            invokeApi('task/ProgressList?taskId=' + taskId, HTTP_GET, null, cb, err);
-        },
-        SaveProgress: (data, cb, err) => {
-            invokeApi('task/saveprogress', HTTP_POST, data, cb, err);
-        },
-        DeleteProgress: (progressId, cb, err) => {
-            invokeApi('task/deleteprogress?id=' + progressId, HTTP_DELETE, null, cb, err);
         }
     },
     Leave: {

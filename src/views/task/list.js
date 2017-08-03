@@ -20,7 +20,7 @@ class TaskList extends Component {
 
     loadData = (page, searchKey = '', status) => {
         let parameter = {
-            status: status || this.state.status,
+            status: status || this.state.status || '',
             searchKey: searchKey || this.state.searchKey,
             page: page || this.state.page.current || 1,
             rows: this.state.page.pageSize
@@ -73,17 +73,15 @@ class TaskList extends Component {
                     rowKey="ID"
                     loading={this.state.loading}
                     columns={[
-                        { title: '任务事项', dataIndex: 'MC', render: (text, item) => <Link to={`/task/edit?id=${item.ID}`}>{text}</Link> },
+                        { title: '任务事项', dataIndex: 'Name', render: (text, item) => <Link to={`/task/edit?id=${item.ID}`}>{text}</Link> },
                         {
                             title: '任务来源', render: (text, item) => <span>
-                                {item.LY_LX === 1 ? '省' : item.LY_LX === 2 ? '市' : '区'}
-                                {item.LY}
+                                {item.FromType === 1 ? '省' : item.FromType === 2 ? '市' : '区'}
+                                {item.From}
                             </span>
                         },
-                        { title: '计划完成时间', dataIndex: 'JH_SJ', render: (text, item) => text ? moment(text).format('ll') : null },
-                        { title: '责任人', dataIndex: 'ZRR_Name' },
-                        { title: '所在流程', dataIndex: 'FlowStep' },
-                        { title: '处理日期', dataIndex: 'UpdateTime', render: (text, item) => text ? moment(text).format('ll') : null },
+                        { title: '计划完成时间', dataIndex: 'ScheduleDate', render: (text, item) => text ? moment(text).format('ll') : null },
+                        { title: '更新日期', dataIndex: 'UpdateTime', render: (text, item) => text ? moment(text).format('ll') : null },
                     ]}
                     dataSource={this.state.data}
                     pagination={{

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Input, message } from 'antd'
-import SelectUser from '../shared/_select_user'
+import SelectUser from '../shared/_user_select'
 import FormModal from '../shared/_formmodal'
 import api from '../../models/api'
 

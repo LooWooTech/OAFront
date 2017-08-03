@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Input, DatePicker, Button, message, Radio } from 'antd'
 import FormModal from '../shared/_formmodal'
-import SelectUser from '../shared/_select_user'
+import SelectUser from '../shared/_user_select'
 import api from '../../models/api'
 import utils from '../../utils'
 

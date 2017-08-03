@@ -44,12 +44,12 @@ export default class FlowList extends React.Component {
                 { title: '审核人', dataIndex: 'RealName' },
                 { title: '审核职务', dataIndex: 'JobTitle' },
                 {
-                    title: '操作', dataIndex: 'ID', width: 200, render: (text, item) =>
+                    title: '操作', dataIndex: 'ID', width: 240, render: (text, item) =>
                         <Button.Group>
                             <NodeEditModal
                                 title="修改节点"
                                 onSubmit={this.loadData}
-                                trigger={<Button icon="edit">编辑</Button>}
+                                trigger={<Button icon="edit"></Button>}
                                 departments={this.state.departments}
                                 titles={this.state.titles}
                                 nodes={record.Nodes}
@@ -62,7 +62,7 @@ export default class FlowList extends React.Component {
                                 okText="是"
                                 cancelText="否"
                             >
-                                <Button type="danger" icon="delete">删除</Button>
+                                <Button type="danger" icon="delete"></Button>
                             </Popconfirm>
                         </Button.Group>
                 }
@@ -96,8 +96,8 @@ export default class FlowList extends React.Component {
                             <span>
                                 <NodeEditModal
                                     title="添加节点"
-                                    onSubmit={this.onNodeSave}
-                                    trigger={<Button icon="plus">添加节点</Button>}
+                                    onSubmit={this.loadData}
+                                    trigger={<Button icon="plus"></Button>}
                                     departments={this.state.departments}
                                     titles={this.state.titles}
                                     nodes={item.Nodes}
@@ -107,7 +107,7 @@ export default class FlowList extends React.Component {
                                     title="修改流程"
                                     onSubmit={this.onEditSave}
                                     children={this.getFlowFormItems(item)}
-                                    trigger={<Button icon="edit">编辑</Button>}
+                                    trigger={<Button icon="edit"></Button>}
                                 />
                                 <Popconfirm
                                     placement="topRight"
@@ -116,7 +116,7 @@ export default class FlowList extends React.Component {
                                     okText="是"
                                     cancelText="否"
                                 >
-                                    <Button type="danger" icon="delete">删除</Button>
+                                    <Button type="danger" icon="delete"></Button>
                                 </Popconfirm>
                             </span>
                         )

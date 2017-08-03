@@ -10,9 +10,21 @@ class EditNodeModal extends Component {
         this.setState({ freeFlow: data })
     }
 
+    handleCloseFreeflow = () => {
+        this.setState({ closeFreeFlow: true })
+    }
+
     handleSubmit = data => {
         data.FreeFlow = this.state.freeFlow === undefined ? data.FreeFlow : this.state.freeFlow
-        api.Flow.SaveNode(data, this.props.onSubmit)
+        if (this.state.closeFreeFlow) {
+            data.FreeFlow = null;
+            data.FreeFlowId = 0;
+        }
+        api.Flow.SaveNode(data, json => {
+            if (this.props.onSubmit) {
+                this.props.onSubmit(json)
+            }
+        })
     }
 
 
@@ -20,7 +32,6 @@ class EditNodeModal extends Component {
         record.FreeFlow = this.state.freeFlow === undefined ? record.FreeFlow : this.state.freeFlow || { ID: 0, LimitMode: 2, DepartmentIds: [], CrossDepartment: false, CrossLevel: false }
         const openFreeFlow = this.state.openFreeFlow === undefined ? record.FreeFlowId > 0 : this.state.openFreeFlow
         nodes = nodes || [];
-        console.log(record.LimitMode)
         var items = [
             { name: 'ID', defaultValue: record.ID, render: <Input type="hidden" /> },
             { name: 'FlowId', defaultValue: record.FlowId, render: <Input type="hidden" /> },
@@ -75,12 +86,12 @@ class EditNodeModal extends Component {
             {
                 title: '限制部门',
                 name: 'LimitMode',
-                defaultValue: record.LimitMode || 0,
+                defaultValue: (record.LimitMode || 0).toString(),
                 render:
-                <Radio.Group onChange={e => this.setState({ limitMode: e.target.value })}>
-                    <Radio value={0}>不限制</Radio>
-                    <Radio value={1}>指定部门</Radio>
-                    <Radio value={2}>发起人部门</Radio>
+                <Radio.Group onChange={e => this.setState({ limitMode: parseInt(e.target.value, 10) })}>
+                    <Radio value='0'>不限制</Radio>
+                    <Radio value='1'>指定部门</Radio>
+                    <Radio value='2'>发起人部门</Radio>
                 </Radio.Group>
             }];
 
@@ -103,13 +114,13 @@ class EditNodeModal extends Component {
             title: '自由流程',
             render:
             <div>
-                {record.FreeFlowId > 0 || this.state.freeFlow ? '已开启' : '未开启'} &nbsp;&nbsp;
+                {record.FreeFlowId > 0 || this.state.freeFlow ? <Button onClick={this.handleCloseFreeflow}>关闭</Button> : null}
                 <FreeNodeModal
                     record={record.FreeFlow}
                     departments={this.props.departments}
                     titles={this.props.titles}
                     onSubmit={this.handleFreeNodeSubmit}
-                    trigger={<Button>设置自由流程</Button>} />
+                    trigger={<Button>设置</Button>} />
             </div>
         });
 

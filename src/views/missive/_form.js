@@ -148,10 +148,10 @@ class MissiveEditForm extends React.Component {
             render: <Input disabled={disabled} />
         }
         let mjControl = {
-            name: 'WJ_MJ', title: '文件密级', defaultValue: model.WJ_MJ || 0,
+            name: 'WJ_MJ', title: '文件密级', defaultValue: (model.WJ_MJ || 0).toString(),
             render: <Radio.Group disabled={disabled} >
-                <Radio.Button value={0}>普通</Radio.Button>
-                <Radio.Button value={1}>保密</Radio.Button>
+                <Radio.Button value='0'>普通</Radio.Button>
+                <Radio.Button value='1'>保密</Radio.Button>
             </Radio.Group>
         }
         let qxControl = {
@@ -196,10 +196,10 @@ class MissiveEditForm extends React.Component {
                 },
                 uploadControl,
                 {
-                    name: 'JJ_DJ', title: '紧急程度', defaultValue: model.JJ_DJ || 0,
+                    name: 'JJ_DJ', title: '紧急程度', defaultValue: (model.JJ_DJ || 0).toString(),
                     render: <Radio.Group disabled={disabled} >
-                        <Radio.Button value={0}>普通</Radio.Button>
-                        <Radio.Button value={1}>紧急</Radio.Button>
+                        <Radio.Button value='0'>普通</Radio.Button>
+                        <Radio.Button value='1'>紧急</Radio.Button>
                     </Radio.Group>
                 }
             ]);

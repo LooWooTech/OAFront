@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router'
 import { Form, Icon, Input, Button, message } from 'antd';
-import '../../css/login.css'
 
 import auth from '../../models/auth'
 import api from '../../models/api'
