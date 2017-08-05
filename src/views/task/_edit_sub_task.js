@@ -11,6 +11,7 @@ class SubTaskModal extends Component {
 
     handleSubmit = (data) => {
         api.Task.SaveSubTask(data, () => {
+            
             this.props.onSubmit()
         });
     }

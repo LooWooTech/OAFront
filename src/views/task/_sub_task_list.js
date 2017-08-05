@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
-import { Button, Table, Tag, Icon } from 'antd'
+import { Button, Table, Tag, message, Modal } from 'antd'
 import moment from 'moment'
 import EditModal from './_edit_sub_task'
+import SubTaskCheckModal from './_sub_task_check'
+import SubTaskSubmitModal from './_sub_task_submit'
 import TodoEditModal from './_edit_todo'
 import api from '../../models/api'
 import auth from '../../models/auth'
@@ -9,7 +11,9 @@ import auth from '../../models/auth'
 
 class SubTaskList extends Component {
     state = {
-        info: this.props.info || {},
+        taskId: this.props.taskId,
+        canViewAllSubTasks: this.props.canViewAllSubTasks,
+        canAddSubTask: this.props.canAddSubTask,
         list: [],
         todo: {}
     }
@@ -19,29 +23,123 @@ class SubTaskList extends Component {
     }
 
     loadData = () => {
-        api.Task.SubTaskList(this.state.info.ID, json => {
-            let roots = json.filter(e => e.ParentId === 0 && (auth.isCurrentUser(this.state.info.PostUserId) || auth.isCurrentUser(e.CreatorId) || auth.isCurrentUser(e.ToUserId) || e.Todos.find(t => auth.isCurrentUser(t.ToUserId))));
-            roots = roots.map(node => this.buildTreeData(node, json))
+        const taskId = this.state.taskId
+        api.Task.SubTaskList(taskId, json => {
+            let roots = json.filter(e => e.ParentId === 0);
+            roots = roots.map(node => this.buildTreeData(node, json)).filter(e => this.canViewSubTask(e))
             this.setState({ list: roots })
+        })
+        //获取当前用户需要审批的列表
+        api.Task.CheckList(taskId, json => {
+            this.setState({ checkList: json })
         })
     }
 
+    handleUpdateStatus = (item) => {
+        let self = this;
+        Modal.confirm({
+            title: '任务完成',
+            content: item.Completed ? '当前操作将会设置该项任务为“未完成”状态，你确定还未完成吗？' : '当前操作将会设置该项任务为“已完成"状态，你确定已经完成该项任务了吗？',
+            onOk: function () {
+                api.Task.UpdateTodoStatus(item.ID, json => {
+                    self.loadData()
+                })
+            }
+        })
+    }
+
+    canViewSubTask = (subTask, parent = null) => {
+        if (!subTask) return false;
+
+        var result = this.state.canViewAllSubTasks
+            || auth.isCurrentUser(subTask.CreatorId)
+            || auth.isCurrentUser(subTask.ToUserId);
+
+        if (!result) {
+            result = subTask.Todos.find(t => auth.isCurrentUser(t.ToUserId))
+        }
+        if (!result) {
+            if (subTask.IsMaster) {
+                result = subTask.children ? subTask.children.find(e => this.canViewSubTask(e)) : false;
+            } else if (parent) {
+                result = this.canViewSubTask(parent)
+            }
+        }
+        if (!result && this.state.checkList) {
+            result = this.state.checkList.find(e => auth.isCurrentUser(e.ToUserId))
+        }
+        return result;
+    }
+
     buildTreeData = (node, list) => {
-        node.children = list.filter(e => e.ParentId === node.ID && (auth.isCurrentUser(this.state.info.PostUserId) || auth.isCurrentUser(e.CreatorId) || auth.isCurrentUser(e.ToUserId) || e.Todos.find(t => auth.isCurrentUser(t.ToUserId))));
-        node.children.map(child => this.buildTreeData(child, list))
+        node.children = list.filter(e => e.ParentId === node.ID && this.canViewSubTask(e, node));
+        node.children.map(child => {
+            child.Parent = node;
+            this.buildTreeData(child, list);
+            return child;
+        })
         return node
     }
 
-    handleDelete = item => {
+    handleDelete = subTask => {
         if (confirm("你确定要删除吗？")) {
-            api.Task.DeleteSubTask(item.ID, () => {
+            api.Task.DeleteSubTask(subTask.ID, () => {
                 this.loadData()
             })
         }
     }
-    expandedRowRender = (item) => {
 
-        let list = item.Todos;
+    getButtons = (subTask) => {
+        switch (subTask.Status) {
+            case 3:
+            case 0:
+                if (auth.isCurrentUser(subTask.ToUserId)) {
+                    return <span>
+                        <SubTaskSubmitModal
+                            model={subTask}
+                            onSubmit={this.loadData}
+                            trigger={<Button>提交</Button>}
+                        />
+                        <TodoEditModal
+                            title="添加子任务"
+                            model={{ SubTaskId: subTask.ID }}
+                            trigger={<Button>添加子任务</Button>}
+                            onSubmit={this.loadData}
+                        />
+                    </span>
+                }
+                if (auth.isCurrentUser(subTask.CreatorId)) {
+                    return <span>
+                        <EditModal
+                            model={subTask}
+                            list={this.state.list}
+                            trigger={<Button icon="edit">修改</Button>}
+                            onSubmit={this.loadData}
+                        />
+                        <Button icon="delete" onClick={() => this.handleDelete(subTask)}>删除</Button>
+                    </span>
+                }
+                break;
+            case 2:
+                return "已完成";
+            case 1:
+                var list = this.state.checkList || [];
+                let checkNodeData = list.sort((a, b) => a.ID < b.ID).find(e => !e.Submited && e.ExtendId === subTask.ID);
+                if (checkNodeData) {
+                    return <SubTaskCheckModal
+                        model={checkNodeData}
+                        trigger={<Button>审核</Button>}
+                        onSubmit={this.loadData}
+                    />
+                }
+                break;
+            default:
+                return null;
+        }
+    }
+
+    expandedRowRender = (subTask) => {
+        let list = subTask.Todos;
         if (list.length === 0) {
             return null;
         }
@@ -61,8 +159,10 @@ class SubTaskList extends Component {
                 { title: '计划完成时间', width: 150, dataIndex: 'ScheduleDate', render: (text) => text ? moment(text).format('ll') : '' },
                 {
                     title: '操作', width: 240, render: (text, item) => <span>
-                        {(auth.isCurrentUser(item.ToUserId)) ?
-                            <Button type="success" onClick={() => this.handleUpdateStatus(item)}>{item.Completed ? '未完成' : '标记完成'}</Button>
+                        {auth.isCurrentUser(item.ToUserId) ?
+                            <span>
+                                <Button type="success" onClick={() => this.handleUpdateStatus(item)}>{item.Completed ? '标记未完成' : '标记完成'}</Button>
+                            </span>
                             : null
                         }
                         {auth.isCurrentUser(item.CreatorId) ?
@@ -83,11 +183,10 @@ class SubTaskList extends Component {
         />
     }
     render() {
-        const info = this.props.info;
-        const taskId = info.ID;
+        const taskId = this.state.taskId
         return (
             <div>
-                {auth.isCurrentUser(info.PostUserId) ?
+                {this.state.canAddSubTask ?
                     <EditModal
                         trigger={<Button type="primary" icon="plus">添加子任务</Button>}
                         model={{ TaskId: taskId }}
@@ -102,7 +201,19 @@ class SubTaskList extends Component {
                     columns={[
                         {
                             title: '状态', dataIndex: 'Completed', width: 90,
-                            render: (text, item) => <Tag color={item.Completed ? "green" : ''}>{item.Completed ? "完成" : '未完成'}</Tag>
+                            render: (text, item) => {
+                                switch (item.Status) {
+                                    default:
+                                    case 0:
+                                        return <Tag color="#108ee9">执行</Tag>
+                                    case 1:
+                                        return <Tag color="#f50">审核</Tag>
+                                    case 2:
+                                        return <Tag color="#87d068">完成</Tag>
+                                    case 3:
+                                        return <Tag color="#ff0">退回</Tag>
+                                }
+                            }
                         },
                         {
                             title: '任务目标', dataIndex: 'Content',
@@ -120,29 +231,7 @@ class SubTaskList extends Component {
                         { title: '计划完成时间', width: 160, dataIndex: 'ScheduleDate', render: (text) => text ? moment(text).format('ll') : '' },
                         {
                             title: '操作', width: 300, render: (text, item) => <span>
-                                {auth.isCurrentUser(item.ToUserId) ?
-                                    <Button type="success" onClick={() => this.handleUpdateStatus(item)}>{item.Completed ? '未完成' : '完成任务'}</Button>
-                                    : null
-                                }
-                                {(auth.isCurrentUser(item.CreatorId)) ?
-                                    <span>
-                                        <TodoEditModal
-                                            title="添加子任务"
-                                            model={{ SubTaskId: item.ID }}
-                                            trigger={<Button>添加子任务</Button>}
-                                            onSubmit={this.loadData}
-                                        />
-                                        <EditModal
-                                            model={item}
-                                            list={this.state.list}
-                                            trigger={<Button icon="edit"></Button>}
-                                            onSubmit={this.loadData}
-                                        />
-                                        <Button icon="delete" onClick={() => this.handleDelete(item)}></Button>
-                                    </span>
-                                    :
-                                    null
-                                }
+                                {this.getButtons(item)}
                             </span>
                         }
                     ]}

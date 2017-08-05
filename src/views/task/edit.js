@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import { Affix, Button, Tabs, message } from 'antd';
 import api from '../../models/api';
+import auth from '../../models/auth'
 import FormTab from './_form';
 import SubTaskTab from './_sub_task_list'
 import ResultTab from './_result';
 import FileListTab from '../file/info_file_list';
+import SubmitFlowModal from '../flowdata/form';
 
 import utils from '../../utils';
 
@@ -42,6 +44,11 @@ export default class TaskEdit extends Component {
                     data.freeFlowNodeData = data.flowNodeData.Nodes.find(n => n.$id === data.freeFlowNodeData.$ref);
                 }
 
+                //是否可以查看所有任务列表（创建人和局长）
+                if (data.flowNodeData.ParentId === 0) {
+                    data.canViewAllSubTasks = auth.isCurrentUser(data.flowNodeData.UserId);
+                }
+
                 this.setState({ ...data });
             });
             api.Task.Model(id, data => {
@@ -71,7 +78,15 @@ export default class TaskEdit extends Component {
                     {this.state.canEdit ?
                         <Button onClick={this.handleSave} type="primary" icon="save" htmlType="submit">保存</Button>
                         : null}
-                        <Button onClick={utils.GoBack} type="" icon="arrow-left" htmlType="button">返回</Button>
+                    {this.state.canSubmit && this.state.flowNodeData.ParentId === 0 && this.state.flowNodeData.FlowNodeName.indexOf('领导') >-1 ?
+                        <SubmitFlowModal
+                            flowDataId={model.FlowDataId}
+                            callback={this.loadData}
+                            infoId={model.ID}
+                            trigger={<Button type="success" icon="check" htmlType="button">领导批示</Button>}
+                        />
+                        : null}
+                    <Button onClick={utils.GoBack} type="" icon="arrow-left" htmlType="button">返回</Button>
                 </Button.Group>
             </Affix>
             <Tabs>
@@ -80,7 +95,11 @@ export default class TaskEdit extends Component {
                 </Tabs.TabPane>
                 {showFlow ?
                     <Tabs.TabPane tab="任务列表" key="2">
-                        <SubTaskTab info={model} />
+                        <SubTaskTab
+                            taskId={model.ID}
+                            canViewAllSubTasks={this.state.canViewAllSubTasks}
+                            canAddSubTask={this.state.canViewAllSubTasks && this.state.canEdit && auth.isCurrentUser(model.PostUserId)}
+                        />
                     </Tabs.TabPane>
                     : null}
                 {showFiles ?
@@ -91,7 +110,7 @@ export default class TaskEdit extends Component {
                 }
                 {showFlow ?
                     <Tabs.TabPane tab="成果预览" key="4">
-                        <ResultTab task={extendModel} flowData={model.FlowData}/>
+                        <ResultTab task={extendModel} flowData={model.FlowData} />
                     </Tabs.TabPane>
                     : null
                 }

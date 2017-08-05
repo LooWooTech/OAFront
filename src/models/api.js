@@ -367,6 +367,15 @@ module.exports = {
         DeleteSubTask: (subTaskId, cb, err) => {
             invokeApi('task/DeleteSubTask?id=' + subTaskId, HTTP_DELETE, null, cb, err);
         },
+        SubmitSubTask: (data, cb, err) => {
+            invokeApi('task/submitsubtask', HTTP_GET, data, cb, err)
+        },
+        CheckSubTask: (data, cb, err) => {
+            invokeApi('task/checksubtask', HTTP_GET, data, cb, err);
+        },
+        CheckList: (taskId, cb, err) => {
+            invokeApi('task/checklist?taskId=' + taskId, HTTP_GET, null, cb, err);
+        },
         TodoList: (subTaskId, cb, err) => {
             invokeApi('task/todolist?subTaskId=' + subTaskId, HTTP_GET, null, cb, err);
         },

@@ -10,7 +10,7 @@ const headerNavData = [
     { name: 'home', active: true, path: '/?scope=all', icon: 'fa fa-commenting', text: '动态' },
     { name: 'missive', path: `/missive/list/${api.Forms.Missive.ID}/?status=1`, icon: 'fa fa-file-o', text: '公文' },
     { name: 'attendance', icon: 'fa fa-calendar-check-o', text: '考勤' },
-    { name: 'task', icon: 'fa fa-clock-o', text: '任务' },
+    { name: 'task', path: '/task/?status=1', icon: 'fa fa-clock-o', text: '任务' },
     { name: 'calendar', icon: 'fa fa-calendar', text: '日程' },
     { name: 'news', icon: 'fa fa-newspaper-o', text: '信息' },
     { name: 'archive', icon: 'fa fa-tasks', text: '档案' },
