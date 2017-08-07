@@ -153,7 +153,7 @@ export default class MissiveEdit extends Component {
                     : null
                 }
                 {showFlow ?
-                    <Tabs.TabPane tab="审批流程" key="3">
+                    <Tabs.TabPane tab="审核流程" key="3">
                         <FlowListTab data={model.FlowData} />
                     </Tabs.TabPane>
                     : null

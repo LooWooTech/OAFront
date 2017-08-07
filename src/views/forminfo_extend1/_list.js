@@ -104,7 +104,7 @@ class Extend1ListComponent extends Component {
                     {item.Result === null && item.ApprovalUserId === currentUser.ID ?
                         <SubmitFlowModal
                             infoId={item.ID}
-                            trigger={<Button>审批</Button>}
+                            trigger={<Button>审核</Button>}
                             callback={this.handleSubmitFlowCallback}
                         />
                         : null}

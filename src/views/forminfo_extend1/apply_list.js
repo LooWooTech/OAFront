@@ -18,8 +18,8 @@ class ApplyList extends Component {
                         this.setState({ status: e.target.value })
                     }}>
                         <Radio.Button value={0}>全部</Radio.Button>
-                        <Radio.Button value={1}>待审批</Radio.Button>
-                        <Radio.Button value={2}>已审批</Radio.Button>
+                        <Radio.Button value={1}>待审核</Radio.Button>
+                        <Radio.Button value={2}>已审核</Radio.Button>
                     </Radio.Group>
 
                 </div>

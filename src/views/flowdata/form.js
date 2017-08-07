@@ -82,7 +82,7 @@ class FlowForm extends Component {
         });
         if (canBack) {
             items.push({
-                title: '审批结果',
+                title: '审核结果',
                 render:
                 <Radio.Group value={this.state.result} onChange={e => this.setState({ result: e.target.value })}>
                     <Radio.Button value={true}>同意</Radio.Button>
@@ -118,7 +118,7 @@ class FlowForm extends Component {
         return (
             <span>
                 <FormModal
-                    title={this.props.title || "提交审批流程"}
+                    title={this.props.title || "提交审核流程"}
                     trigger={this.props.trigger}
                     children={this.getFormItems()}
                     onSubmit={this.handleSubmit}

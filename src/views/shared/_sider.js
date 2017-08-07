@@ -44,9 +44,9 @@ const sideMenuData = {
                 { path: `/extend1/${api.Forms.Car.ID}/my/`, icon: 'fa fa-inbox', text: '我的申请' }
             ]
         }, {
-            title: '管理&审批', role: 2, items: [
+            title: '管理&审核', role: 2, items: [
                 { path: '/car/list', icon: 'fa fa-list', text: '车辆管理' },
-                { path: `/extend1/${api.Forms.Car.ID}/`, icon: 'fa fa-check', text: '车辆审批' }
+                { path: `/extend1/${api.Forms.Car.ID}/`, icon: 'fa fa-check', text: '车辆审核' }
             ]
         }
     ],
@@ -57,9 +57,9 @@ const sideMenuData = {
                 { path: `/extend1/${api.Forms.MeetingRoom.ID}/my/`, icon: 'fa fa-inbox', text: '我的申请' }
             ]
         }, {
-            title: '管理&审批', role: 2, items: [
+            title: '管理&审核', role: 2, items: [
                 { path: '/meetingroom/list', icon: 'fa fa-list', text: '会议室管理' },
-                { path: `/extend1/${api.Forms.MeetingRoom.ID}/`, icon: 'fa fa-check', text: '会议室审批' }
+                { path: `/extend1/${api.Forms.MeetingRoom.ID}/`, icon: 'fa fa-check', text: '会议室审核' }
             ]
         }
     ],
@@ -70,9 +70,9 @@ const sideMenuData = {
                 { path: `/extend1/${api.Forms.Seal.ID}/my/`, icon: 'fa fa-inbox', text: '我的申请' }
             ]
         }, {
-            title: '管理&审批', role: 2, items: [
+            title: '管理&审核', role: 2, items: [
                 { path: '/seal/list', icon: 'fa fa-list', text: '图章管理' },
-                { path: `/extend1/${api.Forms.Seal.ID}/`, icon: 'fa fa-check', text: '图章审批' }
+                { path: `/extend1/${api.Forms.Seal.ID}/`, icon: 'fa fa-check', text: '图章审核' }
             ]
         }
     ],
@@ -94,7 +94,7 @@ const sideMenuData = {
         },
         {
             title: '管理', role: 2, items: [
-                { path: `/extend1/${api.Forms.Leave.ID}/`, icon: 'fa fa-list', text: '请假审批', },
+                { path: `/extend1/${api.Forms.Leave.ID}/`, icon: 'fa fa-list', text: '请假审核', },
                 { path: '/attendance/holidays', icon: 'fa fa-calendar', text: '节假日管理' }
             ]
         }

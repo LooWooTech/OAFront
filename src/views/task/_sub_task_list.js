@@ -29,7 +29,7 @@ class SubTaskList extends Component {
             roots = roots.map(node => this.buildTreeData(node, json)).filter(e => this.canViewSubTask(e))
             this.setState({ list: roots })
         })
-        //获取当前用户需要审批的列表
+        //获取当前用户需要审核的列表
         api.Task.CheckList(taskId, json => {
             this.setState({ checkList: json })
         })
@@ -81,12 +81,30 @@ class SubTaskList extends Component {
         return node
     }
 
-    handleDelete = subTask => {
-        if (confirm("你确定要删除吗？")) {
-            api.Task.DeleteSubTask(subTask.ID, () => {
-                this.loadData()
-            })
-        }
+    handleDeleteSubTask = subTask => {
+        let self = this;
+        Modal.confirm({
+            title: '删除提醒',
+            content: '你确定要删除这项子任务吗？',
+            onOk: function () {
+                api.Task.DeleteSubTask(subTask.ID, () => {
+                    self.loadData();
+                })
+            }
+        })
+    }
+
+    handleDeleteTodo = todo => {
+        let self = this;
+        Modal.confirm({
+            title: '删除提醒',
+            content: '你确定要删除这项子任务吗？',
+            onOk: function () {
+                api.Task.DeleteTodo(todo.ID, () => {
+                    self.loadData();
+                })
+            }
+        })
     }
 
     getButtons = (subTask) => {
@@ -116,7 +134,7 @@ class SubTaskList extends Component {
                             trigger={<Button icon="edit">修改</Button>}
                             onSubmit={this.loadData}
                         />
-                        <Button icon="delete" onClick={() => this.handleDelete(subTask)}>删除</Button>
+                        <Button icon="delete" onClick={() => this.handleDeleteSubTask(subTask)}>删除</Button>
                     </span>
                 }
                 break;
@@ -169,10 +187,10 @@ class SubTaskList extends Component {
                             <span>
                                 <TodoEditModal
                                     model={item}
-                                    trigger={<Button icon="edit"></Button>}
+                                    trigger={<Button icon="edit">修改</Button>}
                                     onSubmit={this.loadData}
                                 />
-                                <Button type="error" icon="delete" onClick={() => this.handleDelete(item)}></Button>
+                                <Button type="error" icon="delete" onClick={() => this.handleDeleteTodo(item)}>删除</Button>
                             </span>
                             : null}
                     </span>

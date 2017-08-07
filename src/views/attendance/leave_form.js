@@ -65,7 +65,7 @@ class LeaveApplyForm extends Component {
                     { title: '结束日期', name: 'ScheduleEndTime', render: <DatePicker showTime format="YYYY-MM-DD HH:mm" />, rules: [{ required: true, message: '请选择结束日期' }], },
                     { title: '请假事由', name: 'Reason', render: <Input type="textarea" autosize={{ minRows: 2, maxRows: 4 }} />, rules: [{ required: true, message: '请填写请假理由' }] },
                     {
-                        title: '审批人',
+                        title: '审核人',
                         render: <SelectUser
                             formType="flow"
                             flowId={api.Forms.Car.ID}

@@ -63,7 +63,7 @@ class CarApplyModal extends Component {
                     { title: '结束日期', name: 'ScheduleEndTime', render: <DatePicker />, rules: [{ required: true, message: '请选择结束日期' }], },
                     { title: '申请用途', name: 'Reason', render: <Input type="textarea" autosize={{ minRows: 2, maxRows: 4 }} />, rules: [{ required: true, message: '请填写车辆申请用途' }] },
                     {
-                        title: '审批人',
+                        title: '审核人',
                         render: <SelectUser
                             formType="flow"
                             flowId={api.Forms.Car.ID}

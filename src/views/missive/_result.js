@@ -12,7 +12,7 @@ class ResultTab extends Component {
                 return null
             }
             return <div className="freeflow">
-                <div className="title">传阅审批：</div>
+                <div className="title">传阅批示：</div>
                 {freeFlowData.Nodes.map(data => data.UpdateTime ? <div key={data.ID}>
                     <div className="header">
                         <span className="signature">{data.Signature}</span>
