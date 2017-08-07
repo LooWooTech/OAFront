@@ -48,6 +48,7 @@ export default class TaskEdit extends Component {
                 if (data.flowNodeData.ParentId === 0) {
                     data.canViewAllSubTasks = auth.isCurrentUser(data.flowNodeData.UserId);
                 }
+                data.canAddSubTask = data.canViewAllSubTasks && data.canEdit && auth.isCurrentUser(data.model.PostUserId);
 
                 this.setState({ ...data });
             });
@@ -96,9 +97,10 @@ export default class TaskEdit extends Component {
                 {showFlow ?
                     <Tabs.TabPane tab="任务列表" key="2">
                         <SubTaskTab
-                            taskId={model.ID}
+                            task={extendModel}
+                            flowData={model.FlowData}
                             canViewAllSubTasks={this.state.canViewAllSubTasks}
-                            canAddSubTask={this.state.canViewAllSubTasks && this.state.canEdit && auth.isCurrentUser(model.PostUserId)}
+                            canAddSubTask={this.state.canAddSubTask}
                         />
                     </Tabs.TabPane>
                     : null}
@@ -110,7 +112,7 @@ export default class TaskEdit extends Component {
                 }
                 {showFlow ?
                     <Tabs.TabPane tab="成果预览" key="4">
-                        <ResultTab task={extendModel} flowData={model.FlowData} />
+                        <ResultTab task={extendModel} flowData={model.FlowData} canViewAllSubTasks={this.state.canViewAllSubTasks}/>
                     </Tabs.TabPane>
                     : null
                 }

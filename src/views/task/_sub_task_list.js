@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Table, Tag, message, Modal } from 'antd'
+import { Button, Table, Tag,  Modal } from 'antd'
 import moment from 'moment'
 import EditModal from './_edit_sub_task'
 import SubTaskCheckModal from './_sub_task_check'
@@ -11,11 +11,12 @@ import auth from '../../models/auth'
 
 class SubTaskList extends Component {
     state = {
-        taskId: this.props.taskId,
+        task: this.props.task,
+        flowData: this.props.flowData,
         canViewAllSubTasks: this.props.canViewAllSubTasks,
         canAddSubTask: this.props.canAddSubTask,
         list: [],
-        todo: {}
+        loading: true
     }
 
     componentWillMount() {
@@ -23,15 +24,11 @@ class SubTaskList extends Component {
     }
 
     loadData = () => {
-        const taskId = this.state.taskId
+        const taskId = this.state.task.ID
         api.Task.SubTaskList(taskId, json => {
             let roots = json.filter(e => e.ParentId === 0);
             roots = roots.map(node => this.buildTreeData(node, json)).filter(e => this.canViewSubTask(e))
-            this.setState({ list: roots })
-        })
-        //获取当前用户需要审核的列表
-        api.Task.CheckList(taskId, json => {
-            this.setState({ checkList: json })
+            this.setState({ list: roots, loading: false })
         })
     }
 
@@ -65,8 +62,8 @@ class SubTaskList extends Component {
                 result = this.canViewSubTask(parent)
             }
         }
-        if (!result && this.state.checkList) {
-            result = this.state.checkList.find(e => auth.isCurrentUser(e.ToUserId))
+        if (!result) {
+            result = this.state.flowData.Nodes.find(e => auth.isCurrentUser(e.UserId))
         }
         return result;
     }
@@ -141,7 +138,7 @@ class SubTaskList extends Component {
             case 2:
                 return "已完成";
             case 1:
-                var list = this.state.checkList || [];
+                var list = this.state.flowData.Nodes || [];
                 let checkNodeData = list.sort((a, b) => a.ID < b.ID).find(e => !e.Submited && e.ExtendId === subTask.ID);
                 if (checkNodeData) {
                     return <SubTaskCheckModal
@@ -201,7 +198,8 @@ class SubTaskList extends Component {
         />
     }
     render() {
-        const taskId = this.state.taskId
+        const taskId = this.props.task.ID
+        if (this.state.loading) return null;
         return (
             <div>
                 {this.state.canAddSubTask ?
@@ -214,7 +212,7 @@ class SubTaskList extends Component {
                 <Table
                     rowKey="ID"
                     loading={this.state.loading}
-                    indentSize={30}
+                    indentSize={0}
                     defaultExpandAllRows={true}
                     columns={[
                         {

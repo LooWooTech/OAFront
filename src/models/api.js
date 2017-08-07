@@ -40,7 +40,10 @@ function invokeApi(path, method, data, callback, onError, async = true) {
         if (onError) {
             onError(error);
         } else {
-            message.error(getExceptionMessage(error));
+            var msg = getExceptionMessage(error);
+            if (msg) {
+                message.error(msg);
+            }
         }
         console.log("ERROR:", error);
     }, async);
@@ -373,8 +376,8 @@ module.exports = {
         CheckSubTask: (data, cb, err) => {
             invokeApi('task/checksubtask', HTTP_GET, data, cb, err);
         },
-        CheckList: (taskId, cb, err) => {
-            invokeApi('task/checklist?taskId=' + taskId, HTTP_GET, null, cb, err);
+        CheckList: (taskId, userId, cb, err) => {
+            invokeApi('task/checklist', HTTP_GET, { taskId, userId }, cb, err);
         },
         TodoList: (subTaskId, cb, err) => {
             invokeApi('task/todolist?subTaskId=' + subTaskId, HTTP_GET, null, cb, err);

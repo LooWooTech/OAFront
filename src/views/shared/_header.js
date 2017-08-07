@@ -22,9 +22,9 @@ const headerNavData = [
 ];
 
 const NavItem = (item, key) => {
-    //if (item.role > 0 && auth.getUser().Role !== item.role) {
-    //    return;
-    //}
+    if (item.role > 0 && auth.getUser().Role !== item.role) {
+       return;
+    }
     return (
         <Menu.Item key={item.name}>
             <i className={item.icon} />&nbsp;{item.text}

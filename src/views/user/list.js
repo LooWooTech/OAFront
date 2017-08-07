@@ -49,8 +49,8 @@ export default class UserList extends React.Component {
 
     };
 
-    handleDelete = (item) => {
-        api.User.Delete(item.ID, () => {
+    handleDelete = (userId) => {
+        api.User.Delete(userId, () => {
             this.loadData()
         })
     }

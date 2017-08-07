@@ -5,7 +5,7 @@ import NodeEditModal from './node_edit';
 import api from '../../models/api';
 
 export default class FlowList extends React.Component {
-    state = {};
+    state = { loading: true };
     componentWillMount() {
         api.Department.List(data => this.setState({ departments: data }));
         api.Group.List(data => this.setState({ groups: data }));
@@ -22,7 +22,7 @@ export default class FlowList extends React.Component {
     };
 
     loadData = () => {
-        api.Flow.List(data => this.setState({ list: data }));
+        api.Flow.List(data => this.setState({ list: data, loading: false }));
     };
     getFlowFormItems = (record) => {
         record = record || { ID: 0, Name: '' };
@@ -71,6 +71,7 @@ export default class FlowList extends React.Component {
     };
 
     render() {
+        if (this.state.loading) return false;
         if (!this.state.list || !this.state.departments || !this.state.groups || !this.state.titles) return null;
         return <div>
             <Affix offsetTop={0} className="toolbar">
@@ -87,6 +88,7 @@ export default class FlowList extends React.Component {
                 rowKey="ID"
                 loading={this.state.loading}
                 expandedRowRender={this.flowNodeList}
+                defaultExpandAllRows={true}
                 onExpand={this.onExpand}
                 columns={[
                     { title: '名称', dataIndex: 'Name', },

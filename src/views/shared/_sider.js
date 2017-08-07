@@ -31,11 +31,11 @@ const sideMenuData = {
                 { path: `/missive/list/${api.Forms.ReceiveMissive.ID}/?status=3`, icon: 'fa fa-archive', text: '归档箱' },
             ]
         },
-        // {
-        //     title: '设置', items: [
-        //         { path: '/missive/redtitle', icon: 'fa fa-file', text: '文件红头' }
-        //     ]
-        // }
+        {
+            title: '设置', role: 2, items: [
+                { path: '/missive/redtitle', icon: 'fa fa-file', text: '文件红头' }
+            ]
+        }
     ],
     car: [
         {
@@ -44,8 +44,8 @@ const sideMenuData = {
                 { path: `/extend1/${api.Forms.Car.ID}/my/`, icon: 'fa fa-inbox', text: '我的申请' }
             ]
         }, {
-            title: '管理&审核', role: 2, items: [
-                { path: '/car/list', icon: 'fa fa-list', text: '车辆管理' },
+            title: '管理&审核', items: [
+                { path: '/car/list', icon: 'fa fa-list', text: '车辆管理', role: 2 },
                 { path: `/extend1/${api.Forms.Car.ID}/`, icon: 'fa fa-check', text: '车辆审核' }
             ]
         }
@@ -57,8 +57,8 @@ const sideMenuData = {
                 { path: `/extend1/${api.Forms.MeetingRoom.ID}/my/`, icon: 'fa fa-inbox', text: '我的申请' }
             ]
         }, {
-            title: '管理&审核', role: 2, items: [
-                { path: '/meetingroom/list', icon: 'fa fa-list', text: '会议室管理' },
+            title: '管理&审核', items: [
+                { path: '/meetingroom/list', icon: 'fa fa-list', text: '会议室管理', role: 2 },
                 { path: `/extend1/${api.Forms.MeetingRoom.ID}/`, icon: 'fa fa-check', text: '会议室审核' }
             ]
         }
@@ -70,8 +70,8 @@ const sideMenuData = {
                 { path: `/extend1/${api.Forms.Seal.ID}/my/`, icon: 'fa fa-inbox', text: '我的申请' }
             ]
         }, {
-            title: '管理&审核', role: 2, items: [
-                { path: '/seal/list', icon: 'fa fa-list', text: '图章管理' },
+            title: '管理&审核',  items: [
+                { path: '/seal/list', icon: 'fa fa-list', text: '图章管理', role: 2 },
                 { path: `/extend1/${api.Forms.Seal.ID}/`, icon: 'fa fa-check', text: '图章审核' }
             ]
         }
@@ -93,9 +93,9 @@ const sideMenuData = {
             ]
         },
         {
-            title: '管理', role: 2, items: [
+            title: '管理', items: [
                 { path: `/extend1/${api.Forms.Leave.ID}/`, icon: 'fa fa-list', text: '请假审核', },
-                { path: '/attendance/holidays', icon: 'fa fa-calendar', text: '节假日管理' }
+                { path: '/attendance/holidays', icon: 'fa fa-calendar', text: '节假日管理', role: 2 }
             ]
         }
     ],
@@ -175,10 +175,10 @@ class Sider extends React.Component {
             <div id='sider'>
                 <Menu onClick={e => this.handleMenuClick(e, user)} selectedKeys={[pathname, url]} >
                     {groups.map((group, key) => {
-                        var show = true;// group.role && user.Role >= group.role;
+                        var show = user.Role >= (group.role || 0);
                         return show ? <Menu.ItemGroup title={group.title || ''} key={key}>
                             {group.items.map((item, key) => {
-                                var show = true//item.role && user.Role >= item.role;
+                                var show = user.Role >= (item.role || 0);
                                 return show ? <Menu.Item key={item.path} item={item}>
                                     <i className={item.icon} />&nbsp;{item.text}
                                 </Menu.Item> : null

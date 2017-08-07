@@ -29,15 +29,12 @@ class SystemConfig extends Component {
                 defaultValue: item.Value,
                 render: <Input />
             });
+            return null;
         });
         return items;
     }
 
-    handleDelete = item => {
-        api.Config.Delete(item.Key, json => {
-            this.loadData();
-        })
-    }
+    handleDelete = item => api.Config.Delete(item.Key, this.loadData)
 
     render() {
         return (
