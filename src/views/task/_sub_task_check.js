@@ -13,8 +13,10 @@ class SubTaskCheckModal extends Component {
     }
 
     getItems = (model) => {
+        let parent = this.props.parent;
         var items = [
             { name: 'ID', defaultValue: model.ID, render: <Input type="hidden" /> },
+            { title: '提交意见', render: parent.Content },
             { title: '意见', name: 'Content', render: <Input type="textarea" autosize={{ minRows: 2, maxRows: 6 }} /> },
             {
                 title: '结果', name: 'Result', defaultValue: "1",

@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
-import { Button, Table, Tag,  Modal } from 'antd'
+import { Button, Table, Tag, Modal } from 'antd'
 import moment from 'moment'
 import EditModal from './_edit_sub_task'
 import SubTaskCheckModal from './_sub_task_check'
 import SubTaskSubmitModal from './_sub_task_submit'
+import SubTaskFlowModal from './_sub_task_flow_modal'
 import TodoEditModal from './_edit_todo'
 import api from '../../models/api'
 import auth from '../../models/auth'
@@ -12,7 +13,7 @@ import auth from '../../models/auth'
 class SubTaskList extends Component {
     state = {
         task: this.props.task,
-        flowData: this.props.flowData,
+        flowData: { Nodes: [] },
         canViewAllSubTasks: this.props.canViewAllSubTasks,
         canAddSubTask: this.props.canAddSubTask,
         list: [],
@@ -24,12 +25,22 @@ class SubTaskList extends Component {
     }
 
     loadData = () => {
+        if (!this.state.loading) {
+            this.setState({ loading: true })
+        }
         const taskId = this.state.task.ID
         api.Task.SubTaskList(taskId, json => {
             let roots = json.filter(e => e.ParentId === 0);
             roots = roots.map(node => this.buildTreeData(node, json)).filter(e => this.canViewSubTask(e))
-            this.setState({ list: roots, loading: false })
-        })
+            api.FlowData.Model(this.props.flowdataId, taskId, data => {
+                console.log(roots)
+                this.setState({
+                    list: roots,
+                    loading: false,
+                    flowData: data.flowData
+                })
+            })
+        });
     }
 
     handleUpdateStatus = (item) => {
@@ -63,7 +74,7 @@ class SubTaskList extends Component {
             }
         }
         if (!result) {
-            result = this.state.flowData.Nodes.find(e => auth.isCurrentUser(e.UserId))
+            result = this.state.flowData.Nodes.find(e => auth.isCurrentUser(e.UserId) && e.ExtendId === subTask.ID)
         }
         return result;
     }
@@ -125,32 +136,48 @@ class SubTaskList extends Component {
                 }
                 if (auth.isCurrentUser(subTask.CreatorId)) {
                     return <span>
+                        {subTask.IsMaster && this.state.canAddSubTask ? <EditModal
+                            trigger={<Button type="primary" icon="plus">协办</Button>}
+                            model={{ TaskId: subTask.TaskId, ParentId: subTask.ID, }}
+                            list={this.state.list}
+                            onSubmit={this.loadData}
+                        /> : null}
                         <EditModal
                             model={subTask}
                             list={this.state.list}
-                            trigger={<Button icon="edit">修改</Button>}
+                            trigger={<Button icon="edit"></Button>}
                             onSubmit={this.loadData}
                         />
-                        <Button icon="delete" onClick={() => this.handleDeleteSubTask(subTask)}>删除</Button>
+                        <Button icon="delete" onClick={() => this.handleDeleteSubTask(subTask)}></Button>
                     </span>
                 }
                 break;
             case 2:
-                return "已完成";
             case 1:
-                var list = this.state.flowData.Nodes || [];
-                let checkNodeData = list.sort((a, b) => a.ID < b.ID).find(e => !e.Submited && e.ExtendId === subTask.ID);
-                if (checkNodeData) {
-                    return <SubTaskCheckModal
+                let list = this.state.flowData.Nodes.sort((a, b) => a.ID < b.ID);
+                let logs = list.filter(e => e.ExtendId === subTask.ID)
+                let checkNodeData = list.find(e => !e.Submited && e.ExtendId === subTask.ID && auth.isCurrentUser(e.UserId));
+                let parentNodeData = checkNodeData ? list.find(e => e.ID === checkNodeData.ParentId) : null
+                return <span>
+                    <SubTaskFlowModal list={logs}
+                        trigger={<Button>审核记录</Button>}
+                    />
+                    {checkNodeData ? <SubTaskCheckModal
                         model={checkNodeData}
+                        parent={parentNodeData}
                         trigger={<Button>审核</Button>}
                         onSubmit={this.loadData}
-                    />
-                }
-                break;
+                    /> : null}
+                </span>
             default:
                 return null;
         }
+    }
+
+    contentRender = (text, item) => {
+        return <div style={{ paddingLeft: item.ParentId > 0 ? '30px' : '0' }}>
+            {text.split('\n').map((item, key) => <span key={key}>{item}<br /></span>)}
+        </div>
     }
 
     expandedRowRender = (subTask) => {
@@ -204,7 +231,7 @@ class SubTaskList extends Component {
             <div>
                 {this.state.canAddSubTask ?
                     <EditModal
-                        trigger={<Button type="primary" icon="plus">添加子任务</Button>}
+                        trigger={<Button type="primary" icon="plus">添加任务</Button>}
                         model={{ TaskId: taskId }}
                         list={this.state.list}
                         onSubmit={this.loadData}
@@ -214,6 +241,9 @@ class SubTaskList extends Component {
                     loading={this.state.loading}
                     indentSize={0}
                     defaultExpandAllRows={true}
+                    dataSource={this.state.list}
+                    pagination={false}
+                    expandedRowRender={this.expandedRowRender}
                     columns={[
                         {
                             title: '状态', dataIndex: 'Completed', width: 90,
@@ -233,27 +263,24 @@ class SubTaskList extends Component {
                         },
                         {
                             title: '任务目标', dataIndex: 'Content',
-                            render: (text, item) => <div style={{ paddingLeft: item.ParentId > 0 ? '30px' : '0' }}>{text.split('\n').map((item, key) => <span key={key}>{item}<br /></span>)}</div>
+                            render: this.contentRender
                         },
                         {
-                            title: '科室', width: 180,
+                            title: '科室', width: 150,
                             render: (text, item) => <span>
                                 {item.IsMaster ? "[主]" : "[协]"}
                                 {item.ToDepartmentName}
                             </span>
                         },
-                        { title: '责任人', width: 100, render: (text, item) => item.ToUserName || '未指派' },
-                        { title: '创建时间', width: 160, dataIndex: 'CreateTime', render: (text) => text ? moment(text).format('ll') : '' },
-                        { title: '计划完成时间', width: 160, dataIndex: 'ScheduleDate', render: (text) => text ? moment(text).format('ll') : '' },
+                        { title: '责任人', width: 80, render: (text, item) => item.ToUserName || '未指派' },
+                        { title: '创建时间', width: 120, dataIndex: 'CreateTime', render: (text) => text ? moment(text).format('ll') : '' },
+                        { title: '计划完成时间', width: 120, dataIndex: 'ScheduleDate', render: (text) => text ? moment(text).format('ll') : '' },
                         {
-                            title: '操作', width: 300, render: (text, item) => <span>
+                            title: '操作', width: 100, render: (text, item) => <span>
                                 {this.getButtons(item)}
                             </span>
                         }
                     ]}
-                    dataSource={this.state.list}
-                    pagination={false}
-                    expandedRowRender={this.expandedRowRender}
                 />
             </div>
         )

@@ -23,7 +23,11 @@ class SubTaskSubmitModal extends Component {
     getItems = (model) => {
         var items = [
             { name: 'ID', defaultValue: model.ID, render: <Input type="hidden" /> },
-            { title: '说明', name: 'Content', render: <Input type="textarea" autosize={{ minRows: 2, maxRows: 6 }} /> }
+            {
+                title: '说明', name: 'Content',
+                rules: [{ required: true, message: '请填写任务完成说明' }],
+                render: <Input type="textarea" autosize={{ minRows: 2, maxRows: 6 }} />
+            }
         ]
         if (model.IsMaster) {
             items.push({
