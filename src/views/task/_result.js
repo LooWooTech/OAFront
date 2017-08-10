@@ -71,7 +71,7 @@ class ResultTab extends Component {
 
     getLDPSRender = () => {
         let model = this.state.flowData.Nodes.sort((a, b) => a.ID < b.ID).find(e => e.FlowNodeName.indexOf('局领导') > -1);
-        return model.Result === null ? null : this.getFlowNodeRender(model)
+        return model ? model.Result === null ? null : this.getFlowNodeRender(model) : null
     }
 
     getFlowNodeRender = (model) => model ? <div className="flowNode">
@@ -163,10 +163,10 @@ class ResultTab extends Component {
                                                 {item.ToDepartmentName}
                                             </span>
                                         },
-                                        { title: '责任人', width: 100, render: (text, item) => item.ToUserName || '未指派' },
-                                        { title: '创建时间', width: 160, dataIndex: 'CreateTime', render: (text) => text ? moment(text).format('ll') : '' },
-                                        { title: '计划完成时间', width: 160, dataIndex: 'ScheduleDate', render: (text) => text ? moment(text).format('ll') : '' },
-                                        { title: '提交完成时间', width: 160, dataIndex: 'UpdateTime', render: (text) => text ? moment(text).format('ll') : '' },
+                                        { title: '责任人', width: 80, render: (text, item) => item.ToUserName || '未指派' },
+                                        { title: '创建时间', width: 120, dataIndex: 'CreateTime', render: (text) => text ? moment(text).format('ll') : '' },
+                                        { title: '计划完成时间', width: 120, dataIndex: 'ScheduleDate', render: (text) => text ? moment(text).format('ll') : '' },
+                                        { title: '提交完成时间', width: 120, dataIndex: 'UpdateTime', render: (text) => text ? moment(text).format('ll') : '' },
 
                                     ]}
                                     dataSource={this.state.list}

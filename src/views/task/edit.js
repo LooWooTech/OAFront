@@ -90,7 +90,7 @@ export default class TaskEdit extends Component {
                     <Tabs.TabPane tab="任务列表" key="2">
                         <SubTaskTab
                             task={extendModel}
-                            flowData={model.FlowData}
+                            flowDataId={model.FlowDataId}
                             canViewAllSubTasks={this.state.canViewAllSubTasks}
                             canAddSubTask={this.state.canAddSubTask}
                         />

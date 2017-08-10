@@ -13,7 +13,7 @@ class SharedModal extends Component {
     }
 
     handleSubmit = () => {
-        if (!this.props.onSubmit()) {
+        if (this.props.onSubmit && !this.props.onSubmit()) {
             this.hideModal()
         }
     }
@@ -27,6 +27,8 @@ class SharedModal extends Component {
                 </span>
                 <Modal title={this.props.title || ''}
                     visible={this.state.visible}
+                    width={this.props.width}
+                    height={this.props.height}
                     onOk={this.handleSubmit}
                     onCancel={this.hideModal}
                 >
@@ -39,6 +41,5 @@ class SharedModal extends Component {
 SharedModal.propTypes = {
     trigger: PropTypes.element.isRequired,
     children: PropTypes.element.isRequired,
-    onSubmit: PropTypes.func.isRequired
 }
 export default SharedModal
