@@ -30,6 +30,7 @@ export default class AttendanceIndex extends React.Component {
     }
 
     componentWillUnmount() {
+        api.Abort();
         clearInterval(this.state.intervalId);
     }
 

@@ -142,7 +142,18 @@ module.exports = {
             invokeApi('FormInfo/save', HTTP_POST, data, cb, err);
         },
         Model: (id, cb, err) => {
-            invokeApi('FormInfo/model?id=' + id, HTTP_GET, null, cb, err);
+            invokeApi('FormInfo/model?id=' + id, HTTP_GET, null, data => {
+                if (data.flowNodeData) {
+                    data.flowNodeData = data.model.FlowData.Nodes.find(n => n.$id === data.flowNodeData.$ref);
+                }
+
+                if (data.freeFlowNodeData) {
+                    data.freeFlowNodeData = data.flowNodeData.FreeFlowData.Nodes.find(n => n.$id === data.freeFlowNodeData.$ref);
+                }
+                if (cb) {
+                    cb(data)
+                }
+            }, err);
         },
         Delete: (id, cb, err) => {
             invokeApi('FormInfo/delete?id=' + id, HTTP_DELETE, null, cb, err);

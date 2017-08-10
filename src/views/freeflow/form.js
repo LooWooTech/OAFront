@@ -30,8 +30,8 @@ class FreeFlowForm extends Component {
                 render: <Input type="textarea" autosize={{ minRows: 2, maxRows: 6 }} />
             },
             {
-                title: '选择发送人员',
-                tips: '选择发送人员，则表示将此条数据提交给他人审阅；不选择代表当前审阅结束',
+                title: '转发',
+                tips: '请选择转发收件人，不选择则代表不转发',
                 render:
                 <SelectUser
                     ref="selectUserForm"

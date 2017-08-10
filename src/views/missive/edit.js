@@ -7,8 +7,6 @@ import FlowListTab from '../flowdata/list';
 import FileListTab from '../file/info_file_list';
 import ResultTab from './_result'
 
-import SubmitFlowModal from '../flowdata/form';
-import SubmitFreeFlowModal from '../freeflow/form';
 import utils from '../../utils';
 
 export default class MissiveEdit extends Component {
@@ -40,13 +38,6 @@ export default class MissiveEdit extends Component {
         }
         else {
             api.FormInfo.Model(id, data => {
-                if (data.flowNodeData) {
-                    data.flowNodeData = data.model.FlowData.Nodes.find(n => n.$id === data.flowNodeData.$ref);
-                }
-
-                if (data.freeFlowNodeData) {
-                    data.freeFlowNodeData = data.flowNodeData.FreeFlowData.Nodes.find(n => n.$id === data.freeFlowNodeData.$ref);
-                }
                 this.setState({ ...data });
             });
             api.Missive.Model(id, data => {
@@ -86,6 +77,12 @@ export default class MissiveEdit extends Component {
         })
     }
 
+    handleSubmitFlow = () => {
+        //如果当前提交的是局长、副局长，则将公文标记为重要
+
+        this.loadData();
+    }
+
     handleSubmitFreeFlow = () => {
         if (confirm("你确定提交此次传阅吗？")) {
             let flowNodeData = this.state.flowNodeData
@@ -111,29 +108,12 @@ export default class MissiveEdit extends Component {
                 <Button.Group>
                     {this.state.canEdit ?
                         <Button onClick={this.handleSave} type="primary" icon="save" htmlType="submit">保存</Button>
-                        : null}
-                    {this.state.canSubmitFlow ?
-                        <SubmitFlowModal
-                            flowDataId={model.FlowDataId}
-                            callback={this.loadData}
-                            infoId={model.ID}
-                            trigger={<Button type="success" icon="check" htmlType="button">提交流程</Button>}
-                        />
-                        : null}
+                        : null
+                    }
                     {this.state.canSubmitFreeFlow && this.state.freeFlowNodeData && !this.state.freeFlowNodeData.UpdateTime ?
                         <Button icon="check" type="primary" onClick={this.handleSubmitFreeFlow}>已阅</Button>
                         : null
                     }
-                    {this.state.canSubmitFreeFlow ?
-                        <SubmitFreeFlowModal
-                            callback={this.loadData}
-                            canSubmit={true}
-                            infoId={model.ID}
-                            flowNodeData={this.state.flowNodeData}
-                            record={this.state.freeFlowNodeData}
-                            trigger={<Button type="danger" icon="retweet" htmlType="button">自由发送</Button>}
-                        />
-                        : null}
                     {this.state.canCompleteFreeFlow ? <Button type="danger" icon="close" onClick={this.handleCloseFreeFlow}>结束自由发送</Button> : null}
                     {this.state.canCancel ? <Button type="danger" icon="rollback" htmlType="button" onClick={this.handleCancel}>撤销</Button> : null}
                     <Button onClick={utils.GoBack} type="" icon="arrow-left" htmlType="button">返回</Button>
@@ -146,15 +126,21 @@ export default class MissiveEdit extends Component {
                 <Tabs.TabPane tab="文档预览" key="2">
                     <ContentTab missive={missive} />
                 </Tabs.TabPane>
-                {showFiles ?
-                    <Tabs.TabPane tab="附件清单" key="5">
-                        <FileListTab infoId={model.ID} formId={model.FormId} canEdit={this.state.canEdit} inline={false} />
+                {showFlow ?
+                    <Tabs.TabPane tab="意见表" key="3">
+                        <FlowListTab
+                            flowData={model.FlowData}
+                            canSubmitFlow={this.state.canSubmitFlow}
+                            canSubmitFreeFlow={this.state.canSubmitFreeFlow}
+                            canComplete={this.state.canComplete}
+                            canBack={this.state.canBack}
+                        />
                     </Tabs.TabPane>
                     : null
                 }
-                {showFlow ?
-                    <Tabs.TabPane tab="审核流程" key="3">
-                        <FlowListTab data={model.FlowData} />
+                {showFiles ?
+                    <Tabs.TabPane tab="附件清单" key="5">
+                        <FileListTab infoId={model.ID} formId={model.FormId} canEdit={this.state.canEdit} inline={false} />
                     </Tabs.TabPane>
                     : null
                 }

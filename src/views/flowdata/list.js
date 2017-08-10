@@ -1,69 +1,100 @@
-import React, { Component } from 'react';
-import { Timeline, Icon, Tree, Badge } from 'antd';
-const TreeNode = Tree.TreeNode
-import moment from 'moment';
+import React, { Component } from 'react'
+import { Table, Badge } from 'antd'
+import moment from 'moment'
+import auth from '../../models/auth'
+import FlowNodeForm from './_form'
+import FreeFlowNodeForm from '../freeflow/_form'
 
 class FlowDataList extends Component {
-
-    getContent = content => content ? content.split('\n').map((str, key) => <span key={key}>{str}<br /></span>) : null;
-
-    getFreeList = freeflowData => {
-        let nodes = freeflowData.Nodes.filter(e => e.ParentId === 0)
-        return (
-            <div className="sub-timeline">
-                <Tree defaultExpandAll={true}>
-                    {nodes.map(node => this.getTreeNode(node, freeflowData.Nodes))}
-                </Tree>
-
-            </div>)
+    state = { loading: true }
+    componentWillMount() {
+        this.buildData();
     }
 
-    getTreeNode = (node, list) => {
-        let children = list.filter(e => e.ParentId === node.ID)
-        // let treeNodeTitle = <Popover
-        //     title={node.UpdateTime ? moment(node.UpdateTime).format('YYYY-MM-DD HH:mm') : ''}
-        //     content={node.Content || node.UpdateTime ? '阅' : ''}
-        //     trigger="hover">
-        //     <Tag color={node.UpdateTime ? 'green' : ''}>{node.Signature}</Tag>
-        // </Popover>
-        let treeNodeTitle = <div className="freeflow">
-            <span className="signature"><Badge status={node.UpdateTime ? 'success' : 'default'} />{node.Signature}</span>
-            <span className="datetime">{node.UpdateTime ? moment(node.UpdateTime).format('YYYY-MM-DD HH:mm') : ''}</span>
-            <div className="content">{node.Content || (node.UpdateTime ? '阅' : '')}</div>            
-            
-        </div>
-        if (children && children.length > 0) {
-            return <TreeNode title={treeNodeTitle} key={node.ID}>
-                {children.map(child => this.getTreeNode(child, list))}
-            </TreeNode>
+    buildData = () => {
+        let { flowData, canSubmitFlow, canSubmitFreeFlow, flowNodeData, freeFlowNodeData } = this.props;
+        let data = { flowData, canSubmitFlow, canSubmitFreeFlow }
+
+        data.list = flowData.Nodes.sort((a, b) => a.ID > b.ID);
+        data.infoId = flowData.InfoId;
+        let currentUser = auth.getUser();
+        if (canSubmitFlow) {
+            data.flowNodeData = flowData.Nodes.sort((a, b) => a.ID < b.ID).find(e => e.UserId === currentUser.ID);
         }
-        else {
-            return <TreeNode title={treeNodeTitle} key={node.ID} />
+        if (canSubmitFreeFlow) {
+            data.freeFlowNodeData = data.freeFlowNodeData || (data.flowNodeData && data.flowNodeData.FreeFlowData.Nodes.sort((a, b) => a.ID < b.ID).find(e => e.UserId === currentUser.ID))
         }
+        this.setState({ loading: false, ...data })
+    }
+
+    contentRender = (text, item) => text ? text.split('\n').map((str, key) => <span key={key}>{str}<br /></span>) : item.Result ? '同意' : null;
+
+    expandedRowRender = (item) => {
+        if (!item.FreeFlowData) return null;
+        let list = item.FreeFlowData.Nodes.filter(e => e.IsCc);
+        if (list.length === 0) return null;
+        return <Table
+            rowKey="ID"
+            showHeader={false}
+            dataSource={list}
+            pagination={false}
+            columns={[
+                { title: '收件人', dataIndex: 'Signature', width: 150, },
+                { title: '意见', dataIndex: 'Content', render: this.contentRender },
+                { title: '日期', dataIndex: 'UpdateTime', width: 150, render: (text, item) => text ? moment(text).format('ll') : null },
+                { title: '', width: 140 }
+            ]}
+        />
+    }
+
+    buildFreeFlowNodeTreeData = (node, list) => {
+        node.children = list.filter(e => e.ParentId === node.ID);
+        node.children.map(e => this.buildFreeFlowNodeTreeData(e, list))
+        return node;
+    }
+
+    //提交流程
+    handleSubmitFlow = (data) => {
+
     }
 
     render() {
-        const model = this.props.data;
-        if (!model) return null;
-        const list = model.Nodes;
-        if (list == null || list.length === 0) {
-            return <span>流程尚未开始</span>;
-        }
+        if (this.state.loading) return null;
         return (
-            <div style={{ padding: '20px', marginLeft: '20px' }}>
-                <Timeline>
-                    {list.sort((a, b) => a.ID > b.ID).map(item => {
-                        var color = item.Result === true ? 'green' : (item.Result === false ? 'red' : 'blue');
-                        var icon = color === 'green' ? 'check' : color === 'red' ? 'close' : 'clock-circle-o';
-                        return <Timeline.Item dot={<Icon type={icon} style={{ fontSize: '1rem' }} />} color={color} key={item.ID}>
-                            <span className="flownode-sign">{item.Signature}</span>
-                            （<span className="flownode-name">{item.FlowNodeName}</span>）
-                        <span className="flownode-datetime">{item.UpdateTime ? moment(item.UpdateTime).format('YYYY-MM-DD HH:mm') : ''}</span>
-                            <div className="flownode-content">{this.getContent(item.Content)}</div>
-                            {item.FreeFlowData ? this.getFreeList(item.FreeFlowData) : null}
-                        </Timeline.Item>
-                    })}
-                </Timeline>
+            <div>
+                <Table
+                    loading={this.state.loading}
+                    rowKey="ID"
+                    dataSource={this.state.list}
+                    pagination={false}
+                    defaultExpandAllRows={true}
+                    expandedRowRender={this.expandedRowRender}
+                    columns={[
+                        {
+                            title: '审核人', dataIndex: 'Signature', width: 150,
+                            render: (text, item) => <span>
+                                <Badge status={item.Result ? 'success' : item.Result === null ? 'processing' : 'error'} />
+                                {text}
+                            </span>
+                        },
+                        {
+                            title: '意见', dataIndex: 'Content',
+                            render: this.contentRender
+                        },
+                        {
+                            title: '审核日期', dataIndex: 'UpdateTime', width: 150,
+                            render: (text, item) => text ? moment(text).format('ll') : null
+                        },
+                        { title: '流程环节', dataIndex: 'FlowNodeName', width: 150 }
+                    ]}
+                />
+                {this.state.canSubmitFreeFlow && this.state.freeFlowNodeData ?
+                    <FreeFlowNodeForm />
+                    :
+                    this.state.canSubmitFlow && auth.isCurrentUser(this.state.flowNodeData.UserId) ?
+                        <FlowNodeForm {...this.props} onSubmit={this.handleSubmitFlow} />
+                        : null
+                }
             </div>
         )
     }
