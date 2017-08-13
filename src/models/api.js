@@ -206,8 +206,8 @@ module.exports = {
         }
     },
     FreeFlowData: {
-        Submit: (flowNodeDataId, infoId, toUserIds, data, cb, err) => {
-            invokeApi(`freeflowdata/submit?flowNodeDataId=${flowNodeDataId}&infoId=${infoId}&toUserIds=${toUserIds}`, HTTP_POST, data, cb, err);
+        Submit: (flowNodeDataId, infoId, toUserIds, ccUserIds, data, cb, err) => {
+            invokeApi(`freeflowdata/submit?flowNodeDataId=${flowNodeDataId}&infoId=${infoId}&toUserIds=${toUserIds}&ccUserIds=${ccUserIds}`, HTTP_POST, data, cb, err);
         },
         UserList: (flowNodeDataId, key, cb, err) => {
             invokeApi(`freeflowdata/userlist?flownodedataId=${flowNodeDataId}&key=${key}`, HTTP_GET, null, cb, err);
@@ -382,10 +382,10 @@ module.exports = {
             invokeApi('task/DeleteSubTask?id=' + subTaskId, HTTP_DELETE, null, cb, err);
         },
         SubmitSubTask: (data, cb, err) => {
-            invokeApi(`task/submitsubtask?id=${data.ID}&toUserId=${data.ToUserId}`, HTTP_POST, { content: data.Content ||'' }, cb, err)
+            invokeApi(`task/submitsubtask?id=${data.ID}&toUserId=${data.ToUserId}`, HTTP_POST, { content: data.Content || '' }, cb, err)
         },
         CheckSubTask: (data, cb, err) => {
-            invokeApi(`task/checksubtask?id=${data.ID}&result=${data.Result}`, HTTP_POST, { content: data.Content||'' }, cb, err);
+            invokeApi(`task/checksubtask?id=${data.ID}&result=${data.Result}`, HTTP_POST, { content: data.Content || '' }, cb, err);
         },
         CheckList: (taskId, userId, cb, err) => {
             invokeApi('task/checklist', HTTP_GET, { taskId, userId }, cb, err);

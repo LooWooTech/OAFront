@@ -211,8 +211,8 @@ class UserSelect extends Component {
         }
 
         return <Modal
-            title="选择人员"
-            trigger={<Button>选择人员</Button>}
+            title={this.props.title || "选择人员"}
+            trigger={this.props.trigger || <Button>选择人员</Button>}
             onSubmit={this.handleSubmit}
             children={<div>
                 <Row>
