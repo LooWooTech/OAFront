@@ -62,7 +62,7 @@ class UserSelect extends Component {
     }
 
     filterUsers = (users) => {
-        users = users.sort((a, b) => a.Sort > b.Sort)
+        users = users.sort((a, b) => b.Sort - a.Sort)
         let key = this.state.key
         let titleId = this.state.titleId
         if (key) {
@@ -103,7 +103,7 @@ class UserSelect extends Component {
             }
             return d
         }))
-        return departments.sort((a, b) => a.Sort > b.Sort);
+        return departments.sort((a, b) => a.Sort - b.Sort);
     }
 
     getRootTreeNode = () => {
@@ -114,13 +114,12 @@ class UserSelect extends Component {
     }
 
     getNodeTreeNode = (node, departments) => {
-        let children = departments.filter(e => e.ParentId === node.ID)
-        let users = this.state.users.filter(user => user.Departments.find(d => d.ID === node.ID))
-            .sort((a, b) => a.Sort < b.Sort)
+        let children = departments.filter(e => e.ParentId === node.ID).sort((a, b) => a.Sort - b.Sort)
+        let users = this.state.users.filter(user => user.Departments.find(d => d.ID === node.ID));
         return (
             <TreeNode key={'d_' + node.ID} title={node.Name} isLeaf={false}>
                 {children.map(child => this.getNodeTreeNode(child, departments))}
-                {users.map(user => <TreeNode title={user.RealName} key={user.ID} isLeaf={true} />)}
+                {users.sort((a, b) => b.Sort - a.Sort).map(user => <TreeNode title={user.RealName} key={user.ID} isLeaf={true} />)}
             </TreeNode>
         )
     }

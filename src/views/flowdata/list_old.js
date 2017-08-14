@@ -52,7 +52,7 @@ class FlowDataList extends Component {
         return (
             <div style={{ padding: '20px', marginLeft: '20px' }}>
                 <Timeline>
-                    {list.sort((a, b) => a.ID > b.ID).map(item => {
+                    {list.sort((a, b) => b.ID - a.ID).map(item => {
                         var color = item.Result === true ? 'green' : (item.Result === false ? 'red' : 'blue');
                         var icon = color === 'green' ? 'check' : color === 'red' ? 'close' : 'clock-circle-o';
                         return <Timeline.Item dot={<Icon type={icon} style={{ fontSize: '1rem' }} />} color={color} key={item.ID}>

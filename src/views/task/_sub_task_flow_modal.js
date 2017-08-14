@@ -4,7 +4,7 @@ import moment from 'moment'
 import Modal from '../shared/_modal'
 class SubTaskFlowModal extends Component {
     render() {
-        const list = (this.props.list || []).sort((a, b) => a.ID > b.ID)
+        const list = (this.props.list || []).sort((a, b) => a.ID - b.ID)
         return (
             <Modal
                 title="审核记录"

@@ -62,7 +62,7 @@ class ResultTab extends Component {
     }
 
     getTaskNameRender = (model) => {
-        let checkLog = model.Status === 2 ? this.state.flowData.Nodes.sort((a, b) => a.ID < b.ID).find(e => e.Result && e.ExtendId === model.ID) : null;
+        let checkLog = model.Status === 2 ? this.state.flowData.Nodes.sort((a, b) => a.ID - b.ID).find(e => e.Result && e.ExtendId === model.ID) : null;
         return <div style={{ paddingLeft: model.ParentId > 0 ? '30px' : '0' }}>
             {model.Content.split('\n').map((item, key) => <span key={key}>{item}<br /></span>)}
             {checkLog ? <Alert message={this.getFlowNodeRender(checkLog)} type={checkLog.Result ? "success" : "error"} /> : null}
@@ -70,7 +70,7 @@ class ResultTab extends Component {
     }
 
     getLDPSRender = () => {
-        let model = this.state.flowData.Nodes.sort((a, b) => a.ID < b.ID).find(e => e.FlowNodeName.indexOf('局领导') > -1);
+        let model = this.state.flowData.Nodes.sort((a, b) => a.ID - b.ID).find(e => e.FlowNodeName.indexOf('局领导') > -1);
         return model ? model.Result === null ? null : this.getFlowNodeRender(model) : null
     }
 

@@ -153,7 +153,7 @@ class SubTaskList extends Component {
                 break;
             case 2:
             case 1:
-                let list = this.state.flowData.Nodes.sort((a, b) => a.ID < b.ID);
+                let list = this.state.flowData.Nodes.sort((a, b) => a.ID - b.ID);
                 let logs = list.filter(e => e.ExtendId === subTask.ID)
                 let checkNodeData = list.find(e => !e.Submited && e.ExtendId === subTask.ID && auth.isCurrentUser(e.UserId));
                 let parentNodeData = checkNodeData ? list.find(e => e.ID === checkNodeData.ParentId) : null

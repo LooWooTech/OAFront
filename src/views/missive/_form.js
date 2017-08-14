@@ -12,6 +12,15 @@ class MissiveEditForm extends React.Component {
         api.Missive.RedTitleList(data => {
             this.setState({ redTitles: data })
         })
+        let model = this.props.model || {}
+        this.updateFileLink(model.ContentId)
+    }
+
+    updateFileLink = (fileId) => {
+        if (!fileId) return null;
+        api.File.WordEditUrl(fileId, json => {
+            this.setState({ fileLink: json })
+        });
     }
 
     handleSubmit = () => {
@@ -48,6 +57,7 @@ class MissiveEditForm extends React.Component {
             alert(response.Message)
             return;
         }
+        this.updateFileLink(response.ID)
         this.setState({ upload: response })
     }
 
@@ -115,6 +125,11 @@ class MissiveEditForm extends React.Component {
                 </Upload.Dragger>
                 {content.ID ?
                     <span>
+                        {this.state.fileLink ?
+                            <span>
+                            <a href={this.state.fileLink} target="_blank"><Icon type="eye" /> 预览文档</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                            </span>
+                            : null}
                         <a href={api.File.DownloadUrl(content.ID)} target="_blank"><Icon type="download" />&nbsp;下载</a>
                         {disabled ? null :
 
@@ -174,7 +189,6 @@ class MissiveEditForm extends React.Component {
             // },
         ];
         if (formId === api.Forms.ReceiveMissive.ID) {
-            console.log(model.JJ_DJ || 0)
             items = items.concat([
                 numberControl,
                 {

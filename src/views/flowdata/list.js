@@ -86,7 +86,7 @@ class FlowDataList extends Component {
                 <Table
                     loading={this.state.loading}
                     rowKey="ID"
-                    dataSource={this.state.flowData.Nodes.sort((a, b) => a.ID > b.ID)}
+                    dataSource={this.state.flowData.Nodes.sort((a, b) => a.ID - b.ID)}
                     pagination={false}
                     defaultExpandAllRows={true}
                     expandedRowRender={this.expandedRowRender}

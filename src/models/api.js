@@ -109,7 +109,10 @@ module.exports = {
             return `${apiHost}file/upload?infoId=${infoId}&id=${fileId}&name=${name}&inline=${inline}`;
         },
         PreviewUrl: (infoId) => {
-            return `${apiHost}file/GetPreviewFile?infoId=${infoId}`;
+            return `${apiHost}word/GetPreviewFile?infoId=${infoId}`;
+        },
+        WordEditUrl: (fileId, cb, err) => {
+            invokeApi(`File/WordEditUrl?id=${fileId}`, HTTP_GET, null, cb, err);
         },
         EditUrl: (fileId) => {
             return `${host}word/get/?id=${fileId}`;
