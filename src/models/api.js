@@ -109,23 +109,15 @@ module.exports = {
             return `${apiHost}file/upload?infoId=${infoId}&id=${fileId}&name=${name}&inline=${inline}`;
         },
         PreviewUrl: (infoId) => {
-            return `${apiHost}word/GetPreviewFile?infoId=${infoId}`;
+            return `${host}attachment/preview?id=${infoId}`;
         },
-        WordEditUrl: (fileId, cb, err) => {
-            invokeApi(`File/WordEditUrl?id=${fileId}`, HTTP_GET, null, cb, err);
-        },
-        EditUrl: (fileId) => {
-            return `${host}word/get/?id=${fileId}`;
-        },
+
         List: (infoId, inline, cb, err) => {
             var data = { infoId, page: 1, rows: 100 };
             if (inline !== undefined) {
                 data.inline = inline;
             }
             invokeApi('file/list', HTTP_GET, data, cb, err);
-        },
-        Upload: (fileId, cb, err) => {
-            invokeApi('file/upload', HTTP_PUT, fileId, cb, err);
         },
         Delete: (fileId, cb, err) => {
             invokeApi('file/delete?id=' + fileId, HTTP_DELETE, null, cb, err);

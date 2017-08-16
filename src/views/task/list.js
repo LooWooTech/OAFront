@@ -18,11 +18,12 @@ class TaskList extends Component {
         data: []
     };
 
-    loadData = (page, searchKey = '', status) => {
+    loadData = (query) => {
+        query = query || this.props.location.query || {}
         let parameter = {
-            status: status || this.state.status || '',
-            searchKey: searchKey || this.state.searchKey,
-            page: page || this.state.page.current || 1,
+            status: query.status || this.state.status || '',
+            searchKey: query.searchKey || this.state.searchKey || '',
+            page: query.page || this.state.page.current || 1,
             rows: this.state.page.pageSize
         };
 
@@ -39,10 +40,8 @@ class TaskList extends Component {
     };
 
     componentWillReceiveProps(nextProps) {
-        const nextStatus = nextProps.location.query.status
-
-        if (nextStatus !== this.props.location.query.status) {
-            this.loadData(1, this.state.searchKey, nextStatus);
+        if (nextProps.location.search !== this.props.location.search) {
+            this.loadData(nextProps.location.query);
         }
     }
 
@@ -51,8 +50,14 @@ class TaskList extends Component {
     }
 
     handleSearch = searchKey => {
-        this.loadData(this.state.page.current, searchKey);
-    };
+        let url = `/task/?status=${this.state.status}&searchKey=${searchKey}&page=${this.state.page.current}`
+        utils.Redirect(url)
+    }
+
+    handlePageChange = page => {
+        let url = `/task/?status=${this.state.status}&searchKey=${this.state.searchKey}&page=${page}`
+        utils.Redirect(url)
+    }
 
     render() {
 
@@ -86,9 +91,7 @@ class TaskList extends Component {
                     dataSource={this.state.data}
                     pagination={{
                         size: 5, ...this.state.page,
-                        onChange: (page, pageSize) => {
-                            this.loadData(this.state.formId, page)
-                        },
+                        onChange: this.handlePageChange,
                     }}
                 />
             </div>

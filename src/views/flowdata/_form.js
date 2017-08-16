@@ -7,13 +7,15 @@ import api from '../../models/api'
 
 class FlowNodeForm extends Component {
     state = {
-        result: true, 
-        toUser: {}, 
+        result: true,
+        toUser: {},
         ...this.props,
         itemLayout: this.props.itemLayout || { labelCol: { span: 2 }, wrapperCol: { span: 16 } }
     }
 
     handleSubmit = () => {
+        this.setState({ submitting: true })
+        console.log(this.state.submitting)
         var form = this.refs.form;
         form.validateFields((err, data) => {
             data.ToUserId = this.state.toUser.ID || 0
@@ -24,6 +26,7 @@ class FlowNodeForm extends Component {
                 }
                 if (!data.ToUserId) {
                     message.error("请先选择发送人")
+                    this.setState({ submitting: false })
                     return false
                 }
             }
@@ -31,13 +34,14 @@ class FlowNodeForm extends Component {
             if (!data.Result && !confirm('你确定要退回吗？')) return false
 
             api.FlowData.Submit(data.ToUserId, data.InfoId, data, json => {
-                this.setState({ visible: false })
-                message.success("提交成功")
+                this.setState({ visible: false, submitting: false }, () => {
+                    message.success("提交成功")
 
-                const callback = this.props.onSubmit
-                if (callback) {
-                    callback(json)
-                }
+                    const callback = this.props.onSubmit
+                    if (callback) {
+                        callback(json)
+                    }
+                })
             })
 
         });
@@ -103,7 +107,7 @@ class FlowNodeForm extends Component {
         if (!this.props.trigger) {
             items.push({
                 render: <Row><Col offset={this.state.itemLayout.labelCol.span}>
-                    <Button type="primary" onClick={this.handleSubmit}>提交</Button>
+                    <Button type="primary" onClick={this.handleSubmit} disabled={this.state.submitting}>提交</Button>
                 </Col></Row>,
             });
         }

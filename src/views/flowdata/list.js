@@ -17,10 +17,9 @@ class FlowDataList extends Component {
         this.loadData();
     }
 
-    loadData = () => {
-        api.FlowData.Model(this.state.flowDataId, this.state.infoId, data => {
-            this.setState({ loading: false, ...data })
-        })
+    loadData = (props) => {
+        props = props || this.props
+        this.setState({ loading: false, ...props })
     }
 
     contentRender = (text, item) => {
@@ -55,6 +54,11 @@ class FlowDataList extends Component {
             this.props.onSubmit(data);
         }
     }
+
+    componentWillReceiveProps(nextProps) {
+        this.loadData(nextProps)
+    }
+
 
     render() {
         if (this.state.loading) return null;
@@ -112,9 +116,13 @@ class FlowDataList extends Component {
         )
     }
 }
+
 FlowDataList.propTypes = {
     infoId: PropTypes.number.isRequired,
-    flowDataId: PropTypes.number.isRequired,
+    flowData: PropTypes.object.isRequired,
+    flowNodeData: PropTypes.object.isRequired,
+    canSubmitFlow: PropTypes.bool.isRequired,
+    canSubmitFreeFlow: PropTypes.bool.isRequired,
     onSubmit: PropTypes.func,
 }
 export default FlowDataList

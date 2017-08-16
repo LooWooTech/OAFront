@@ -6,7 +6,6 @@ class FreeFlowFormModal extends Component {
     state = {}
     handleSubmit = () => {
         this.refs.form.submit(data => {
-            console.log(this.props.onSubmit)
             if (this.props.onSubmit) {
                 this.props.onSubmit(data)
             }
@@ -24,10 +23,10 @@ class FreeFlowFormModal extends Component {
                 children={<Form {...this.props}
                     ref="form"
                     itemLayout={{ labelCol: { span: 6 }, wrapperCol: { span: 14 } }}
-                    onSubmit={this.handleSubmit}
+                    isModal={true}
                 />}
-                trigger={this.props.trigger}
                 onSubmit={this.handleSubmit}
+                trigger={this.props.trigger}
             />
 
         )

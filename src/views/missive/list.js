@@ -20,12 +20,13 @@ export default class MissiveList extends React.Component {
         data: []
     };
 
-    loadData = (formId, page, searchKey = '', status) => {
+    loadData = (formId, query) => {
+        query = query || this.props.query || {}
         let parameter = {
             formId: formId || this.state.formId,
-            status: status || this.state.status,
-            searchKey: searchKey,
-            page: page || this.state.page.current || 1,
+            status: query.status || this.state.status,
+            searchKey: query.searchKey || '',
+            page: query.page || this.state.page.current || 1,
             rows: this.state.page.pageSize
         };
 
@@ -43,11 +44,9 @@ export default class MissiveList extends React.Component {
     };
 
     componentWillReceiveProps(nextProps) {
-        const nextStatus = nextProps.location.query.status
         const nextFormId = nextProps.params.formId
-
-        if (nextStatus !== this.props.location.query.status || nextFormId !== this.props.params.formId) {
-            this.loadData(nextFormId, 1, '', nextStatus);
+        if (nextFormId !== this.props.params.formId || nextProps.location.search !== this.props.location.search) {
+            this.loadData(nextFormId, nextProps.location.query);
         }
     }
 
@@ -59,10 +58,15 @@ export default class MissiveList extends React.Component {
         api.Abort();
     }
 
-
     handleSearch = searchKey => {
-        this.loadData(this.state.formId, this.state.page.current, searchKey);
+        let url = `/missive/list/${this.state.formId}/?status=${this.state.status}&searchKey=${searchKey}&page=${this.state.page.current}`
+        utils.Redirect(url)
     };
+
+    handlePageChange = page => {
+        let url = `/missive/list/${this.state.formId}/?status=${this.state.status}&searchKey=${this.state.searchKey}&page=${page}`
+        utils.Redirect(url)
+    }
 
     handleDelete = item => {
         api.FormInfo.Delete(item.ID, () => {
@@ -120,9 +124,7 @@ export default class MissiveList extends React.Component {
                     dataSource={this.state.data}
                     pagination={{
                         size: 5, ...this.state.page,
-                        onChange: (page, pageSize) => {
-                            this.loadData(this.state.formId, page, this.state.searchKey)
-                        },
+                        onChange: this.handlePageChange,
                     }}
                 />
             </div>

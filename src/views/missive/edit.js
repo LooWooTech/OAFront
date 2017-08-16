@@ -56,7 +56,9 @@ export default class MissiveEdit extends Component {
 
     handleCancel = e => {
         if (!confirm('你确定要撤销流程吗?')) return false;
-        api.FlowData.Cancel(this.state.model.ID, this.loadData);
+        api.FlowData.Cancel(this.state.model.ID, () => {
+            this.loadData();
+        });
     };
 
     handleCloseFreeFlow = () => {
@@ -156,7 +158,11 @@ export default class MissiveEdit extends Component {
                     <Tabs.TabPane tab="审核流程" key="3">
                         <FlowListTab
                             infoId={model.ID}
-                            flowDataId={model.FlowDataId}
+                            flowData={model.FlowData}
+                            flowNodeData={this.state.flowNodeData}
+                            freeFlowNodeData={this.state.freeFlowNodeData}
+                            canSubmitFlow={this.state.canSubmitFlow}
+                            canSubmitFreeFlow={this.state.canSubmitFreeFlow}
                             onSubmit={this.handleSubmitFlow}
                         />
                     </Tabs.TabPane>

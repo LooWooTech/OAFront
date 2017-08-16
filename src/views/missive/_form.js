@@ -12,17 +12,8 @@ class MissiveEditForm extends React.Component {
         // api.Missive.RedTitleList(data => {
         //     this.setState({ redTitles: data })
         // })
-        let model = this.props.model || {}
-        console.log("cwm:", model)
-        this.updateFileLink(model.ContentId)
     }
 
-    updateFileLink = (fileId) => {
-        if (!fileId) return null;
-        api.File.WordEditUrl(fileId, json => {
-            this.setState({ fileLink: json })
-        });
-    }
 
     handleSubmit = () => {
         this.refs.form.validateFields((err, values) => {
@@ -58,7 +49,6 @@ class MissiveEditForm extends React.Component {
             alert(response.Message)
             return;
         }
-        this.updateFileLink(response.ID)
         this.setState({ upload: response })
     }
 
@@ -92,7 +82,7 @@ class MissiveEditForm extends React.Component {
 
     getItems = () => {
         const formId = parseInt(this.props.formId, 10)
-        
+
         const model = this.props.model || {}
         const content = this.state.upload || model.Content || {}
         const disabled = this.props.disabled
@@ -126,13 +116,9 @@ class MissiveEditForm extends React.Component {
                 </Upload.Dragger>
                 {content.ID ?
                     <span style={{ fontSize: '1.2rem', fontWeight: 500 }}>
-                        {this.state.fileLink ?
-                            <span>
-                                <a href={this.state.fileLink} target={content.IsWordFile ? '' : '_blank'}>
-                                    <Icon type="eye" /> 预览文档</a>
-                                &nbsp;&nbsp;&nbsp;&nbsp;
-                            </span>
-                            : null}
+                        <a href={api.File.PreviewUrl(content.ID)} target={content.IsWordFile ? '' : '_blank'}>
+                            <Icon type="eye" /> 预览文档</a>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
                         <a href={api.File.DownloadUrl(content.ID)} target="_blank">
                             <Icon type="download" />&nbsp;下载
                         </a>
