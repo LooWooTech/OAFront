@@ -4,7 +4,7 @@ import moment from 'moment'
 import Modal from '../shared/_modal'
 class SubTaskFlowModal extends Component {
     render() {
-        const list = this.props.list || []
+        const list = (this.props.list || []).sort((a, b) => a.ID - b.ID)
         return (
             <Modal
                 title="审核记录"
@@ -14,6 +14,7 @@ class SubTaskFlowModal extends Component {
                     rowKey="ID"
                     dataSource={list}
                     pagination={false}
+                    onSubmit={() => true}
                     columns={[
                         {
                             title: '签名', dataIndex: 'Signature', width: 120,

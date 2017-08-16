@@ -33,7 +33,6 @@ class SubTaskList extends Component {
             let roots = json.filter(e => e.ParentId === 0);
             roots = roots.map(node => this.buildTreeData(node, json)).filter(e => this.canViewSubTask(e))
             api.FlowData.Model(this.props.flowdataId, taskId, data => {
-                console.log(roots)
                 this.setState({
                     list: roots,
                     loading: false,
@@ -58,25 +57,25 @@ class SubTaskList extends Component {
 
     canViewSubTask = (subTask, parent = null) => {
         if (!subTask) return false;
+        return true;
+        // var result = this.state.canViewAllSubTasks
+        //     || auth.isCurrentUser(subTask.CreatorId)
+        //     || auth.isCurrentUser(subTask.ToUserId);
 
-        var result = this.state.canViewAllSubTasks
-            || auth.isCurrentUser(subTask.CreatorId)
-            || auth.isCurrentUser(subTask.ToUserId);
-
-        if (!result) {
-            result = subTask.Todos.find(t => auth.isCurrentUser(t.ToUserId))
-        }
-        if (!result) {
-            if (subTask.IsMaster) {
-                result = subTask.children ? subTask.children.find(e => this.canViewSubTask(e)) : false;
-            } else if (parent) {
-                result = this.canViewSubTask(parent)
-            }
-        }
-        if (!result) {
-            result = this.state.flowData.Nodes.find(e => auth.isCurrentUser(e.UserId) && e.ExtendId === subTask.ID)
-        }
-        return result;
+        // if (!result) {
+        //     result = subTask.Todos.find(t => auth.isCurrentUser(t.ToUserId))
+        // }
+        // if (!result) {
+        //     if (subTask.IsMaster) {
+        //         result = subTask.children ? subTask.children.find(e => this.canViewSubTask(e)) : false;
+        //     } else if (parent) {
+        //         result = this.canViewSubTask(parent)
+        //     }
+        // }
+        // if (!result) {
+        //     result = this.state.flowData.Nodes.find(e => auth.isCurrentUser(e.UserId) && e.ExtendId === subTask.ID)
+        // }
+        // return result;
     }
 
     buildTreeData = (node, list) => {
@@ -154,7 +153,7 @@ class SubTaskList extends Component {
                 break;
             case 2:
             case 1:
-                let list = this.state.flowData.Nodes.sort((a, b) => a.ID < b.ID);
+                let list = this.state.flowData.Nodes.sort((a, b) => a.ID - b.ID);
                 let logs = list.filter(e => e.ExtendId === subTask.ID)
                 let checkNodeData = list.find(e => !e.Submited && e.ExtendId === subTask.ID && auth.isCurrentUser(e.UserId));
                 let parentNodeData = checkNodeData ? list.find(e => e.ID === checkNodeData.ParentId) : null
@@ -180,11 +179,33 @@ class SubTaskList extends Component {
         </div>
     }
 
+    canViewTodos = (subTask) => {
+        var result = this.state.canViewAllSubTasks
+            || auth.isCurrentUser(subTask.CreatorId)
+            || auth.isCurrentUser(subTask.ToUserId);
+
+        if (!result) {
+            result = subTask.Todos.find(t => auth.isCurrentUser(t.ToUserId))
+        }
+        if (!result) {
+            if (subTask.IsMaster) {
+                result = subTask.children ? subTask.children.find(e => this.canViewSubTask(e)) : false;
+            } else if (parent) {
+                result = this.canViewSubTask(parent)
+            }
+        }
+        return result;
+    }
+
     expandedRowRender = (subTask) => {
         let list = subTask.Todos;
         if (list.length === 0) {
             return null;
         }
+        if(!this.canViewTodos(subTask)){
+            return null;
+        }
+
         return <Table
             rowKey="ID"
             columns={[

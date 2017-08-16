@@ -6,7 +6,7 @@ import FormTab from './_form';
 import SubTaskTab from './_sub_task_list'
 import ResultTab from './_result';
 import FileListTab from '../file/info_file_list';
-import SubmitFlowModal from '../flowdata/form';
+import SubmitFlowModal from '../flowdata/_modal';
 
 import utils from '../../utils';
 
@@ -35,17 +35,9 @@ export default class TaskEdit extends Component {
         }
         else {
             api.FormInfo.Model(id, data => {
-
-                if (data.flowNodeData) {
-                    data.flowNodeData = data.model.FlowData.Nodes.find(n => n.$id === data.flowNodeData.$ref);
-                }
-
-                if (data.freeFlowNodeData) {
-                    data.freeFlowNodeData = data.flowNodeData.Nodes.find(n => n.$id === data.freeFlowNodeData.$ref);
-                }
-
+                console.log(data)
                 //是否可以查看所有任务列表（创建人和局长）
-                if (data.flowNodeData.ParentId === 0) {
+                if (data.flowNodeData && data.flowNodeData.ParentId === 0) {
                     data.canViewAllSubTasks = auth.isCurrentUser(data.flowNodeData.UserId);
                 }
                 data.canAddSubTask = data.canViewAllSubTasks && data.canEdit && auth.isCurrentUser(data.model.PostUserId);
@@ -79,7 +71,7 @@ export default class TaskEdit extends Component {
                     {this.state.canEdit ?
                         <Button onClick={this.handleSave} type="primary" icon="save" htmlType="submit">保存</Button>
                         : null}
-                    {this.state.canSubmit && this.state.flowNodeData.ParentId === 0 && this.state.flowNodeData.FlowNodeName.indexOf('领导') >-1 ?
+                    {this.state.canSubmit && this.state.flowNodeData.ParentId === 0 && this.state.flowNodeData.FlowNodeName.indexOf('领导') > -1 ?
                         <SubmitFlowModal
                             flowDataId={model.FlowDataId}
                             callback={this.loadData}
@@ -112,7 +104,7 @@ export default class TaskEdit extends Component {
                 }
                 {showFlow ?
                     <Tabs.TabPane tab="成果预览" key="4">
-                        <ResultTab task={extendModel} flowData={model.FlowData} canViewAllSubTasks={this.state.canViewAllSubTasks}/>
+                        <ResultTab task={extendModel} flowData={model.FlowData} canViewAllSubTasks={this.state.canViewAllSubTasks} />
                     </Tabs.TabPane>
                     : null
                 }

@@ -19,7 +19,6 @@ const sideMenuData = {
             title: '发文', items: [
                 { path: `/missive/list/${api.Forms.Missive.ID}/?status=1`, icon: 'fa fa-envelope-open-o', text: '收件箱' },
                 { path: `/missive/list/${api.Forms.Missive.ID}/?status=2`, icon: 'fa fa-check-square-o', text: '已办箱' },
-                { path: `/missive/list/${api.Forms.Missive.ID}/?status=0`, icon: 'fa fa-edit', text: '草稿箱' },
                 { path: `/missive/list/${api.Forms.Missive.ID}/?status=3`, icon: 'fa fa-archive', text: '完结箱' },
                 { path: `/missive/list/${api.Forms.Missive.ID}/?status=4`, icon: 'fa fa-reply', text: '退回箱' },
             ]

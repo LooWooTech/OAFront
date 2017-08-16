@@ -3,7 +3,7 @@ import { Table, Button, Tag } from 'antd'
 import moment from 'moment'
 import api from '../../models/api'
 import auth from '../../models/auth'
-import SubmitFlowModal from '../flowdata/form'
+import SubmitFlowModal from '../flowdata/_modal'
 
 class Extend1ListComponent extends Component {
 

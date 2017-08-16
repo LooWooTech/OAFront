@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router';
-import { Button, Input, Table, Popconfirm } from 'antd';
+import { Button, Input, Table, Popconfirm, Tag } from 'antd';
 import utils from '../../utils';
 import api from '../../models/api';
 import auth from '../../models/auth';
@@ -20,12 +20,13 @@ export default class MissiveList extends React.Component {
         data: []
     };
 
-    loadData = (formId, page, searchKey = '', status) => {
+    loadData = (formId, query) => {
+        query = query || this.props.query || {}
         let parameter = {
             formId: formId || this.state.formId,
-            status: status || this.state.status,
-            searchKey: searchKey,
-            page: page || this.state.page.current || 1,
+            status: query.status || this.state.status,
+            searchKey: query.searchKey || '',
+            page: query.page || this.state.page.current || 1,
             rows: this.state.page.pageSize
         };
 
@@ -43,11 +44,9 @@ export default class MissiveList extends React.Component {
     };
 
     componentWillReceiveProps(nextProps) {
-        const nextStatus = nextProps.location.query.status
         const nextFormId = nextProps.params.formId
-
-        if (nextStatus !== this.props.location.query.status || nextFormId !== this.props.params.formId) {
-            this.loadData(nextFormId, 1, '', nextStatus);
+        if (nextFormId !== this.props.params.formId || nextProps.location.search !== this.props.location.search) {
+            this.loadData(nextFormId, nextProps.location.query);
         }
     }
 
@@ -55,14 +54,19 @@ export default class MissiveList extends React.Component {
         this.loadData();
     }
 
-    componentWillUnmount () {
-        api.Abort();    
+    componentWillUnmount() {
+        api.Abort();
     }
-    
-    
+
     handleSearch = searchKey => {
-        this.loadData(this.state.formId, this.state.page.current, searchKey);
+        let url = `/missive/list/${this.state.formId}/?status=${this.state.status}&searchKey=${searchKey}&page=${this.state.page.current}`
+        utils.Redirect(url)
     };
+
+    handlePageChange = page => {
+        let url = `/missive/list/${this.state.formId}/?status=${this.state.status}&searchKey=${this.state.searchKey}&page=${page}`
+        utils.Redirect(url)
+    }
 
     handleDelete = item => {
         api.FormInfo.Delete(item.ID, () => {
@@ -73,7 +77,14 @@ export default class MissiveList extends React.Component {
     getColumns = () => {
         let items = [
             { title: '文号', dataIndex: 'WJ_ZH' },
-            { title: '标题', dataIndex: 'WJ_BT', render: (text, item) => <Link to={`/missive/edit/${this.state.formId}/?id=${item.ID}`}>{text}</Link> },
+            {
+                title: '标题', dataIndex: 'WJ_BT',
+                render: (text, item) => <Link to={`/missive/edit/${this.state.formId}/?id=${item.ID}`}>
+                    {item.JJ_DJ ? <Tag color="red"><i className="fa fa-flash"></i></Tag> : null}
+                    {item.Important ? <Tag color="blue"><i className="fa fa-flag"></i></Tag> : null}
+                    {text}
+                </Link>
+            },
             { title: '办理期限', dataIndex: 'QX_RQ', render: (text, item) => text ? moment(text).format('ll') : null },
             { title: '所在流程', dataIndex: 'FlowStep' },
             { title: '处理日期', dataIndex: 'UpdateTime', render: (text, item) => text ? moment(text).format('ll') : null },
@@ -82,7 +93,7 @@ export default class MissiveList extends React.Component {
                     if (auth.isCurrentUser(item.PostUserId)) {
 
                         return <Popconfirm title="删除后无法恢复，你确定要删除吗? " onConfirm={() => this.handleDelete(item)} >
-                            <Button type="danger" icon="remove">删除</Button>
+                            <Button type="danger" icon="delete"></Button>
                         </Popconfirm>
                     }
                 }
@@ -113,9 +124,7 @@ export default class MissiveList extends React.Component {
                     dataSource={this.state.data}
                     pagination={{
                         size: 5, ...this.state.page,
-                        onChange: (page, pageSize) => {
-                            this.loadData(this.state.formId, page, this.state.searchKey)
-                        },
+                        onChange: this.handlePageChange,
                     }}
                 />
             </div>

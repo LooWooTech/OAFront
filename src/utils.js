@@ -1,3 +1,4 @@
+import React from 'react'
 import { hashHistory } from 'react-router'
 
 let currentRequest = null;
@@ -36,7 +37,7 @@ function xmlHttpRequest(url, method, data, cb, err) {
     var postData = data ? JSON.stringify(data) : null;
     req.send(postData);
 };
-
+let newlineRegex = /(\r\n|\r|\n)/g;
 module.exports = {
     Redirect(path) {
         hashHistory.push(path);
@@ -49,5 +50,14 @@ module.exports = {
     },
     GoBack() {
         hashHistory.goBack();
+    },
+    NewLineToBreak(str) {
+        if (typeof str === 'number') {
+            return str;
+        } else if (typeof str !== 'string') {
+            return '';
+        }
+
+        return str.split(newlineRegex).map((line, index) => <span key={index}>{line}{line.match(newlineRegex) ? <br /> : null}</span>);
     }
 }

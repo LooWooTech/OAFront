@@ -109,20 +109,15 @@ module.exports = {
             return `${apiHost}file/upload?infoId=${infoId}&id=${fileId}&name=${name}&inline=${inline}`;
         },
         PreviewUrl: (infoId) => {
-            return `${apiHost}file/GetPreviewFile?infoId=${infoId}`;
+            return `${host}attachment/preview?id=${infoId}`;
         },
-        EditUrl: (fileId) => {
-            return `${host}word/get/?id=${fileId}`;
-        },
+
         List: (infoId, inline, cb, err) => {
             var data = { infoId, page: 1, rows: 100 };
             if (inline !== undefined) {
                 data.inline = inline;
             }
             invokeApi('file/list', HTTP_GET, data, cb, err);
-        },
-        Upload: (fileId, cb, err) => {
-            invokeApi('file/upload', HTTP_PUT, fileId, cb, err);
         },
         Delete: (fileId, cb, err) => {
             invokeApi('file/delete?id=' + fileId, HTTP_DELETE, null, cb, err);
@@ -142,7 +137,18 @@ module.exports = {
             invokeApi('FormInfo/save', HTTP_POST, data, cb, err);
         },
         Model: (id, cb, err) => {
-            invokeApi('FormInfo/model?id=' + id, HTTP_GET, null, cb, err);
+            invokeApi('FormInfo/model?id=' + id, HTTP_GET, null, data => {
+                if (data.flowNodeData) {
+                    data.flowNodeData = data.model.FlowData.Nodes.find(n => n.$id === data.flowNodeData.$ref);
+                }
+
+                if (data.freeFlowNodeData) {
+                    data.freeFlowNodeData = data.flowNodeData.FreeFlowData.Nodes.find(n => n.$id === data.freeFlowNodeData.$ref);
+                }
+                if (cb) {
+                    cb(data)
+                }
+            }, err);
         },
         Delete: (id, cb, err) => {
             invokeApi('FormInfo/delete?id=' + id, HTTP_DELETE, null, cb, err);
@@ -173,7 +179,18 @@ module.exports = {
     },
     FlowData: {
         Model: (flowDataId = 0, infoId = 0, cb, err) => {
-            invokeApi('flowdata/model', HTTP_GET, { id: flowDataId, infoId }, cb, err);
+            invokeApi('flowdata/model', HTTP_GET, { id: flowDataId, infoId }, data => {
+                if (data.flowNodeData) {
+                    data.flowNodeData = data.flowData.Nodes.find(n => n.$id === data.flowNodeData.$ref);
+                }
+
+                if (data.freeFlowNodeData) {
+                    data.freeFlowNodeData = data.flowNodeData.FreeFlowData.Nodes.find(n => n.$id === data.freeFlowNodeData.$ref);
+                }
+                if (cb) {
+                    cb(data)
+                }
+            }, err);
         },
         Submit: (toUserId, infoId, data, cb, err) => {
             invokeApi('flowdata/submit?toUserId=' + toUserId + '&infoId=' + infoId, HTTP_POST, data, cb, err);
@@ -195,8 +212,8 @@ module.exports = {
         }
     },
     FreeFlowData: {
-        Submit: (flowNodeDataId, infoId, toUserIds, data, cb, err) => {
-            invokeApi(`freeflowdata/submit?flowNodeDataId=${flowNodeDataId}&infoId=${infoId}&toUserIds=${toUserIds}`, HTTP_POST, data, cb, err);
+        Submit: (flowNodeDataId, infoId, toUserIds, ccUserIds, data, cb, err) => {
+            invokeApi(`freeflowdata/submit?flowNodeDataId=${flowNodeDataId}&infoId=${infoId}&toUserIds=${toUserIds}&ccUserIds=${ccUserIds}`, HTTP_POST, data, cb, err);
         },
         UserList: (flowNodeDataId, key, cb, err) => {
             invokeApi(`freeflowdata/userlist?flownodedataId=${flowNodeDataId}&key=${key}`, HTTP_GET, null, cb, err);
@@ -288,6 +305,9 @@ module.exports = {
         },
         DeleteRedTitle: (id, cb, err) => {
             invokeApi('missive/deleteredtitle?id=' + id, HTTP_DELETE, null, cb, err);
+        },
+        UpdateImportant: (id, cb, err) => {
+            invokeApi('missive/UpdateImportant?id=' + id, HTTP_GET, null, cb, err);
         }
     },
     FormInfoExtend1: {
@@ -371,10 +391,10 @@ module.exports = {
             invokeApi('task/DeleteSubTask?id=' + subTaskId, HTTP_DELETE, null, cb, err);
         },
         SubmitSubTask: (data, cb, err) => {
-            invokeApi(`task/submitsubtask?id=${data.ID}&toUserId=${data.ToUserId}`, HTTP_POST, { content: data.Content ||'' }, cb, err)
+            invokeApi(`task/submitsubtask?id=${data.ID}&toUserId=${data.ToUserId}`, HTTP_POST, { content: data.Content || '' }, cb, err)
         },
         CheckSubTask: (data, cb, err) => {
-            invokeApi(`task/checksubtask?id=${data.ID}&result=${data.Result}`, HTTP_POST, { content: data.Content||'' }, cb, err);
+            invokeApi(`task/checksubtask?id=${data.ID}&result=${data.Result}`, HTTP_POST, { content: data.Content || '' }, cb, err);
         },
         CheckList: (taskId, userId, cb, err) => {
             invokeApi('task/checklist', HTTP_GET, { taskId, userId }, cb, err);

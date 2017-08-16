@@ -6,7 +6,7 @@ class ResultTab extends Component {
     render() {
         const model = this.props.missive
         const flowData = this.props.flowData || {};
-        const nodes = (flowData.Nodes || []).sort((a, b) => a.ID < b.ID);
+        const nodes = (flowData.Nodes || []).sort((a, b) => a.ID - b.ID);
         const GetFreeFlowData = freeFlowData => {
             if (!freeFlowData) {
                 return null
