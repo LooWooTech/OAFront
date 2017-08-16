@@ -2,13 +2,12 @@ import React, { Component } from 'react';
 import { Button, Tabs, message, Modal } from 'antd';
 import api from '../../models/api';
 import FormTab from './_form';
-import ContentTab from './_content';
 import FlowListTab from '../flowdata/list';
 import FileListTab from '../file/info_file_list';
 import ResultTab from './_result'
 import SubmitFreeFlowModal from '../freeflow/_modal';
-import auth from '../../models/auth'
 import utils from '../../utils';
+import auth from '../../models/auth'
 
 export default class MissiveEdit extends Component {
     state = {
@@ -17,7 +16,6 @@ export default class MissiveEdit extends Component {
     }
     componentWillMount() {
         this.loadData();
-        console.log(auth.getUser())
     };
 
     loadData = () => {
@@ -85,9 +83,16 @@ export default class MissiveEdit extends Component {
         })
     }
 
-    handleSubmitFlow = () => {
-        //如果当前提交的是局长、副局长，则将公文标记为重要
-        this.loadData();
+    handleSubmitFlow = (data) => {
+        let user = auth.getUser();
+        if (user.JobTitle.Name.indexOf('局长') > -1) {
+            api.Missive.UpdateImportant(this.state.model.ID, () => {
+                utils.GoBack();
+            });
+        }
+        else {
+            utils.GoBack();
+        }
     }
 
     handleSubmitFreeFlow = () => {
@@ -96,12 +101,10 @@ export default class MissiveEdit extends Component {
             content: '确定已阅吗？',
             onOk: () => {
                 let flowNodeData = this.state.flowNodeData
-                api.FreeFlowData.Submit(flowNodeData.ID, this.state.model.ID, '', {
+                api.FreeFlowData.Submit(flowNodeData.ID, this.state.model.ID, '', '', {
                     ID: this.state.freeFlowNodeData.ID,
                 }, json => {
-                    let freeFlowNodeData = this.state.freeFlowNodeData;
-                    freeFlowNodeData.UpdateTime = new Date();
-                    this.setState({ freeFlowNodeData })
+                    utils.GoBack();
                 })
             }
         });
@@ -131,7 +134,8 @@ export default class MissiveEdit extends Component {
                             canSubmit={true}
                             infoId={model.ID}
                             flowNodeData={this.state.flowNodeData}
-                            record={this.state.freeFlowNodeData}
+                            freeFlowNodeData={this.state.freeFlowNodeData}
+                            onSubmit={this.handleSubmitFlow}
                             trigger={<Button type="danger" icon="retweet" htmlType="button">自由发送</Button>}
                         />
                         : null
@@ -141,15 +145,15 @@ export default class MissiveEdit extends Component {
                     <Button onClick={utils.GoBack} type="" icon="arrow-left" htmlType="button">返回</Button>
                 </Button.Group>
             </div>
-            {missive?
-            <h2>{missive.WJ_BT}</h2>
-            :null}
+            {missive ?
+                <h2>{missive.WJ_BT}</h2>
+                : null}
             <Tabs>
                 <Tabs.TabPane tab="拟稿表单" key="1" style={{ zIndex: 2 }}>
                     <FormTab model={missive} formId={this.state.formId} disabled={!this.state.canEdit} ref="form" />
                 </Tabs.TabPane>
                 {showFlow ?
-                    <Tabs.TabPane tab="意见表" key="3">
+                    <Tabs.TabPane tab="审核流程" key="3">
                         <FlowListTab
                             infoId={model.ID}
                             flowDataId={model.FlowDataId}

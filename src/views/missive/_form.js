@@ -9,10 +9,11 @@ class MissiveEditForm extends React.Component {
     state = { uploading: false }
 
     componentWillMount() {
-        api.Missive.RedTitleList(data => {
-            this.setState({ redTitles: data })
-        })
+        // api.Missive.RedTitleList(data => {
+        //     this.setState({ redTitles: data })
+        // })
         let model = this.props.model || {}
+        console.log("cwm:", model)
         this.updateFileLink(model.ContentId)
     }
 
@@ -91,7 +92,7 @@ class MissiveEditForm extends React.Component {
 
     getItems = () => {
         const formId = parseInt(this.props.formId, 10)
-        //const formName = formId === api.Forms.Missive.ID ? '发文' : '收文'
+        
         const model = this.props.model || {}
         const content = this.state.upload || model.Content || {}
         const disabled = this.props.disabled
@@ -124,13 +125,17 @@ class MissiveEditForm extends React.Component {
                     </div>
                 </Upload.Dragger>
                 {content.ID ?
-                    <span>
+                    <span style={{ fontSize: '1.2rem', fontWeight: 500 }}>
                         {this.state.fileLink ?
                             <span>
-                            <a href={this.state.fileLink} target="_blank"><Icon type="eye" /> 预览文档</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <a href={this.state.fileLink} target={content.IsWordFile ? '' : '_blank'}>
+                                    <Icon type="eye" /> 预览文档</a>
+                                &nbsp;&nbsp;&nbsp;&nbsp;
                             </span>
                             : null}
-                        <a href={api.File.DownloadUrl(content.ID)} target="_blank"><Icon type="download" />&nbsp;下载</a>
+                        <a href={api.File.DownloadUrl(content.ID)} target="_blank">
+                            <Icon type="download" />&nbsp;下载
+                        </a>
                         {disabled ? null :
 
                             <span>
@@ -244,11 +249,11 @@ class MissiveEditForm extends React.Component {
                 qxControl,
                 {
                     name: 'ZS_JG', title: '主送机关', defaultValue: model.ZS_JG,
-                    render: <Input />
+                    render: <Input disabled={disabled} />
                 },
                 {
                     name: 'CS_JG', title: '抄送机关', defaultValue: model.CS_JG,
-                    render: <Input />
+                    render: <Input disabled={disabled} />
                 },
             ]);
         }

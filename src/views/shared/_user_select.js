@@ -181,7 +181,7 @@ class UserSelect extends Component {
             }
 
             if (users.length > 1 && users.length < 10) {
-                return <Select mode={multiple ? 'multiple' : ''}
+                return <Select mode={multiple ? 'multiple' : ''} style={{ maxWidth: '200px' }}
                     onSelect={value => {
                         let userId = parseInt(value, 10)
                         let selectUser = this.state.users.find(e => e.ID === userId);

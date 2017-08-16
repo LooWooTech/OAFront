@@ -1,19 +1,23 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Input, Radio, message, Row, Button } from 'antd'
+import { Input, Radio, message, Row, Col, Button } from 'antd'
 import Form from '../shared/_form'
 import SelectUser from '../shared/_user_select'
 import api from '../../models/api'
 
 class FlowNodeForm extends Component {
-    state = { result: true, toUser: {}, ...this.props }
+    state = {
+        result: true, 
+        toUser: {}, 
+        ...this.props,
+        itemLayout: this.props.itemLayout || { labelCol: { span: 2 }, wrapperCol: { span: 16 } }
+    }
 
     handleSubmit = () => {
         var form = this.refs.form;
         form.validateFields((err, data) => {
             data.ToUserId = this.state.toUser.ID || 0
-            console.log(data)
-            if (!this.state.canComplete && this.state.result && !data.ToUserId) {
+            if (!this.props.canComplete && this.state.result && !data.ToUserId) {
                 let users = this.refs.selectUserForm.getSelectedUsers()
                 if (users.length > 0) {
                     data.ToUserId = users[0].ID || 0;
@@ -40,7 +44,7 @@ class FlowNodeForm extends Component {
     }
 
     handleSelect = (users) => {
-        if (!this.state.canComplete && this.state.result && users && users.length === 0) {
+        if (!this.props.canComplete && this.state.result && users && users.length === 0) {
             message.error("请先选择发送人")
             return false
         }
@@ -48,15 +52,23 @@ class FlowNodeForm extends Component {
     }
 
     getFormItems = () => {
-        let { flowNodeData, flowData, canBack, canComplete } = this.state;
+        let { flowNodeData, flowData, canBack, canComplete } = this.props;
+        let currentNode = flowData.Flow.Nodes.find(e => e.ID === flowNodeData.FlowNodeId)
+        let prevNode = currentNode ? flowData.Flow.Nodes.find(e => e.ID === currentNode.PrevId) : null
+        let nextNode = currentNode ? flowData.Flow.Nodes.find(e => e.PrevId === currentNode.ID) : null
         var items = [
             { name: 'InfoId', defaultValue: flowData.InfoId, render: <Input type="hidden" /> },
             { name: 'FlowNodeId', defaultValue: flowNodeData.FlowNodeId, render: <Input type="hidden" /> },
             { name: 'FlowDataId', defaultValue: flowNodeData.FlowDataId, render: <Input type="hidden" /> },
             { name: 'ID', defaultValue: flowNodeData.ID, render: <Input type="hidden" /> },
             { name: 'UserId', defaultValue: flowNodeData.UserId, render: <Input type="hidden" /> },
-
         ]
+        if (prevNode) {
+            items.push({ title: '上一环节', render: prevNode.Name })
+        }
+        if (currentNode) {
+            items.push({ title: '当前环节', render: currentNode.Name })
+        }
         items.push({
             title: '意见', name: 'Content', defaultValue: flowNodeData.Content,
             render: <Input type="textarea" autosize={{ minRows: 2, maxRows: 6 }} />
@@ -71,6 +83,9 @@ class FlowNodeForm extends Component {
                 </Radio.Group>
             })
         }
+        if (nextNode) {
+            items.push({ title: '下一环节', render: nextNode.Name })
+        }
         //如果可以结束，且同意，则不需要选择发送人
         if (!canComplete && this.state.result) {
             items.push({
@@ -81,13 +96,17 @@ class FlowNodeForm extends Component {
                     flowNodeDataId={flowNodeData.ID}
                     onSubmit={this.handleSelect}
                     formType="flow"
+                    trigger={<Button>{(this.state.toUser || {}).ID > 0 ? ' 已选 ' + this.state.toUser.RealName : '选择...'}</Button>}
                 />,
-                before: <span>{(this.state.toUser || {}).ID > 0 ? ' 已选 ' + this.state.toUser.RealName : ''}</span>
             })
         }
-        items.push({
-            render: <Row><Button type="primary" onClick={this.handleSubmit}>提交</Button></Row>
-        });
+        if (!this.props.trigger) {
+            items.push({
+                render: <Row><Col offset={this.state.itemLayout.labelCol.span}>
+                    <Button type="primary" onClick={this.handleSubmit}>提交</Button>
+                </Col></Row>,
+            });
+        }
         return items
     }
 
@@ -98,8 +117,9 @@ class FlowNodeForm extends Component {
             ref="form"
             children={this.getFormItems()}
             onSubmit={this.handleSubmit}
-            itemLayout={{ labelCol: { span: 24 }, wrapperCol: { span: 18 } }}
+            itemLayout={this.state.itemLayout}
         />
+
     }
 }
 FlowNodeForm.propTypes = {

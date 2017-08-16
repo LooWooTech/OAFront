@@ -187,7 +187,18 @@ module.exports = {
     },
     FlowData: {
         Model: (flowDataId = 0, infoId = 0, cb, err) => {
-            invokeApi('flowdata/model', HTTP_GET, { id: flowDataId, infoId }, cb, err);
+            invokeApi('flowdata/model', HTTP_GET, { id: flowDataId, infoId }, data => {
+                if (data.flowNodeData) {
+                    data.flowNodeData = data.flowData.Nodes.find(n => n.$id === data.flowNodeData.$ref);
+                }
+
+                if (data.freeFlowNodeData) {
+                    data.freeFlowNodeData = data.flowNodeData.FreeFlowData.Nodes.find(n => n.$id === data.freeFlowNodeData.$ref);
+                }
+                if (cb) {
+                    cb(data)
+                }
+            }, err);
         },
         Submit: (toUserId, infoId, data, cb, err) => {
             invokeApi('flowdata/submit?toUserId=' + toUserId + '&infoId=' + infoId, HTTP_POST, data, cb, err);
@@ -302,6 +313,9 @@ module.exports = {
         },
         DeleteRedTitle: (id, cb, err) => {
             invokeApi('missive/deleteredtitle?id=' + id, HTTP_DELETE, null, cb, err);
+        },
+        UpdateImportant: (id, cb, err) => {
+            invokeApi('missive/UpdateImportant?id=' + id, HTTP_GET, null, cb, err);
         }
     },
     FormInfoExtend1: {

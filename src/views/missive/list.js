@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router';
-import { Button, Input, Table, Popconfirm } from 'antd';
+import { Button, Input, Table, Popconfirm, Tag } from 'antd';
 import utils from '../../utils';
 import api from '../../models/api';
 import auth from '../../models/auth';
@@ -55,11 +55,11 @@ export default class MissiveList extends React.Component {
         this.loadData();
     }
 
-    componentWillUnmount () {
-        api.Abort();    
+    componentWillUnmount() {
+        api.Abort();
     }
-    
-    
+
+
     handleSearch = searchKey => {
         this.loadData(this.state.formId, this.state.page.current, searchKey);
     };
@@ -73,7 +73,14 @@ export default class MissiveList extends React.Component {
     getColumns = () => {
         let items = [
             { title: '文号', dataIndex: 'WJ_ZH' },
-            { title: '标题', dataIndex: 'WJ_BT', render: (text, item) => <Link to={`/missive/edit/${this.state.formId}/?id=${item.ID}`}>{text}</Link> },
+            {
+                title: '标题', dataIndex: 'WJ_BT',
+                render: (text, item) => <Link to={`/missive/edit/${this.state.formId}/?id=${item.ID}`}>
+                    {item.JJ_DJ ? <Tag color="red"><i className="fa fa-flash"></i></Tag> : null}
+                    {item.Important ? <Tag color="blue"><i className="fa fa-flag"></i></Tag> : null}
+                    {text}
+                </Link>
+            },
             { title: '办理期限', dataIndex: 'QX_RQ', render: (text, item) => text ? moment(text).format('ll') : null },
             { title: '所在流程', dataIndex: 'FlowStep' },
             { title: '处理日期', dataIndex: 'UpdateTime', render: (text, item) => text ? moment(text).format('ll') : null },
@@ -82,7 +89,7 @@ export default class MissiveList extends React.Component {
                     if (auth.isCurrentUser(item.PostUserId)) {
 
                         return <Popconfirm title="删除后无法恢复，你确定要删除吗? " onConfirm={() => this.handleDelete(item)} >
-                            <Button type="danger" icon="remove">删除</Button>
+                            <Button type="danger" icon="delete"></Button>
                         </Popconfirm>
                     }
                 }

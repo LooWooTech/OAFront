@@ -1,13 +1,18 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Table, Badge } from 'antd'
+import { Button, Table, Badge } from 'antd'
 import moment from 'moment'
 import auth from '../../models/auth'
 import FlowNodeForm from './_form'
+import FreeFlowDataList from '../freeflow/_list'
 import FreeFlowNodeForm from '../freeflow/_form'
 import api from '../../models/api'
+import utils from '../../utils'
+
 class FlowDataList extends Component {
-    state = { loading: true, infoId: this.props.infoId, flowDataId: this.props.flowDataId }
+    state = {
+        loading: true, infoId: this.props.infoId, flowDataId: this.props.flowDataId
+    }
     componentWillMount() {
         this.loadData();
     }
@@ -18,51 +23,24 @@ class FlowDataList extends Component {
         })
     }
 
-    contentRender = (text, item, parent) => {
-        if (item.hasOwnProperty('Result')) {
-            //主流程
-            if (item.Result === null && this.state.canSubmitFlow) {
-                return <FlowNodeForm
-                    {...this.state}
-                    onSubmit={this.handleSubmitFlow}
-                />
-            }
-            if (!text) {
-                return item.Result === null ? item.FreeFlowData ? '传阅中' : '待审核' : item.Result ? '同意' : '不同意';
-            }
-        } else if (item.hasOwnProperty('Submited')) {
-            //自由流程
-            if (!item.Submited && this.state.canSubmitFreeFlow && !item.IsCc && auth.isCurrentUser(item.UserId)) {
-                return <FreeFlowNodeForm
-                    infoId={this.state.infoId}
-                    freeFlowNodeData={item}
-                    flowNodeData={parent}
-                    onSubmit={this.handleSubmitFlow}
-                />
-            }
-            if (!text) {
-                return item.Submited ? '已阅' : '未读';
-            }
+    contentRender = (text, item) => {
+        if (!text) {
+            text = item.Result === null ? item.FreeFlowData ? '传阅中' : '待审核' : item.Result ? '同意' : '不同意';
         }
-        return text.split('\n').map((str, key) => <span key={key}>{str}<br /></span>);
+
+        return <span>
+            {utils.NewLineToBreak(text)}&nbsp;&nbsp;
+            {item.FreeFlowData ?
+                <Button onClick={() => this.setState({ showAll: !this.state.showAll })} icon="eye">
+                    {this.state.showAll ? '隐藏抄送和未读' : '显示全部'}
+                </Button>
+                : null}
+        </span>
     }
 
     expandedRowRender = (parent) => {
         if (!parent.FreeFlowData) return null;
-        let list = parent.FreeFlowData.Nodes.filter(e => !e.IsCc || e.Content);
-        if (list.length === 0)  return null;
-        return <Table
-            rowKey="ID"
-            showHeader={false}
-            dataSource={list}
-            pagination={false}
-            columns={[
-                { title: '收件人', dataIndex: 'Signature', width: 150, },
-                { title: '意见', dataIndex: 'Content', render: (text, item) => this.contentRender(text, item, parent) },
-                { title: '日期', dataIndex: 'UpdateTime', width: 150, render: (text, item) => text ? moment(text).format('ll') : null },
-                { title: '', width: 140 }
-            ]}
-        />
+        return <FreeFlowDataList model={parent.FreeFlowData} showAll={this.state.showAll} />
     }
 
     buildFreeFlowNodeTreeData = (node, list) => {
@@ -73,16 +51,37 @@ class FlowDataList extends Component {
 
     //提交流程
     handleSubmitFlow = (data) => {
-        this.loadData();
         if (this.props.onSubmit) {
-            this.props.onSubmit();
+            this.props.onSubmit(data);
         }
     }
 
     render() {
         if (this.state.loading) return null;
+        const { flowNodeData, canSubmitFlow, canSubmitFreeFlow, freeFlowNodeData } = this.state
         return (
             <div>
+                {canSubmitFreeFlow && freeFlowNodeData && !freeFlowNodeData.Submited ?
+                    <div className="flow-form">
+                        <h3>自由发送</h3>
+                        <FreeFlowNodeForm
+                            infoId={this.state.infoId}
+                            freeFlowNodeData={freeFlowNodeData}
+                            flowNodeData={flowNodeData}
+                            onSubmit={this.handleSubmitFlow}
+                        />
+                    </div>
+                    :
+                    canSubmitFlow && flowNodeData && !flowNodeData.Submited ?
+                        <div className="flow-form">
+                            <h3>主流程审核</h3>
+                            <FlowNodeForm
+                                {...this.state}
+                                onSubmit={this.handleSubmitFlow}
+                            />
+                        </div>
+                        : null
+                }
                 <Table
                     loading={this.state.loading}
                     rowKey="ID"
