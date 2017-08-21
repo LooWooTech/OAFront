@@ -1,12 +1,14 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Input, Row, Col, message, Button, Tag } from 'antd'
+import { Input, Row, Col, message, Button, Tag, Checkbox } from 'antd'
 import SelectUser from '../shared/_user_select'
 import Form from '../shared/_form'
 import api from '../../models/api'
 
 class FreeFlowNodeForm extends Component {
     state = {
+        sms_to: true,
+        sms_cc: false,
         itemLayout: this.props.itemLayout || { labelCol: { span: 2 }, wrapperCol: { span: 16 } },
         users: [],
         cc_users: []
@@ -20,6 +22,14 @@ class FreeFlowNodeForm extends Component {
             if (err) return false;
             api.FreeFlowData.Submit(data.FlowNodeDataID, data.InfoId, toUserIds, ccUserIds, data, json => {
                 message.success("提交成功")
+
+                if (this.state.sms_to) {
+                    api.Sms.Send(toUserIds, data.InfoId);
+                }
+                if (this.state.sms_cc) {
+                    api.Sms.Send(ccUserIds, data.InfoId);
+                }
+
                 callback = this.props.onSubmit || callback
                 if (callback && typeof (callback) === 'function') {
                     callback(json)
@@ -49,10 +59,9 @@ class FreeFlowNodeForm extends Component {
                     nullable={true}
                     formType="freeflow"
                     flowNodeDataId={flowNodeData.ID}
-                    onSubmit={users => this.setState({ users: users || [] })}
                     title="选择转发人员"
                 />,
-                after: <span>{this.state.users.map(e => <Tag key={e.ID}>{e.RealName}</Tag>)}</span>
+                after: <div><Checkbox checked={this.state.sms_to} onChange={e => this.setState({ sms_to: e.target.checked })}>短信通知</Checkbox></div>
             },
             {
                 title: '抄送',
@@ -63,7 +72,8 @@ class FreeFlowNodeForm extends Component {
                     formType="freeflow"
                     flowNodeDataId={flowNodeData.ID}
                     title="选择抄送人员"
-                />
+                />,
+                after: <div><Checkbox checked={this.state.sms_cc} onChange={e => this.setState({ sms_cc: e.target.checked })}>短信通知</Checkbox></div>
             }
         ]
         if (!this.props.isModal) {

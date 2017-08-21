@@ -117,7 +117,7 @@ class MissiveEditForm extends React.Component {
                 {content.ID ?
                     <span style={{ fontSize: '1.2rem', fontWeight: 500 }}>
                         <a href={api.File.PreviewUrl(content.ID)} target={content.IsWordFile ? '' : '_blank'}>
-                            <Icon type="eye" /> 预览文档</a>
+                            <Icon type="eye" /> 预览</a>
                         &nbsp;&nbsp;&nbsp;&nbsp;
                         <a href={api.File.DownloadUrl(content.ID)} target="_blank">
                             <Icon type="download" />&nbsp;下载

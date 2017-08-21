@@ -65,7 +65,7 @@ class FlowDataList extends Component {
         const { flowNodeData, canSubmitFlow, canSubmitFreeFlow, freeFlowNodeData } = this.state
         return (
             <div>
-                {canSubmitFreeFlow && freeFlowNodeData && !freeFlowNodeData.Submited ?
+                {canSubmitFreeFlow && freeFlowNodeData && !freeFlowNodeData.Submited && !freeFlowNodeData.IsCc?
                     <div className="flow-form">
                         <h3>自由发送</h3>
                         <FreeFlowNodeForm

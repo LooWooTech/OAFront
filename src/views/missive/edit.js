@@ -118,7 +118,6 @@ export default class MissiveEdit extends Component {
         if (!model) return null
         const showFiles = model.ID > 0
         const showFlow = !!model.FlowDataId
-
         return <div>
             <div className="toolbar">
                 <Button.Group>
@@ -126,7 +125,7 @@ export default class MissiveEdit extends Component {
                         <Button onClick={this.handleSave} type="primary" icon="save" htmlType="submit">保存</Button>
                         : null
                     }
-                    {this.state.canSubmitFreeFlow && this.state.freeFlowNodeData && !this.state.freeFlowNodeData.UpdateTime ?
+                    {this.state.canSubmitFreeFlow && this.state.freeFlowNodeData && !this.state.freeFlowNodeData.Submited ?
                         <Button icon="check" type="primary" onClick={this.handleSubmitFreeFlow}>已阅</Button>
                         : null
                     }

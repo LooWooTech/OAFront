@@ -154,6 +154,11 @@ module.exports = {
             invokeApi('FormInfo/delete?id=' + id, HTTP_DELETE, null, cb, err);
         }
     },
+    Sms: {
+        Send: (userId, infoId, cb, err) => {
+            invokeApi('sms/send?userid=' + userId + '&infoId=' + infoId, HTTP_GET, null, cb, err);
+        }
+    },
     Flow: {
         ID: {
             Missive: 1,

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Input, Radio, message, Row, Col, Button } from 'antd'
+import { Input, Radio, message, Row, Col, Button, Checkbox } from 'antd'
 import Form from '../shared/_form'
 import SelectUser from '../shared/_user_select'
 import api from '../../models/api'
@@ -10,6 +10,7 @@ class FlowNodeDataForm extends Component {
     state = {
         result: true,
         toUser: {},
+        sms: true,
         ...this.props,
         itemLayout: this.props.itemLayout || { labelCol: { span: 2 }, wrapperCol: { span: 16 } }
     }
@@ -17,16 +18,12 @@ class FlowNodeDataForm extends Component {
     submit = (callback) => {
         var form = this.refs.form;
         form.validateFields((err, data) => {
-            data.ToUserId = this.state.toUser.ID || 0
+            let users = this.refs.selectUserForm.getSelectedUsers()
+            data.ToUserId = users.length > 0 ? users[0].ID : 0;
+
             if (!this.props.canComplete && this.state.result && !data.ToUserId) {
-                let users = this.refs.selectUserForm.getSelectedUsers()
-                if (users.length > 0) {
-                    data.ToUserId = users[0].ID || 0;
-                }
-                if (!data.ToUserId) {
-                    message.error("请先选择发送人")
-                    return false
-                }
+                message.error("请先选择发送人")
+                return false
             }
             data.Result = this.state.result;
             if (!data.Result && !confirm('你确定要退回吗？')) return false
@@ -34,7 +31,9 @@ class FlowNodeDataForm extends Component {
             api.FlowData.Submit(data.ToUserId, data.InfoId, data, json => {
                 this.setState({ visible: false }, () => {
                     message.success("提交成功")
-
+                    if (this.state.sms) {
+                        api.Sms.Send(data.ToUserId, data.InfoId);
+                    }
                     const callback = this.props.onSubmit
                     if (callback) {
                         callback(json)
@@ -43,14 +42,6 @@ class FlowNodeDataForm extends Component {
             })
 
         });
-    }
-
-    handleSelect = (users) => {
-        if (!this.props.canComplete && this.state.result && users && users.length === 0) {
-            message.error("请先选择发送人")
-            return false
-        }
-        this.setState({ toUser: users[0] })
     }
 
     getFormItems = () => {
@@ -98,14 +89,14 @@ class FlowNodeDataForm extends Component {
                     flowNodeDataId={flowNodeData.ID}
                     onSubmit={this.handleSelect}
                     formType="flow"
-                    trigger={<Button>{(this.state.toUser || {}).ID > 0 ? ' 已选 ' + this.state.toUser.RealName : '选择...'}</Button>}
                 />,
+                after: <div><Checkbox checked={this.state.sms} onChange={e => this.setState({ sms: e.target.checked })}>短信通知</Checkbox></div>
             })
         }
         if (!this.props.isModal) {
             items.push({
                 render: <Row><Col offset={this.state.itemLayout.labelCol.span}>
-                    <Button type="primary" onClick={this.handleSubmit}>提交</Button>
+                    <Button type="primary" onClick={this.submit}>提交</Button>
                 </Col></Row>,
             });
         }

@@ -54,10 +54,10 @@ class SharedForm extends Component {
                             extra={item.extra}
                             {...(item.layout ? item.layout : formItemLayout) }
                         >
-                            {item.before}
+                            {item.before ? <span>{item.before}&nbsp;</span> : null}
                             {getControl(item)}
-                            {item.after}
-                        </Form.Item>
+                            {item.after ? <span>&nbsp;{item.after}</span> : null}
+                            </Form.Item>
                         : <span key={item.name || key}>{item.before} {getControl(item)} {item.after}</span>
                 )}
             </Form>

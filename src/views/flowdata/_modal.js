@@ -14,7 +14,6 @@ class FlowNodeDataModal extends Component {
     }
 
     render() {
-        console.log(this.props)
         return <Modal
         title={this.props.title || '提交流程'}
         children={<Form {...this.props}

@@ -165,6 +165,13 @@ class UserSelect extends Component {
 
     handleSubmit = () => {
         let users = this.getSelectedUsers()
+        if (users.length > 0) {
+            let text = '已选 ' + users[0].RealName;
+            if (users.length > 1) {
+                text += ' 等' + users.length + '人';
+            }
+            this.setState({ buttonText: text })
+        }
         if (this.props.onSubmit)
             this.props.onSubmit(users)
     }
@@ -211,7 +218,7 @@ class UserSelect extends Component {
 
         return <Modal
             title={this.props.title || "选择人员"}
-            trigger={this.props.trigger || <Button>选择人员</Button>}
+            trigger={<Button>{this.state.buttonText || '选择...'}</Button>}
             onSubmit={this.handleSubmit}
             children={<div>
                 <Row>
