@@ -294,8 +294,8 @@ class SubTaskList extends Component {
                             </span>
                         },
                         { title: '责任人', width: 80, render: (text, item) => item.ToUserName || '未指派' },
-                        { title: '创建时间', width: 120, dataIndex: 'CreateTime', render: (text) => text ? moment(text).format('ll') : '' },
-                        { title: '计划完成时间', width: 120, dataIndex: 'ScheduleDate', render: (text) => text ? moment(text).format('ll') : '' },
+                        { title: '创建时间', width: 130, dataIndex: 'CreateTime', render: (text) => text ? moment(text).format('ll') : '' },
+                        { title: '计划完成时间', width: 130, dataIndex: 'ScheduleDate', render: (text) => text ? moment(text).format('ll') : '' },
                         {
                             title: '操作', width: 100, render: (text, item) => <span>
                                 {this.getButtons(item)}

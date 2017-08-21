@@ -18,7 +18,6 @@ class TaskForm extends React.Component {
             }
             let formData = values
             formData.ScheduleDate = formData.ScheduleDate ? formData.ScheduleDate.format() : ''
-            formData.FromType = this.state.FromType || 1;
             api.Task.Save(formData, json => {
                 message.success('保存成功')
                 utils.Redirect(`/task/?status=1`)
@@ -32,6 +31,10 @@ class TaskForm extends React.Component {
         var items = [
             { name: 'ID', defaultValue: model.ID || 0, render: <Input type="hidden" /> },
             { name: 'FormId', defaultValue: this.state.formId, render: <Input type="hidden" /> },
+            {
+                name: 'Number', title: '任务单号', defaultValue: model.Number || '',
+                rules: [{ required: true, message: '请填写任务单号' }], render: <Input disabled={disabled} />
+            },
             {
                 name: 'Name', title: '任务事项', defaultValue: model.Name || '',
                 rules: [{ required: true, message: '请填写任务事项' }], render: <Input disabled={disabled} />
@@ -57,7 +60,7 @@ class TaskForm extends React.Component {
                 render: <DatePicker disabled={disabled} />
             }
         ];
-        
+
         return items;
     }
 

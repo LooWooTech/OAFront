@@ -13,7 +13,6 @@ class FreeFlowNodeForm extends Component {
     }
 
     submit = (callback) => {
-        this.setState({ submitting: true })
         var toUserIds = this.refs.selectUserForm.getSelectedUsers().map(e => e.ID).join()
         var ccUserIds = this.refs.selectUserToCc.getSelectedUsers().map(e => e.ID).join()
         var form = this.refs.form;
@@ -21,13 +20,11 @@ class FreeFlowNodeForm extends Component {
             if (err) return false;
             api.FreeFlowData.Submit(data.FlowNodeDataID, data.InfoId, toUserIds, ccUserIds, data, json => {
                 message.success("提交成功")
-                this.setState({ submitting: false }, () => {
-                    callback = this.props.onSubmit || callback
-                    if (callback && typeof (callback) === 'function') {
-                        callback(json)
-                    }
-                    form.resetFields();
-                })
+                callback = this.props.onSubmit || callback
+                if (callback && typeof (callback) === 'function') {
+                    callback(json)
+                }
+                form.resetFields();
             })
         });
     }
@@ -72,7 +69,7 @@ class FreeFlowNodeForm extends Component {
         if (!this.props.isModal) {
             items.push({
                 render: <Row><Col offset={this.state.itemLayout.labelCol.span}>
-                    <Button type="primary" onClick={this.submit} disabled={this.state.submitting}>提交</Button>
+                    <Button type="primary" onClick={this.submit}>提交</Button>
                 </Col></Row>,
             });
         }

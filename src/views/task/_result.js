@@ -62,10 +62,13 @@ class ResultTab extends Component {
     }
 
     getTaskNameRender = (model) => {
-        let checkLog = model.Status === 2 ? this.state.flowData.Nodes.sort((a, b) => a.ID - b.ID).find(e => e.Result && e.ExtendId === model.ID) : null;
+
         return <div style={{ paddingLeft: model.ParentId > 0 ? '30px' : '0' }}>
             {model.Content.split('\n').map((item, key) => <span key={key}>{item}<br /></span>)}
-            {checkLog ? <Alert message={this.getFlowNodeRender(checkLog)} type={checkLog.Result ? "success" : "error"} /> : null}
+            {model.IsMaster ? this.state.flowData.Nodes.filter(e => e.ExtendId === model.ID)
+                .sort((a, b) => a.ID - b.ID)
+                .map(item => <Alert key={item.ID} message={this.getFlowNodeRender(item)} type="success" />)
+                : null}
         </div>
     }
 
@@ -74,13 +77,16 @@ class ResultTab extends Component {
         return model ? model.Result === null ? null : this.getFlowNodeRender(model) : null
     }
 
-    getFlowNodeRender = (model) => model ? <div className="flowNode">
-        <p className="content"> {model.Content}</p>
-        <div>
-            <span className="signature">{model.Signature}</span>
-            <span className="datetime">{model.UpdateTime ? moment(model.UpdateTime).format('ll') : null}</span>
-        </div>
-    </div> : null
+    getFlowNodeRender = (model) => {
+        if (!model) return ''
+        return <div className="flowNode">
+            <p className="content"> {model.Content}</p>
+            <div>
+                <span className="signature">{model.Signature}</span>
+                <span className="datetime">{model.UpdateTime ? moment(model.UpdateTime).format('ll') : null}</span>
+            </div>
+        </div>;
+    }
 
     render() {
         if (this.state.loading) return null;
@@ -93,7 +99,7 @@ class ResultTab extends Component {
                 <h1>定海分局具体工作任务落实单
                 </h1>
                 <div className="sub-title">
-                    <span>单号：</span>
+                    <span>单号：{task.Number || ''}</span>
                     <span>日期：{moment(task.CreateTime).format('ll')}</span>
                 </div>
                 <table>
@@ -164,9 +170,9 @@ class ResultTab extends Component {
                                             </span>
                                         },
                                         { title: '责任人', width: 80, render: (text, item) => item.ToUserName || '未指派' },
-                                        { title: '创建时间', width: 120, dataIndex: 'CreateTime', render: (text) => text ? moment(text).format('ll') : '' },
-                                        { title: '计划完成时间', width: 120, dataIndex: 'ScheduleDate', render: (text) => text ? moment(text).format('ll') : '' },
-                                        { title: '提交完成时间', width: 120, dataIndex: 'UpdateTime', render: (text) => text ? moment(text).format('ll') : '' },
+                                        { title: '创建时间', width: 130, dataIndex: 'CreateTime', render: (text) => text ? moment(text).format('ll') : '' },
+                                        { title: '计划完成时间', width: 130, dataIndex: 'ScheduleDate', render: (text) => text ? moment(text).format('ll') : '' },
+                                        { title: '提交完成时间', width: 130, dataIndex: 'UpdateTime', render: (text) => text ? moment(text).format('ll') : '' },
 
                                     ]}
                                     dataSource={this.state.list}

@@ -48,13 +48,15 @@ class FileList extends Component {
                     rowKey="ID"
                     dataSource={this.state.list}
                     columns={[
-                        { title: '文件名', dataIndex: 'FileName', render: (text, item) => <a href={api.File.FileUrl(item.ID)} target="_blank">{text}</a> },
+                        { title: '文件名', dataIndex: 'FileName', render: (text, item) => <a href={api.File.PreviewUrl(item.ID)} target={item.IsWordFile ? '' : '_blank'}>{text}</a> },
                         { title: '文件大小', dataIndex: 'DisplaySize', width: 100 },
                         { title: '上传时间', width: 200, render: (text, item) => moment(item.CreateTime).format('l') },
                         {
                             title: '操作', width: 150,
-                            render: (text, item) => <span>
-                                <Button disabled={!canEdit} type="danger" onClick={() => this.handleDelete(item)}><Icon type="delete" />删除</Button>
+                            render: (text, item) => <span>                              
+                                <Button disabled={!canEdit} type="danger" onClick={() => this.handleDelete(item)}>
+                                    <Icon type="delete" /> 删除
+                                </Button>
                             </span>
                         }
                     ]}

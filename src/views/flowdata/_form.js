@@ -4,8 +4,9 @@ import { Input, Radio, message, Row, Col, Button } from 'antd'
 import Form from '../shared/_form'
 import SelectUser from '../shared/_user_select'
 import api from '../../models/api'
+import auth from '../../models/auth'
 
-class FlowNodeForm extends Component {
+class FlowNodeDataForm extends Component {
     state = {
         result: true,
         toUser: {},
@@ -13,9 +14,7 @@ class FlowNodeForm extends Component {
         itemLayout: this.props.itemLayout || { labelCol: { span: 2 }, wrapperCol: { span: 16 } }
     }
 
-    handleSubmit = () => {
-        this.setState({ submitting: true })
-        console.log(this.state.submitting)
+    submit = (callback) => {
         var form = this.refs.form;
         form.validateFields((err, data) => {
             data.ToUserId = this.state.toUser.ID || 0
@@ -26,7 +25,6 @@ class FlowNodeForm extends Component {
                 }
                 if (!data.ToUserId) {
                     message.error("请先选择发送人")
-                    this.setState({ submitting: false })
                     return false
                 }
             }
@@ -34,7 +32,7 @@ class FlowNodeForm extends Component {
             if (!data.Result && !confirm('你确定要退回吗？')) return false
 
             api.FlowData.Submit(data.ToUserId, data.InfoId, data, json => {
-                this.setState({ visible: false, submitting: false }, () => {
+                this.setState({ visible: false }, () => {
                     message.success("提交成功")
 
                     const callback = this.props.onSubmit
@@ -104,10 +102,10 @@ class FlowNodeForm extends Component {
                 />,
             })
         }
-        if (!this.props.trigger) {
+        if (!this.props.isModal) {
             items.push({
                 render: <Row><Col offset={this.state.itemLayout.labelCol.span}>
-                    <Button type="primary" onClick={this.handleSubmit} disabled={this.state.submitting}>提交</Button>
+                    <Button type="primary" onClick={this.handleSubmit}>提交</Button>
                 </Col></Row>,
             });
         }
@@ -116,20 +114,20 @@ class FlowNodeForm extends Component {
 
     render() {
         if (!this.state.flowData || !this.state.flowNodeData) return null;
-        if (this.state.flowNodeData.Result != null) return null;
+        if (this.state.flowNodeData.Result != null || !auth.isCurrentUser(this.state.flowNodeData.UserId)) return null;
         return <Form
             ref="form"
             children={this.getFormItems()}
-            onSubmit={this.handleSubmit}
+            onSubmit={this.submit}
             itemLayout={this.state.itemLayout}
         />
 
     }
 }
-FlowNodeForm.propTypes = {
+FlowNodeDataForm.propTypes = {
     infoId: PropTypes.number.isRequired,
     flowData: PropTypes.object.isRequired,
     flowNodeData: PropTypes.object.isRequired,
     onSubmit: PropTypes.func,
 }
-export default FlowNodeForm
+export default FlowNodeDataForm
