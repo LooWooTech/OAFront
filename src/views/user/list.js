@@ -67,9 +67,9 @@ export default class UserList extends React.Component {
                     <EditModal
                         title="添加用户"
                         onSubmit={this.loadData}
-                        groups={this.groups}
-                        deparments={this.deparments}
-                        titles={this.titles}
+                        groups={this.state.groups}
+                        departments={this.state.departments}
+                        titles={this.state.titles}
                         trigger={<Button type="primary" icon="file">添加用户</Button>}
                     />
                 </Button.Group>

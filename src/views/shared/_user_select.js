@@ -2,23 +2,24 @@ import React, { Component } from 'react';
 import { Select, Button, Tabs, Tag, Tree, Input, Row, Col } from 'antd';
 const TreeNode = Tree.TreeNode
 import Modal from './_modal'
+import FlowContactModal from '../user/_flow_contact_modal'
 import api from '../../models/api'
 import auth from '../../models/auth'
 
+
 class UserSelect extends Component {
-    state = { users: [], recents: [], selected: [], inModal: false }
+    state = {
+        users: [], favorites: [], selected: [], inModal: false,
+        multiple: this.props.multiple || this.props.formType === 'freeflow'
+    }
 
     componentWillMount() {
         this.loadInitData();
     }
 
-    componentWillReceiveProps(nextProps) {
-
-    }
-
     loadInitData = () => {
-        api.User.RecentList(json => {
-            this.setState({ allRecents: json }, this.loadUsers)
+        api.User.FlowContacts(json => {
+            this.setState({ favorites: json }, this.loadUsers)
         })
         api.JobTitle.List(json => {
             this.setState({ titles: json })
@@ -71,17 +72,8 @@ class UserSelect extends Component {
         if (titleId) {
             users = users.filter(e => e.JobTitleId === titleId)
         }
-        let recents = [];
-        users.map(user => {
-            var any = (this.state.allRecents || []).find(e => e.ID === user.ID)
-            if (any) {
-                recents.push(user)
-            }
-            return user
-        })
-        this.setState({ recents, users })
+        this.setState({ users })
     }
-
 
     getSelectedUsers = () => {
         let nullable = this.props.nullable || false
@@ -117,9 +109,13 @@ class UserSelect extends Component {
         let children = departments.filter(e => e.ParentId === node.ID).sort((a, b) => a.Sort - b.Sort)
         let users = this.state.users.filter(user => user.Departments.find(d => d.ID === node.ID));
         return (
-            <TreeNode key={'d_' + node.ID} title={node.Name} isLeaf={false}>
+            <TreeNode key={'d_' + node.ID} title={node.Name} isLeaf={false} disableCheckbox={!this.state.multiple}>
                 {children.map(child => this.getNodeTreeNode(child, departments))}
-                {users.sort((a, b) => b.Sort - a.Sort).map(user => <TreeNode title={user.RealName} key={user.ID} isLeaf={true} />)}
+                {users.sort((a, b) => b.Sort - a.Sort).map(user => <TreeNode
+                    title={user.RealName}
+                    key={user.ID}
+                    isLeaf={true}
+                />)}
             </TreeNode>
         )
     }
@@ -144,23 +140,31 @@ class UserSelect extends Component {
     }
 
     handleCheck = (checkedKeys, e) => {
-        let result = []
-        //console.log
-        this.state.users.map(user => {
-            if (checkedKeys.find(id => user.ID.toString() === id)) {
-                result.push(user)
-            }
-            return user
-        })
-        this.setState({ selected: result })
+        if (!checkedKeys || checkedKeys.length === 0) {
+            this.setState({ selected: [] })
+            return;
+        }
+        if (this.state.multiple) {
+            let result = []
+            this.state.users.map(user => {
+                if (checkedKeys.find(id => user.ID.toString() === id)) {
+                    result.push(user)
+                }
+                return user
+            })
+            this.setState({ selected: result })
+        }
+        else {
+            let currentKey = e.node.props.eventKey;
+            let isLeaf = e.node.props.isLeaf;
+            if (!isLeaf) return;
+            let user = this.state.users.find(e => e.ID.toString() === currentKey)
+            this.setState({ selected: [user] })
+        }
     }
 
-    handleSelect = (checkedKeys, e) => {
-        const multiple = this.props.formType === 'freeflow'
-        if (multiple) {
-            return false;
-        }
-        this.handleCheck(checkedKeys, e)
+    handleSelect = (selectedKeys, e) => {
+        this.handleCheck(selectedKeys, e)
     }
 
     handleSubmit = () => {
@@ -176,10 +180,19 @@ class UserSelect extends Component {
             this.props.onSubmit(users)
     }
 
+    handleAddFlowContact = () => {
+        this.loadInitData();
+    }
+
+    handleRemoveSelectedUser = user => {
+        let selected = this.state.selected.filter(e => e.ID !== user.ID) || [];
+        this.setState({ selected });
+    }
+
     render() {
-        const { formType } = this.props
-        const multiple = formType === 'freeflow'
+        const multiple = this.state.multiple
         const users = this.state.users || []
+        const defaultSelectedKeys = this.state.selected.map(user => user.ID.toString())
         //如果不是查询结果
         if (!this.state.inModal) {
             if (users.length === 1) {
@@ -239,23 +252,34 @@ class UserSelect extends Component {
                         </Select>
                     </Col>
                 </Row>
-                <Tabs defaultActiveKey="1" style={{ height: '300px', overflow: 'auto', overflowX: 'hidden' }}>
-                    <Tabs.TabPane tab="最近发送" key="1">
-                        <Tree
-                            multiple={multiple}
+                <Tabs
+                    defaultActiveKey="0"
+                    style={{ height: '300px', overflow: 'auto', overflowX: 'hidden' }}
+                    tabBarExtraContent={<FlowContactModal onSubmit={this.handleAddFlowContact} />}
+                >
+                    <Tabs.TabPane tab="常用联系人" key="0">
+                        <Tree multiple={multiple}
                             checkable={multiple}
                             onCheck={this.handleCheck}
                             onSelect={this.handleSelect}
+                            checkedKeys={defaultSelectedKeys}
+                            selectedKeys={defaultSelectedKeys}
                         >
-                            {this.state.recents.map(user => <TreeNode key={user.ID} isLeaf={true} title={user.RealName} />)}
+                            {this.state.favorites.map(user => {
+                                let disabled = !this.state.users.find(e => e.ID === user.ID);
+                                return <TreeNode key={user.ID} isLeaf={true} title={user.RealName} disabled={disabled} />
+                            })}
                         </Tree>
                     </Tabs.TabPane>
+
                     <Tabs.TabPane tab="全部人员" key="2">
                         <Tree multiple={multiple}
                             checkable={multiple}
                             defaultExpandedKeys={["d_0"]}
                             onCheck={this.handleCheck}
-                            onSelect={this.handleCheck}
+                            onSelect={this.handleSelect}
+                            checkedKeys={defaultSelectedKeys}
+                            selectedKeys={defaultSelectedKeys}
                         >
                             {this.getRootTreeNode()}
                         </Tree>
@@ -266,7 +290,9 @@ class UserSelect extends Component {
                             checkable={multiple}
                             defaultExpandAll={true}
                             onCheck={this.handleCheck}
-                            onSelect={this.handleCheck}
+                            onSelect={this.handleSelect}
+                            checkedKeys={defaultSelectedKeys}
+                            selectedKeys={defaultSelectedKeys}
                         >
                             {this.getSelfDepartmentTreeNode()}
                         </Tree>
@@ -274,7 +300,7 @@ class UserSelect extends Component {
                 </Tabs>
                 <div style={{ maxHeight: '200px', overflow: 'auto' }}>
                     <legend>所选人员</legend>
-                    {this.state.selected.map(user => <Tag key={user.ID}>{user.RealName}</Tag>)}
+                    {this.state.selected.map(user => <Tag key={user.ID} closable={true} afterClose={() => this.handleRemoveSelectedUser(user)}>{user.RealName}</Tag>)}
                 </div>
 
             </div>

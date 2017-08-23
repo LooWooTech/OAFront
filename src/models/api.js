@@ -88,7 +88,16 @@ module.exports = {
         },
         RecentList: (cb, err) => {
             invokeApi('user/recentlist', HTTP_GET, null, cb, err)
-        }
+        },
+        FlowContacts: (cb, err) => {
+            invokeApi('user/flowContactList', HTTP_GET, null, cb, err);
+        },
+        AddFlowContact: (userId, cb, err) => {
+            invokeApi('user/saveflowcontact?userid=' + userId, HTTP_GET, null, cb, err);
+        },
+        DeleteFlowContact: (userId, cb, err) => {
+            invokeApi('user/deleteflowcontact?userid=' + userId, HTTP_DELETE, null, cb, err);
+        },
     },
     Form: {
         Model: (formId, cb) => {
