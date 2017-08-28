@@ -1,4 +1,5 @@
 import { message } from 'antd';
+import auth from './auth';
 import utils from '../utils';
 
 const HTTP_GET = "GET"
@@ -98,6 +99,9 @@ module.exports = {
         DeleteFlowContact: (userId, cb, err) => {
             invokeApi('user/deleteflowcontact?userid=' + userId, HTTP_DELETE, null, cb, err);
         },
+        ParentTitleUserList: (userId, cb, err) => {
+            invokeApi(`user/ParentTitleUserList?userId=${userId || 0}`, HTTP_GET, null, cb, err);
+        }
     },
     Form: {
         Model: (formId, cb) => {
@@ -325,14 +329,25 @@ module.exports = {
         }
     },
     FormInfoExtend1: {
+        ListUrl: (parameters) => {
+            let queryString = jsonToQueryString({
+                infoId: parameters.infoId || 0,
+                page: parameters.page || 1,
+                searchKey: parameters.searchKey || '',
+                status: parameters.status || ''
+            });
+            let isMyList = auth.isCurrentUser(parameters.userId)
+            let path = isMyList ? "requests" : 'approvals'
+            return `/extend1/${parameters.formId}/${path}?` + queryString
+        },
         List: (parameters, cb, err) => {
             invokeApi('FormInfoExtend1/List', HTTP_GET, parameters, cb, err);
         },
         Approval: (infoId, cb, err) => {
             invokeApi('FormInfoExtend1/Approval?infoId=' + infoId, HTTP_GET, null, cb, err);
         },
-        Back: (infoId, cb, err) => {
-            invokeApi('FormInfoExtend1/Back?infoId=' + infoId, HTTP_GET, null, cb, err);
+        Back: (infoId, backTime, cb, err) => {
+            invokeApi('FormInfoExtend1/Back?id=' + infoId + '&backTime=' + backTime, HTTP_GET, null, cb, err);
         }
     },
     Car: {
@@ -435,7 +450,7 @@ module.exports = {
         },
         Delete: (id, cb, err) => {
             invokeApi('Leave/delete?id=' + id, HTTP_DELETE, null, cb, err);
-        }
+        },
     },
     Attendance: {
         Month: (year, month, cb, err) => {
@@ -447,5 +462,8 @@ module.exports = {
         Apply: (data, cb, err) => {
             invokeApi('attendance/apply', HTTP_POST, data, cb, err);
         },
+        Approval: (id, result = true, toUserId = 0, cb, err) => {
+            invokeApi('attendance/approval', HTTP_GET, { id, result, toUserId }, cb, err);
+        }
     }
 };

@@ -85,11 +85,6 @@ export default class TopNav extends React.Component {
                     {headerNavData.map((item, key) => NavItem(item, key))}
                 </Menu>
                 <Menu theme="dark" mode="horizontal" className="right" onClick={this.handleRightMenuClick}>
-                    <Menu.Item>
-                        <Badge count={5}>
-                            <i className="fa fa-bell-o"></i>
-                        </Badge>
-                    </Menu.Item>
                     <Menu.SubMenu title={<span><Icon type="user" /> {auth.getUser().RealName || 'Administrator'} </span>}>
                         <Menu.Item>个人资料</Menu.Item>
                         <Menu.Item key="editpassword">
@@ -97,9 +92,6 @@ export default class TopNav extends React.Component {
                                 trigger="修改密码"
                             />
                         </Menu.Item>
-                        <Menu.Divider />
-                        <Menu.Item>通讯录</Menu.Item>
-                        <Menu.Item>消息设置</Menu.Item>
                         <Menu.Divider />
                         <Menu.Item key="logout">退出登录</Menu.Item>
                     </Menu.SubMenu>

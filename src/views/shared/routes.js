@@ -26,8 +26,8 @@ import MeetingRoomList from '../meetingroom/list'
 import SealIndex from '../seal/index'
 import SealList from '../seal/list'
 
-import MyApplyList from '../forminfo_extend1/my_apply_list'
-import ApplyList from '../forminfo_extend1/apply_list'
+import Extend1ApplyList from '../forminfo_extend1/apply_list'
+import Extend1ApprovalList from '../forminfo_extend1/approval_list'
 
 import AttendanceIndex from '../attendance/index'
 import HolidayList from '../attendance/holidays'
@@ -70,8 +70,8 @@ export default class Routes extends React.Component {
                     <Route path="list" component={SealList} />
                 </Route>
                 <Route path="extend1/:formId">
-                    <IndexRoute path="" component={ApplyList} />
-                    <Route path="my" component={MyApplyList} />
+                    <Route path="approvals" component={Extend1ApprovalList} />
+                    <Route path="requests" component={Extend1ApplyList} />
                 </Route>
                 <Route path="task">
                     <IndexRoute component={TaskIndex} />

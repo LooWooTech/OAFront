@@ -3,7 +3,8 @@ import PropTypes from 'prop-types'
 import { Form, Tooltip, Icon } from 'antd'
 
 class SharedForm extends Component {
-    handleSubmit = () => {
+    handleSubmit = (e) => {
+        e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (err) {
                 console.log(err);
@@ -54,9 +55,9 @@ class SharedForm extends Component {
                             extra={item.extra}
                             {...(item.layout ? item.layout : formItemLayout) }
                         >
-                            {item.before ? <span>{item.before}&nbsp;</span> : null}
+                            {item.before}
                             {getControl(item)}
-                            {item.after ? <span>&nbsp;{item.after}</span> : null}
+                            {item.after}
                             </Form.Item>
                         : <span key={item.name || key}>{item.before} {getControl(item)} {item.after}</span>
                 )}

@@ -19,9 +19,9 @@ class SharedFormModal extends Component {
                 return false;
             }
             else {
-                form.resetFields();
                 if (this.props.onSubmit(values) !== false) {
                     this.hideModal();
+                    form.resetFields();
                 }
             }
         });

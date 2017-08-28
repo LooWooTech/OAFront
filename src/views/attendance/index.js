@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Card, Badge, Row, Col, Calendar } from 'antd';
-import LeaveFormModal from './leave_form';
+import LeaveFormModal from './_leave_form';
 import moment from 'moment';
 import 'moment/locale/zh-cn';
 moment.locale('zh-cn');

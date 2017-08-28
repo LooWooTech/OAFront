@@ -1,16 +1,18 @@
 import React, { Component } from 'react'
-import { Input, Select, Radio, DatePicker } from 'antd'
+import { Input, Select, Checkbox, DatePicker } from 'antd'
 import DepartmentSelect from '../shared/_department_select'
 import Modal from '../shared/_formmodal'
 import moment from 'moment'
 import api from '../../models/api'
 
 class SubTaskModal extends Component {
-    state = { users: [], isMaster: true }
+    state = { sms: true, users: [], isMaster: true }
 
     handleSubmit = (data) => {
-        api.Task.SaveSubTask(data, () => {
-
+        api.Task.SaveSubTask(data, (json) => {
+            if (!data.ID && this.state.sms) {
+                api.Sms.Send(data.ToUserId, json.TaskId)
+            }
             this.props.onSubmit()
         });
     }
@@ -56,16 +58,17 @@ class SubTaskModal extends Component {
                     showSearch disabled={model.ID > 0}
                 >
                     {users.map(user => <Select.Option key={user.ID}>{user.RealName}</Select.Option>)}
-                </Select>
+                </Select>,
+                after: <div><Checkbox checked={this.state.sms} onChange={e => this.setState({ sms: e.target.checked })}>短信通知</Checkbox></div>
             },
             {
                 title: '派单时间', name: 'CreateTime',
                 defaultValue: moment(model.CreateTime),
-                render: <DatePicker format="YYYY-MM-DD"/>
+                render: <DatePicker format="YYYY-MM-DD" />
             },
             {
                 title: '计划完成时间', name: 'ScheduleDate',
-                defaultValue: model.ScheduleDate ? moment(model.ScheduleDate) : '',
+                defaultValue: model.ScheduleDate ? moment(model.ScheduleDate) : null,
                 render: <DatePicker format="YYYY-MM-DD" disabledDate={disabledDate} />
             }
         ];

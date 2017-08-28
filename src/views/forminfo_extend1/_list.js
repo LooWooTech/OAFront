@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
-import { Table, Button, Tag } from 'antd'
+import PropTypes from 'prop-types'
+import { Table, Tag, Radio } from 'antd'
 import moment from 'moment'
 import api from '../../models/api'
-import auth from '../../models/auth'
-import SubmitFlowModal from '../flowdata/_modal'
+import utils from '../../utils'
+
 
 class Extend1ListComponent extends Component {
 
@@ -11,8 +12,10 @@ class Extend1ListComponent extends Component {
         list: [],
         loading: true,
         userId: this.props.userId || 0,
+        approvalUserId: this.props.approvalUserId || 0,
         infoId: this.props.infoId || 0,
         status: this.props.status || 0,
+        formId: this.props.formId,
         page: 1
     }
 
@@ -37,6 +40,7 @@ class Extend1ListComponent extends Component {
             infoId: infoId === 0 ? 0 : (infoId || this.state.infoId || 0),
             userId: userId === 0 ? 0 : (userId || this.state.userId || 0),
             status: status === 0 ? 0 : (status || this.state.status || 0),
+            formId: this.state.formId,
             page: page || this.state.page || 1,
         }
         api.FormInfoExtend1.List(parameter, json => {
@@ -51,20 +55,9 @@ class Extend1ListComponent extends Component {
         });
     }
 
-    handleBack = infoId => {
-        if (confirm(`你确定要已归还了吗？`)) {
-            api.FormInfoExtend1.Back(infoId, json => {
-                this.loadData();
-            })
-        }
-    }
-
-
     getColumns = () => {
         var columns = []
-        let infoId = this.props.infoId || 0;
-        let userId = this.props.userId || 0;
-        let formId = this.props.formId || 0;
+        let { userId, approvalUserId, formId } = this.state
         let formName = ''
         for (var key in api.Forms) {
             if (api.Forms.hasOwnProperty(key)) {
@@ -75,16 +68,14 @@ class Extend1ListComponent extends Component {
             }
         }
 
-        let currentUser = auth.getUser();
-        if (!infoId) {
-            columns.push({ title: formName, render: (text, item) => <span>{item.Title}<br />{item.Reason}</span> })
-        }
+        columns.push({ title: formName, render: (text, item) => <span>{item.Title}<br />{item.Reason}</span> })
         if (!userId) {
             columns.push({ title: '申请人', dataIndex: 'ApplyUser' })
         }
         columns = columns.concat([
+            { title: '审批人', dataIndex: 'ApprovalUser' },
             { title: '申请日期', dataIndex: 'CreateTime', render: (text, item) => moment(text).format('ll') },
-            { title: '使用时间范围', render: (text, item) => <span>{moment(item.ScheduleBeginTime).format('ll')} ~ {moment(item.ScheduleEndTime).format('ll')}</span> },
+            { title: '时间范围', render: (text, item) => <span>{moment(item.ScheduleBeginTime).format('ll')} ~ {moment(item.ScheduleEndTime).format('ll')}</span> },
             {
                 title: '申请结果', dataIndex: 'Result', render: (text, item) => {
                     switch (item.Result) {
@@ -93,34 +84,46 @@ class Extend1ListComponent extends Component {
                         case false:
                             return <Tag color="red">失败</Tag>
                         default:
-                            return <Tag>未审核</Tag>
+                            return <Tag>审核中</Tag>
                     }
                 }
             },
             { title: '处理日期', dataIndex: 'UpdateTime', render: (text, item) => text ? moment(text).format('ll') : null },
             {
-                title: '操作',
-                render: (text, item) => <span>
-                    {item.Result === null && item.ApprovalUserId === currentUser.ID ?
-                        <SubmitFlowModal
-                            infoId={item.ID}
-                            trigger={<Button>审核</Button>}
-                            callback={this.handleSubmitFlowCallback}
-                        />
-                        : null}
-                    {item.Result === true && item.UserId === currentUser.ID && !item.RealEndTime ?
-                        <Button icon="reply" type="primary" onClick={() => this.handleBack(item.ID)}>归还</Button>
-                        : null}
-                </span>
+                title: '操作', render: this.props.buttons
             }
         ]);
         return columns;
     }
 
+    handlePageChange = page => {
+        let parameter = this.state
+        parameter.page = page;
+        let url = api.FormInfoExtend1.ListUrl(parameter)
+        utils.Redirect(url)
+    }
+
+    handleStatusChange = val => {
+        let parameter = this.state
+        parameter.status = val
+        let url = api.FormInfoExtend1.ListUrl(parameter)
+        utils.Redirect(url)
+    }
+
+    reload = () => {
+        this.loadData()
+    }
 
     render() {
         return (
             <div>
+                <div className="toolbar">
+                    <Radio.Group defaultValue={this.state.status} onChange={e => this.handleStatusChange(e.target.value)}>
+                        <Radio.Button value={0}>全部</Radio.Button>
+                        <Radio.Button value={1}>待审核</Radio.Button>
+                        <Radio.Button value={2}>已审核</Radio.Button>
+                    </Radio.Group>
+                </div>
                 <Table
                     rowKey="ID"
                     loading={this.state.loading}
@@ -128,14 +131,14 @@ class Extend1ListComponent extends Component {
                     dataSource={this.state.list}
                     pagination={{
                         size: 5, ...this.state.page,
-                        onChange: (page) => {
-                            this.loadData(this.state.infoId, this.state.userId, this.state.status, page)
-                        },
+                        onChange: this.handlePageChange,
                     }}
                 />
             </div>
         );
     }
 }
-
+Extend1ListComponent.propTypes = {
+    formId: PropTypes.number.isRequired,
+}
 export default Extend1ListComponent;

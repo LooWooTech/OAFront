@@ -42,6 +42,9 @@ module.exports = {
     Redirect(path) {
         hashHistory.push(path);
     },
+    ReloadPage(url) {
+        console.log(window.location.href)
+    },
     Request(url, method, data, cb, err, async) {
         return xmlHttpRequest(url, method, data, cb, err, async)
     },

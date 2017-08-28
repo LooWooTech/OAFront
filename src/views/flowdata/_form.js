@@ -12,7 +12,21 @@ class FlowNodeDataForm extends Component {
         toUser: {},
         sms: true,
         ...this.props,
+        loading: true,
         itemLayout: this.props.itemLayout || { labelCol: { span: 2 }, wrapperCol: { span: 16 } }
+    }
+
+    componentWillMount() {
+        //如果只传了flowDataId
+        console.log(this.props.flowDataId)
+        if (!this.state.flowData && this.state.flowDataId) {
+            api.FlowData.Model(this.state.flowDataId, this.state.infoId, data => {
+                this.setState({ loading: false, ...data })
+            })
+        }
+        else {
+            this.setState({ loading: false })
+        }
     }
 
     submit = (callback) => {
@@ -104,7 +118,7 @@ class FlowNodeDataForm extends Component {
     }
 
     render() {
-        if (!this.state.flowData || !this.state.flowNodeData) return null;
+        if (this.state.loading || !this.state.flowData || !this.state.flowNodeData) return null;
         if (this.state.flowNodeData.Result != null || !auth.isCurrentUser(this.state.flowNodeData.UserId)) return null;
         return <Form
             ref="form"
@@ -117,8 +131,8 @@ class FlowNodeDataForm extends Component {
 }
 FlowNodeDataForm.propTypes = {
     infoId: PropTypes.number.isRequired,
-    flowData: PropTypes.object.isRequired,
-    flowNodeData: PropTypes.object.isRequired,
+    flowData: PropTypes.object,
+    flowNodeData: PropTypes.object,
     onSubmit: PropTypes.func,
 }
 export default FlowNodeDataForm

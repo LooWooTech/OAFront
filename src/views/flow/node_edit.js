@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Input, Select, Button, Radio } from 'antd'
+import { Input, Select, Button, Radio, Checkbox } from 'antd'
 import SharedModal from '../shared/_formmodal'
 import FreeNodeModal from './freenode_edit'
 import api from '../../models/api';
@@ -123,7 +123,14 @@ class EditNodeModal extends Component {
                     trigger={<Button>设置</Button>} />
             </div>
         });
-
+        // items.push({
+        //     title: '可结束流程', name: 'CanComplete',
+        //     render: <Checkbox
+        //         checked={this.state.canComplete === undefined ? record.CanComplete : this.state.canComplete}
+        //         onClick={e => this.setState({ canComplete: e.target.checked })}>
+        //         是
+        //         </Checkbox>
+        // })
         return items;
     };
 

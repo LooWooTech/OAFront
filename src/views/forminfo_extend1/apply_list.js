@@ -1,38 +1,56 @@
 import React, { Component } from 'react'
-import { Radio, Alert } from 'antd'
+import { Button } from 'antd'
+import BackModal from './_back_modal'
 import List from './_list'
+import auth from '../../models/auth'
+import api from '../../models/api'
 
 class ApplyList extends Component {
     state = {
-        userId: this.props.userId || (this.props.location && this.props.location.query && this.props.location.query.userId) || 0,
         status: 1,
-        infoId: this.props.infoId || 0,
+        infoId: parseInt(this.props.infoId || (this.props.params && this.props.params.infoId), 10) || 0,
         formId: parseInt(this.props.formId || (this.props.params && this.props.params.formId), 10) || 0
     }
 
-    render() {
-        return (
-            <div>
-                <div className="toolbar">
-                    <Radio.Group defaultValue={this.state.status} onChange={e => {
-                        this.setState({ status: e.target.value })
-                    }}>
-                        <Radio.Button value={0}>全部</Radio.Button>
-                        <Radio.Button value={1}>待审核</Radio.Button>
-                        <Radio.Button value={2}>已审核</Radio.Button>
-                    </Radio.Group>
+    handleBackSubmit = () => {
+        this.refs.list.reload();
+    }
 
-                </div>
-                {this.state.formId ?
-                    <List
-                        userId={this.state.userId}
-                        status={this.state.status}
-                        formId={this.state.formId}
-                        infoId={this.props.infoId}
-                    />
-                    : <Alert message="缺少FormId参数" type="info" />}
-            </div>
-        )
+    defaultButtonsRender = (text, item) => {
+        if (!item.RealEndTime && item.Result === true && auth.isCurrentUser(item.UserId)) {
+            let text = '归还';
+            switch (this.state.formId) {
+                case api.Forms.Car.ID:
+                    text = '还车';
+                    break;
+                case api.Forms.MeetingRoom.ID:
+                    text = '使用完毕';
+                    break;
+                case api.Forms.Leave.ID:
+                    text = '请假结束';
+                    break;
+                default:
+                    text = '归还'
+                    break;
+            }
+            return <BackModal
+                title={text}
+                id={item.ID}
+                trigger={<Button>{text}</Button>}
+                onSubmit={this.handleBackSubmit}
+            />
+        }
+    }
+
+    render() {
+        let user = auth.getUser()
+        return <List
+            ref="list"
+            userId={user.ID}
+            formId={this.state.formId}
+            infoId={this.props.infoId}
+            buttons={this.defaultButtonsRender}
+        />
     }
 }
 

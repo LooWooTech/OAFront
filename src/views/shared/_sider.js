@@ -40,12 +40,12 @@ const sideMenuData = {
         {
             title: '申请', items: [
                 { path: '/car/', icon: 'fa fa-car', text: '车辆查询' },
-                { path: `/extend1/${api.Forms.Car.ID}/my/`, icon: 'fa fa-inbox', text: '我的申请' }
+                { path: `/extend1/${api.Forms.Car.ID}/requests`, icon: 'fa fa-inbox', text: '我的申请' }
             ]
         }, {
             title: '管理&审核', items: [
                 { path: '/car/list', icon: 'fa fa-list', text: '车辆管理', role: 2 },
-                { path: `/extend1/${api.Forms.Car.ID}/`, icon: 'fa fa-check', text: '车辆审核' }
+                { path: `/extend1/${api.Forms.Car.ID}/approvals`, icon: 'fa fa-check', text: '车辆审核' }
             ]
         }
     ],
@@ -53,12 +53,12 @@ const sideMenuData = {
         {
             title: '申请', items: [
                 { path: '/meetingroom/', icon: 'fa fa-home', text: '会议室查询' },
-                { path: `/extend1/${api.Forms.MeetingRoom.ID}/my/`, icon: 'fa fa-inbox', text: '我的申请' }
+                { path: `/extend1/${api.Forms.MeetingRoom.ID}/requests`, icon: 'fa fa-inbox', text: '我的申请' }
             ]
         }, {
             title: '管理&审核', items: [
                 { path: '/meetingroom/list', icon: 'fa fa-list', text: '会议室管理', role: 2 },
-                { path: `/extend1/${api.Forms.MeetingRoom.ID}/`, icon: 'fa fa-check', text: '会议室审核' }
+                { path: `/extend1/${api.Forms.MeetingRoom.ID}/approvals`, icon: 'fa fa-check', text: '会议室审核' }
             ]
         }
     ],
@@ -66,12 +66,12 @@ const sideMenuData = {
         {
             title: '申请', items: [
                 { path: '/seal/', icon: 'fa fa-circle-o', text: '图章查询' },
-                { path: `/extend1/${api.Forms.Seal.ID}/my/`, icon: 'fa fa-inbox', text: '我的申请' }
+                { path: `/extend1/${api.Forms.Seal.ID}/requests`, icon: 'fa fa-inbox', text: '我的申请' }
             ]
         }, {
             title: '管理&审核',  items: [
                 { path: '/seal/list', icon: 'fa fa-list', text: '图章管理', role: 2 },
-                { path: `/extend1/${api.Forms.Seal.ID}/`, icon: 'fa fa-check', text: '图章审核' }
+                { path: `/extend1/${api.Forms.Seal.ID}/approvals`, icon: 'fa fa-check', text: '图章审核' }
             ]
         }
     ],
@@ -88,12 +88,12 @@ const sideMenuData = {
         {
             title: '考勤', items: [
                 { path: '/attendance', icon: 'fa fa-calendar-check-o', text: '考勤记录' },
-                { path: `/extend1/${api.Forms.Leave.ID}/my/`, icon: 'fa fa-history', text: '我的请假记录' },
+                { path: `/extend1/${api.Forms.Leave.ID}/requests`, icon: 'fa fa-history', text: '我的请假记录' },
             ]
         },
         {
             title: '管理', items: [
-                { path: `/extend1/${api.Forms.Leave.ID}/`, icon: 'fa fa-list', text: '请假审核', },
+                { path: `/extend1/${api.Forms.Leave.ID}/approvals`, icon: 'fa fa-list', text: '请假审核', },
                 { path: '/attendance/holidays', icon: 'fa fa-calendar', text: '节假日管理', role: 2 }
             ]
         }

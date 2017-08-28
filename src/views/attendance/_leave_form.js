@@ -1,18 +1,20 @@
 import React, { Component } from 'react'
-import { Input, DatePicker, Button, message, Radio } from 'antd'
+import { Input, DatePicker, Button, message, Radio, Select } from 'antd'
 import FormModal from '../shared/_formmodal'
-import SelectUser from '../shared/_user_select'
 import api from '../../models/api'
 import utils from '../../utils'
 
 class LeaveApplyForm extends Component {
-    state = {}
+    state = { toUsers: [], loading: true }
+
+    componentWillMount() {
+        api.User.ParentTitleUserList(0, data => {
+            this.setState({ toUsers: data, loading: false })
+        })
+    }
+
     handleSubmit = formData => {
-        let users = this.refs.selectUserForm.getSelectedUsers()
-        if (users.length > 0) {
-            formData.ApprovalUserId = users[0].ID
-        }
-        else {
+        if (!formData.ApprovalUserId) {
             message.error("请先选择发送人")
             return false
         }
@@ -29,7 +31,7 @@ class LeaveApplyForm extends Component {
                 this.props.onSubmit(json);
             }
             message.success("申请成功，请等待审核");
-            utils.Redirect(`/extend1/${api.Forms.Leave.ID}/my`)
+            utils.Redirect(`/extend1/${api.Forms.Leave.ID}/requests`)
         })
     }
 
@@ -42,6 +44,7 @@ class LeaveApplyForm extends Component {
     }
 
     render() {
+        if (this.state.loading) return null
         return (
             <FormModal
                 title="申请假期"
@@ -62,18 +65,22 @@ class LeaveApplyForm extends Component {
                         render: <DatePicker showTime format="YYYY-MM-DD HH:mm" />,
                         rules: [{ required: true, message: '请选择开始日期' }],
                     },
-                    { title: '结束日期', name: 'ScheduleEndTime', render: <DatePicker showTime format="YYYY-MM-DD HH:mm" />, rules: [{ required: true, message: '请选择结束日期' }], },
-                    { title: '请假事由', name: 'Reason', render: <Input type="textarea" autosize={{ minRows: 2, maxRows: 4 }} />, rules: [{ required: true, message: '请填写请假理由' }] },
+                    {
+                        title: '结束日期', name: 'ScheduleEndTime',
+                        render: <DatePicker showTime format="YYYY-MM-DD HH:mm" />,
+                        rules: [{ required: true, message: '请选择结束日期' }],
+                    },
+                    {
+                        title: '请假事由', name: 'Reason',
+                        render: <Input type="textarea" autosize={{ minRows: 2, maxRows: 4 }} />,
+                        rules: [{ required: true, message: '请填写请假理由' }]
+                    },
                     {
                         title: '审核人',
-                        render: <SelectUser
-                            formType="flow"
-                            flowId={api.Forms.Car.ID}
-                            flowStep={2}
-                            onSubmit={this.handleSelect}
-                            ref="selectUserForm"
-                        />,
-                        after: <span>{(this.state.toUser || {}).ID > 0 ? ' 已选 ' + this.state.toUser.RealName : ''}</span>
+                        name: 'ApprovalUserId',
+                        render: <Select>
+                            {this.state.toUsers.map(user => <Select.Option key={user.ID}>{user.RealName}</Select.Option>)}
+                        </Select>,
                     },
                 ]}
             />
