@@ -39,7 +39,7 @@ const sideMenuData = {
     car: [
         {
             title: '申请', items: [
-                { path: '/car/', icon: 'fa fa-car', text: '车辆查询' },
+                { path: '/car', icon: 'fa fa-car', text: '车辆查询' },
                 { path: `/extend1/${api.Forms.Car.ID}/requests`, icon: 'fa fa-inbox', text: '我的申请' }
             ]
         }, {
@@ -52,7 +52,7 @@ const sideMenuData = {
     meetingroom: [
         {
             title: '申请', items: [
-                { path: '/meetingroom/', icon: 'fa fa-home', text: '会议室查询' },
+                { path: '/meetingroom', icon: 'fa fa-home', text: '会议室查询' },
                 { path: `/extend1/${api.Forms.MeetingRoom.ID}/requests`, icon: 'fa fa-inbox', text: '我的申请' }
             ]
         }, {
@@ -65,7 +65,7 @@ const sideMenuData = {
     seal: [
         {
             title: '申请', items: [
-                { path: '/seal/', icon: 'fa fa-circle-o', text: '图章查询' },
+                { path: '/seal', icon: 'fa fa-circle-o', text: '图章查询' },
                 { path: `/extend1/${api.Forms.Seal.ID}/requests`, icon: 'fa fa-inbox', text: '我的申请' }
             ]
         }, {

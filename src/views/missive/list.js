@@ -13,7 +13,7 @@ export default class MissiveList extends React.Component {
         formId: this.props.params.formId,
         status: this.props.location.query.status,
         page: {
-            pageSize: 20,
+            pageSize: 10,
             current: this.props.location.query.page || 1,
             total: 0
         },
@@ -59,13 +59,11 @@ export default class MissiveList extends React.Component {
     }
 
     handleSearch = searchKey => {
-        let url = `/missive/list/${this.state.formId}/?status=${this.state.status}&searchKey=${searchKey}&page=${this.state.page.current}`
-        utils.Redirect(url)
+        utils.ReloadPage({ searchKey })
     };
 
     handlePageChange = page => {
-        let url = `/missive/list/${this.state.formId}/?status=${this.state.status}&searchKey=${this.state.searchKey}&page=${page}`
-        utils.Redirect(url)
+        utils.ReloadPage({ page })
     }
 
     handleDelete = item => {
@@ -76,7 +74,7 @@ export default class MissiveList extends React.Component {
 
     getColumns = () => {
         let items = [
-            { title: '文号', dataIndex: 'WJ_ZH' },
+            { title: '文号', dataIndex: 'WJ_ZH', width: 200, },
             {
                 title: '标题', dataIndex: 'WJ_BT',
                 render: (text, item) => <Link to={`/missive/edit/${this.state.formId}/?id=${item.ID}`}>
@@ -85,9 +83,9 @@ export default class MissiveList extends React.Component {
                     {text}
                 </Link>
             },
-            { title: '办理期限', dataIndex: 'QX_RQ', render: (text, item) => text ? moment(text).format('ll') : null },
-            { title: '所在流程', dataIndex: 'FlowStep' },
-            { title: '处理日期', dataIndex: 'UpdateTime', render: (text, item) => text ? moment(text).format('ll') : null },
+            { title: '办理期限', width: 130, dataIndex: 'QX_RQ', render: (text, item) => text ? moment(text).format('ll') : null },
+            { title: '所在流程', width: 120, dataIndex: 'FlowStep' },
+            { title: '处理日期', width: 130, dataIndex: 'UpdateTime', render: (text, item) => text ? moment(text).format('ll') : null },
             {
                 title: '操作', render: (text, item) => {
                     if (auth.isCurrentUser(item.PostUserId)) {

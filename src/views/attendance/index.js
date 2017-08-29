@@ -20,7 +20,7 @@ export default class AttendanceIndex extends React.Component {
     };
 
     handleApplySubmit = (error, values) => {
-        
+
     };
 
     componentWillMount() {
@@ -86,20 +86,37 @@ export default class AttendanceIndex extends React.Component {
     };
 
     dateCellRender = date => {
+        date = moment(date.format('YYYY-MM-DDT00:00:00'))
         let model = this.state.list.find(e => moment(e.Date).format('YYYYMMDD') === date.format('YYYYMMDD'))
+        var holiday = this.state.holiday.find(e => moment(e.BeginDate) <= date && date <= moment(e.EndDate))
+        var leave = this.state.leaves.find(e => moment(e.ScheduleBeginTime) <= date && date <= moment(e.ScheduleEndTime))
         let today = moment();
-        return <ul>
-            {model == null ? date < today ?
-                <span>
-                    无记录
-                </span>
-                : ''
-                :
-                <span>
-                    {this.getAttendanceResult(model.AMResult, '上午')} <br />
-                    {this.getAttendanceResult(model.PMResult, '下午')}
-                </span>
+        if (!model) {
+            if (holiday) {
+                return holiday.Name.indexOf('周') ? '周末' : '节假日'
             }
+            if (leave && leave.Result) {
+                switch (leave.InfoId) {
+                    case 1:
+                        return '公事请假';
+                    case 2:
+                        return '私事请假';
+                    case 3:
+                        return '病假';
+                    case 4:
+                        return '调休';
+                    default:
+                        return '请假';
+                }
+            }
+            return date < today ? '无记录' : ''
+        }
+        return <ul>
+            <span>
+
+                {this.getAttendanceResult(model.AMResult, '上午')} <br />
+                {this.getAttendanceResult(model.PMResult, '下午')}
+            </span>
         </ul>
     };
 
@@ -157,7 +174,7 @@ export default class AttendanceIndex extends React.Component {
             return <Card>
                 <Button icon="clock" disabled={true} className="btn-checkInOut">
                     {this.state.now.format('LTS')} <br />
-                    <span style={{fontSize:'0.8rem'}}>当前时间不能打卡</span>
+                    <span style={{ fontSize: '0.8rem' }}>当前时间不能打卡</span>
                 </Button>
             </Card>;
         }
@@ -165,6 +182,9 @@ export default class AttendanceIndex extends React.Component {
     }
 
     render() {
+        if (this.state.loading) {
+            return null
+        }
         return <div>
             <div className="toolbar">
                 <Button.Group>
@@ -210,8 +230,7 @@ export default class AttendanceIndex extends React.Component {
                     </Card>
                     <Card title="请假记录" style={{ marginTop: "10px" }}>
                         {this.state.leavesOfDate.length > 0 ? this.state.leavesOfDate.map(item => <span key={item.ID}>
-                            {item.Title} <br />
-                            {moment(item.ScheduleBeginTime).format('lll')}~moment(item.ScheduleEndTime).format('lll')
+                            {moment(item.ScheduleBeginTime).format('lll')}~{moment(item.ScheduleEndTime).format('lll')}
                         </span>)
                             : <span>未请假</span>
                         }

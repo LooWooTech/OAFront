@@ -11,7 +11,7 @@ class TaskList extends Component {
         searchKey: '',
         status: this.props.location.query.status,
         page: {
-            pageSize: 20,
+            pageSize: 10,
             current: this.props.location.query.page || 1,
             total: 0
         },
@@ -50,13 +50,11 @@ class TaskList extends Component {
     }
 
     handleSearch = searchKey => {
-        let url = `/task/?status=${this.state.status}&searchKey=${searchKey}&page=${this.state.page.current}`
-        utils.Redirect(url)
+        utils.ReloadPage({ searchKey })
     }
 
     handlePageChange = page => {
-        let url = `/task/?status=${this.state.status}&searchKey=${this.state.searchKey}&page=${page}`
-        utils.Redirect(url)
+        utils.ReloadPage({ page })
     }
 
     render() {

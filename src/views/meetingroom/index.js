@@ -46,7 +46,11 @@ class MeetingRoomIndex extends Component {
                     )}
                 </Menu>
                 {this.state.roomId ?
-                    <ApplyList infoId={this.state.roomId} />
+                    <ApplyList
+                        infoId={this.state.roomId}
+                        formId={api.Forms.MeetingRoom.ID}
+                        toolbar={false}
+                    />
                     :
                     <Alert message="还没添加任何会议室" />
                 }

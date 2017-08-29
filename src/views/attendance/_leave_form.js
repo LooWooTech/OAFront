@@ -52,7 +52,7 @@ class LeaveApplyForm extends Component {
                 onSubmit={this.handleSubmit}
                 children={[
                     {
-                        title: '请假类型', name: 'Category', defaultValue: 1,
+                        title: '请假类型', name: 'InfoId', defaultValue: 1,
                         render: <Radio.Group>
                             <Radio value={1}>公事</Radio>
                             <Radio value={2}>私事</Radio>

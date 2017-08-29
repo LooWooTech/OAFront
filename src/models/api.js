@@ -29,7 +29,7 @@ function getExceptionMessage(ex) {
 function invokeApi(path, method, data, callback, onError, async = true) {
     var url = host + apiPath + path;
     if (data && (method === HTTP_GET || method === HTTP_DELETE)) {
-        url += (url.indexOf('?') > 0 ? '&' : '?') + jsonToQueryString(data)
+        url += (url.indexOf('?') > 0 ? '&' : '?') + utils.jsonToQueryString(data)
         data = null
     }
 
@@ -49,16 +49,7 @@ function invokeApi(path, method, data, callback, onError, async = true) {
         console.log("ERROR:", error);
     }, async);
 }
-function jsonToQueryString(json) {
-    if (!json)
-        return null;
-    return Object
-        .keys(json)
-        .map(function (key) {
-            return encodeURIComponent(key) + '=' + encodeURIComponent(json[key]);
-        })
-        .join('&');
-}
+
 module.exports = {
     Forms,
     //断开请求
@@ -330,7 +321,7 @@ module.exports = {
     },
     FormInfoExtend1: {
         ListUrl: (parameters) => {
-            let queryString = jsonToQueryString({
+            let queryString = utils.jsonToQueryString({
                 infoId: parameters.infoId || 0,
                 page: parameters.page || 1,
                 searchKey: parameters.searchKey || '',
@@ -343,8 +334,8 @@ module.exports = {
         List: (parameters, cb, err) => {
             invokeApi('FormInfoExtend1/List', HTTP_GET, parameters, cb, err);
         },
-        Approval: (infoId, cb, err) => {
-            invokeApi('FormInfoExtend1/Approval?infoId=' + infoId, HTTP_GET, null, cb, err);
+        Approval: (id, result = true, toUserId = 0, cb, err) => {
+            invokeApi('attendance/approval', HTTP_GET, { id, result, toUserId }, cb, err);
         },
         Back: (infoId, backTime, cb, err) => {
             invokeApi('FormInfoExtend1/Back?id=' + infoId + '&backTime=' + backTime, HTTP_GET, null, cb, err);

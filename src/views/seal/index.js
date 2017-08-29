@@ -46,7 +46,11 @@ class SealIndex extends Component {
                     )}
                 </Menu>
                 {this.state.sealId ?
-                    <ApplyList infoId={this.state.sealId} />
+                    <ApplyList
+                        infoId={this.state.sealId}
+                        formId={api.Forms.Seal.ID}
+                        toolbar={false}
+                    />
                     :
                     <Alert message="还没添加任何图章" />
                 }

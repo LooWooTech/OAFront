@@ -8,8 +8,7 @@ import api from '../../models/api'
 class ApplyList extends Component {
     state = {
         status: 1,
-        infoId: parseInt(this.props.infoId || (this.props.params && this.props.params.infoId), 10) || 0,
-        formId: parseInt(this.props.formId || (this.props.params && this.props.params.formId), 10) || 0
+        formId: parseInt(this.props.params.formId, 10) || 0
     }
 
     handleBackSubmit = () => {
@@ -48,7 +47,6 @@ class ApplyList extends Component {
             ref="list"
             userId={user.ID}
             formId={this.state.formId}
-            infoId={this.props.infoId}
             buttons={this.defaultButtonsRender}
         />
     }

@@ -18,7 +18,6 @@ class FlowNodeDataForm extends Component {
 
     componentWillMount() {
         //如果只传了flowDataId
-        console.log(this.props.flowDataId)
         if (!this.state.flowData && this.state.flowDataId) {
             api.FlowData.Model(this.state.flowDataId, this.state.infoId, data => {
                 this.setState({ loading: false, ...data })
@@ -32,14 +31,13 @@ class FlowNodeDataForm extends Component {
     submit = (callback) => {
         var form = this.refs.form;
         form.validateFields((err, data) => {
-            let users = this.refs.selectUserForm.getSelectedUsers()
+            let users = this.refs.selectUserForm ? this.refs.selectUserForm.getSelectedUsers() : []
             data.ToUserId = users.length > 0 ? users[0].ID : 0;
 
-            if (!this.props.canComplete && this.state.result && !data.ToUserId) {
+            if (!this.state.canComplete && data.Result && !data.ToUserId) {
                 message.error("请先选择发送人")
                 return false
             }
-            data.Result = this.state.result;
             if (!data.Result && !confirm('你确定要退回吗？')) return false
 
             api.FlowData.Submit(data.ToUserId, data.InfoId, data, json => {
@@ -48,9 +46,8 @@ class FlowNodeDataForm extends Component {
                     if (this.state.sms) {
                         api.Sms.Send(data.ToUserId, data.InfoId);
                     }
-                    const callback = this.props.onSubmit
-                    if (callback) {
-                        callback(json)
+                    if (this.props.onSubmit) {
+                        this.props.onSubmit(json)
                     }
                 })
             })
@@ -59,7 +56,8 @@ class FlowNodeDataForm extends Component {
     }
 
     getFormItems = () => {
-        let { flowNodeData, flowData, canBack, canComplete } = this.props;
+        if (this.state.loading) return null
+        let { flowNodeData, flowData, canBack, canComplete } = this.state;
         let currentNode = flowData.Flow.Nodes.find(e => e.ID === flowNodeData.FlowNodeId)
         let prevNode = currentNode ? flowData.Flow.Nodes.find(e => e.ID === currentNode.PrevId) : null
         let nextNode = currentNode ? flowData.Flow.Nodes.find(e => e.PrevId === currentNode.ID) : null
@@ -82,9 +80,9 @@ class FlowNodeDataForm extends Component {
         });
         if (canBack) {
             items.push({
-                title: '审核结果',
+                title: '审核结果', name: 'Result', defaultValue: true,
                 render:
-                <Radio.Group value={this.state.result} onChange={e => this.setState({ result: e.target.value })}>
+                <Radio.Group>
                     <Radio.Button value={true}>同意</Radio.Button>
                     <Radio.Button value={false}>不同意</Radio.Button>
                 </Radio.Group>

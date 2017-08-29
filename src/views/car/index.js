@@ -3,6 +3,7 @@ import { Menu } from 'antd'
 import api from '../../models/api'
 import ApplyList from '../forminfo_extend1/_list'
 import ApplyFormModal from './apply'
+import utils from '../../utils'
 
 class CarIndex extends Component {
 
@@ -10,6 +11,7 @@ class CarIndex extends Component {
         list: [],
         flowId: api.Forms.Car.ID,
         carId: 0,
+        page: this.props.location.query.page || 1,
     }
 
     componentWillMount() {
@@ -25,6 +27,10 @@ class CarIndex extends Component {
 
     handleSubmit = () => this.loadData
 
+    handleChangeCar = ({ item, key, keyPath }) => {
+        this.setState({ carId: key })
+    }
+
     render() {
         if (this.state.loading) return null
         if (!this.state.carId) return null;
@@ -36,9 +42,7 @@ class CarIndex extends Component {
                 <Menu
                     mode="horizontal"
                     defaultSelectedKeys={[this.state.carId.toString() || '']}
-                    onClick={({ item, key, keyPath }) => {
-                        this.setState({ carId: key })
-                    }}>
+                    onClick={this.handleChangeCar}>
 
                     {this.state.list.map(item =>
                         <Menu.Item key={item.ID}>
@@ -46,7 +50,11 @@ class CarIndex extends Component {
                         </Menu.Item>
                     )}
                 </Menu>
-                <ApplyList infoId={this.state.carId} />
+                <ApplyList
+                    infoId={this.state.carId}
+                    toolbar={false}
+                    formId={api.Forms.Car.ID}
+                />
             </div>
         )
     }

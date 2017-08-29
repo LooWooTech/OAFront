@@ -3,13 +3,12 @@ import { Button } from 'antd'
 import List from './_list'
 import api from '../../models/api'
 import auth from '../../models/auth'
-import SubmitFlowModal from '../flowdata/_modal'
 import LeaveApprovalModal from '../attendance/_leave_approval'
+import ApprovalModal from './_approval_modal'
 
 class ApprovalList extends Component {
     state = {
         status: 1,
-        //infoId: parseInt(this.props.infoId || (this.props.params && this.props.params.infoId), 10) || 0,
         formId: parseInt(this.props.params.formId, 10) || 0
     }
 
@@ -26,12 +25,7 @@ class ApprovalList extends Component {
                 case api.Forms.Leave.ID:
                     return <LeaveApprovalModal model={item} onSubmit={this.handleSubmit} />
                 default:
-                    return <SubmitFlowModal
-                        infoId={item.ID}
-                        flowDataId={item.FlowDataId}
-                        trigger={<Button>审核</Button>}
-                        callback={this.handleSubmitFlowCallback}
-                    />
+                    return <ApprovalModal model={item} onSubmit={this.handleSubmit} />
             }
         }
     }
@@ -42,7 +36,6 @@ class ApprovalList extends Component {
             ref="list"
             approvalUserId={user.ID}
             formId={this.state.formId}
-            infoId={this.props.infoId}
             buttons={this.defaultButtonsRender}
         />
     }

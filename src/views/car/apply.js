@@ -16,9 +16,9 @@ class CarApplyModal extends Component {
             return false
         }
 
-        let carId = formData.CarId;
+        let carId = formData.InfoId;
         if (!carId) {
-            message.error("参数不正确");
+            message.error("请选择正确的车辆");
             return false;
         }
         if (!formData.ScheduleBeginTime || !formData.ScheduleEndTime) {
@@ -29,6 +29,7 @@ class CarApplyModal extends Component {
         formData.ScheduleEndTime = formData.ScheduleEndTime.format()
 
         api.Car.Apply(formData, json => {
+            message.success('申请完成，请等待审核');
             if (this.props.onSubmit) {
                 this.props.onSubmit(json);
             }
@@ -53,7 +54,7 @@ class CarApplyModal extends Component {
                 onSubmit={this.handleSubmit}
                 children={[
                     {
-                        title: '申请车辆', name: 'CarId', defaultValue: '',
+                        title: '申请车辆', name: 'InfoId', defaultValue: '',
                         rules: [{ required: true, message: '请选择申请车辆' }],
                         render: <Select>
                             {cars.map(car => <Select.Option key={car.ID}>{car.Name}（{car.Number}）</Select.Option>)}

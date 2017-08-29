@@ -1,12 +1,16 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Table, Tag, Radio } from 'antd'
+import { Table, Tag, Radio, Alert } from 'antd'
 import moment from 'moment'
 import api from '../../models/api'
 import utils from '../../utils'
 
 
 class Extend1ListComponent extends Component {
+
+    static contextTypes = {
+        router: PropTypes.object.isRequired
+    }
 
     state = {
         list: [],
@@ -16,35 +20,49 @@ class Extend1ListComponent extends Component {
         infoId: this.props.infoId || 0,
         status: this.props.status || 0,
         formId: this.props.formId,
-        page: 1
+        page: {
+            pageSize: 10,
+            current: this.context.router.location.query.page || 1,
+            total: 0
+        },
     }
+
 
     componentWillMount() {
         this.loadData()
     }
 
     componentWillReceiveProps(nextProps) {
-        let nextUserId = nextProps.userId
-        let nextInfoId = nextProps.infoId
-        let nextStatus = nextProps.status
-        if (nextUserId !== this.state.userId
-            || nextInfoId !== this.state.infoId
-            || nextStatus !== this.state.status
+        let formId = nextProps.formId
+        let infoId = nextProps.infoId
+        let status = nextProps.status
+        if (formId !== this.state.formId
+            || infoId !== this.state.infoId
+            || status !== this.state.status
         ) {
-            this.loadData(nextInfoId, nextUserId, nextStatus, this.state.page)
+            this.loadData(nextProps);
         }
     }
 
-    loadData = (infoId, userId, status, page) => {
+    loadData = (props) => {
+        props = props || {}
         let parameter = {
-            infoId: infoId === 0 ? 0 : (infoId || this.state.infoId || 0),
-            userId: userId === 0 ? 0 : (userId || this.state.userId || 0),
-            status: status === 0 ? 0 : (status || this.state.status || 0),
             formId: this.state.formId,
-            page: page || this.state.page || 1,
-        }
+            infoId: props.infoId || this.state.infoId || 0,
+            userId: this.state.userId,
+            approvalUserId: this.state.approvalUserId,
+            status: this.context.router.location.query.status || 0,
+            page: this.context.router.location.query.page || this.state.page.current || 1,
+            rows: this.state.page.pageSize
+        };
+
         api.FormInfoExtend1.List(parameter, json => {
-            this.setState({ list: json.List, ...parameter, loading: false })
+            this.setState({
+                list: json.List,
+                ...parameter,
+                page: json.Page,
+                loading: false
+            })
         })
     }
 
@@ -97,17 +115,11 @@ class Extend1ListComponent extends Component {
     }
 
     handlePageChange = page => {
-        let parameter = this.state
-        parameter.page = page;
-        let url = api.FormInfoExtend1.ListUrl(parameter)
-        utils.Redirect(url)
+        utils.ReloadPage({ page })
     }
 
     handleStatusChange = val => {
-        let parameter = this.state
-        parameter.status = val
-        let url = api.FormInfoExtend1.ListUrl(parameter)
-        utils.Redirect(url)
+        utils.ReloadPage({ status: val })
     }
 
     reload = () => {
@@ -115,15 +127,21 @@ class Extend1ListComponent extends Component {
     }
 
     render() {
+        if (!this.state.formId) {
+            return <Alert message="缺少formId参数" type="error" />
+        }
+
         return (
             <div>
-                <div className="toolbar">
-                    <Radio.Group defaultValue={this.state.status} onChange={e => this.handleStatusChange(e.target.value)}>
-                        <Radio.Button value={0}>全部</Radio.Button>
-                        <Radio.Button value={1}>待审核</Radio.Button>
-                        <Radio.Button value={2}>已审核</Radio.Button>
-                    </Radio.Group>
-                </div>
+                {this.props.toolbar !== false ?
+                    <div className="toolbar">
+                        <Radio.Group defaultValue={this.state.status} onChange={e => this.handleStatusChange(e.target.value)}>
+                            <Radio.Button value={0}>全部</Radio.Button>
+                            <Radio.Button value={1}>待审核</Radio.Button>
+                            <Radio.Button value={2}>已审核</Radio.Button>
+                        </Radio.Group>
+                    </div>
+                    : null}
                 <Table
                     rowKey="ID"
                     loading={this.state.loading}
@@ -137,8 +155,5 @@ class Extend1ListComponent extends Component {
             </div>
         );
     }
-}
-Extend1ListComponent.propTypes = {
-    formId: PropTypes.number.isRequired,
 }
 export default Extend1ListComponent;

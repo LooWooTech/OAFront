@@ -16,7 +16,7 @@ class SealApplyModal extends Component {
             return false
         }
 
-        let sealId = formData.SealId;
+        let sealId = formData.InfoId;
         if (!sealId) {
             message.error("参数不正确");
             return false;
@@ -29,6 +29,7 @@ class SealApplyModal extends Component {
         formData.ScheduleEndTime = formData.ScheduleEndTime.format()
 
         api.Seal.Apply(formData, json => {
+            message.success('申请完成，请等待审核');
             if (this.props.onSubmit) {
                 this.props.onSubmit(json);
             }
@@ -53,7 +54,7 @@ class SealApplyModal extends Component {
                 onSubmit={this.handleSubmit}
                 children={[
                     {
-                        title: '申请图章', name: 'SealId', defaultValue: '',
+                        title: '申请图章', name: 'InfoId', defaultValue: '',
                         rules: [{ required: true, message: '请选择申请图章' }],
                         render: <Select>
                             {seals.map(seal => <Select.Option key={seal.ID}>{seal.Name}（{seal.Number}）</Select.Option>)}

@@ -1,6 +1,5 @@
 import React from 'react'
 import { hashHistory } from 'react-router'
-
 let currentRequest = null;
 function xmlHttpRequest(url, method, data, cb, err) {
     var req = currentRequest = new XMLHttpRequest();
@@ -42,8 +41,41 @@ module.exports = {
     Redirect(path) {
         hashHistory.push(path);
     },
-    ReloadPage(url) {
-        console.log(window.location.href)
+    LoadPage(url, parameters) {
+
+    },
+    ReloadPage(parameters) {
+        parameters = parameters || {}
+        let hash = window.location.hash;
+        let pathAndQuery = hash.indexOf('#') > -1 ? window.location.hash.substring(1) : '/';
+        let queryIndex = pathAndQuery.indexOf('?')
+        let queryString = queryIndex > -1 ? pathAndQuery.substring(queryIndex + 1) : ''
+        let params = this.queryStringToJson(queryString)
+        Object.keys(parameters).map(key => params[key] = parameters[key])
+        let newQueryString = this.jsonToQueryString(params)
+        let path = queryIndex === -1 ? pathAndQuery : pathAndQuery.substring(0, queryIndex)
+        let newUrl = path + '?' + newQueryString
+        console.log(newUrl)
+        this.Redirect(newUrl)
+    },
+    queryStringToJson(str) {
+        let json = {}
+        str.split('&').map(kv => {
+            let arr = kv.split('=')
+            if (arr.length === 2) {
+                json[arr[0]] = arr[1]
+            }
+            return json
+        })
+        return json;
+    },
+    jsonToQueryString(json) {
+        if (!json)
+            return null;
+        return Object
+            .keys(json)
+            .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(json[key]))
+            .join('&');
     },
     Request(url, method, data, cb, err, async) {
         return xmlHttpRequest(url, method, data, cb, err, async)
