@@ -5,8 +5,6 @@ import utils from '../utils';
 const HTTP_GET = "GET"
 const HTTP_POST = "POST"
 const HTTP_DELETE = "DELETE"
-const HTTP_PUT = "PUT"
-
 
 const host = process.env.NODE_ENV === 'production' ? '/' : 'http://localhost:8012/';
 const apiPath = "api/";
@@ -14,9 +12,9 @@ const apiHost = host + apiPath;
 const Forms = {
     Missive: { ID: 1, Name: '公文发文' },
     ReceiveMissive: { ID: 2, Name: '公文收文' },
-    Car: { ID: 3, Name: '公车申请' },
+    Car: { ID: 3, Name: '用车' },
     Task: { ID: 4, Name: '任务' },
-    MeetingRoom: { ID: 5, Name: '请假' },
+    MeetingRoom: { ID: 5, Name: '会议室' },
     Seal: { ID: 6, Name: '图章' },
     Leave: { ID: 7, Name: '请假' }
 };
@@ -95,6 +93,10 @@ module.exports = {
         }
     },
     Form: {
+        GetName: (id) => {
+            let key = Object.keys(Forms).find(key => Forms[key].ID === id)
+            return Forms[key].Name
+        },
         Model: (formId, cb) => {
             invokeApi('form/model?id=' + formId, HTTP_GET, null, cb, null);
         },

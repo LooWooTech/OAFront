@@ -75,7 +75,7 @@ class FeedIndex extends Component {
             case api.Forms.MeetingRoom.ID:
             case api.Forms.Seal.ID:
             case api.Forms.Leave.ID:
-                link = `/extend1/${item.FormId}/approvals`;
+                link = `/extend1/approvals/${item.FormId}`;
                 break;
         }
         return <Link to={link}>{item.Title}</Link>

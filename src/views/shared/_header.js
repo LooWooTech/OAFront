@@ -1,6 +1,6 @@
 import React from 'react'
 import auth from '../../models/auth'
-import { Menu, Icon, Badge } from 'antd'
+import { Menu, Icon } from 'antd'
 import api from '../../models/api'
 import utils from '../../utils'
 

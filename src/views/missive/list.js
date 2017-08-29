@@ -44,9 +44,19 @@ export default class MissiveList extends React.Component {
     };
 
     componentWillReceiveProps(nextProps) {
-        const nextFormId = nextProps.params.formId
+        let nextFormId = nextProps.params.formId
+        let nextStatus = nextProps.location.query.status
+        let nextQuery = nextProps.location.query
+
+        if (nextFormId !== this.props.params.formId
+            || nextStatus !== this.props.location.query.status
+        ) {
+            nextQuery.page = 1;
+            nextQuery.searchKey = ''
+        }
+
         if (nextFormId !== this.props.params.formId || nextProps.location.search !== this.props.location.search) {
-            this.loadData(nextFormId, nextProps.location.query);
+            this.loadData(nextFormId, nextQuery);
         }
     }
 
@@ -59,7 +69,7 @@ export default class MissiveList extends React.Component {
     }
 
     handleSearch = searchKey => {
-        utils.ReloadPage({ searchKey })
+        utils.ReloadPage({ searchKey, page: 1 })
     };
 
     handlePageChange = page => {

@@ -45,6 +45,7 @@ class ApplyList extends Component {
         let user = auth.getUser()
         return <List
             ref="list"
+            title={'我的' + api.Form.GetName(this.state.formId) + '记录'}
             userId={user.ID}
             formId={this.state.formId}
             buttons={this.defaultButtonsRender}

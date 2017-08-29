@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Input, Select, Button, Radio, Checkbox } from 'antd'
+import { Input, Select, Button, Radio } from 'antd'
 import SharedModal from '../shared/_formmodal'
 import FreeNodeModal from './freenode_edit'
 import api from '../../models/api';

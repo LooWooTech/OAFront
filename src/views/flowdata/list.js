@@ -2,11 +2,9 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Button, Table, Badge } from 'antd'
 import moment from 'moment'
-import auth from '../../models/auth'
 import FlowNodeForm from './_form'
 import FreeFlowDataList from '../freeflow/_list'
 import FreeFlowNodeForm from '../freeflow/_form'
-import api from '../../models/api'
 import utils from '../../utils'
 
 class FlowDataList extends Component {

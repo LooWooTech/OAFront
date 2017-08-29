@@ -69,9 +69,9 @@ export default class Routes extends React.Component {
                     <IndexRoute component={SealIndex} />
                     <Route path="list" component={SealList} />
                 </Route>
-                <Route path="extend1/:formId">
-                    <Route path="approvals" component={Extend1ApprovalList} />
-                    <Route path="requests" component={Extend1ApplyList} />
+                <Route path="extend1">
+                    <Route path="approvals/:formId" component={Extend1ApprovalList} />
+                    <Route path="requests/:formId" component={Extend1ApplyList} />
                 </Route>
                 <Route path="task">
                     <IndexRoute component={TaskIndex} />

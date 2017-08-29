@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { Button } from 'antd'
 import List from './_list'
 import api from '../../models/api'
 import auth from '../../models/auth'
@@ -34,6 +33,7 @@ class ApprovalList extends Component {
         let user = auth.getUser()
         return <List
             ref="list"
+            title={api.Form.GetName(this.state.formId) + '审核'}
             approvalUserId={user.ID}
             formId={this.state.formId}
             buttons={this.defaultButtonsRender}

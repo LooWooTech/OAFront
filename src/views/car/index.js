@@ -3,7 +3,6 @@ import { Menu } from 'antd'
 import api from '../../models/api'
 import ApplyList from '../forminfo_extend1/_list'
 import ApplyFormModal from './apply'
-import utils from '../../utils'
 
 class CarIndex extends Component {
 

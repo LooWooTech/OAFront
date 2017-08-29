@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Input, Row, Col, message, Button, Tag, Checkbox } from 'antd'
+import { Input, Row, Col, message, Button, Checkbox } from 'antd'
 import SelectUser from '../shared/_user_select'
 import Form from '../shared/_form'
 import api from '../../models/api'

@@ -75,7 +75,7 @@ class Extend1ListComponent extends Component {
 
     getColumns = () => {
         var columns = []
-        let { userId, approvalUserId, formId } = this.state
+        let { userId, formId } = this.state
         let formName = ''
         for (var key in api.Forms) {
             if (api.Forms.hasOwnProperty(key)) {
@@ -135,6 +135,7 @@ class Extend1ListComponent extends Component {
             <div>
                 {this.props.toolbar !== false ?
                     <div className="toolbar">
+                        <h2>{this.props.title || ''}</h2>
                         <Radio.Group defaultValue={this.state.status} onChange={e => this.handleStatusChange(e.target.value)}>
                             <Radio.Button value={0}>全部</Radio.Button>
                             <Radio.Button value={1}>待审核</Radio.Button>
