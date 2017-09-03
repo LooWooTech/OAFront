@@ -63,7 +63,7 @@ module.exports = {
         str.split('&').map(kv => {
             let arr = kv.split('=')
             if (arr.length === 2) {
-                json[arr[0]] = arr[1]
+                json[arr[0]] =  decodeURIComponent(arr[1])
             }
             return json
         })

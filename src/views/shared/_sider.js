@@ -9,9 +9,13 @@ const sideMenuData = {
         {
             title: '动态', items: [
                 { path: '/?scope=all', icon: 'fa fa-comment', text: '全部动态' },
-                { path: '/?scope=my', icon: 'fa fa-comment-o', text: '我的动态' },
-                { path: '/?scope=star', icon: 'fa fa-star-o', text: '星标动态' },
-            ]
+            ],
+        },
+        {
+            title: '类型', items: Object.keys(api.Forms).map(key => {
+                var form = api.Forms[key]
+                return { path: '/?formId=' + form.ID, icon: 'fa fa-bookmark-o', text: form.Name }
+            })
         }
     ],
     missive: [
@@ -69,7 +73,7 @@ const sideMenuData = {
                 { path: `/extend1/requests/${api.Forms.Seal.ID}`, icon: 'fa fa-inbox', text: '我的申请' }
             ]
         }, {
-            title: '管理&审核',  items: [
+            title: '管理&审核', items: [
                 { path: '/seal/list', icon: 'fa fa-list', text: '图章管理', role: 2 },
                 { path: `/extend1/approvals/${api.Forms.Seal.ID}`, icon: 'fa fa-check', text: '图章审核' }
             ]

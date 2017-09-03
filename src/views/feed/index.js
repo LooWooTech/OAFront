@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import { Card, Icon, Dropdown, Menu, Pagination } from 'antd'
+import { Card, Alert, Pagination } from 'antd'
 import { Link } from 'react-router'
 import moment from 'moment'
 import api from '../../models/api'
-import auth from '../../models/auth'
+import utils from '../../utils'
 
 class FeedIndex extends Component {
 
@@ -14,41 +14,27 @@ class FeedIndex extends Component {
         list: [],
         page: {
             pageSize: 10,
-            current: this.props.location.query.page || 1,
+            current: parseInt(this.props.location.query.page || 1, 10),
             total: 0
         },
     }
 
     componentWillMount() {
-        this.loadData(this.state.userId);
+        this.loadData(this.props.location.query);
     }
 
     componentWillReceiveProps(nextProps) {
-        var scope = nextProps.location.query.scope;
-        if (scope !== this.props.location.query.scope) {
-            this.loadData(scope)
+        if (nextProps.location.search !== this.props.location.search) {
+            this.loadData(nextProps.location.query)
         }
     }
 
-
-    loadData = (scope, userId = 0, page = 1) => {
-        scope = scope || this.state.scope
-        switch (scope) {
-            default:
-            case 'all':
-                break;
-            case 'my':
-                userId = auth.getUser().ID
-                break;
-            case 'star':
-
-                break;
-        }
-        api.Feed.List(userId, page, this.state.page.pageSize, data => {
+    loadData = (params) => {
+        let formId = params.formId || ''
+        api.Feed.List(params, data => {
             this.setState({
                 loading: false,
-                scope: scope,
-                fromUserId: userId,
+                formId: formId,
                 list: data.List,
                 page: data.Page
             })
@@ -57,7 +43,11 @@ class FeedIndex extends Component {
 
     handleDelete = id => api.Feed.Delete(id, json => this.loadData())
 
-    getFeedContent = item => {
+    handlePageChange = page => {
+        utils.ReloadPage({ page })
+    }
+
+    itemRender = item => {
         //if (!item.) return null;
 
         var link = null;
@@ -82,31 +72,25 @@ class FeedIndex extends Component {
     }
 
     render() {
-
-        const currentUser = auth.getUser();
-
         return (
             <div className="feeds">
-                {this.state.list.map(item =>
+                {this.state.list.length > 0 ? this.state.list.map(item =>
                     <Card key={item.ID}
                         title={<div className="title">
                             <a href="#">{item.FromUser}</a>
                             {item.Action}了{item.FormName}{item.Type}
                             <span className="datetime"> {moment(item.CreateTime).format('lll')}</span>
                         </div>}
-                        extra={<Dropdown overlay={<Menu>
-                            {currentUser.ID === item.FromUserId ? <Menu.Item key="delete">删除</Menu.Item> : null}
-                        </Menu>}><Icon type="down" /></Dropdown>}
                     >
 
                         <div className="content">
-                            {this.getFeedContent(item)}
+                            {this.itemRender(item)}
                         </div>
                     </Card>
-                )}
-                <Pagination defaultCurrent={1} {...this.state.page} onChange={page => {
-                    this.loadData(null, null, page)
-                }}
+                ) : <span>
+                        <Alert message="Tips" description="暂无相关动态" />
+                    </span>}
+                <Pagination {...this.state.page} onChange={this.handlePageChange}
                     style={{ padding: '20px', float: 'right' }}
                 />
             </div>

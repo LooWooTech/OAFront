@@ -3,11 +3,13 @@ import { Table, Button, Popconfirm, Input, Select } from 'antd';
 import EditModal from './_edit';
 import Form from '../shared/_form'
 import api from '../../models/api';
+import utils from '../../utils'
 
 export default class UserList extends React.Component {
     state = {
         loading: true,
-        searchKey: '',
+        searchKey: this.props.location.query.searchKey || '',
+        departmentId: this.props.location.query.departmentId || 0,
         page: {
             pageSize: 20,
             current: parseInt(this.props.location.query.page || '1', 10),
@@ -56,9 +58,18 @@ export default class UserList extends React.Component {
     }
 
     handleSearch = (data) => {
-        this.loadData(data.departmentId, data.searchKey)
+        utils.ReloadPage({ departmentId: data.departmentId || 0, searchKey: data.searchKey || '' })
         return false
     }
+
+    componentWillReceiveProps(nextProps) {
+        let departmentId = nextProps.location.query.departmentId
+        let searchKey = nextProps.location.query.searchKey
+        if (departmentId !== this.state.departmentId || searchKey !== this.state.searchKey) {
+            this.loadData(departmentId, searchKey, 1)
+        }
+    }
+
 
     render() {
         return <div>

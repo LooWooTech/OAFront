@@ -33,7 +33,7 @@ class FlowNodeDataForm extends Component {
         form.validateFields((err, data) => {
             let users = this.refs.selectUserForm ? this.refs.selectUserForm.getSelectedUsers() : []
             data.ToUserId = users.length > 0 ? users[0].ID : 0;
-
+            data.Result = this.state.result;
             if (!this.state.canComplete && data.Result && !data.ToUserId) {
                 message.error("请先选择发送人")
                 return false
@@ -80,9 +80,9 @@ class FlowNodeDataForm extends Component {
         });
         if (canBack) {
             items.push({
-                title: '审核结果', name: 'Result', defaultValue: true,
+                title: '审核结果',
                 render:
-                <Radio.Group>
+                <Radio.Group value={this.state.result} onChange={e => this.setState({ result: e.target.value })}>
                     <Radio.Button value={true}>同意</Radio.Button>
                     <Radio.Button value={false}>不同意</Radio.Button>
                 </Radio.Group>

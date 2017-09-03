@@ -10,8 +10,8 @@ const host = process.env.NODE_ENV === 'production' ? '/' : 'http://localhost:801
 const apiPath = "api/";
 const apiHost = host + apiPath;
 const Forms = {
-    Missive: { ID: 1, Name: '公文发文' },
-    ReceiveMissive: { ID: 2, Name: '公文收文' },
+    Missive: { ID: 1, Name: '发文' },
+    ReceiveMissive: { ID: 2, Name: '收文' },
     Car: { ID: 3, Name: '用车' },
     Task: { ID: 4, Name: '任务' },
     MeetingRoom: { ID: 5, Name: '会议室' },
@@ -322,17 +322,6 @@ module.exports = {
         }
     },
     FormInfoExtend1: {
-        ListUrl: (parameters) => {
-            let queryString = utils.jsonToQueryString({
-                infoId: parameters.infoId || 0,
-                page: parameters.page || 1,
-                searchKey: parameters.searchKey || '',
-                status: parameters.status || ''
-            });
-            let isMyList = auth.isCurrentUser(parameters.userId)
-            let path = isMyList ? "requests" : 'approvals'
-            return `/extend1/${parameters.formId}/${path}?` + queryString
-        },
         List: (parameters, cb, err) => {
             invokeApi('FormInfoExtend1/List', HTTP_GET, parameters, cb, err);
         },
@@ -386,8 +375,8 @@ module.exports = {
         }
     },
     Feed: {
-        List: (userId, page, rows, cb, err) => {
-            invokeApi('feed/list', HTTP_GET, { userId, page, rows }, cb, err);
+        List: (parameters, cb, err) => {
+            invokeApi('feed/list', HTTP_GET, parameters, cb, err);
         },
         Delete: (id, cb, err) => {
             invokeApi('feed/delete?id=' + id, HTTP_GET, null, cb, err);

@@ -21,16 +21,20 @@ export default class GroupList extends React.Component {
     }
     getFormItems = record => {
         record = record || { ID: 0, Name: '' };
-        return [{
-            name: 'ID',
-            defaultValue: record.ID,
-            render: <Input type="hidden" />
-        }, {
-            title: '名称',
-            name: 'Name',
-            defaultValue: record.Name,
-            render: <Input />
-        }];
+        return [
+            {
+                name: 'ID', defaultValue: record.ID,
+                render: <Input type="hidden" />
+            },
+            {
+                title: '名称', name: 'Name', defaultValue: record.Name,
+                render: <Input />
+            },
+            {
+                title: '权限', name: 'Rights', defaultValue: record.Rights,
+                render: <Input type="textarea" autosize={{ minRows: 2, maxRows: 6 }} />
+            }
+        ];
     };
     render() {
 

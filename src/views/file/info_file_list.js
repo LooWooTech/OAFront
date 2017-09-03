@@ -53,18 +53,27 @@ class FileList extends Component {
                         { title: '上传时间', width: 200, render: (text, item) => moment(item.CreateTime).format('l') },
                         {
                             title: '操作', width: 240,
-                            render: (text, item) => <span>
-                                <a href={api.File.PreviewUrl(item.ID)} target={item.IsWordFile ? '' : '_blank'}><Icon type="eye" />预览</a>
-                                &nbsp;&nbsp;
-                                <a href={api.File.DownloadUrl(item.ID)}><Icon type="download" />下载</a>
-                                &nbsp;
-                                {canEdit ?
-                                    <Button type="danger" onClick={() => this.handleDelete(item)}>
-                                        <Icon type="delete" />
-                                    </Button>
-                                    : null}
+                            render: (text, item) => {
 
-                            </span>
+                                let showPreviewButton = ".pdf,.jpg,.jpge,.tiff,.tif,.doc,.docx,.mp4,.epub".indexOf(item.FileExt) > -1;
+
+                                return <span>
+                                    {showPreviewButton ?
+                                        <span>
+                                            <a href={api.File.PreviewUrl(item.ID)} target={item.IsWordFile ? '' : '_blank'}><Icon type="eye" />预览</a>
+                                            &nbsp;&nbsp;
+                                        </span>
+                                        : null}
+                                    <a href={api.File.DownloadUrl(item.ID)}><Icon type="download" />下载</a>
+                                    &nbsp;
+                                {canEdit ?
+                                        <Button type="danger" onClick={() => this.handleDelete(item)}>
+                                            <Icon type="delete" />
+                                        </Button>
+                                        : null}
+
+                                </span>
+                            }
                         }
                     ]}
                     pagination={false}
