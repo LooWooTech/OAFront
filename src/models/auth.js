@@ -1,5 +1,5 @@
 import cookie from 'react-cookie'
-
+const tokenName = 'token'
 module.exports = {
 
   hasLogin() {
@@ -7,18 +7,18 @@ module.exports = {
   },
 
   getToken() {
-    return cookie.load('token');
+    return cookie.load(tokenName);
   },
 
   login(user) {
     localStorage.user = JSON.stringify(user);
-    cookie.save("token", user.Token);
+    cookie.save(tokenName, user.Token);
     this.getToken();
   },
 
   logout() {
     delete localStorage.user;
-    cookie.remove("token");
+    cookie.remove(tokenName);
   },
 
   getUser() {

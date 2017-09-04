@@ -6,7 +6,18 @@ import moment from 'moment'
 import api from '../../models/api'
 
 class SubTaskModal extends Component {
-    state = { sms: true, users: [], isMaster: true }
+    state = { loading: true, sms: true, users: [], isMaster: true }
+
+    componentWillMount() {
+        //获取分管领导，hard code
+        api.User.List({ groupId: 4 }, json => {
+            this.setState({
+                leaders: json.List,
+                loading: false
+            })
+        })
+    }
+
 
     handleSubmit = (data) => {
         api.Task.SaveSubTask(data, (json) => {
@@ -54,9 +65,7 @@ class SubTaskModal extends Component {
             {
                 title: '选择责任人', name: 'ToUserId', defaultValue: model.ToUserId === undefined ? "" : model.ToUserId.toString(),
                 rules: [{ required: true, message: '请选择责任人' }],
-                render: <Select
-                    showSearch disabled={model.ID > 0}
-                >
+                render: <Select showSearch disabled={model.ID > 0} >
                     {users.map(user => <Select.Option key={user.ID}>{user.RealName}</Select.Option>)}
                 </Select>,
                 after: <div><Checkbox checked={this.state.sms} onChange={e => this.setState({ sms: e.target.checked })}>短信通知</Checkbox></div>
@@ -72,10 +81,20 @@ class SubTaskModal extends Component {
                 render: <DatePicker format="YYYY-MM-DD" disabledDate={disabledDate} />
             }
         ];
+        if (!parentId) {
+            items.push({
+                title: '分管领导', name: 'LeaderId', defaultValue: model.LeaderId,
+                rules: [{ required: true, message: '请选择分管领导' }],
+                render: <Select disabled={model.ID > 0} >
+                    {(this.state.leaders || []).map(user => <Select.Option key={user.ID}>{user.RealName}</Select.Option>)}
+                </Select>,
+            })
+        }
         return items;
     }
 
     render() {
+        if (this.state.loading) return null;
         const model = this.props.model || {}
         return (
             <Modal

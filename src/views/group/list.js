@@ -16,8 +16,10 @@ export default class GroupList extends React.Component {
         api.Group.List(data => this.setState({ list: data }));
     };
 
-    onEditSave = (values) => {
-        api.Group.Save(values, this.loadData);
+    handleSubmit = (formData) => {
+        let data = formData
+        data.Rights = formData.Rights.split('\n').map(name => { return { Name: name } })
+        api.Group.Save(data, this.loadData);
     }
     getFormItems = record => {
         record = record || { ID: 0, Name: '' };
@@ -31,7 +33,7 @@ export default class GroupList extends React.Component {
                 render: <Input />
             },
             {
-                title: '权限', name: 'Rights', defaultValue: record.Rights,
+                title: '权限', name: 'Rights', defaultValue: (record.Rights || []).map(e=>e.Name).join('\n'),
                 render: <Input type="textarea" autosize={{ minRows: 2, maxRows: 6 }} />
             }
         ];
@@ -45,7 +47,7 @@ export default class GroupList extends React.Component {
                         name="添加分组"
                         children={this.getFormItems()}
                         trigger={<Button type="primary" icon="file">添加分组</Button>}
-                        onSubmit={this.onEditSave}
+                        onSubmit={this.handleSubmit}
                     />
                 </Button.Group>
             </Affix>
@@ -61,7 +63,7 @@ export default class GroupList extends React.Component {
                             <Button.Group>
                                 <EditModal
                                     name="编辑分组"
-                                    onSubmit={this.onEditSave}
+                                    onSubmit={this.handleSubmit}
                                     children={this.getFormItems(item)}
                                     trigger={<Button icon="edit">编辑</Button>}
                                 />

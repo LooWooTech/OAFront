@@ -402,7 +402,7 @@ module.exports = {
             invokeApi('task/DeleteSubTask?id=' + subTaskId, HTTP_DELETE, null, cb, err);
         },
         SubmitSubTask: (data, cb, err) => {
-            invokeApi(`task/submitsubtask?id=${data.ID}&toUserId=${data.ToUserId}`, HTTP_POST, { content: data.Content || '' }, cb, err)
+            invokeApi(`task/submitsubtask?id=${data.ID}`, HTTP_POST, { content: data.Content || '' }, cb, err)
         },
         CheckSubTask: (data, cb, err) => {
             invokeApi(`task/checksubtask?id=${data.ID}&result=${data.Result}`, HTTP_POST, { content: data.Content || '' }, cb, err);

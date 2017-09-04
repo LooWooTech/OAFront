@@ -85,6 +85,7 @@ const sideMenuData = {
                 { path: '/task/?status=1', icon: 'fa fa-envelope-open-o', text: '待办箱' },
                 { path: '/task/?status=2', icon: 'fa fa-send', text: '在办箱' },
                 { path: '/task/?status=3', icon: 'fa fa-envelope', text: '已办箱' },
+                { path: '/task/?scope=all', icon: 'fa fa-list', text: '所有任务' },
             ]
         }
     ],

@@ -21,9 +21,9 @@ class TaskList extends Component {
     loadData = (query) => {
         query = query || this.props.location.query || {}
         let parameter = {
-            status: (query.status === undefined ? this.state.status : query.status) || '',
-            searchKey: (query.searchKey === undefined ? this.state.searchKey : query.searchKey) || '',
-            page: query.page || this.state.page.current || 1,
+            status: query.status || '',
+            searchKey: query.searchKey || '',
+            page: query.page || 1,
             rows: this.state.page.pageSize
         };
 
@@ -40,6 +40,13 @@ class TaskList extends Component {
     };
 
     componentWillReceiveProps(nextProps) {
+        let searchKey = nextProps.location.query.searchKey
+        let status = nextProps.location.query.status
+        if (searchKey !== this.props.location.query.searchKey
+            || status !== this.props.location.query.status
+        ) {
+            nextProps.location.query.page = 1;
+        }
         if (nextProps.location.search !== this.props.location.search) {
             this.loadData(nextProps.location.query);
         }
