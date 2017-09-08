@@ -17,6 +17,7 @@ class TaskForm extends React.Component {
                 return false
             }
             let formData = values
+            formData.FromType = this.state.FromType || ''
             formData.ScheduleDate = formData.ScheduleDate ? formData.ScheduleDate.format() : ''
             api.Task.Save(formData, json => {
                 message.success('保存成功')

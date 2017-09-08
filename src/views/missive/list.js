@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router';
-import { Button, Input, Table, Popconfirm, Tag } from 'antd';
+import { Button, Input, Table, Popconfirm, Icon } from 'antd';
 import utils from '../../utils';
 import api from '../../models/api';
 import auth from '../../models/auth';
@@ -13,7 +13,7 @@ export default class MissiveList extends React.Component {
         formId: this.props.params.formId,
         status: this.props.location.query.status,
         page: {
-            pageSize: 10,
+            pageSize: window.defaultRows,
             current: this.props.location.query.page || 1,
             total: 0
         },
@@ -87,11 +87,13 @@ export default class MissiveList extends React.Component {
             { title: '文号', dataIndex: 'WJ_ZH', width: 200, },
             {
                 title: '标题', dataIndex: 'WJ_BT',
-                render: (text, item) => <Link to={`/missive/edit/${this.state.formId}/?id=${item.ID}`}>
-                    {item.JJ_DJ ? <Tag color="red"><i className="fa fa-flash"></i></Tag> : null}
-                    {item.Important ? <Tag color="blue"><i className="fa fa-flag"></i></Tag> : null}
-                    {text}
-                </Link>
+                render: (text, item) => <span>
+                    {item.JJ_DJ ? <Icon type="exclamation" className="red" /> : null}
+                    {item.Important ? <Icon type="flag" /> : null}
+                    <Link to={`/missive/edit/${this.state.formId}/?id=${item.ID}`}>
+                        {text}
+                    </Link>
+                </span>
             },
             { title: '办理期限', width: 130, dataIndex: 'QX_RQ', render: (text, item) => text ? moment(text).format('ll') : null },
             { title: '所在流程', width: 120, dataIndex: 'FlowStep' },

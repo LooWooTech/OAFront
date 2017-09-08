@@ -296,3 +296,24 @@ hr {
 
 .flow-form{border:solid 1px #ddd;padding:10px;margin:10px;}
 .flow-form .ant-form-item{margin-bottom: 10px;}
+
+.ant-select-disabled{color:#666;}
+
+
+.item-feed:hover {
+    background: #eee;
+}
+.item-feed {
+    border-bottom: dotted 1px #ddd;
+    /* margin: 10px; */
+    padding: 8px;
+    border-radius: 5px;
+    line-height: 1.5rem;
+}.item-feed-body {
+    font-size: 1rem;
+    padding-left: 30px;
+}
+
+.red {color: red;}
+.blue{color:blue;}
+.green{color:green;}

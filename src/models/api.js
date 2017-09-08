@@ -1,5 +1,4 @@
 import { message } from 'antd';
-import auth from './auth';
 import utils from '../utils';
 
 const HTTP_GET = "GET"
@@ -158,6 +157,9 @@ module.exports = {
         },
         Delete: (id, cb, err) => {
             invokeApi('FormInfo/delete?id=' + id, HTTP_DELETE, null, cb, err);
+        },
+        Remind: (id, cb, err) => {
+            invokeApi('FormInfo/Remind?id=' + id, HTTP_GET, null, cb, err);
         }
     },
     Sms: {

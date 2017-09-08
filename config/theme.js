@@ -5,5 +5,7 @@ module.exports = {
   //'link-color': '#369',
   'border-radius-base': '4px',
   'input-disabled-bg': '#fff',
-  'disabled-color': '#333'
+  'disabled-color': '#333',
+  'table-padding-vertical': '8px',
+  'table-padding-horizontal': '8px',
 };

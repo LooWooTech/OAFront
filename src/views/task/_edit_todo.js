@@ -38,7 +38,6 @@ class TodoModal extends Component {
                     { name: 'ToUserId', defaultValue: this.state.toUser.ID || (model.ToUser ? model.ToUser.ID : 0), render: <Input type="hidden" /> },
                     {
                         title: '指派给',
-                        before: <span>{this.state.toUser.RealName || model.ToUserName || '未指派'}  </span>,
                         render: <UserSelect
                             ref="selectUserForm"
                             onSubmit={this.handleSelect}

@@ -123,12 +123,12 @@ class SubTaskList extends Component {
                         <SubTaskSubmitModal
                             model={subTask}
                             onSubmit={this.loadData}
-                            trigger={<Button>提交</Button>}
+                            trigger={<Button type="primary" icon="check">提交</Button>}
                         />
                         <TodoEditModal
                             title="添加子任务"
                             model={{ SubTaskId: subTask.ID }}
-                            trigger={<Button>添加子任务</Button>}
+                            trigger={<Button  icon="plus">子任务</Button>}
                             onSubmit={this.loadData}
                         />
                     </span>
@@ -144,10 +144,10 @@ class SubTaskList extends Component {
                         <EditModal
                             model={subTask}
                             list={this.state.list}
-                            trigger={<Button icon="edit"></Button>}
+                            trigger={<Button icon="edit">修改</Button>}
                             onSubmit={this.loadData}
                         />
-                        <Button icon="delete" onClick={() => this.handleDeleteSubTask(subTask)}></Button>
+                        <Button icon="delete" type="danger" onClick={() => this.handleDeleteSubTask(subTask)}>删除</Button>
                     </span>
                 }
                 break;
@@ -297,7 +297,7 @@ class SubTaskList extends Component {
                         { title: '创建时间', width: 130, dataIndex: 'CreateTime', render: (text) => text ? moment(text).format('ll') : '' },
                         { title: '计划完成时间', width: 130, dataIndex: 'ScheduleDate', render: (text) => text ? moment(text).format('ll') : '' },
                         {
-                            title: '操作', width: 100, render: (text, item) => <span>
+                            title: '操作', width: 200, render: (text, item) => <span>
                                 {this.getButtons(item)}
                             </span>
                         }

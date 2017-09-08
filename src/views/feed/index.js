@@ -1,25 +1,25 @@
 import React, { Component } from 'react'
-import { Card, Alert, Pagination } from 'antd'
+import { Alert, Pagination } from 'antd'
 import { Link } from 'react-router'
 import moment from 'moment'
 import api from '../../models/api'
 import utils from '../../utils'
 
 class FeedIndex extends Component {
-
     state = {
         scope: 'all',
         loading: true,
         userId: this.props.params.userId || 0,
         list: [],
         page: {
-            pageSize: 10,
+            pageSize: window.defaultRows,
             current: parseInt(this.props.location.query.page || 1, 10),
             total: 0
         },
     }
 
     componentWillMount() {
+        console.log(window)
         this.loadData(this.props.location.query);
     }
 
@@ -31,6 +31,7 @@ class FeedIndex extends Component {
 
     loadData = (params) => {
         let formId = params.formId || ''
+        params.rows = this.state.page.pageSize
         api.Feed.List(params, data => {
             this.setState({
                 loading: false,
@@ -47,7 +48,7 @@ class FeedIndex extends Component {
         utils.ReloadPage({ page })
     }
 
-    itemRender = item => {
+    itemContentRender = item => {
         //if (!item.) return null;
 
         var link = null;
@@ -75,18 +76,16 @@ class FeedIndex extends Component {
         return (
             <div className="feeds">
                 {this.state.list.length > 0 ? this.state.list.map(item =>
-                    <Card key={item.ID}
-                        title={<div className="title">
+                    <div key={item.ID} className="item-feed">
+                        <div className="item-feed-header">
                             <a href="#">{item.FromUser}</a>
-                            {item.Action}了{item.FormName}{item.Type}
+                            {item.Action}了{item.FormName}{item.Type === item.FormName ? '' : item.Type}
                             <span className="datetime"> {moment(item.CreateTime).format('lll')}</span>
-                        </div>}
-                    >
-
-                        <div className="content">
-                            {this.itemRender(item)}
                         </div>
-                    </Card>
+                        <div className="item-feed-body">
+                            {this.itemContentRender(item)}
+                        </div>
+                    </div>
                 ) : <span>
                         <Alert message="Tips" description="暂无相关动态" />
                     </span>}

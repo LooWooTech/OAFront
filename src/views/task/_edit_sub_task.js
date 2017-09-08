@@ -54,6 +54,16 @@ class SubTaskModal extends Component {
                 rules: [{ required: true, message: '请填写任务目标' }],
             },
             {
+                title: '派单时间', name: 'CreateTime',
+                defaultValue: moment(model.CreateTime),
+                render: <DatePicker format="YYYY-MM-DD" />
+            },
+            {
+                title: '计划完成时间', name: 'ScheduleDate',
+                defaultValue: model.ScheduleDate ? moment(model.ScheduleDate) : null,
+                render: <DatePicker format="YYYY-MM-DD" disabledDate={disabledDate} />
+            },
+            {
                 title: '选择' + (parentId ? '协办' : '主办') + '科室', name: 'ToDepartmentId', defaultValue: model.ToDepartmentId === undefined ? "" : model.ToDepartmentId.toString(),
                 rules: [{ required: true, message: '请选择科室' }],
                 render: <DepartmentSelect
@@ -70,20 +80,11 @@ class SubTaskModal extends Component {
                 </Select>,
                 after: <div><Checkbox checked={this.state.sms} onChange={e => this.setState({ sms: e.target.checked })}>短信通知</Checkbox></div>
             },
-            {
-                title: '派单时间', name: 'CreateTime',
-                defaultValue: moment(model.CreateTime),
-                render: <DatePicker format="YYYY-MM-DD" />
-            },
-            {
-                title: '计划完成时间', name: 'ScheduleDate',
-                defaultValue: model.ScheduleDate ? moment(model.ScheduleDate) : null,
-                render: <DatePicker format="YYYY-MM-DD" disabledDate={disabledDate} />
-            }
+
         ];
         if (!parentId) {
             items.push({
-                title: '分管领导', name: 'LeaderId', defaultValue: model.LeaderId,
+                title: '分管领导', name: 'LeaderId', defaultValue: model.LeaderId === undefined ? "" : model.LeaderId.toString(),
                 rules: [{ required: true, message: '请选择分管领导' }],
                 render: <Select disabled={model.ID > 0} >
                     {(this.state.leaders || []).map(user => <Select.Option key={user.ID}>{user.RealName}</Select.Option>)}

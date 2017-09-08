@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
-import { Button, Input, Table } from 'antd';
+import { Button, Input, Table, Modal, Icon } from 'antd';
 import utils from '../../utils';
 import api from '../../models/api';
+import auth from '../../models/auth';
 import moment from 'moment'
 
 class TaskList extends Component {
@@ -11,10 +12,11 @@ class TaskList extends Component {
         searchKey: '',
         status: this.props.location.query.status,
         page: {
-            pageSize: 10,
+            pageSize: window.defaultRows,
             current: this.props.location.query.page || 1,
             total: 0
         },
+        hashViewRight: auth.hasRight('Form.Task.View'),
         data: []
     };
 
@@ -64,6 +66,26 @@ class TaskList extends Component {
         utils.ReloadPage({ page })
     }
 
+    buttonsRender = (text, item) => {
+        if (!item.Reminded && !item.Completed && auth.hasRight('Form.Task.View')) {
+            return <Button onClick={() => this.handleRemind(item)}>催办</Button>
+        }
+    }
+
+    handleRemind = (item) => {
+        Modal.confirm({
+            title: '提醒',
+            content: '您确定要催办该任务吗？',
+            okText: '确定',
+            cancelText: '取消',
+            onOk: () => {
+                api.FormInfo.Remind(item.ID, josn => {
+                    this.loadData(this.props.location.query)
+                })
+            }
+        })
+    }
+
     render() {
 
         return (
@@ -86,7 +108,7 @@ class TaskList extends Component {
                         { title: '任务单号', dataIndex: 'Number', width: 100 },
                         {
                             title: '任务事项', dataIndex: 'Name',
-                            render: (text, item) => <Link to={`/task/edit?id=${item.ID}`}>{text}</Link>
+                            render: (text, item) => <span>{item.Reminded ? <Icon type="exclamation" className="red"  /> : null}  <Link to={`/task/edit?id=${item.ID}`}>{text}</Link></span>
                         },
                         {
                             title: '任务来源', render: (text, item) => <span>
@@ -102,6 +124,9 @@ class TaskList extends Component {
                             title: '更新日期', dataIndex: 'UpdateTime', width: 130,
                             render: (text, item) => text ? moment(text).format('ll') : null
                         },
+                        {
+                            title: '操作', render: this.buttonsRender
+                        }
                     ]}
                     dataSource={this.state.data}
                     pagination={{

@@ -13,7 +13,6 @@ module.exports = {
   login(user) {
     localStorage.user = JSON.stringify(user);
     cookie.save(tokenName, user.Token);
-    this.getToken();
   },
 
   logout() {
@@ -26,8 +25,13 @@ module.exports = {
   },
 
   isCurrentUser(id) {
-    var user = this.getUser();
+    let user = this.getUser();
     return user.ID === id;
+  },
+
+  hasRight(rightName) {
+    let user = this.getUser();
+    return !!user.UserGroups.find(e => e.Group.Rights.find(r => r.Name === rightName));
   }
 
 }

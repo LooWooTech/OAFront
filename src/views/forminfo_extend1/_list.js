@@ -21,7 +21,7 @@ class Extend1ListComponent extends Component {
         status: this.props.status || 0,
         formId: this.props.formId,
         page: {
-            pageSize: 10,
+            pageSize: window.defaultRows,
             current: this.context.router.location.query.page || 1,
             total: 0
         },

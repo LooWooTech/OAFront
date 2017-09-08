@@ -113,9 +113,9 @@ class ResultTab extends Component {
                             <th colSpan="2">责任单位</th>
                         </tr>
                         <tr>
-                            <th>省</th>
-                            <th>市</th>
-                            <th>区</th>
+                            <th>省{task.FromType === 1 ? "√" : ""}</th>
+                            <th>市{task.FromType === 2 ? "√" : ""}</th>
+                            <th>区{task.FromType === 3 ? "√" : ""}</th>
                             <th>主办单位</th>
                             <th>协办单位</th>
                         </tr>
@@ -131,11 +131,10 @@ class ResultTab extends Component {
                             <td></td>
                         </tr>
                         <tr>
-                            <th colSpan="8">工作进展</th>
-                            <th>备注</th>
+                            <th colSpan="10">工作进展</th>
                         </tr>
                         <tr>
-                            <td colSpan="8">
+                            <td colSpan="10">
                                 <Table
                                     rowKey="ID"
                                     loading={this.state.loading}
@@ -179,10 +178,9 @@ class ResultTab extends Component {
                                     pagination={false}
                                 />
                             </td>
-                            <td rowSpan="3"></td>
                         </tr>
                         <tr>
-                            <td colSpan="8">
+                            <td colSpan="10">
                                 <div>
                                     领导批示：{this.getLDPSRender()}
                                 </div>
