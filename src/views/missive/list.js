@@ -96,10 +96,10 @@ export default class MissiveList extends React.Component {
                 </span>
             },
             { title: '办理期限', width: 130, dataIndex: 'QX_RQ', render: (text, item) => text ? moment(text).format('ll') : null },
-            { title: '所在流程', width: 120, dataIndex: 'FlowStep' },
+            { title: '所在流程', width: 150, dataIndex: 'FlowStep' },
             { title: '处理日期', width: 130, dataIndex: 'UpdateTime', render: (text, item) => text ? moment(text).format('ll') : null },
             {
-                title: '操作', render: (text, item) => {
+                title: '操作', width: 120, render: (text, item) => {
                     if (auth.isCurrentUser(item.PostUserId)) {
 
                         return <Popconfirm title="删除后无法恢复，你确定要删除吗? " onConfirm={() => this.handleDelete(item)} >

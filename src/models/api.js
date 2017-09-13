@@ -17,6 +17,7 @@ const Forms = {
     Seal: { ID: 6, Name: '图章' },
     Leave: { ID: 7, Name: '请假' }
 };
+
 function getExceptionMessage(ex) {
     if (ex.InnerException) {
         return getExceptionMessage(ex.InnerException)
@@ -101,6 +102,17 @@ module.exports = {
         },
         List: (cb, err) => {
             invokeApi('form/list', HTTP_GET, null, cb, err);
+        },
+        GetFormName: (formId) => {
+            for (var key in Forms) {
+                if (Forms.hasOwnProperty(key)) {
+                    let form = Forms[key]
+                    if (form.ID === formId) {
+                        return form.Name
+                    }
+                }
+            }
+            return ''
         }
     },
     File: {
@@ -205,8 +217,11 @@ module.exports = {
                 }
             }, err);
         },
-        Submit: (toUserId, infoId, data, cb, err) => {
-            invokeApi('flowdata/submit?toUserId=' + toUserId + '&infoId=' + infoId, HTTP_POST, data, cb, err);
+        Submit: (data, cb, err) => {
+            let toUserId = data.ToUserId || 0;
+            let infoId = data.InfoId || 0;
+            let nextFlowNodeId = data.NextFlowNodeId || 0;
+            invokeApi('flowdata/submit?toUserId=' + toUserId + '&infoId=' + infoId + '&nextFlowNodeId=' + nextFlowNodeId, HTTP_POST, data, cb, err);
         },
         Back: (infoId, cb, err) => {
             invokeApi('flowdata/submit?infoId=' + infoId, HTTP_POST, null, cb, err);

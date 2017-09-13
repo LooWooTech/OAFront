@@ -76,24 +76,17 @@ class Extend1ListComponent extends Component {
     getColumns = () => {
         var columns = []
         let { userId, formId } = this.state
-        let formName = ''
-        for (var key in api.Forms) {
-            if (api.Forms.hasOwnProperty(key)) {
-                let form = api.Forms[key]
-                if (form.ID.toString() === formId) {
-                    formName = api.Forms[key].Name
-                }
-            }
-        }
-
-        columns.push({ title: formName, render: (text, item) => <span>{item.Title}<br />{item.Reason}</span> })
+        let formName = api.Form.GetFormName(formId)
+        columns.push({ title: formName, dataIndex:'title', render: (text, item) => <span key={item.ID}>{item.Title}<br />{item.Reason}</span> })
         if (!userId) {
             columns.push({ title: '申请人', dataIndex: 'ApplyUser' })
         }
         columns = columns.concat([
             { title: '审批人', dataIndex: 'ApprovalUser' },
-            { title: '申请日期', dataIndex: 'CreateTime', render: (text, item) => moment(text).format('ll') },
-            { title: '时间范围', render: (text, item) => <span>{moment(item.ScheduleBeginTime).format('ll')} ~ {moment(item.ScheduleEndTime).format('ll')}</span> },
+            {
+                title: '申请日期', dataIndex: 'CreateTime',
+                render: (text, item) => moment(text).format('ll')
+            },
             {
                 title: '申请结果', dataIndex: 'Result', render: (text, item) => {
                     switch (item.Result) {
@@ -106,7 +99,10 @@ class Extend1ListComponent extends Component {
                     }
                 }
             },
-            { title: '处理日期', dataIndex: 'UpdateTime', render: (text, item) => text ? moment(text).format('ll') : null },
+            {
+                title: '处理日期', dataIndex: 'UpdateTime',
+                render: (text, item) => text ? moment(text).format('ll') : null
+            },
             {
                 title: '操作', render: this.props.buttons
             }

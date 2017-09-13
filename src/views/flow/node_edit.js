@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Input, Select, Button, Radio } from 'antd'
+import { Input, Select, Button, Radio, Checkbox } from 'antd'
 import SharedModal from '../shared/_formmodal'
 import FreeNodeModal from './freenode_edit'
 import api from '../../models/api';
@@ -49,6 +49,14 @@ class EditNodeModal extends Component {
                         disabled={node.ID === record.ID}>
                         {node.Name}</Select.Option>)}
                 </Select>
+            },
+            {
+                title: '可跳过', name: 'CanSkip',
+                render: <Checkbox
+                    checked={this.state.canSkip === undefined ? record.CanSkip : this.state.canSkip}
+                    onClick={e => this.setState({ canSkip: e.target.checked })}>
+                    该节点可以跳过
+                    </Checkbox>
             },
             {
                 title: '受理人',
@@ -114,7 +122,7 @@ class EditNodeModal extends Component {
             title: '自由流程',
             render:
             <div>
-                {record.FreeFlowId > 0 || this.state.freeFlow ? <Button onClick={this.handleCloseFreeflow}>关闭</Button> : null}
+                {record.FreeFlowId > 0 || this.state.freeFlow ? <Button onClick={this.handleCloseFreeflow}>关闭自由流程 </Button> : null}
                 <FreeNodeModal
                     record={record.FreeFlow}
                     departments={this.props.departments}
@@ -123,14 +131,6 @@ class EditNodeModal extends Component {
                     trigger={<Button>设置</Button>} />
             </div>
         });
-        // items.push({
-        //     title: '可结束流程', name: 'CanComplete',
-        //     render: <Checkbox
-        //         checked={this.state.canComplete === undefined ? record.CanComplete : this.state.canComplete}
-        //         onClick={e => this.setState({ canComplete: e.target.checked })}>
-        //         是
-        //         </Checkbox>
-        // })
         return items;
     };
 

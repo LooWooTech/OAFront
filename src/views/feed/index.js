@@ -19,7 +19,6 @@ class FeedIndex extends Component {
     }
 
     componentWillMount() {
-        console.log(window)
         this.loadData(this.props.location.query);
     }
 
@@ -49,8 +48,6 @@ class FeedIndex extends Component {
     }
 
     itemContentRender = item => {
-        //if (!item.) return null;
-
         var link = null;
         switch (item.FormId) {
             default:
@@ -73,6 +70,7 @@ class FeedIndex extends Component {
     }
 
     render() {
+        if(this.state.loading) return null
         return (
             <div className="feeds">
                 {this.state.list.length > 0 ? this.state.list.map(item =>

@@ -163,6 +163,8 @@ export default class MissiveEdit extends Component {
                             canSubmitFlow={this.state.canSubmitFlow}
                             canSubmitFreeFlow={this.state.canSubmitFreeFlow}
                             onSubmit={this.handleSubmitFlow}
+                            canBack={this.state.canBack}
+                            canComplete={this.state.canComplete}
                         />
                     </Tabs.TabPane>
                     : ''

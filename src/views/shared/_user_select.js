@@ -9,13 +9,30 @@ import auth from '../../models/auth'
 
 class UserSelect extends Component {
     state = {
-        users: [], favorites: [], selected: [], inModal: false,
+        users: [],
+        favorites: [],
+        selected: [],
+        inModal: false,
+        flowNodeId: this.props.flowNodeId || 0,
+        flowDataId: this.props.flowDataId || 0,
+        flowId: this.props.flowId || 0,
+        flowStep: this.props.flowStep || 0,
+        formType: this.props.formType,
         multiple: this.props.multiple || this.props.formType === 'freeflow'
     }
 
     componentWillMount() {
         this.loadInitData();
     }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.flowNodeId !== this.props.flowNodeId
+            || nextProps.flowStep !== this.props.flowStep
+        ) {
+            this.setState({ flowNodeId: nextProps.flowNodeId }, this.loadUsers)
+        }
+    }
+
 
     loadInitData = () => {
         api.User.FlowContacts(json => {
@@ -46,11 +63,9 @@ class UserSelect extends Component {
     }
 
     loadUsersForFlowData = () => {
-        const flowNodeDataId = this.props.flowNodeDataId || 0;
-        const flowId = this.props.flowId || 0;
-        const flowStep = this.props.flowStep || 1;
+        const { flowNodeId, flowDataId, flowId, flowStep } = this.state;
 
-        api.FlowData.UserList({ flowNodeDataId, flowId, flowStep }, json => {
+        api.FlowData.UserList({ flowNodeId, flowId, flowDataId, flowStep: flowStep || 1 }, json => {
             this.filterUsers(json)
         })
     }

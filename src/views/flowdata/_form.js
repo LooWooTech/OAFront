@@ -12,20 +12,7 @@ class FlowNodeDataForm extends Component {
         toUser: {},
         sms: true,
         ...this.props,
-        loading: true,
         itemLayout: this.props.itemLayout || { labelCol: { span: 2 }, wrapperCol: { span: 16 } }
-    }
-
-    componentWillMount() {
-        //如果只传了flowDataId
-        if (!this.state.flowData && this.state.flowDataId) {
-            api.FlowData.Model(this.state.flowDataId, this.state.infoId, data => {
-                this.setState({ loading: false, ...data })
-            })
-        }
-        else {
-            this.setState({ loading: false })
-        }
     }
 
     submit = (callback) => {
@@ -40,7 +27,7 @@ class FlowNodeDataForm extends Component {
             }
             if (!data.Result && !confirm('你确定要退回吗？')) return false
 
-            api.FlowData.Submit(data.ToUserId, data.InfoId, data, json => {
+            api.FlowData.Submit(data, json => {
                 this.setState({ visible: false }, () => {
                     message.success("提交成功")
                     if (this.state.sms) {
@@ -55,10 +42,23 @@ class FlowNodeDataForm extends Component {
         });
     }
 
+    getNextNodes = () => {
+        let flowNodes = this.state.flowData.Flow.Nodes;
+        var list = [];
+        let prevNode = flowNodes.find(e => e.ID === this.state.flowNodeData.FlowNodeId)
+        do {
+            let nextNode = flowNodes.find(e => e.PrevId === prevNode.ID);
+            list.push(nextNode);
+            prevNode = nextNode;
+        }
+        while (prevNode && prevNode.CanSkip)
+        return list;
+    }
+
     getFormItems = () => {
-        if (this.state.loading) return null
         let { flowNodeData, flowData, canBack, canComplete } = this.state;
-        let currentNode = flowData.Flow.Nodes.find(e => e.ID === flowNodeData.FlowNodeId)
+        let flowNodes = flowData.Flow.Nodes;
+        let currentNode = flowNodes.find(e => e.ID === flowNodeData.FlowNodeId)
         let prevNode = currentNode ? flowData.Flow.Nodes.find(e => e.ID === currentNode.PrevId) : null
         let nextNode = currentNode ? flowData.Flow.Nodes.find(e => e.PrevId === currentNode.ID) : null
         var items = [
@@ -88,23 +88,39 @@ class FlowNodeDataForm extends Component {
                 </Radio.Group>
             })
         }
-        if (nextNode) {
-            items.push({ title: '下一环节', render: nextNode.Name })
+
+        if (nextNode && this.state.result) {
+            //如果下一个节点可以跳过，则罗列出后面所有可以跳过的节点 直到最后一个不可以跳过的节点为止
+            let nextFlowNodeId = this.state.nextFlowNodeId === undefined ? nextNode.ID : this.state.nextFlowNodeId
+            if (nextNode.CanSkip) {
+                let nextNodes = this.getNextNodes();
+                items.push({
+                    title: '下一环节', name: 'NextFlowNodeId', defaultValue: nextFlowNodeId,
+                    render: <Radio.Group onChange={(e) => this.setState({ nextFlowNodeId: e.target.value })}>
+                        {nextNodes.map(e => <Radio.Button key={e.ID} value={e.ID}>{e.Name}</Radio.Button>)}
+                    </Radio.Group>
+                });
+            }
+            else {
+                items.push({ title: '下一环节', render: nextNode.Name })
+            }
+            //如果可以结束，且同意，则不需要选择发送人
+            if (!canComplete) {
+                items.push({
+                    title: '选择发送人员',
+                    render:
+                    <SelectUser
+                        ref="selectUserForm"
+                        flowNodeId={nextFlowNodeId}
+                        onSubmit={this.handleSelect}
+                        flowDataId={flowData.ID}
+                        formType="flow"
+                    />,
+                    after: <div><Checkbox checked={this.state.sms} onChange={e => this.setState({ sms: e.target.checked })}>短信通知</Checkbox></div>
+                })
+            }
         }
-        //如果可以结束，且同意，则不需要选择发送人
-        if (!canComplete && this.state.result) {
-            items.push({
-                title: '选择发送人员',
-                render:
-                <SelectUser
-                    ref="selectUserForm"
-                    flowNodeDataId={flowNodeData.ID}
-                    onSubmit={this.handleSelect}
-                    formType="flow"
-                />,
-                after: <div><Checkbox checked={this.state.sms} onChange={e => this.setState({ sms: e.target.checked })}>短信通知</Checkbox></div>
-            })
-        }
+
         if (!this.props.isModal) {
             items.push({
                 render: <Row><Col offset={this.state.itemLayout.labelCol.span}>

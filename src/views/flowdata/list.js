@@ -8,18 +8,7 @@ import FreeFlowNodeForm from '../freeflow/_form'
 import utils from '../../utils'
 
 class FlowDataList extends Component {
-    state = {
-        loading: true, infoId: this.props.infoId, flowDataId: this.props.flowDataId
-    }
-    componentWillMount() {
-        this.loadData();
-    }
-
-    loadData = (props) => {
-        props = props || this.props
-        this.setState({ loading: false, ...props })
-    }
-
+    state = { showAll: false, }
     contentRender = (text, item) => {
         if (!text) {
             text = item.Result === null ? item.FreeFlowData ? '传阅中' : '待审核' : item.Result ? '同意' : '不同意';
@@ -59,15 +48,14 @@ class FlowDataList extends Component {
 
 
     render() {
-        if (this.state.loading) return null;
-        const { flowNodeData, canSubmitFlow, canSubmitFreeFlow, freeFlowNodeData } = this.state
+        const { infoId,flowData, flowNodeData, canSubmitFlow, canSubmitFreeFlow, freeFlowNodeData } = this.props
         return (
             <div>
-                {canSubmitFreeFlow && freeFlowNodeData && !freeFlowNodeData.Submited && !freeFlowNodeData.IsCc?
+                {canSubmitFreeFlow && freeFlowNodeData && !freeFlowNodeData.Submited && !freeFlowNodeData.IsCc ?
                     <div className="flow-form">
                         <h3>自由发送</h3>
                         <FreeFlowNodeForm
-                            infoId={this.state.infoId}
+                            infoId={infoId}
                             freeFlowNodeData={freeFlowNodeData}
                             flowNodeData={flowNodeData}
                             onSubmit={this.handleSubmitFlow}
@@ -78,16 +66,15 @@ class FlowDataList extends Component {
                         <div className="flow-form">
                             <h3>主流程审核</h3>
                             <FlowNodeForm
-                                {...this.state}
+                                {...this.props}
                                 onSubmit={this.handleSubmitFlow}
                             />
                         </div>
                         : null
                 }
                 <Table
-                    loading={this.state.loading}
                     rowKey="ID"
-                    dataSource={this.state.flowData.Nodes.sort((a, b) => a.ID - b.ID)}
+                    dataSource={flowData.Nodes.sort((a, b) => a.ID - b.ID)}
                     pagination={false}
                     defaultExpandAllRows={true}
                     expandedRowRender={this.expandedRowRender}

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button, Card, Badge, Row, Col, Calendar } from 'antd';
 import LeaveFormModal from './_leave_form';
+import CheckButton from './_button';
 import moment from 'moment';
 import 'moment/locale/zh-cn';
 moment.locale('zh-cn');
@@ -25,17 +26,10 @@ export default class AttendanceIndex extends React.Component {
 
     componentWillMount() {
         this.loadData();
-        var intervalId = setInterval(this.timer, 1000);
-        this.setState({ intervalId: intervalId });
     }
 
     componentWillUnmount() {
         api.Abort();
-        clearInterval(this.state.intervalId);
-    }
-
-    timer = () => {
-        this.setState({ now: moment() })
     }
 
     loadData = date => {
@@ -146,41 +140,6 @@ export default class AttendanceIndex extends React.Component {
         return <Badge status={status} text={title + text} />
     }
 
-    getCheckButton = () => {
-        if (!this.state.time) return null;
-        const now = moment();
-        var hasChecked = false;
-        var canCheck = false;
-        //如果在上午打卡区间
-        if (now >= this.state.time.AMBeginTime && now <= this.state.time.AMEndTime) {
-            canCheck = true;
-            hasChecked = this.getLogsOfDate(this.state.logs, now).find(e => moment(e.CreateTime) >= this.state.time.AMBeginTime
-                && moment(e.CreateTime) <= this.state.time.AMEndTime);
-        }
-        //如果在下午打卡区间
-        else if (now >= this.state.time.PMBeginTime && now <= this.state.time.PMEndTime) {
-            canCheck = true;
-            hasChecked = this.getLogsOfDate(this.state.logs, now).find(e => moment(e.CreateTime) >= this.state.time.PMBeginTime
-                && moment(e.CreateTime) <= this.state.time.PMEndTime);
-        }
-        if (canCheck) {
-            return <Card>
-                <Button icon="check" type="primary" onClick={this.handleCheckInOut} className="btn-checkInOut">
-                    {hasChecked ? "已打卡" : "立即打卡"}
-                </Button>
-            </Card>;
-        }
-        else {
-            return <Card>
-                <Button icon="clock" disabled={true} className="btn-checkInOut">
-                    {this.state.now.format('LTS')} <br />
-                    <span style={{ fontSize: '0.8rem' }}>当前时间不能打卡</span>
-                </Button>
-            </Card>;
-        }
-
-    }
-
     render() {
         if (this.state.loading) {
             return null
@@ -208,7 +167,7 @@ export default class AttendanceIndex extends React.Component {
                     />
                 </Col>
                 <Col span={6}>
-                    {this.getCheckButton()}
+                    <CheckButton logs={this.state.logs} config={this.state.time} onClick={this.handleCheckInOut} />
 
                     <Card title="考勤统计" style={{ marginTop: "10px" }}>
                         <Badge status="default" text={`正常考勤：${this.state.total.Normal}次`} /><br />

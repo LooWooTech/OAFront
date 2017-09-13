@@ -88,7 +88,6 @@ export default class FlowList extends React.Component {
                 rowKey="ID"
                 loading={this.state.loading}
                 expandedRowRender={this.flowNodeList}
-                defaultExpandAllRows={true}
                 onExpand={this.onExpand}
                 columns={[
                     { title: '名称', dataIndex: 'Name', },

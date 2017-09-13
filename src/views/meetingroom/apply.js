@@ -71,8 +71,7 @@ class MeetingRoomApplyModal extends Component {
                             flowStep={2}
                             onSubmit={this.handleSelect}
                             ref="selectUserForm"
-                        />,
-                        extend: <span>{(this.state.toUser || {}).ID > 0 ? ' 已选 ' + this.state.toUser.RealName : ''}</span>
+                        />
                     },
                 ]}
             />
