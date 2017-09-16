@@ -11,19 +11,18 @@ const headerNavData = [
     { name: 'missive', path: `/missive/list/${api.Forms.Missive.ID}/?status=1`, icon: 'fa fa-file-o', text: '公文' },
     { name: 'attendance', icon: 'fa fa-calendar-check-o', text: '考勤' },
     { name: 'task', path: '/task/?status=1', icon: 'fa fa-clock-o', text: '任务' },
+    { namn: 'salary', path: '/salary', icon: 'fa fa-money', text: '工资单' },
     { name: 'calendar', icon: 'fa fa-calendar', text: '日程' },
-    { name: 'news', icon: 'fa fa-newspaper-o', text: '信息' },
     { name: 'archive', icon: 'fa fa-tasks', text: '档案' },
     { name: 'meetingroom', icon: 'fa fa-television', text: '会议室' },
     { name: 'car', icon: 'fa fa-car', text: '车辆' },
     { name: 'seal', icon: 'fa fa-circle-o', text: '图章' },
-    { name: 'file', icon: 'fa fa-files-o', text: '文档' },
     { name: 'system', path: '/user/list', icon: 'fa fa-gear', text: '系统设置', role: 3 }
 ];
 
 const NavItem = (item, key) => {
     if (item.role > 0 && auth.getUser().Role !== item.role) {
-       return;
+        return;
     }
     return (
         <Menu.Item key={item.name}>

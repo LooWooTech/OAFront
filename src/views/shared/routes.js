@@ -38,6 +38,8 @@ import FeedIndex from '../feed/index'
 import TaskIndex from '../task/list'
 import TaskEdit from '../task/edit'
 
+import SalaryIndex from '../salary/list'
+
 const authorize = (nextState, replace) => {
     if (!auth.hasLogin()) {
         replace({
@@ -56,6 +58,9 @@ export default class Routes extends React.Component {
                     <Route path="list/:formId" component={MissiveList} />
                     <Route path="edit/:formId" component={MissiveEdit} />
                     <Route path='redtitle' component={MissiveRedTitle} />
+                </Route>
+                <Route path="salary">
+                    <IndexRoute component={SalaryIndex} />
                 </Route>
                 <Route path="car">
                     <IndexRoute component={CarIndex} />
