@@ -464,5 +464,23 @@ module.exports = {
         Approval: (id, result = true, toUserId = 0, cb, err) => {
             invokeApi('attendance/approval', HTTP_GET, { id, result, toUserId }, cb, err);
         }
+    },
+    Salary: {
+        Years: (userId, cb, err) => {
+            invokeApi('salary/getyears', HTTP_GET, { userId }, cb, err);
+        },
+        List: (year, userId, cb, err) => {
+            invokeApi('salary/list', HTTP_GET, { year, userId }, cb, err);
+        },
+        Delete: (id, cb, err) => {
+            invokeApi('salary/delete', HTTP_DELETE, { id }, cb, err);
+        },
+        ImportUrl: () => {
+            return `${apiHost}salary/upload`;
+        },
+        Import: (data, cb, err) => {
+            let query = utils.jsonToQueryString(data)
+            invokeApi('salary/import?' + query, HTTP_POST, null, cb, err);
+        }
     }
 };

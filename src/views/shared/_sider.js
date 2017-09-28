@@ -103,6 +103,18 @@ const sideMenuData = {
             ]
         }
     ],
+    salary: [
+        {
+            title: '我的', items: [
+                { path: '/salary', icon: 'fa fa-paper', text: '工资查询' }
+            ]
+        },
+        {
+            title: '管理', role: 2, items: [
+                { path: '/salary/import', icon: 'fa fa-import', text: '导入工资单' }
+            ],
+        }
+    ],
     system: [
         {
             title: '系统管理', role: 2, items: [

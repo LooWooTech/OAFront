@@ -39,6 +39,7 @@ import TaskIndex from '../task/list'
 import TaskEdit from '../task/edit'
 
 import SalaryIndex from '../salary/list'
+import SalaryImport from '../salary/import'
 
 const authorize = (nextState, replace) => {
     if (!auth.hasLogin()) {
@@ -52,15 +53,16 @@ const authorize = (nextState, replace) => {
 export default class Routes extends React.Component {
     render() {
         return <Router history={hashHistory}>
-            <Route path='/' component={Layout} onEnter={authorize}>
+            <Route path="/" component={Layout} onEnter={authorize}>
                 <IndexRoute component={FeedIndex} />
                 <Route path="missive">
                     <Route path="list/:formId" component={MissiveList} />
                     <Route path="edit/:formId" component={MissiveEdit} />
-                    <Route path='redtitle' component={MissiveRedTitle} />
+                    <Route path="redtitle" component={MissiveRedTitle} />
                 </Route>
                 <Route path="salary">
                     <IndexRoute component={SalaryIndex} />
+                    <Route path="import" component={SalaryImport} />
                 </Route>
                 <Route path="car">
                     <IndexRoute component={CarIndex} />
@@ -89,18 +91,18 @@ export default class Routes extends React.Component {
                 </Route>
 
                 <Route userRole={3}>
-                    <Route path='system/config' component={SystemConfig} />
-                    <Route path='user/list' component={UserList} />
-                    <Route path='group/list' component={GroupList} />
-                    <Route path='category/list' component={CategoryList} />
-                    <Route path='department/list' component={DepartmentList} />
-                    <Route path='jobtitle/list' component={JobTitleList} />
-                    <Route path='flow/list' component={FlowList} />
+                    <Route path="system/config" component={SystemConfig} />
+                    <Route path="user/list" component={UserList} />
+                    <Route path="group/list" component={GroupList} />
+                    <Route path="category/list" component={CategoryList} />
+                    <Route path="department/list" component={DepartmentList} />
+                    <Route path="jobtitle/list" component={JobTitleList} />
+                    <Route path="flow/list" component={FlowList} />
                 </Route>
             </Route>
-            <Route path='/user'>
-                <Route path='login' component={Login} />
-                <Route path='logout' component={Logout} />
+            <Route path="/user">
+                <Route path="login" component={Login} />
+                <Route path="logout" component={Logout} />
             </Route>
         </Router>;
     }

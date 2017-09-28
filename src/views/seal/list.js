@@ -56,7 +56,7 @@ class SealList extends Component {
                         }
                     ]}
                     dataSource={this.state.list}
-                    pagination={null}
+                    pagination={false}
                 />
             </div>
         )

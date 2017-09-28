@@ -59,7 +59,7 @@ class MeetingRoomList extends Component {
                         }
                     ]}
                     dataSource={this.state.list}
-                    pagination={null}
+                    pagination={false}
                 />
             </div>
         )

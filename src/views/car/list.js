@@ -57,7 +57,7 @@ class CarList extends Component {
                         }
                     ]}
                     dataSource={this.state.list}
-                    pagination={null}
+                    pagination={false}
                 />
             </div>
         )

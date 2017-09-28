@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Form, Tooltip, Icon } from 'antd'
+import { Form, Tooltip, Icon, Button, Row, Col } from 'antd'
 
 class SharedForm extends Component {
     handleSubmit = (e) => {
@@ -14,8 +14,32 @@ class SharedForm extends Component {
         })
     }
 
+    controlRender = item => {
+        let getField = true
+        if (item.getField === false) getField = false
+        if (!item.name) getField = false
+
+        let fieldParameter = {}
+        if (item.defaultValue)
+            fieldParameter.initialValue = item.defaultValue;
+        if (item.rules)
+            fieldParameter.rules = item.rules
+
+        return getField ?
+            this.props.form.getFieldDecorator(item.name, fieldParameter)(item.render)
+            : item.render;
+    }
+
+    labelRender = item => {
+        if (item.tips) {
+            return <Tooltip title={item.tips}><Icon type="question-circle" /> {item.title} </Tooltip>
+        }
+        return item.title
+    }
+
     render() {
         const children = this.props.children || [];
+        const buttons = this.props.buttons || [];
         const style = this.props.style || {}
         const formItemLayout = this.props.itemLayout || {
             labelCol: { span: 6 },
@@ -24,43 +48,30 @@ class SharedForm extends Component {
 
         const layout = this.props.layout || 'horizontal'
 
-        const { getFieldDecorator } = this.props.form;
-        const getControl = item => {
-            var getField = true
-            if (item.getField === false) getField = false
-            if (!item.name) getField = false
-            let fieldParameter = {}
-            if (item.defaultValue)
-                fieldParameter.initialValue = item.defaultValue;
-            if (item.rules)
-                fieldParameter.rules = item.rules
 
-            return getField ?
-                getFieldDecorator(item.name, fieldParameter)(item.render)
-                : item.render;
-        }
-        const getLabel = item => {
-            if (item.tips) {
-                return <Tooltip title={item.tips}><Icon type="question-circle" /> {item.title} </Tooltip>
-            }
-            return item.title
-        }
+
         return (
             <Form layout={layout} onSubmit={this.handleSubmit} style={style}>
                 {children.map((item, key) =>
                     item.title ?
                         <Form.Item
                             key={item.name || key}
-                            label={getLabel(item)}
+                            label={this.labelRender(item)}
                             extra={item.extra}
                             {...(item.layout ? item.layout : formItemLayout) }
                         >
                             {item.before}
-                            {getControl(item)}
+                            {this.controlRender(item)}
                             {item.after}
-                            </Form.Item>
-                        : <span key={item.name || key}>{item.before} {getControl(item)} {item.after}</span>
+                        </Form.Item>
+                        : <span key={item.name || key}>{item.before} {this.controlRender(item)} {item.after}</span>
                 )}
+                <Row>
+                    <Col span={formItemLayout.labelCol.span}></Col>
+                    <Col span={formItemLayout.wrapperCol.span}>
+                        {buttons.map((item, key) => <span key={key}>{item}</span>)}
+                    </Col>
+                </Row>
             </Form>
         )
     }
