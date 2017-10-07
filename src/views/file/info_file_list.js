@@ -55,7 +55,7 @@ class FileList extends Component {
                             title: '操作', width: 240,
                             render: (text, item) => {
 
-                                let showPreviewButton = ".pdf,.jpg,.jpge,.tiff,.tif,.doc,.docx,.mp4,.epub".indexOf(item.FileExt) > -1;
+                                let showPreviewButton = ".pdf,.jpg,.jpge,.tiff,.tif,.doc,.docx,.mp4,.epub".indexOf(item.FileExt.toLowerCase()) > -1;
 
                                 return <span>
                                     {showPreviewButton ?

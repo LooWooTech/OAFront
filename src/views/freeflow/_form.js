@@ -70,7 +70,7 @@ class FreeFlowNodeForm extends Component {
                     ref="selectUserToCc"
                     nullable={true}
                     formType="freeflow"
-                    flowNodeId={flowNodeData.FlowNodeId}
+                    flowNodeDataId={flowNodeData.ID}
                     title="选择抄送人员"
                 />,
                 after: <div><Checkbox checked={this.state.sms_cc} onChange={e => this.setState({ sms_cc: e.target.checked })}>短信通知</Checkbox></div>

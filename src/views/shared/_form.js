@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Form, Tooltip, Icon, Button, Row, Col } from 'antd'
+import { Form, Tooltip, Icon, Row, Col } from 'antd'
 
 class SharedForm extends Component {
     handleSubmit = (e) => {

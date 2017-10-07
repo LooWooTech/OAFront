@@ -14,6 +14,8 @@ class SalaryList extends Component {
             this.setState({ years: list });
             if (list.length > 0) {
                 this.loadData(list[list.length - 1]);
+            } else {
+                this.setState({ loading: false })
             }
         });
     }
