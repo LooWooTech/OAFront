@@ -32,8 +32,7 @@ class ImportSalary extends Component {
         return (
             <div>
                 <div className="toolbar">
-                    <h3>导入工资单</h3>
-                    <a href="/templates/salary_templates.zip" target="_blank">下载导入模板</a>
+                    <h3>导入工资单</h3>                 
                 </div>
                 <Form
                     ref="form"
@@ -66,7 +65,8 @@ class ImportSalary extends Component {
                         }
                     ]}
                     buttons={[
-                        <Button icon="import" type="primary" onClick={this.handleSubmit}>导入</Button>
+                        <Button icon="import" type="primary" onClick={this.handleSubmit}>导入</Button>,
+                        <a className="btn" href="/templates/salary_templates.zip" target="_blank">下载导入模板</a>
                     ]}
                 />
             </div>

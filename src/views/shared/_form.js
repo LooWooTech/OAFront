@@ -69,7 +69,7 @@ class SharedForm extends Component {
                 <Row>
                     <Col span={formItemLayout.labelCol.span}></Col>
                     <Col span={formItemLayout.wrapperCol.span}>
-                        {buttons.map((item, key) => <span key={key}>{item}</span>)}
+                        {buttons.map((item, key) => <span key={key}> {item} </span>)}
                     </Col>
                 </Row>
             </Form>

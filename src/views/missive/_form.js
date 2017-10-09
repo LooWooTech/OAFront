@@ -41,6 +41,11 @@ class MissiveEditForm extends React.Component {
         })
     }
 
+    handleBeforeUpload = () => {
+        this.setState({ uploading: true });
+        return true;
+    }
+
     handleUploadContent = ({ file, fileList }) => {
         this.setState({ uploading: false })
         if (!file || !file.response) return
@@ -96,7 +101,7 @@ class MissiveEditForm extends React.Component {
             render: <span>
                 <Upload.Dragger
                     action={api.File.UploadUrl(content.ID || 0, 0, 'content', true)}
-                    beforeUpload={() => { this.setState({ uploading: true }) }}
+                    beforeUpload={this.handleBeforeUpload}
                     onChange={this.handleUploadContent}
                     name="content"
                     onRemove={this.handleDeleteFile}

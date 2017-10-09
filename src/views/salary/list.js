@@ -27,9 +27,9 @@ class SalaryList extends Component {
     }
 
     getToolbarRender = () => {
-        return <div className="toolbar">
+        return <Button.Group>
             {this.state.years.map(year => <Button key={year} onClick={() => this.loadData(year)}>{year}年</Button>)}
-        </div>
+        </Button.Group>
     }
 
     expandedRowRender = (model) => {
@@ -42,7 +42,10 @@ class SalaryList extends Component {
     render() {
         return (
             <div>
-                {this.getToolbarRender()}
+                <div className="toolbar">
+                    <h3>我的工资单</h3>
+                    {this.getToolbarRender()}
+                </div>
                 <Table
                     rowKey="ID"
                     loading={this.state.loading}
