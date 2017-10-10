@@ -21,8 +21,8 @@ class SalaryList extends Component {
     }
 
     loadData = (year) => {
-        api.Salary.List(year, 0, json => {
-            this.setState({ list: json, loading: false })
+        api.Salary.List({ year }, json => {
+            this.setState({ list: json.List, loading: false })
         });
     }
 

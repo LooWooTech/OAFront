@@ -105,13 +105,10 @@ const sideMenuData = {
     ],
     salary: [
         {
-            title: '我的', items: [
-                { path: '/salary', icon: 'fa fa-paper', text: '工资查询' }
-            ]
-        },
-        {
-            title: '管理', role: 2, items: [
-                { path: '/salary/import', icon: 'fa fa-import', text: '导入工资单' }
+            title: '工资单', items: [
+                { path: '/salary/', icon: 'fa fa-file-text-o', text: '我的工资单' },
+                { path: '/salary/search', icon: 'fa fa-search', text: '工资单查询', Right: 'Form.Salary.View' },
+                { path: '/salary/import', icon: 'fa fa-save', text: '导入工资单', Right: 'Form.Salary.Edit' }
             ],
         }
     ],
@@ -194,7 +191,11 @@ class Sider extends React.Component {
                         var show = user.Role >= (group.role || 0);
                         return show ? <Menu.ItemGroup title={group.title || ''} key={key}>
                             {group.items.map((item, key) => {
-                                var show = user.Role >= (item.role || 0);
+                                var show = auth.hasRight(item.Right);
+                                                               
+                                if(!show && item.Role){
+                                    show = user.Role >= item.Role;
+                                }
                                 return show ? <Menu.Item key={item.path} item={item}>
                                     <i className={item.icon} />&nbsp;{item.text}
                                 </Menu.Item> : null

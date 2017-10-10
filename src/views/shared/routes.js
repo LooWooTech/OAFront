@@ -39,6 +39,7 @@ import TaskIndex from '../task/list'
 import TaskEdit from '../task/edit'
 
 import SalaryIndex from '../salary/list'
+import SalarySearch from '../salary/search'
 import SalaryImport from '../salary/import'
 
 const authorize = (nextState, replace) => {
@@ -62,6 +63,7 @@ export default class Routes extends React.Component {
                 </Route>
                 <Route path="salary">
                     <IndexRoute component={SalaryIndex} />
+                    <Route path="search" component={SalarySearch} />
                     <Route path="import" component={SalaryImport} />
                 </Route>
                 <Route path="car">
