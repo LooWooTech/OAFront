@@ -154,10 +154,21 @@ class UserSelect extends Component {
         </TreeNode>)
     }
 
-    handleCheck = (checkedKeys, e) => {
+    handleCheck = (checkedKeys, { checked, checkedNodes, node, event }) => {
         if (!checkedKeys || checkedKeys.length === 0) {
             this.setState({ selected: [] })
             return;
+        }
+        if (!checked) {
+            let excludeIds = [];
+            if (!node.props.isLeaf) {
+                node.props.children.map(child => child.map(n => {
+                    excludeIds.push(n.key)
+                }));
+            } else {
+                excludeIds = [node.props.eventKey]
+            }
+            checkedKeys = checkedKeys.filter(id => !excludeIds.find(eId => id === eId))
         }
         if (this.state.multiple) {
             let result = []
@@ -170,8 +181,8 @@ class UserSelect extends Component {
             this.setState({ selected: result })
         }
         else {
-            let currentKey = e.node.props.eventKey;
-            let isLeaf = e.node.props.isLeaf;
+            let currentKey = node.props.eventKey;
+            let isLeaf = node.props.isLeaf;
             if (!isLeaf) return;
             let user = this.state.users.find(e => e.ID.toString() === currentKey)
             this.setState({ selected: [user] })
@@ -269,7 +280,7 @@ class UserSelect extends Component {
                 </Row>
                 <Tabs
                     defaultActiveKey="0"
-                    style={{ height: '300px', overflow: 'auto', overflowX: 'hidden' }}
+                    style={{ height: '280px', overflow: 'auto', overflowX: 'hidden' }}
                     tabBarExtraContent={<FlowContactModal onSubmit={this.handleAddFlowContact} />}
                 >
                     <Tabs.TabPane tab="常用联系人" key="0">
@@ -313,7 +324,7 @@ class UserSelect extends Component {
                         </Tree>
                     </Tabs.TabPane>
                 </Tabs>
-                <div style={{ maxHeight: '200px', overflow: 'auto' }}>
+                <div style={{ maxHeight: '100px', overflow: 'auto' }}>
                     <legend>所选人员</legend>
                     {this.state.selected.map(user => <Tag key={user.ID} closable={true} afterClose={() => this.handleRemoveSelectedUser(user)}>{user.RealName}</Tag>)}
                 </div>

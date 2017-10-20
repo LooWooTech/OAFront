@@ -336,6 +336,9 @@ module.exports = {
         },
         UpdateImportant: (id, cb, err) => {
             invokeApi('missive/UpdateImportant?id=' + id, HTTP_GET, null, cb, err);
+        },
+        Report: (id, cb, err) => {
+            invokeApi('missive/report?id=' + id, HTTP_GET, null, cb, err);
         }
     },
     FormInfoExtend1: {

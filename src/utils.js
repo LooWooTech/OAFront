@@ -55,7 +55,6 @@ module.exports = {
         let newQueryString = this.jsonToQueryString(params)
         let path = queryIndex === -1 ? pathAndQuery : pathAndQuery.substring(0, queryIndex)
         let newUrl = path + '?' + newQueryString
-        console.log(newUrl)
         this.Redirect(newUrl)
     },
     queryStringToJson(str) {

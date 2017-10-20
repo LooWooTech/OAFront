@@ -43,12 +43,13 @@ class TaskForm extends React.Component {
             {
                 name: 'From', title: '任务来源', defaultValue: model.From || '',
                 render: <Input disabled={disabled} />,
-                before: <Radio.Group defaultValue={this.state.FromType || model.FromType}
+                before: <Radio.Group defaultValue={this.state.FromType || model.FromType || 0}
                     onChange={e => this.setState({ FromType: e.target.value })} disabled={disabled}>
                     <Radio.Button value={1}>省</Radio.Button>
                     <Radio.Button value={2}>市</Radio.Button>
                     <Radio.Button value={3}>区</Radio.Button>
-                </Radio.Group>
+                    <Radio.Button value={0}>不选</Radio.Button>
+                    </Radio.Group>
             },
             {
                 name: 'Goal', title: '工作目标任务', defaultValue: model.Goal || '',

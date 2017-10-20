@@ -30,6 +30,7 @@ class MissiveEditForm extends React.Component {
             formData.Content = content;
             formData.FW_RQ = formData.FW_RQ ? formData.FW_RQ.format() : ''
             formData.QX_RQ = formData.QX_RQ ? formData.QX_RQ.format('YYYY-MM-DD') : ''
+            formData.NotReport = this.state.notReport;
             if (!formData.FormId) {
                 message.error("缺少参数FormId")
                 return false
@@ -246,6 +247,15 @@ class MissiveEditForm extends React.Component {
                     name: 'CS_JG', title: '抄送机关', defaultValue: model.CS_JG,
                     render: <Input disabled={disabled} />
                 },
+                {
+                    title: '是否上报',
+                    tips: "只有在公文流程完全结束之后才会上报，不选择则不上报",
+                    render: <Checkbox
+                        defaultChecked={model.NotReport === false ? false : true}
+
+                        onChange={e => this.setState({ notReport: !e.target.checked })}
+                    >上报市局OA系统</Checkbox>
+                }
             ]);
         }
         return items;

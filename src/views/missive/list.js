@@ -76,10 +76,16 @@ export default class MissiveList extends React.Component {
         utils.ReloadPage({ page })
     }
 
-    handleDelete = item => {
-        api.FormInfo.Delete(item.ID, () => {
+    handleDelete = id => {
+        api.FormInfo.Delete(id, () => {
             this.loadData()
         })
+    }
+
+    handleReport = id => {
+        api.Missive.Report(id, () => {
+            utils.ReloadPage({ time: Math.random() })
+        });
     }
 
     getColumns = () => {
@@ -100,12 +106,24 @@ export default class MissiveList extends React.Component {
             { title: '处理日期', width: 130, dataIndex: 'UpdateTime', render: (text, item) => text ? moment(text).format('ll') : null },
             {
                 title: '操作', width: 120, render: (text, item) => {
+                    var buttons = [];
                     if (auth.isCurrentUser(item.PostUserId)) {
-
-                        return <Popconfirm title="删除后无法恢复，你确定要删除吗? " onConfirm={() => this.handleDelete(item)} >
-                            <Button type="danger" icon="delete"></Button>
-                        </Popconfirm>
+                        if (item.Completed) {
+                            if (!item.Uid) {
+                                buttons.push(<Popconfirm title="你确定要上报吗？"
+                                    onConfirm={() => this.handleReport(item.ID)} >
+                                    <Button type="primary">上报</Button>
+                                </Popconfirm>);
+                            }
+                        }
+                        else {
+                            buttons.push(<Popconfirm title="删除后无法恢复，你确定要删除吗? "
+                                onConfirm={() => this.handleDelete(item.ID)} >
+                                <Button type="danger" icon="delete"></Button>
+                            </Popconfirm>);
+                        }
                     }
+                    return buttons;
                 }
             }
         ];

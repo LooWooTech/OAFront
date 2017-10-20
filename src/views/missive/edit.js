@@ -87,6 +87,11 @@ export default class MissiveEdit extends Component {
 
     handleSubmitFlow = (data) => {
         let user = auth.getUser();
+        //如果是最后一步，则添加上报记录
+        if (this.state.formId === api.Forms.Missive.ID) {
+            api.Missive.Report(this.state.model.ID);
+        }
+        //如果是局长审批则标记为重要
         if (user.JobTitle.Name.indexOf('局长') > -1) {
             api.Missive.UpdateImportant(this.state.model.ID, () => {
                 utils.GoBack();
