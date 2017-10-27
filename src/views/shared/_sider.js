@@ -99,7 +99,8 @@ const sideMenuData = {
         {
             title: '管理', items: [
                 { path: `/extend1/approvals/${api.Forms.Leave.ID}`, icon: 'fa fa-list', text: '请假审核', },
-                { path: '/attendance/holidays', icon: 'fa fa-calendar', text: '节假日管理', role: 2 }
+                { path: '/attendance/holidays', icon: 'fa fa-calendar', text: '节假日管理', role: 2 },
+                { path: `/attendance/groups`, icon: 'fa fa-list', text: '考勤组管理', role: 2 }
             ]
         }
     ],
@@ -192,8 +193,8 @@ class Sider extends React.Component {
                         return show ? <Menu.ItemGroup title={group.title || ''} key={key}>
                             {group.items.map((item, key) => {
                                 var show = auth.hasRight(item.Right);
-                                                               
-                                if(!show && item.Role){
+
+                                if (!show && item.Role) {
                                     show = user.Role >= item.Role;
                                 }
                                 return show ? <Menu.Item key={item.path} item={item}>

@@ -466,6 +466,12 @@ module.exports = {
         },
         Approval: (id, result = true, toUserId = 0, cb, err) => {
             invokeApi('attendance/approval', HTTP_GET, { id, result, toUserId }, cb, err);
+        },
+        Groups: (cb, err) => {
+            invokeApi('attendance/groups', HTTP_GET, null, cb, err);
+        },
+        SaveGroup: (data, cb, err) => {
+            invokeApi('attendance/savegroup', HTTP_POST, data, cb, err);
         }
     },
     Salary: {

@@ -101,9 +101,9 @@ export default class MissiveList extends React.Component {
                     </Link>
                 </span>
             },
-            { title: '办理期限', width: 130, dataIndex: 'QX_RQ', render: (text, item) => text ? moment(text).format('ll') : null },
+            { title: '办理期限', width: 140, dataIndex: 'QX_RQ', render: (text, item) => text ? moment(text).format('ll') : null },
             { title: '所在流程', width: 150, dataIndex: 'FlowStep' },
-            { title: '处理日期', width: 130, dataIndex: 'UpdateTime', render: (text, item) => text ? moment(text).format('ll') : null },
+            { title: '处理日期', width: 140, dataIndex: 'UpdateTime', render: (text, item) => text ? moment(text).format('ll') : null },
             {
                 title: '操作', width: 120, render: (text, item) => {
                     var buttons = [];

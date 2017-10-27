@@ -26,6 +26,7 @@ export default class UserList extends React.Component {
         api.Department.List(data => this.setState({ departments: data }));
         api.Group.List(data => this.setState({ groups: data }))
         api.JobTitle.List(data => this.setState({ titles: data }))
+        api.Attendance.Groups(data => this.setState({ attendanceGroups: data }))
     }
 
     componentWillUnmount() {
@@ -80,6 +81,7 @@ export default class UserList extends React.Component {
                         onSubmit={this.loadData}
                         groups={this.state.groups}
                         departments={this.state.departments}
+                        attendanceGroups={this.state.attendanceGroups}
                         titles={this.state.titles}
                         trigger={<Button type="primary" icon="file">添加用户</Button>}
                     />
@@ -126,6 +128,7 @@ export default class UserList extends React.Component {
                                     groups={this.state.groups}
                                     departments={this.state.departments}
                                     titles={this.state.titles}
+                                    attendanceGroups={this.state.attendanceGroups}
                                     model={item}
                                     trigger={<Button icon="edit">编辑</Button>}
                                 />

@@ -34,7 +34,11 @@ export default class GroupList extends React.Component {
             },
             {
                 title: '权限', name: 'Rights', defaultValue: (record.Rights || []).map(e=>e.Name).join('\n'),
-                render: <Input type="textarea" autosize={{ minRows: 2, maxRows: 6 }} />
+                render: <Input type="textarea" autosize={{ minRows: 2, maxRows: 6 }} />,
+                after:<div>
+                    权限说明：<br />
+                    1、Form.[Task|Missive|FormName].[View|Edit|Delete|Submit]
+                </div>
             }
         ];
     };

@@ -42,6 +42,8 @@ import SalaryIndex from '../salary/list'
 import SalarySearch from '../salary/search'
 import SalaryImport from '../salary/import'
 
+import AttendanceGroupList from '../attendance/groups'
+
 const authorize = (nextState, replace) => {
     if (!auth.hasLogin()) {
         replace({
@@ -90,6 +92,7 @@ export default class Routes extends React.Component {
                 <Route path="attendance">
                     <IndexRoute component={AttendanceIndex} />
                     <Route path="holidays" component={HolidayList} />
+                    <Route path="groups" component={AttendanceGroupList} />
                 </Route>
 
                 <Route userRole={3}>

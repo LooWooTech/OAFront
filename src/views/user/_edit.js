@@ -16,6 +16,7 @@ class EditUserModal extends Component {
         const departments = this.props.departments || []
         const groups = this.props.groups || []
         const titles = this.props.titles || []
+        const attendanceGroups = this.props.attendanceGroups  || []
         return [{
             name: 'ID',
             defaultValue: model.ID,
@@ -30,7 +31,7 @@ class EditUserModal extends Component {
             name: 'RealName',
             defaultValue: model.RealName,
             render: <Input />
-        },{
+        }, {
             title: '手机',
             name: 'Mobile',
             defaultValue: model.Mobile,
@@ -59,6 +60,14 @@ class EditUserModal extends Component {
             </Select>
         },
         {
+            title: '考勤组',
+            name: 'AttendanceId',
+            defaultValue: model.AttendanceId ? model.AttendanceId.toString() : '',
+            render: <Select>
+                {attendanceGroups.map(item => <Select.Option key={item.ID}>{item.Name}</Select.Option>)}
+            </Select>
+        },
+        {
             title: '排序',
             name: 'Sort',
             defaultValue: (model.Sort || 0),
@@ -73,12 +82,12 @@ class EditUserModal extends Component {
         const model = this.props.model || {}
 
         return (
-                <Modal
-                    name="用户"
-                    onSubmit={this.handleSubmit}
-                    children={this.getItems(model)}
-                    trigger={this.props.trigger}
-                />
+            <Modal
+                name="用户"
+                onSubmit={this.handleSubmit}
+                children={this.getItems(model)}
+                trigger={this.props.trigger}
+            />
         )
     }
 }
