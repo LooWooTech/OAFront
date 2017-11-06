@@ -154,6 +154,12 @@ class UserSelect extends Component {
         </TreeNode>)
     }
 
+    getLeaderTreeNode = ()=>{
+
+        return this.state.users.filter(e => e.JobTitleId === 3).map(e => <TreeNode key={e.ID} isLeaf={true} title={e.RealName}>{e.RealName}</TreeNode>)
+        
+    }
+
     handleCheck = (checkedKeys, { checked, checkedNodes, node, event }) => {
         if (!checkedKeys || checkedKeys.length === 0) {
             this.setState({ selected: [] })
@@ -259,6 +265,7 @@ class UserSelect extends Component {
             title={this.props.title || "选择人员"}
             trigger={<Button>{this.state.buttonText || '选择...'}</Button>}
             onSubmit={this.handleSubmit}
+            style={{ width: '50%' }}
             children={<div>
                 <Row>
                     <Col span={12}>
@@ -281,9 +288,8 @@ class UserSelect extends Component {
                 <Tabs
                     defaultActiveKey="0"
                     style={{ height: '280px', overflow: 'auto', overflowX: 'hidden' }}
-                    tabBarExtraContent={<FlowContactModal onSubmit={this.handleAddFlowContact} />}
                 >
-                    <Tabs.TabPane tab="常用联系人" key="0">
+                    <Tabs.TabPane tab="常用" key="0">
                         <Tree multiple={multiple}
                             checkable={multiple}
                             onCheck={this.handleCheck}
@@ -296,6 +302,7 @@ class UserSelect extends Component {
                                 return <TreeNode key={user.ID} isLeaf={true} title={user.RealName} disabled={disabled} />
                             })}
                         </Tree>
+                        <FlowContactModal onSubmit={this.handleAddFlowContact} />
                     </Tabs.TabPane>
 
                     <Tabs.TabPane tab="全部人员" key="2">
@@ -321,6 +328,20 @@ class UserSelect extends Component {
                             selectedKeys={defaultSelectedKeys}
                         >
                             {this.getSelfDepartmentTreeNode()}
+                        </Tree>
+                    </Tabs.TabPane>
+                    <Tabs.TabPane tab="负责人" key="4">
+                        <Tree
+                            multiple={multiple}
+                            checkable={multiple}
+                            onSelect={this.handleSelect}
+                            onCheck={this.handleCheck}                            
+                            checkedKeys={defaultSelectedKeys}
+                            selectedKeys={defaultSelectedKeys}
+                        >
+                            {this.state.users
+                                .filter(e => e.JobTitleId === 3)
+                                .map(user => <TreeNode key={user.ID} isLeaf={true} title={user.RealName} />)}
                         </Tree>
                     </Tabs.TabPane>
                 </Tabs>

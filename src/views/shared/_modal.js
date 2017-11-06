@@ -31,6 +31,7 @@ class SharedModal extends Component {
                     height={this.props.height}
                     onOk={this.handleSubmit}
                     onCancel={this.hideModal}
+                    style={this.props.style}
                 >
                     {children}
                 </Modal>

@@ -192,11 +192,8 @@ class Sider extends React.Component {
                         var show = user.Role >= (group.role || 0);
                         return show ? <Menu.ItemGroup title={group.title || ''} key={key}>
                             {group.items.map((item, key) => {
-                                var show = auth.hasRight(item.Right);
+                                var show = auth.hasRight(item.Right) && user.Role >= (item.role || 0);
 
-                                if (!show && item.Role) {
-                                    show = user.Role >= item.Role;
-                                }
                                 return show ? <Menu.Item key={item.path} item={item}>
                                     <i className={item.icon} />&nbsp;{item.text}
                                 </Menu.Item> : null

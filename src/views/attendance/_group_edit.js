@@ -23,8 +23,8 @@ class AttendanceGroupEditModal extends Component {
                     { name: 'Name', title: '名称', defaultValue: model.Name || '', render: <Input /> , rules: [{ required: true, message: '请填写名称' }],},
                     { name: 'AMBeginTime', title: '上午开始时间', defaultValue: model.AMBeginTime || '05:00', render: <Input /> },
                     { name: 'AMEndTime', title: '上午结束时间', defaultValue: model.AMEndTime || '08:40', render: <Input /> },
-                    { name: 'PMBeginTime', title: '下午开始时间', defaultValue: model.AMBeginTime || '17:20', render: <Input /> },
-                    { name: 'PMEndTime', title: '下午结束时间', defaultValue: model.AMBeginTime || '22:00', render: <Input /> },
+                    { name: 'PMBeginTime', title: '下午开始时间', defaultValue: model.PMBeginTime || '17:20', render: <Input /> },
+                    { name: 'PMEndTime', title: '下午结束时间', defaultValue: model.PMEndTime || '22:00', render: <Input /> },
                     { name: 'API', title: '接口域名/IP', defaultValue: model.API || '', render: <Input /> },
                     {
                         name: 'Default', title: '是否默认', 

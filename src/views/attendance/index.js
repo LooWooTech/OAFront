@@ -54,7 +54,10 @@ export default class AttendanceIndex extends React.Component {
     getLeavesOfDate = (leaves, date) => leaves.filter(e => moment(e.ScheduleBeginTime) <= date && moment(e.ScheduleEndTime) >= date)
 
     handleCheckInOut = () => {
-        api.Attendance.CheckInOut(() => {
+        api.Attendance.CheckInOut(json => {
+            if (json) {
+                alert(json);
+            }
             this.loadData()
         });
     }
@@ -181,7 +184,7 @@ export default class AttendanceIndex extends React.Component {
                         {this.state.logsOfDate.length > 0 ?
                             <ul>
                                 {this.state.logsOfDate.map(item => <li key={item.ID}>
-                                    {moment(item.CreateTime).format('lll')}
+                                    {moment(item.CreateTime).format('lll')} {JSON.parse(item.ApiContent).msg}
                                 </li>)
                                 }</ul>
                             : <span>未打卡</span>
