@@ -76,7 +76,7 @@ class Extend1ListComponent extends Component {
     getColumns = () => {
         var columns = []
         let { userId, formId } = this.state
-        let formName = api.Form.GetFormName(formId)
+        let formName = api.Form.GetName(formId)
         columns.push({ title: formName, dataIndex:'title', render: (text, item) => <span key={item.ID}>{item.Title}<br />{item.Reason}</span> })
         if (!userId) {
             columns.push({ title: '申请人', dataIndex: 'ApplyUser' })

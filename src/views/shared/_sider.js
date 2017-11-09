@@ -187,7 +187,7 @@ class Sider extends React.Component {
 
         return groups.length > 0 ?
             <div id='sider'>
-                <Menu onClick={e => this.handleMenuClick(e, user)} selectedKeys={[pathname, url]} >
+                <Menu onClick={e => this.handleMenuClick(e, user)} selectedKeys={[pathname, url]} style={{borderRight:'none'}}>
                     {groups.map((group, key) => {
                         var show = user.Role >= (group.role || 0);
                         return show ? <Menu.ItemGroup title={group.title || ''} key={key}>

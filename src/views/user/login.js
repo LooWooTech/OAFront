@@ -1,15 +1,10 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router'
 import { Form, Icon, Input, Button, message } from 'antd';
-
 import auth from '../../models/auth'
 import api from '../../models/api'
 import utils from '../../utils'
-
 const FormItem = Form.Item;
-function hasErrors(fieldsError) {
-    return Object.keys(fieldsError).some(field => fieldsError[field]);
-}
+
 class Login extends Component {
     state = { loading: false }
     handleSubmit = (e) => {
@@ -30,31 +25,46 @@ class Login extends Component {
         });
     }
     render() {
-        const { getFieldDecorator, getFieldsError, getFieldError, isFieldTouched } = this.props.form;
+        const { getFieldDecorator} = this.props.form;
 
-        // Only show error after a field is touched.
-        const userNameError = isFieldTouched('username') && getFieldError('username');
-        const passwordError = isFieldTouched('password') && getFieldError('password');
-        const userNameDecorator = getFieldDecorator('username', { rules: [{ required: true, message: '请填写用户名' }], });
-        const passwordDecorator = getFieldDecorator('password', { rules: [{ required: true, message: '请填写密码' }], });
         return (
-            <div className="container">
-                <div className="login-panel">
-                    <Form layout="inline" onSubmit={this.handleSubmit} className="login-form">
-                        <FormItem validateStatus={userNameError ? 'error' : ''} help={userNameError || ''}>
-                            {userNameDecorator(<Input addonBefore={<Icon type="user" />} placeholder="用户名" />)}
-                        </FormItem>
-                        <FormItem validateStatus={passwordError ? 'error' : ''} help={passwordError || ''} >
-                            {passwordDecorator(<Input addonBefore={<Icon type="lock" />} type="password" placeholder="密码" />)}
-                        </FormItem>
-                        <FormItem>
-                            <Button type="primary" htmlType="submit" loading={this.state.loading} disabled={hasErrors(getFieldsError())}>登录</Button>
-                        </FormItem>
-                        <FormItem>
-                            &nbsp;<Link to="/user/findpassword">找回密码</Link>
-                        </FormItem>
-                    </Form>
-                </div>
+            <div className="container login-page">
+                <div className="login">
+                <h1>定海国土局自动化办公系统</h1>
+                <Form onSubmit={this.handleSubmit}>                  
+                      <FormItem>
+                        {getFieldDecorator('userName', {
+                          rules: [{  required: true, message: '请输入账户名！', }],
+                        })(
+                          <Input
+                            size="large"
+                            prefix={<Icon type="user" />}
+                            placeholder="用户名"
+                          />
+                        )}
+                      </FormItem>
+                      <FormItem>
+                        {getFieldDecorator('password', {
+                          rules: [{
+                            required: true, message: '请输入密码！',
+                          }],
+                        })(
+                          <Input
+                            size="large"
+                            prefix={<Icon type="lock" />}
+                            type="password"
+                            placeholder="密码"
+                          />
+                        )}
+                      </FormItem>
+                    
+                  <FormItem className="additional">
+                    <Button size="large" loading={this.state.submitting} type="primary" htmlType="submit">
+                      登录
+                    </Button>
+                  </FormItem>
+                </Form>
+              </div>
             </div>
         );
     }

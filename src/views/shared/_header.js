@@ -1,10 +1,11 @@
 import React from 'react'
 import auth from '../../models/auth'
-import { Menu, Icon } from 'antd'
+import { Menu, Icon, Popover } from 'antd'
 import api from '../../models/api'
 import utils from '../../utils'
 
 import EditPasswordModal from '../user/editpassword'
+import MessagePopover from '../message/_popover'
 
 const headerNavData = [
     { name: 'home', active: true, path: '/?scope=all', icon: 'fa fa-commenting', text: '动态' },
@@ -59,45 +60,33 @@ export default class TopNav extends React.Component {
         })
     };
 
-    handleRightMenuClick = e => {
-        switch (e.key) {
-            case 'logout':
-                auth.logout();
-                utils.Redirect('/user/login');
-                break;
-            case 'editpassword':
-
-                break;
-            default:
-                break;
-        }
+    handleLogout = () => {
+        auth.logout();
+        utils.Redirect('/user/login');
     };
+
+    getUserMenuRender = () => <Popover
+        content={<div className="user-menu">
+            <div><EditPasswordModal trigger={<a href='#'><Icon type="lock" /> 修改密码</a>} /></div>
+            <div><a onClick={this.handleLogout}><Icon type="poweroff" /> 退出登录</a></div>
+        </div>}
+        trigger="hover">
+        <span><Icon type="user" />{auth.getUser().RealName || 'Administrator'} </span>
+    </Popover>
 
     render() {
 
         const names = getCurrentPathName(this.context.router.location.pathname);
 
-        return (
-
-            <div className="navbar fixed">
-                <Menu theme="dark" mode="horizontal" selectedKeys={names} onClick={this.handleLeftMenuClick} className="left">
-                    {headerNavData.map((item, key) => NavItem(item, key))}
-                </Menu>
-                <Menu theme="dark" mode="horizontal" className="right" onClick={this.handleRightMenuClick}>
-                    <Menu.SubMenu title={<span><Icon type="user" /> {auth.getUser().RealName || 'Administrator'} </span>}>
-                        <Menu.Item>个人资料</Menu.Item>
-                        <Menu.Item key="editpassword">
-                            <EditPasswordModal
-                                trigger="修改密码"
-                            />
-                        </Menu.Item>
-                        <Menu.Divider />
-                        <Menu.Item key="logout">退出登录</Menu.Item>
-                    </Menu.SubMenu>
-                </Menu>
-            </div>
-
-        );
+        return <div className="navbar fixed">
+            <Menu theme="dark" mode="horizontal" selectedKeys={names} onClick={this.handleLeftMenuClick} className="left">
+                {headerNavData.map((item, key) => NavItem(item, key))}
+            </Menu>
+            <Menu theme="dark" mode="horizontal" className="right" onClick={this.handleRightMenuClick}>
+                <Menu.SubMenu title={<MessagePopover />} />
+                <Menu.SubMenu title={this.getUserMenuRender()} />
+            </Menu>
+        </div>
     }
 }
 

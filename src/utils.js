@@ -41,9 +41,6 @@ module.exports = {
     Redirect(path) {
         hashHistory.push(path);
     },
-    LoadPage(url, parameters) {
-
-    },
     ReloadPage(parameters) {
         parameters = parameters || {}
         let hash = window.location.hash;

@@ -20,7 +20,7 @@ class EditPassword extends Component {
         return (
             <Modal
                 title="修改密码"
-                trigger={<span>{this.props.trigger}</span>}
+                trigger={this.props.trigger}
                 onSubmit={this.handleSubmit}
                 children={[
                     { name: 'OldPassword', title: '原密码', render: <Input type="password" />, rules: [{ required: true, message: '请填写旧密码' }], },

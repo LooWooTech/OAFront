@@ -48,29 +48,15 @@ class FeedIndex extends Component {
     }
 
     itemContentRender = item => {
-        var link = null;
-        switch (item.FormId) {
-            default:
-                return null
-            case api.Forms.Missive.ID:
-            case api.Forms.ReceiveMissive.ID:
-                link = `/missive/edit/${item.FormId}/?id=${item.InfoId}`
-                break;
-            case api.Forms.Task.ID:
-                link = `/task/edit/?id=${item.InfoId}`
-                break;
-            case api.Forms.Car.ID:
-            case api.Forms.MeetingRoom.ID:
-            case api.Forms.Seal.ID:
-            case api.Forms.Leave.ID:
-                link = `/extend1/approvals/${item.FormId}`;
-                break;
-        }
+        var form = api.Form.GetForm(item.FormId);
+        if (!form) return null;
+
+        var link = form.InfoLink.replace('{ID}', item.InfoId);
         return <Link to={link}>{item.Title}</Link>
     }
 
     render() {
-        if(this.state.loading) return null
+        if (this.state.loading) return null
         return (
             <div className="feeds">
                 {this.state.list.length > 0 ? this.state.list.map(item =>

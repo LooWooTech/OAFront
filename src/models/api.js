@@ -9,13 +9,13 @@ const host = process.env.NODE_ENV === 'production' ? '/' : 'http://localhost:801
 const apiPath = "api/";
 const apiHost = host + apiPath;
 const Forms = {
-    Missive: { ID: 1, Name: '发文' },
-    ReceiveMissive: { ID: 2, Name: '收文' },
-    Car: { ID: 3, Name: '用车' },
-    Task: { ID: 4, Name: '任务' },
-    MeetingRoom: { ID: 5, Name: '会议室' },
-    Seal: { ID: 6, Name: '图章' },
-    Leave: { ID: 7, Name: '请假' }
+    Missive: { ID: 1, Name: '发文', Icon: 'fa fa-file-o', InfoLink: '/missive/edit/1/?id={ID}' },
+    ReceiveMissive: { ID: 2, Name: '收文', Icon: 'fa fa-file', InfoLink: '/missive/edit/2/?id={ID}' },
+    Car: { ID: 3, Name: '用车', Icon: 'fa fa-car', InfoLink: '/extend1/approvals/3' },
+    Task: { ID: 4, Name: '任务', Icon: 'fa fa-clock-o', InfoLink: '/task/edit/?id={ID}' },
+    MeetingRoom: { ID: 5, Name: '会议室', Icon: 'fa fa-television', InfoLink: '/extend1/approvals/5' },
+    Seal: { ID: 6, Name: '图章', Icon: 'fa fa-dot-circle-o', InfoLink: '/extend1/approvals/6' },
+    Leave: { ID: 7, Name: '请假', Icon: 'fa fa-calendar-check-o', InfoLink: '/extend1/approvals/7' }
 };
 
 function getExceptionMessage(ex) {
@@ -103,16 +103,9 @@ module.exports = {
         List: (cb, err) => {
             invokeApi('form/list', HTTP_GET, null, cb, err);
         },
-        GetFormName: (formId) => {
-            for (var key in Forms) {
-                if (Forms.hasOwnProperty(key)) {
-                    let form = Forms[key]
-                    if (form.ID === formId) {
-                        return form.Name
-                    }
-                }
-            }
-            return ''
+        GetForm: (formId) => {
+            let key = Object.keys(Forms).find(key => Forms[key].ID === formId)
+            return Forms[key]
         }
     },
     File: {
@@ -490,6 +483,23 @@ module.exports = {
         Import: (data, cb, err) => {
             let query = utils.jsonToQueryString(data)
             invokeApi('salary/import?' + query, HTTP_POST, null, cb, err);
+        }
+    },
+    Message: {
+        Unreads: (top, cb, err) => {
+            invokeApi('message/list', HTTP_GET, { hasRead: false, page: 1, rows: top }, cb, err);
+        },
+        Read: (id, cb, err) => {
+            invokeApi('message/read?id=' + id, HTTP_GET, null, cb, err);
+        },
+        ReadAll: (cb, err) => {
+            invokeApi('message/readall', HTTP_GET, null, cb, err);
+        },
+        histories: (top, cb, err) => {
+            invokeApi('message/list', HTTP_GET, { hasRead: true, page: 1, rows: top }, cb, err);
+        },
+        List: (hasRead, page, rows, cb, err) => {
+            invokeApi('message/list', HTTP_GET, { hasRead, page, rows }, cb, err);
         }
     }
 };
