@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Popover, Icon, Badge, Button, Card } from 'antd';
+import { Popover, Icon, Badge, Button } from 'antd';
 import moment from 'moment'
 import api from '../../models/api'
 import utils from '../../utils'
@@ -32,7 +32,7 @@ class MessagePopover extends Component {
 
     gotoHistoryPage = () => {
         this.setState({ visible: false })
-        utils.Redirect('/message/list')
+        utils.Redirect('/message/?action=receive')
     }
 
     handleVisibleChange = (visible) => {
@@ -65,7 +65,7 @@ class MessagePopover extends Component {
 
     getNotificationBox = () => {
         const emptyMsgRender = <div className="message-empty">
-            <img src="/images/message_empty.svg" />
+            <img src="/images/message_empty.svg" role="presentation"/>
             <h3>没有新消息</h3>
         </div>
             ;

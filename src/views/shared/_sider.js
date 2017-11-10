@@ -14,7 +14,7 @@ const sideMenuData = {
         {
             title: '类型', items: Object.keys(api.Forms).map(key => {
                 var form = api.Forms[key]
-                return { path: '/?formId=' + form.ID, icon: 'fa fa-bookmark-o', text: form.Name }
+                return { path: '/?formId=' + form.ID, icon: form.Icon, text: form.Name }
             })
         }
     ],
@@ -113,6 +113,20 @@ const sideMenuData = {
             ],
         }
     ],
+    message: [
+        {
+            title: '消息', items: [
+                { path: '/message/?action=receive', icon: 'fa fa-envelope-open-o', text: '我收到的' },
+                { path: '/message/?action=send', icon: 'fa fa-send-o', text: '我发出的' },
+            ]
+        },
+        {
+            title: '类型', items: Object.keys(api.Forms).map(key => {
+                var form = api.Forms[key]
+                return { path: '/message/?formId=' + form.ID, icon: form.Icon, text: form.Name }
+            })
+        }
+    ],
     system: [
         {
             title: '系统管理', role: 2, items: [
@@ -187,7 +201,7 @@ class Sider extends React.Component {
 
         return groups.length > 0 ?
             <div id='sider'>
-                <Menu onClick={e => this.handleMenuClick(e, user)} selectedKeys={[pathname, url]} style={{borderRight:'none'}}>
+                <Menu onClick={e => this.handleMenuClick(e, user)} selectedKeys={[pathname, url]} style={{ borderRight: 'none' }}>
                     {groups.map((group, key) => {
                         var show = user.Role >= (group.role || 0);
                         return show ? <Menu.ItemGroup title={group.title || ''} key={key}>

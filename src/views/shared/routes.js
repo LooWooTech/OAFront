@@ -44,6 +44,8 @@ import SalaryImport from '../salary/import'
 
 import AttendanceGroupList from '../attendance/groups'
 
+import MessageList from '../message/list'
+
 const authorize = (nextState, replace) => {
     if (!auth.hasLogin()) {
         replace({
@@ -95,6 +97,10 @@ export default class Routes extends React.Component {
                     <Route path="groups" component={AttendanceGroupList} />
                 </Route>
 
+                <Route path="message">
+                    <IndexRoute component={MessageList} />
+                </Route>
+
                 <Route userRole={3}>
                     <Route path="system/config" component={SystemConfig} />
                     <Route path="user/list" component={UserList} />
@@ -104,6 +110,8 @@ export default class Routes extends React.Component {
                     <Route path="jobtitle/list" component={JobTitleList} />
                     <Route path="flow/list" component={FlowList} />
                 </Route>
+
+
             </Route>
             <Route path="/user">
                 <Route path="login" component={Login} />

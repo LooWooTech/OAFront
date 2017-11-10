@@ -15,7 +15,7 @@ const Forms = {
     Task: { ID: 4, Name: '任务', Icon: 'fa fa-clock-o', InfoLink: '/task/edit/?id={ID}' },
     MeetingRoom: { ID: 5, Name: '会议室', Icon: 'fa fa-television', InfoLink: '/extend1/approvals/5' },
     Seal: { ID: 6, Name: '图章', Icon: 'fa fa-dot-circle-o', InfoLink: '/extend1/approvals/6' },
-    Leave: { ID: 7, Name: '请假', Icon: 'fa fa-calendar-check-o', InfoLink: '/extend1/approvals/7' }
+    Leave: { ID: 7, Name: '请假', Icon: 'fa fa-calendar-check-o', InfoLink: '/extend1/approvals/7' },
 };
 
 function getExceptionMessage(ex) {
@@ -95,7 +95,8 @@ module.exports = {
     Form: {
         GetName: (id) => {
             let key = Object.keys(Forms).find(key => Forms[key].ID === id)
-            return Forms[key].Name
+            var form = Forms[key] || {};
+            return form.Name || ''
         },
         Model: (formId, cb) => {
             invokeApi('form/model?id=' + formId, HTTP_GET, null, cb, null);
@@ -487,7 +488,7 @@ module.exports = {
     },
     Message: {
         Unreads: (top, cb, err) => {
-            invokeApi('message/list', HTTP_GET, { hasRead: false, page: 1, rows: top }, cb, err);
+            invokeApi('message/list', HTTP_GET, { hasRead: false, action: 'receive', page: 1, rows: top }, cb, err);
         },
         Read: (id, cb, err) => {
             invokeApi('message/read?id=' + id, HTTP_GET, null, cb, err);
@@ -498,8 +499,11 @@ module.exports = {
         histories: (top, cb, err) => {
             invokeApi('message/list', HTTP_GET, { hasRead: true, page: 1, rows: top }, cb, err);
         },
-        List: (hasRead, page, rows, cb, err) => {
-            invokeApi('message/list', HTTP_GET, { hasRead, page, rows }, cb, err);
+        List: (parameters, cb, err) => {
+            invokeApi('message/list', HTTP_GET, parameters, cb, err);
+        },
+        Delete: (id, cb, err) => {
+            invokeApi('message/delete?id=' + id, HTTP_DELETE, null, cb, err);
         }
     }
 };
