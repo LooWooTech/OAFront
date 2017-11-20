@@ -127,6 +127,19 @@ const sideMenuData = {
             })
         }
     ],
+    email: [
+        {
+            title: '我的邮箱', items: [
+                { path: '/email/post', icon: 'fa fa-edit', text: '写邮件' },
+                { path: '/email/?type=receive', icon: 'fa fa-envelope-open-o', text: '收件箱' },
+                { path: '/email/?type=star', icon: 'fa fa-star-o', text: '星标邮件' },
+                { path: '/email/?type=draft', icon: 'fa fa-pencil', text: '草稿箱' },
+                { path: '/email/?type=send', icon: 'fa fa-send-o', text: '已发送' },
+                { path: '/email/?type=trash', icon: 'fa fa-trash', text: '已删除' },
+                //{ path: '/email/contacts', icon: 'fa fa-address-book-o', text: '通讯录' },
+            ],
+        }
+    ],
     system: [
         {
             title: '系统管理', role: 2, items: [
@@ -187,8 +200,8 @@ class Sider extends React.Component {
         }
         let path = item.path;
         path = item.path.replace('{UserId}', user.ID);
-
         utils.Redirect(path);
+
         document.title = item.text
     };
 
@@ -201,7 +214,11 @@ class Sider extends React.Component {
 
         return groups.length > 0 ?
             <div id='sider'>
-                <Menu onClick={e => this.handleMenuClick(e, user)} selectedKeys={[pathname, url]} style={{ borderRight: 'none' }}>
+                <Menu
+                    onClick={e => this.handleMenuClick(e, user)}
+                    selectedKeys={[pathname, url]}
+                    style={{ borderRight: 'none' }}
+                >
                     {groups.map((group, key) => {
                         var show = user.Role >= (group.role || 0);
                         return show ? <Menu.ItemGroup title={group.title || ''} key={key}>

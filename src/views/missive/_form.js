@@ -101,7 +101,7 @@ class MissiveEditForm extends React.Component {
             rules: [{ required: true }],
             render: <span>
                 <Upload.Dragger
-                    action={api.File.UploadUrl(content.ID || 0, 0, 'content', true)}
+                    action={api.File.UploadUrl(content.ID || 0, 0, 0, 'content', true)}
                     beforeUpload={this.handleBeforeUpload}
                     onChange={this.handleUploadContent}
                     name="content"
@@ -143,7 +143,7 @@ class MissiveEditForm extends React.Component {
 
         let numberControl = {
             name: 'WJ_ZH', title: '文件字号', defaultValue: model.WJ_ZH,
-            layout: { labelCol: { span: 4 }, wrapperCol: { span: 6 } },
+            layout: { labelCol: { span: 3 }, wrapperCol: { span: 6 } },
             render: <AutoComplete
                 dataSource={(this.state.redTitles || []).filter(t => t.FormId === formId).map(t => { return { value: t.ID, text: t.Name + `〔${new Date().getFullYear()}〕` } })}
                 disabled={disabled}
@@ -202,7 +202,7 @@ class MissiveEditForm extends React.Component {
                 qxControl,
                 {
                     name: 'DJR', title: '登记人', defaultValue: model.DJR,
-                    layout: { labelCol: { span: 4 }, wrapperCol: { span: 3 } },
+                    layout: { labelCol: { span: 3 }, wrapperCol: { span: 4 } },
                     render: <Input disabled={disabled} />
                 },
                 uploadControl,
@@ -252,9 +252,11 @@ class MissiveEditForm extends React.Component {
                     tips: "只有在公文流程完全结束之后才会上报，不选择则不上报",
                     render: <Checkbox
                         defaultChecked={model.NotReport === false ? false : true}
-
                         onChange={e => this.setState({ notReport: !e.target.checked })}
-                    >上报市局OA系统</Checkbox>
+                        disabled={disabled}
+                    >
+                        上报市局OA系统
+                        </Checkbox>
                 }
             ]);
         }
@@ -268,7 +270,7 @@ class MissiveEditForm extends React.Component {
             ref="form"
             onSubmit={this.handleSubmit}
             children={this.getItems()}
-            itemLayout={{ labelCol: { span: 4 }, wrapperCol: { span: 8 } }}
+            itemLayout={{ labelCol: { span: 3 }, wrapperCol: { span: 18 } }}
         />
     }
 }

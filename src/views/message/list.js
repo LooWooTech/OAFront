@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { Table, Button, Popconfirm } from 'antd'
+import { Link } from 'react-router'
 import moment from 'moment'
 import api from '../../models/api'
 import utils from '../../utils'
+import auth from '../../models/auth'
 
 class MessageList extends Component {
 
@@ -29,14 +31,12 @@ class MessageList extends Component {
             page: query.page || 1,
             rows: this.state.page.pageSize
         };
-        api.Message.List(parameter, data => {
+        api.Message.List(parameter, json => {
             this.setState({
                 loading: false,
-                list: data.List,
-                page: data.Page,
-                hasRead: parameter.hasRead,
-                formId: parameter.formId,
-                action: parameter.action,
+                list: json.List,
+                page: json.Page,
+                ...parameter
             });
         });
     }
@@ -59,6 +59,51 @@ class MessageList extends Component {
         }
     }
 
+    getColumns = () => {
+        var list = [
+            { title: 'ID', dataIndex: 'ID', width: 50 },
+        ];
+        if (this.state.action === 'receive') {
+            list.push({ title: '发送人', dataIndex: 'FromUser', width: 100 });
+        } else {
+            list.push({ title: '接收人', dataIndex: 'ToUser', width: 100 });
+        }
+        return list.concat([{
+            title: '发送时间', dataIndex: 'CreateTime', width: 150,
+            render: (text) => moment(text).format('ll')
+        },
+        {
+            title: '内容', dataIndex: 'Content',
+            render: (text, item) => {
+                if (item.FormId) {
+                    var form = api.Form.GetForm(item.FormId);
+                    return <div>
+                        <Link to={form.InfoLink.replace('{ID}', item.InfoId)}>{item.Title}</Link>
+                    </div>
+                }
+                else {
+                    return text;
+                }
+            }
+        },
+        { title: '状态', dataIndex: 'HasRead', width: 80, render: (text) => text ? "已读" : "未读" },
+        {
+            title: '操作', width: 210,
+            render: (text, item) => (
+                <span>
+                    {!item.HasRead && auth.isCurrentUser(item.ToUserId) ?
+                        <Button type="primary" icon="check" onClick={() => this.handleRead(item.ID)}>已读</Button>
+                        : null}
+                    <Popconfirm placement="topRight" title="你确定要删除吗？"
+                        onConfirm={() => this.handleDelete(item.ID)}
+                        okText="是" cancelText="否">
+                        <Button type="danger" icon="delete">删除</Button>
+                    </Popconfirm>
+                </span>
+            )
+        }]);
+    }
+
     render() {
         return (
             <div>
@@ -72,28 +117,7 @@ class MessageList extends Component {
                 <Table
                     rowKey="ID"
                     loading={this.state.loading}
-                    columns={[
-                        { title: 'ID', dataIndex: 'ID', width: 50 },
-                        { title: '发送人', dataIndex: 'FromUser', },
-                        { title: '发送时间', dataIndex: 'CreateTime', render: (text) => moment(text).format('ll') },
-                        { title: '内容', dataIndex: 'Content' },
-                        { title: '状态', dataIndex: 'HasRead', render: (text) => text ? "已读" : "未读" },
-                        {
-                            title: '操作', width: 210,
-                            render: (text, item) => (
-                                <span>
-                                    {!item.HasRead ?
-                                        <Button type="primary" icon="check" onClick={() => this.handleRead(item.ID)}>已读</Button>
-                                        : null}
-                                    <Popconfirm placement="topRight" title="你确定要删除吗？"
-                                        onConfirm={() => this.handleDelete(item.ID)}
-                                        okText="是" cancelText="否">
-                                        <Button type="danger" icon="delete">删除</Button>
-                                    </Popconfirm>
-                                </span>
-                            )
-                        }
-                    ]}
+                    columns={this.getColumns()}
                     dataSource={this.state.list}
                     pagination={{
                         size: 5, ...this.state.page,

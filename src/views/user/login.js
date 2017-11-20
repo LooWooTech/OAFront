@@ -30,7 +30,9 @@ class Login extends Component {
         return (
             <div className="container login-page">
                 <div className="login">
-                <h1>定海国土局自动化办公系统</h1>
+                <h1>舟山市国土局定海分局
+                <span>自动化办公系统</span>
+                </h1>
                 <Form onSubmit={this.handleSubmit}>                  
                       <FormItem>
                         {getFieldDecorator('userName', {
@@ -59,7 +61,7 @@ class Login extends Component {
                       </FormItem>
                     
                   <FormItem className="additional">
-                    <Button size="large" loading={this.state.submitting} type="primary" htmlType="submit">
+                    <Button size="large" loading={this.state.loading} type="primary" htmlType="submit">
                       登录
                     </Button>
                   </FormItem>

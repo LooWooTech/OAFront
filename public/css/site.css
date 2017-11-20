@@ -292,8 +292,14 @@ hr {
 }
 .login h1 {
     font-size: 1.8rem;
-    line-height: 100px;
     color: #152956;
+    line-height: 2rem;
+    margin: 20px;
+}
+.login h1 span {
+    font-size: 1rem;
+    color: #666;
+    display: inline-block;
 }
 .login button[type='submit'] {
     width: 100%;

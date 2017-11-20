@@ -34,6 +34,7 @@ class TaskForm extends React.Component {
             { name: 'FormId', defaultValue: this.state.formId, render: <Input type="hidden" /> },
             {
                 name: 'Number', title: '任务单号', defaultValue: model.Number || '',
+                layout: { labelCol: { span: 3 }, wrapperCol: { span: 8 } },
                 rules: [{ required: true, message: '请填写任务单号' }], render: <Input disabled={disabled} />
             },
             {
@@ -49,7 +50,7 @@ class TaskForm extends React.Component {
                     <Radio.Button value={2}>市</Radio.Button>
                     <Radio.Button value={3}>区</Radio.Button>
                     <Radio.Button value={0}>不选</Radio.Button>
-                    </Radio.Group>
+                </Radio.Group>
             },
             {
                 name: 'Goal', title: '工作目标任务', defaultValue: model.Goal || '',
@@ -73,7 +74,7 @@ class TaskForm extends React.Component {
                     ref="form"
                     onSubmit={this.handleSubmit}
                     children={this.getItems()}
-                    itemLayout={{ labelCol: { span: 4 }, wrapperCol: { span: 8 } }}
+                    itemLayout={{ labelCol: { span: 3 }, wrapperCol: { span: 12 } }}
                 />
             </div>
         )

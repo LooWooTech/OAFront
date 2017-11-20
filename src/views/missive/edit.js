@@ -117,6 +117,10 @@ export default class MissiveEdit extends Component {
         });
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        return JSON.stringify(nextProps) !== JSON.stringify(this.props) || nextState !== this.state
+    }
+    
     render() {
         const model = this.state.model
         const missive = this.state.missive

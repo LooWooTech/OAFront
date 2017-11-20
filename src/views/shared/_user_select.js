@@ -11,7 +11,7 @@ class UserSelect extends Component {
     state = {
         users: [],
         favorites: [],
-        selected: [],
+        selected: this.props.defaultValue ? this.props.defaultValue.split(',') : [],
         inModal: false,
         flowNodeId: this.props.flowNodeId || 0,
         flowDataId: this.props.flowDataId || 0,
@@ -154,10 +154,8 @@ class UserSelect extends Component {
         </TreeNode>)
     }
 
-    getLeaderTreeNode = ()=>{
-
+    getLeaderTreeNode = () => {
         return this.state.users.filter(e => e.JobTitleId === 3).map(e => <TreeNode key={e.ID} isLeaf={true} title={e.RealName}>{e.RealName}</TreeNode>)
-        
     }
 
     handleCheck = (checkedKeys, { checked, checkedNodes, node, event }) => {
@@ -208,6 +206,9 @@ class UserSelect extends Component {
             }
             this.setState({ buttonText: text })
         }
+        else {
+            this.setState({ buttonText: '选择...' })
+        }
         if (this.props.onSubmit)
             this.props.onSubmit(users)
     }
@@ -219,6 +220,10 @@ class UserSelect extends Component {
     handleRemoveSelectedUser = user => {
         let selected = this.state.selected.filter(e => e.ID !== user.ID) || [];
         this.setState({ selected });
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        return JSON.stringify(nextProps) !== JSON.stringify(this.props) || nextState !== this.state
     }
 
     render() {
@@ -335,7 +340,7 @@ class UserSelect extends Component {
                             multiple={multiple}
                             checkable={multiple}
                             onSelect={this.handleSelect}
-                            onCheck={this.handleCheck}                            
+                            onCheck={this.handleCheck}
                             checkedKeys={defaultSelectedKeys}
                             selectedKeys={defaultSelectedKeys}
                         >

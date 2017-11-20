@@ -109,7 +109,7 @@ export default class MissiveList extends React.Component {
                     var buttons = [];
                     if (auth.isCurrentUser(item.PostUserId)) {
                         if (item.Completed) {
-                            if (!item.Uid) {
+                            if (!item.Uid && item.FormId === api.Forms.Missive.ID) {
                                 buttons.push(<Popconfirm title="你确定要上报吗？"
                                     onConfirm={() => this.handleReport(item.ID)} >
                                     <Button type="primary">上报</Button>

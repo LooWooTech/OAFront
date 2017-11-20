@@ -46,6 +46,11 @@ import AttendanceGroupList from '../attendance/groups'
 
 import MessageList from '../message/list'
 
+import EmailList from '../email/list'
+import EmailForm from '../email/form'
+import EmailDetail from '../email/detail'
+import ContactList from '../user/contacts'
+
 const authorize = (nextState, replace) => {
     if (!auth.hasLogin()) {
         replace({
@@ -101,6 +106,13 @@ export default class Routes extends React.Component {
                     <IndexRoute component={MessageList} />
                 </Route>
 
+                <Route path="email">
+                    <IndexRoute component={EmailList} />
+                    <Route path="post" component={EmailForm} />
+                    <Route path="detail" component={EmailDetail} />
+                    <Route path="contacts" component={ContactList} />
+                </Route>
+
                 <Route userRole={3}>
                     <Route path="system/config" component={SystemConfig} />
                     <Route path="user/list" component={UserList} />
@@ -110,7 +122,6 @@ export default class Routes extends React.Component {
                     <Route path="jobtitle/list" component={JobTitleList} />
                     <Route path="flow/list" component={FlowList} />
                 </Route>
-
 
             </Route>
             <Route path="/user">

@@ -3,41 +3,46 @@ import { Row, Col } from 'antd';
 import moment from 'moment';
 
 class ResultTab extends Component {
+
+    getFreeFlowDataRender = freeFlowData => {
+        if (!freeFlowData) {
+            return null
+        }
+        return <div className="freeflow">
+            <div className="title">传阅批示：</div>
+            {freeFlowData.Nodes.map(data => data.UpdateTime ? <div key={data.ID}>
+                <div className="header">
+                    <span className="signature">{data.Signature}</span>
+                    <span className="datetime">{moment(data.UpdateTime || data.CreateTime).format('lll')}</span>
+                </div>
+                <div className="content">{data.Content}</div>
+            </div> : <span></span>)}
+        </div>
+    }
+
+    getNodeDataRender = (name, title) => {
+        const flowData = this.props.flowData || {};
+        const nodes = (flowData.Nodes || []).sort((a, b) => a.ID - b.ID);
+        const data = nodes.find(e => e.FlowNodeName.startsWith(name)) || {};
+        return <div className="flownode">
+            <div className="title">{title || name}：</div>
+            <div className="content">
+                {data.Content ? data.Content.replace(/\n/g, '<br />') : data.UpdateTime ? '同意' : ''}
+            </div>
+            <div className="bottom">
+                <span className="signature">{data.Signature}</span>
+                <span className="datetime">{data.UserId ? moment(data.UpdateTime || data.CreateTime).format('YYYY年MM月DD日') : ''}</span>
+            </div>
+            {this.getFreeFlowDataRender(data.FreeFlowData)}
+        </div>
+    };
+
+    getZWGKRender = () => ['主动公开', '依申请公开', '不公开'].map((text, key) => <span key={key}>{(this.props.missive.ZW_GK === (key + 1) ? '√' : '□') + text}&nbsp;&nbsp;&nbsp;&nbsp;</span>);
+
+
     render() {
         const model = this.props.missive
         const flowData = this.props.flowData || {};
-        const nodes = (flowData.Nodes || []).sort((a, b) => a.ID - b.ID);
-        const GetFreeFlowData = freeFlowData => {
-            if (!freeFlowData) {
-                return null
-            }
-            return <div className="freeflow">
-                <div className="title">传阅批示：</div>
-                {freeFlowData.Nodes.map(data => data.UpdateTime ? <div key={data.ID}>
-                    <div className="header">
-                        <span className="signature">{data.Signature}</span>
-                        <span className="datetime">{moment(data.UpdateTime || data.CreateTime).format('lll')}</span>
-                    </div>
-                    <div className="content">{data.Content}</div>
-                </div> : <span></span>)}
-            </div>
-        }
-        const GetNodeData = name => {
-            var data = nodes.find(e => e.FlowNodeName.startsWith(name)) || {};
-            return <div className="flownode">
-                <div className="title">{name}：</div>
-                <div className="content">
-                    {data.Content ? data.Content.replace(/\n/g, '<br />') : data.UpdateTime ? '同意' : ''}
-                </div>
-                <div className="bottom">
-                    <span className="signature">{data.Signature}</span>
-                    <span className="datetime">{data.UserId ? moment(data.UpdateTime || data.CreateTime).format('YYYY年MM月DD日') : ''}</span>
-                </div>
-                {GetFreeFlowData(data.FreeFlowData)}
-            </div>
-        };
-        const getZWGK = () => ['主动公开', '依申请公开', '不公开'].map((text, key) => <span key={key}>{(model.ZWGK === (key + 1) ? '√' : '□') + text}&nbsp;&nbsp;&nbsp;&nbsp;</span>);
-
         return (
             <div className="missive_result">
                 <h1>舟山市国土资源局定海分局发文拟稿纸
@@ -45,24 +50,24 @@ class ResultTab extends Component {
                 </h1>
                 <div className="table">
                     <Row>
-                        {GetNodeData('签发')}
+                        {this.getNodeDataRender(flowData.Nodes.find(e => e.FlowNodeName === '局长签发') ? '局长签发' : '分管领导', '签发')}
                     </Row>
                     <Row>
-                        {GetNodeData('分管领导')}
+                        {this.getNodeDataRender('分管领导')}
                     </Row>
                     <Row>
                         <Col span={11}>
-                            {GetNodeData('办公室')}
+                            {this.getNodeDataRender('办公室')}
                         </Col>
                         <Col span={13}>
-                            {GetNodeData('科室负责人')}
+                            {this.getNodeDataRender('科室负责人')}
                         </Col>
                     </Row>
                     <Row>
-                        {GetNodeData('拟稿人')}
+                        {this.getNodeDataRender('拟稿人')}
                     </Row>
                     <Row style={{ padding: '10px' }}>
-                        政务公开： {getZWGK()}
+                        政务公开： {this.getZWGKRender()}
                     </Row>
                     <Row style={{ padding: '10px' }}>
                         是否公开发布（{model.GKFB === true ? "√是、否" : model.GKFB === false ? "是、√否" : "是、否"}）

@@ -1,0 +1,158 @@
+import React, { Component } from 'react';
+import { Button, Table, Icon, Popconfirm } from 'antd'
+import { Link } from 'react-router'
+import moment from 'moment'
+import api from '../../models/api'
+import utils from '../../utils'
+
+class EmailListPage extends Component {
+
+    state = {
+        loading: true,
+        selectedRowKeys: [],
+        searchKey: '',
+        type: this.props.location.query.type,
+        list: [],
+        page: {
+            pageSize: window.defaultRows,
+            current: this.props.location.query.page || 1,
+            total: 0
+        },
+    }
+
+    componentWillMount() {
+        this.loadData();
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.location.search !== this.props.location.search) {
+            this.loadData(nextProps.location.query);
+        }
+    }
+
+
+    loadData = (query) => {
+        query = query || this.props.location.query || {}
+        let parameter = {
+            star: query.star || '',
+            searchKey: query.searchKey || '',
+            type: query.type || 'receive',
+            page: query.page || 1,
+            rows: this.state.page.pageSize
+        };
+        api.Mail.List(parameter, json => {
+            this.setState({
+                loading: false,
+                list: json.List,
+                page: json.Page,
+                ...parameter
+            });
+        })
+    }
+
+    handleSearch = searchKey => {
+        utils.ReloadPage({ searchKey, page: 1 })
+    };
+
+    handlePageChange = page => {
+        utils.ReloadPage({ page })
+    }
+
+    handleStar = (id, isStar) => {
+        if (isStar) {
+            api.Mail.Unstar(id, this.loadData)
+        }
+        else {
+            api.Mail.Star(id, this.loadData)
+        }
+    }
+
+    handleDelete = id => {
+        api.Mail.Delete(id, this.loadData)
+    }
+
+    handleEdit = id => {
+        utils.Redirect('/email/post?id=' + id)
+    }
+
+    handleForward = id => {
+        utils.Redirect('/email/post?forwardId=' + id);
+    }
+
+    getColumns = () => {
+        var items = []
+        if (this.state.type === 'send' || this.state.type === 'draft') {
+            items.push({ title: '收件人', dataIndex: 'ToUserName', width: 200, });
+        } else {
+            items.push({
+                title: '', dataIndex: 'Star', width: 50,
+                render: (text, item) => <Icon onClick={() => this.handleStar(item.ID, item.Star)} type={item.Star ? 'star' : 'star-o'} />
+            })
+            items.push({ title: '发件人', dataIndex: 'FromUserName', width: 100, });
+        }
+        return items.concat([
+            {
+                title: '主题', dataIndex: 'Subject',
+                render: (text, item) => <Link to={`/email/detail?id=${item.ID}`}>{item.Subject}</Link>
+            },
+            {
+                title: '时间', dataIndex: 'CreateTime', width: 150,
+                render: (text) => moment(text).format('ll')
+            },
+            {
+                title: '操作', dataIndex: 'ID', width: 200,
+                render: (text, item) => <div>
+                    {this.state.type === 'draft' ? <Button icon="edit" type="primary" title="修改" onClick={() => this.handleEdit(item.ID)}></Button> : null}
+                    <Popconfirm placement="topRight" title="你确定要删除吗？"
+                        onConfirm={() => this.handleDelete(item.ID)}
+                        okText="是" cancelText="否">
+                        <Button type="danger" icon="delete" title="删除"></Button>
+                    </Popconfirm>
+                    <Button icon="select" title="转发" onClick={() => this.handleForward(item.ID)}></Button>
+                </div>
+            }
+        ]);
+    }
+
+    render() {
+
+        let title = "收件箱";
+        switch (this.state.type) {
+            case 'send':
+                title = '已发送';
+                break;
+            case 'star':
+                title = '星标邮件';
+                break;
+            case 'draft':
+                title = '草稿箱';
+                break;
+            case 'trash':
+                title = '已删除';
+                break;
+            default:
+                title = "收件箱";
+                break;
+        }
+
+        return (
+            <div>
+                <div className="toolbar">
+                    <h3>{title}</h3>
+                </div>
+                <Table
+                    rowKey="ID"
+                    loading={this.state.loading}
+                    columns={this.getColumns()}
+                    dataSource={this.state.list}
+                    pagination={{
+                        size: 5, ...this.state.page,
+                        onChange: this.handlePageChange,
+                    }}
+                />
+            </div>
+        );
+    }
+}
+
+export default EmailListPage;

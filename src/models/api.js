@@ -9,13 +9,14 @@ const host = process.env.NODE_ENV === 'production' ? '/' : 'http://localhost:801
 const apiPath = "api/";
 const apiHost = host + apiPath;
 const Forms = {
-    Missive: { ID: 1, Name: '发文', Icon: 'fa fa-file-o', InfoLink: '/missive/edit/1/?id={ID}' },
-    ReceiveMissive: { ID: 2, Name: '收文', Icon: 'fa fa-file', InfoLink: '/missive/edit/2/?id={ID}' },
-    Car: { ID: 3, Name: '用车', Icon: 'fa fa-car', InfoLink: '/extend1/approvals/3' },
-    Task: { ID: 4, Name: '任务', Icon: 'fa fa-clock-o', InfoLink: '/task/edit/?id={ID}' },
-    MeetingRoom: { ID: 5, Name: '会议室', Icon: 'fa fa-television', InfoLink: '/extend1/approvals/5' },
-    Seal: { ID: 6, Name: '图章', Icon: 'fa fa-dot-circle-o', InfoLink: '/extend1/approvals/6' },
-    Leave: { ID: 7, Name: '请假', Icon: 'fa fa-calendar-check-o', InfoLink: '/extend1/approvals/7' },
+    Missive: { ID: 1, FlowId: 1, Name: '发文', Icon: 'fa fa-file-o', InfoLink: '/missive/edit/1/?id={ID}' },
+    ReceiveMissive: { ID: 2, FlowId: 2, Name: '收文', Icon: 'fa fa-file', InfoLink: '/missive/edit/2/?id={ID}' },
+    Car: { ID: 3, FlowId: 3, Name: '用车', Icon: 'fa fa-car', InfoLink: '/extend1/approvals/3' },
+    Task: { ID: 4, FlowId: 4, Name: '任务', Icon: 'fa fa-clock-o', InfoLink: '/task/edit/?id={ID}' },
+    MeetingRoom: { ID: 5, FlowId: 5, Name: '会议室', Icon: 'fa fa-television', InfoLink: '/extend1/approvals/5' },
+    Seal: { ID: 6, FlowId: 6, Name: '图章', Icon: 'fa fa-dot-circle-o', InfoLink: '/extend1/approvals/6' },
+    Leave: { ID: 7, FlowId: 7, Name: '请假', Icon: 'fa fa-calendar-check-o', InfoLink: '/extend1/approvals/7' },
+    Mail: { ID: 8, Name: '邮件', Icon: 'fa fa-envelope-o', InfoLink: '/email/detail?id={ID}' },
 };
 
 function getExceptionMessage(ex) {
@@ -116,8 +117,8 @@ module.exports = {
         DownloadUrl: (fileId) => {
             return `${apiHost}file/download?id=${fileId}`;
         },
-        UploadUrl: (fileId = 0, infoId = 0, name = null, inline = false) => {
-            return `${apiHost}file/upload?infoId=${infoId}&id=${fileId}&name=${name}&inline=${inline}`;
+        UploadUrl: (fileId = 0, infoId = 0, formId = 0, name = null, inline = false) => {
+            return `${apiHost}file/upload?infoId=${infoId}&formId=${formId}&id=${fileId}&name=${name}&inline=${inline}`;
         },
         PreviewUrl: (infoId) => {
             return `${host}attachment/preview?id=${infoId}`;
@@ -504,6 +505,32 @@ module.exports = {
         },
         Delete: (id, cb, err) => {
             invokeApi('message/delete?id=' + id, HTTP_DELETE, null, cb, err);
+        }
+    },
+    Mail: {
+        List: (parameters, cb, err) => {
+            invokeApi('mail/list', HTTP_GET, parameters, cb, err);
+        },
+        Save: (data, cb, err) => {
+            invokeApi('mail/save', HTTP_POST, data, cb, err);
+        },
+        Send: (data, cb, err) => {
+            invokeApi('mail/send', HTTP_POST, data, cb, err);
+        },
+        Star: (id, cb, err) => {
+            invokeApi('mail/star?id=' + id, HTTP_GET, null, cb, err);
+        },
+        Unstar: (id, cb, err) => {
+            invokeApi('mail/unstar?id=' + id, HTTP_GET, null, cb, err);
+        },
+        Delete: (id, cb, err) => {
+            invokeApi('mail/delete?id=' + id, HTTP_DELETE, null, cb, err);
+        },
+        Recovery: (id, cb, err) => {
+            invokeApi('mail/recovery?id=' + id, HTTP_GET, null, cb, err);
+        },
+        Model: (id, cb, err) => {
+            invokeApi('mail/model?id=' + id, HTTP_GET, null, cb, err);
         }
     }
 };

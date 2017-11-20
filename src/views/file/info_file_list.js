@@ -37,7 +37,7 @@ class FileList extends Component {
                     <Upload
                         showUploadList={false}
                         onChange={this.handleUpload}
-                        action={api.File.UploadUrl(0, infoId, 'file1')}
+                        action={api.File.UploadUrl(0, infoId, 0, 'file1')}
                         name="file1"
                         withCredentials={true}
                     >

@@ -48,7 +48,7 @@ class RedTitleEditModal extends Component {
             {
                 name: 'Template', title: '红头模板', defaultValue: template,
                 render: <Upload.Dragger
-                    action={api.File.UploadUrl(0, model.ID, 'template', true)}
+                    action={api.File.UploadUrl(0, model.ID, 0, 'template', true)}
                     name="template"
                     onChange={this.handleUpload}
                     accept=".doc,.docx"
