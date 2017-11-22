@@ -11,7 +11,8 @@ class UserSelect extends Component {
     state = {
         users: [],
         favorites: [],
-        selected: this.props.defaultValue ? this.props.defaultValue.split(',') : [],
+        selected: this.props.defaultValue || [],
+        length: this.props.length || 5,
         inModal: false,
         flowNodeId: this.props.flowNodeId || 0,
         flowDataId: this.props.flowDataId || 0,
@@ -93,7 +94,7 @@ class UserSelect extends Component {
     getSelectedUsers = () => {
         let nullable = this.props.nullable || false
         if (nullable) {
-            return this.state.selected
+            return this.state.selected || []
         }
         if (this.state.users.length === 1) {
             return this.state.users
@@ -197,18 +198,29 @@ class UserSelect extends Component {
         this.handleCheck(selectedKeys, e)
     }
 
-    handleSubmit = () => {
-        let users = this.getSelectedUsers()
+    getButtonText = (users) => {
         if (users.length > 0) {
-            let text = '已选 ' + users[0].RealName;
-            if (users.length > 1) {
-                text += ' 等' + users.length + '人';
+            let text = '已选'
+            for (var i = 0; i < this.state.length; i++) {
+                if (i < users.length) {
+                    text += ' ' + users[i].RealName;
+                }
             }
-            this.setState({ buttonText: text })
+            if (users.length > this.state.length) {
+                text += ' 等' + users.length + '人';
+
+            }
+            return text;
         }
         else {
-            this.setState({ buttonText: '选择...' })
+            return '请选择...'
         }
+    }
+
+    handleSubmit = () => {
+        let users = this.getSelectedUsers()
+        let btnText = this.getButtonText(users)
+        this.setState({ buttonText: btnText })
         if (this.props.onSubmit)
             this.props.onSubmit(users)
     }
@@ -227,9 +239,12 @@ class UserSelect extends Component {
     }
 
     render() {
+        console.log(this.state)
         const multiple = this.state.multiple
         const users = this.state.users || []
-        const defaultSelectedKeys = this.state.selected.map(user => user.ID.toString())
+        const selectedUsers = this.state.selected || [];
+        const selectedUserIds = selectedUsers.map(user => user.ID.toString())
+
         //如果不是查询结果
         if (!this.state.inModal) {
             if (users.length === 1) {
@@ -243,7 +258,7 @@ class UserSelect extends Component {
                         let userId = parseInt(value, 10)
                         let selectUser = this.state.users.find(e => e.ID === userId);
                         if (multiple) {
-                            let list = this.state.selected || []
+                            let list = selectedUsers || []
                             if (!list.find(user => user.ID === userId)) {
                                 list.push(selectUser);
                             }
@@ -254,7 +269,7 @@ class UserSelect extends Component {
                     }}
                     onDeselect={value => {
                         let userId = parseInt(value, 10)
-                        let list = (this.state.selected || []).filter(user => user.ID !== userId)
+                        let list = selectedUsers.filter(user => user.ID !== userId)
                         this.setState({ selected: list })
                     }}
                 >
@@ -268,7 +283,7 @@ class UserSelect extends Component {
 
         return <Modal
             title={this.props.title || "选择人员"}
-            trigger={<Button>{this.state.buttonText || '选择...'}</Button>}
+            trigger={<Button>{this.getButtonText(selectedUsers)}</Button>}
             onSubmit={this.handleSubmit}
             style={{ width: '50%' }}
             children={<div>
@@ -299,8 +314,8 @@ class UserSelect extends Component {
                             checkable={multiple}
                             onCheck={this.handleCheck}
                             onSelect={this.handleSelect}
-                            checkedKeys={defaultSelectedKeys}
-                            selectedKeys={defaultSelectedKeys}
+                            checkedKeys={selectedUserIds}
+                            selectedKeys={selectedUserIds}
                         >
                             {this.state.favorites.map(user => {
                                 let disabled = !this.state.users.find(e => e.ID === user.ID);
@@ -316,8 +331,8 @@ class UserSelect extends Component {
                             defaultExpandedKeys={["d_0"]}
                             onCheck={this.handleCheck}
                             onSelect={this.handleSelect}
-                            checkedKeys={defaultSelectedKeys}
-                            selectedKeys={defaultSelectedKeys}
+                            checkedKeys={selectedUserIds}
+                            selectedKeys={selectedUserIds}
                         >
                             {this.getRootTreeNode()}
                         </Tree>
@@ -329,8 +344,8 @@ class UserSelect extends Component {
                             defaultExpandAll={true}
                             onCheck={this.handleCheck}
                             onSelect={this.handleSelect}
-                            checkedKeys={defaultSelectedKeys}
-                            selectedKeys={defaultSelectedKeys}
+                            checkedKeys={selectedUserIds}
+                            selectedKeys={selectedUserIds}
                         >
                             {this.getSelfDepartmentTreeNode()}
                         </Tree>
@@ -341,8 +356,8 @@ class UserSelect extends Component {
                             checkable={multiple}
                             onSelect={this.handleSelect}
                             onCheck={this.handleCheck}
-                            checkedKeys={defaultSelectedKeys}
-                            selectedKeys={defaultSelectedKeys}
+                            checkedKeys={selectedUserIds}
+                            selectedKeys={selectedUserIds}
                         >
                             {this.state.users
                                 .filter(e => e.JobTitleId === 3)
@@ -352,7 +367,7 @@ class UserSelect extends Component {
                 </Tabs>
                 <div style={{ maxHeight: '100px', overflow: 'auto' }}>
                     <legend>所选人员</legend>
-                    {this.state.selected.map(user => <Tag key={user.ID} closable={true} afterClose={() => this.handleRemoveSelectedUser(user)}>{user.RealName}</Tag>)}
+                    {selectedUsers.map(user => <Tag key={user.ID} closable={true} afterClose={() => this.handleRemoveSelectedUser(user)}>{user.RealName}</Tag>)}
                 </div>
 
             </div>

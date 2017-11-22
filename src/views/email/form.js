@@ -4,12 +4,13 @@ import SelectUser from '../shared/_user_select'
 import Form from '../shared/_form'
 import api from '../../models/api'
 import utils from '../../utils'
-import Editor from './_editor'
+import Editor from 'react-lz-editor'
 
 class EmailForm extends Component {
 
     state = {
-        id: this.props.location.query.forwardId || 0,
+        id: this.props.location.query.id || 0,
+        replyId: this.props.location.query.replyId || 0,
         forwardId: this.props.location.query.forwardId || 0,
     }
 
@@ -17,46 +18,28 @@ class EmailForm extends Component {
         this.loadData(this.state.id, this.state.forwardId);
     }
 
-    loadData = (id, forwardId) => {
-        if (id || forwardId) {
-            api.Mail.Model(id || forwardId, data => {
+    loadData = (id, forwardId, replyId) => {
+        if (id || forwardId || replyId) {
+            api.Mail.Model(id || forwardId || replyId, data => {
                 this.setState({
                     id,
+                    replyId,
                     forwardId,
-                    model: data,
-                    attachments: data.Attachments,
+                    ...data
                 })
             })
         }
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.location.query.forwardId !== this.state.forwardId
-            || nextProps.location.query.id !== this.state.id
-        ) {
-            this.loadData(nextProps.location.query.id || 0, nextProps.location.query.forwardId || 0);
-        }
-    }
-
-
     submitFormData = (callback) => {
         this.refs.form.validateFields((err, values) => {
-            var formData = values;
-            formData.ToUserIds = this.refs.toUsersForm.getSelectedUsers().map(e => e.ID).join();
-            formData.CcUserIds = this.refs.ccUsersForm.getSelectedUsers().map(e => e.ID).join();
-            formData.Content = this.state.content;
+            let formData = values;
+            let toUsers = this.refs.toUsersForm.getSelectedUsers().map(e => { return { MailId: formData.ID, UserId: e.ID }; });
+            let ccUsers = this.refs.ccUsersForm.getSelectedUsers().map(e => { return { MailId: formData.ID, UserId: e.ID, CC: true, }; });
+            formData.Content = this.state.changed ? this.state.content : this.state.model ? this.state.model.Content : '';
+            formData.Users = toUsers.concat(ccUsers);
             formData.attachments = this.state.attachments;
-            formData.Content = this.refs.editor.getContent() || '';
 
-            if (!formData.ToUserIds) {
-                message.error("请选择收件人");
-                return false;
-            }
-            if (!formData.Content) {
-                message.error("请填写邮件正文");
-                return false;
-            }
-            console.log(formData);
             callback(formData);
         });
     }
@@ -72,6 +55,14 @@ class EmailForm extends Component {
 
     handleSend = () => {
         this.submitFormData(data => {
+            if (!data.Users.find(e => !e.CC)) {
+                message.error("请选择收件人");
+                return false;
+            }
+            if (!data.Content) {
+                message.error("请填写邮件正文");
+                return false;
+            }
             api.Mail.Send(data, json => {
                 //跳转到发件箱
                 utils.Redirect('/email/?type=send');
@@ -83,7 +74,7 @@ class EmailForm extends Component {
         if (this.state.changed || (this.state.model === null && !this.state.content)) {
             Modal.confirm({
                 title: '提醒',
-                content: '你确定取消发送吗？',
+                content: '邮件内容已经改变，尚未保存！\n你确定取消发送吗？',
                 okText: '确认',
                 cancelText: '取消',
                 onOk: () => {
@@ -96,21 +87,20 @@ class EmailForm extends Component {
         }
     }
 
-    handleUploadFile = ({ file, fileList }) => {
-        this.setState({ uploading: false })
-        if (!file || !file.response) return
-        let response = file.response
-        if (response.Message) {
-            message.error(response.Message)
-            return;
+    handleUploadChange = ({ file, fileList }) => {
+        if (file.status === 'done') {
+            let response = file.response
+            if (response.Message) {
+                message.error(response.Message)
+                return;
+            }
         }
         this.setState({ attachments: fileList.map(e => e.response) })
     }
 
-    handleDeleteFile = (file) => {
-
+    handleContentChange = (content) => {
+        this.setState({ content, changed: true })
     }
-
     getFormItems = () => {
         const model = this.state.model || {}
         var items = [
@@ -123,7 +113,7 @@ class EmailForm extends Component {
                     title="选择收件人"
                     multiple={true}
                     ref="toUsersForm"
-                    defaultValue={model.ToUsersIds} />
+                    defaultValue={this.state.toUsers} />
             },
             {
                 title: '抄送',
@@ -132,7 +122,7 @@ class EmailForm extends Component {
                     multiple={true}
                     ref="ccUsersForm"
                     nullable={true}
-                    defaultValue={model.CcUserIds} />
+                    defaultValue={this.state.ccUsers} />
             },
             {
                 name: 'Subject',
@@ -146,18 +136,32 @@ class EmailForm extends Component {
                 itemLayout: { labelCol: { span: 3 }, wrapperCol: { span: 12 } },
                 render: <Upload
                     action={api.File.UploadUrl(0, model.ID, api.Forms.Mail.ID, 'attachments')}
-                    onChange={this.handleUploadFile}
+                    onChange={this.handleUploadChange}
                     name="attachments"
-                    onRemove={this.handleDeleteFile}
                     withCredentials={true}
-                    defaultFileList={this.state.attachments || []}
+                    defaultFileList={(this.state.attachments || []).map(file => {
+                        return {
+                            uid: file.ID,
+                            name: file.FileName,
+                            status: 'done',
+                            reponse: file, // custom error message to show
+                            url: api.File.FileUrl(file.ID),
+                        }
+                    })}
                 >
                     <Button> <Icon type="upload" /> 选择文件 </Button>
                 </Upload>
             },
             {
                 title: '正文',
-                render: <Editor ref="editor" />
+                render: <Editor
+                    cbReceiver={this.handleContentChange}
+                    importContent={this.state.content === undefined ? this.state.replyId > 0 ? `<pre><code>${model.Content}</code></pre>` : model.Content : this.state.content}
+                    video={false}
+                    audio={false}
+                    image={false}
+                    fullScreen={false}
+                />
             }
         ];
 
@@ -165,6 +169,10 @@ class EmailForm extends Component {
     }
 
     render() {
+        if ((this.state.id || this.state.forwardId) && !this.state.model) {
+            return null;
+        }
+
         return (
             <div>
                 <div className="toolbar">

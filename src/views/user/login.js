@@ -31,7 +31,7 @@ class Login extends Component {
             <div className="container login-page">
                 <div className="login">
                 <h1>舟山市国土局定海分局
-                <span>自动化办公系统</span>
+                <span>办公自动化系统</span>
                 </h1>
                 <Form onSubmit={this.handleSubmit}>                  
                       <FormItem>

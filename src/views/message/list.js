@@ -60,9 +60,7 @@ class MessageList extends Component {
     }
 
     getColumns = () => {
-        var list = [
-            { title: 'ID', dataIndex: 'ID', width: 50 },
-        ];
+        var list = [];
         if (this.state.action === 'receive') {
             list.push({ title: '发送人', dataIndex: 'FromUser', width: 100 });
         } else {

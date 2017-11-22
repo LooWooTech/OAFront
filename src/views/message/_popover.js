@@ -49,7 +49,7 @@ class MessagePopover extends Component {
         const form = api.Form.GetForm(item.FormId);
         if (!form) return null;
         const link = form.InfoLink.replace('{ID}', item.InfoId);
-        return <div className="message-item" key={item.ID} onClick={() => this.handleMessageLink(item.ID, link)}>
+        return <div className="message-item" key={item.ID} onClick={() => this.handleMessageLink(item.MessageId, link)}>
             <div className={`form-icon form-icon-${form.ID}`}>
                 <i className={form.Icon}></i>
             </div>
@@ -65,12 +65,14 @@ class MessagePopover extends Component {
 
     getNotificationBox = () => {
         const emptyMsgRender = <div className="message-empty">
-            <img src="/images/message_empty.svg" role="presentation"/>
+            <img src="/images/message_empty.svg" role="presentation" />
             <h3>没有新消息</h3>
         </div>
             ;
-        return <div className="message-list">
-            {this.state.list.length === 0 ? emptyMsgRender : this.state.list.map(this.getMessageItemRender)}
+        return <div className="message-popover">
+            <div className="message-list">
+                {this.state.list.length === 0 ? emptyMsgRender : this.state.list.map(this.getMessageItemRender)}
+            </div>
             <div className="bottom">
                 <Button onClick={this.handleClear}><i className="fa fa-bell-slash-o"></i> 标记所有未读</Button>
                 <Button onClick={this.gotoHistoryPage}><i className="fa fa-clock-o"></i> 查看历史消息</Button>
@@ -85,6 +87,7 @@ class MessagePopover extends Component {
                 placement="bottomRight"
                 trigger="click"
                 content={this.getNotificationBox()}
+                style={{padding:'0'}}
             >
                 <span className="message_icon">
                     <Badge count={this.state.count} className="badge">

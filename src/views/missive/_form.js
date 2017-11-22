@@ -48,14 +48,24 @@ class MissiveEditForm extends React.Component {
     }
 
     handleUploadContent = ({ file, fileList }) => {
-        this.setState({ uploading: false })
-        if (!file || !file.response) return
-        var response = file.response
-        if (response.Message) {
-            alert(response.Message)
-            return;
+        switch (file.status) {
+            case 'uploading':
+                this.setState({ uploading: true })
+                return;
+            case 'done':
+                this.setState({ uploading: false })
+                if (!file || !file.response) return
+                var response = file.response
+                if (response.Message) {
+                    alert(response.Message)
+                    return;
+                }
+                this.setState({ upload: response })
+                break;
+            default:
+                this.setState({ uploading: false })
+                break;
         }
-        this.setState({ upload: response })
     }
 
     handleDeleteContent = (contentId) => {

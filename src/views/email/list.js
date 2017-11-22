@@ -5,7 +5,7 @@ import moment from 'moment'
 import api from '../../models/api'
 import utils from '../../utils'
 
-class EmailListPage extends Component {
+class MailReceiveList extends Component {
 
     state = {
         loading: true,
@@ -80,20 +80,25 @@ class EmailListPage extends Component {
     }
 
     getColumns = () => {
-        var items = []
-        if (this.state.type === 'send' || this.state.type === 'draft') {
-            items.push({ title: '收件人', dataIndex: 'ToUserName', width: 200, });
+        let isSend = this.state.type === 'send' || this.state.type === 'draft';
+        let items = []
+        if (isSend) {
+            items.push({
+                title: '收件人', dataIndex: 'ToUsers', width: 200,
+                render: (text, item) => item.ToUsers.slice(0, 3).map(e => e.RealName).join()
+            });
         } else {
             items.push({
+                //星标
                 title: '', dataIndex: 'Star', width: 50,
-                render: (text, item) => <Icon onClick={() => this.handleStar(item.ID, item.Star)} type={item.Star ? 'star' : 'star-o'} />
+                render: (text, item) => <Icon style={{ color: 'orange' }} onClick={() => this.handleStar(item.ID, item.Star)} type={item.Star ? 'star' : 'star-o'} />
             })
             items.push({ title: '发件人', dataIndex: 'FromUserName', width: 100, });
         }
         return items.concat([
             {
                 title: '主题', dataIndex: 'Subject',
-                render: (text, item) => <Link to={`/email/detail?id=${item.ID}`}>{item.Subject}</Link>
+                render: (text, item) => <Link to={`/email/${this.state.type === 'draft' ? 'post' : 'detail'}?id=${item.ID}`}>{item.Subject}</Link>
             },
             {
                 title: '时间', dataIndex: 'CreateTime', width: 150,
@@ -102,13 +107,13 @@ class EmailListPage extends Component {
             {
                 title: '操作', dataIndex: 'ID', width: 200,
                 render: (text, item) => <div>
-                    {this.state.type === 'draft' ? <Button icon="edit" type="primary" title="修改" onClick={() => this.handleEdit(item.ID)}></Button> : null}
+                    {this.state.type === 'draft' ? <Button icon="edit" type="primary" title="修改" onClick={() => this.handleEdit(item.MailId)}></Button> : null}
                     <Popconfirm placement="topRight" title="你确定要删除吗？"
                         onConfirm={() => this.handleDelete(item.ID)}
                         okText="是" cancelText="否">
                         <Button type="danger" icon="delete" title="删除"></Button>
                     </Popconfirm>
-                    <Button icon="select" title="转发" onClick={() => this.handleForward(item.ID)}></Button>
+                    <Button icon="select" title="转发" onClick={() => this.handleForward(item.MailId)}></Button>
                 </div>
             }
         ]);
@@ -155,4 +160,4 @@ class EmailListPage extends Component {
     }
 }
 
-export default EmailListPage;
+export default MailReceiveList;
