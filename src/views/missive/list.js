@@ -92,11 +92,11 @@ export default class MissiveList extends React.Component {
         let items = [
             { title: '文号', dataIndex: 'WJ_ZH', width: 200, },
             {
-                title: '标题', dataIndex: 'WJ_BT',
+                title: '标题', dataIndex: 'Title',
                 render: (text, item) => <span>
                     {item.JJ_DJ ? <Icon type="exclamation" className="red" /> : null}
                     {item.Important ? <Icon type="flag" /> : null}
-                    <Link to={`/missive/edit/${this.state.formId}/?id=${item.ID}`}>
+                    <Link to={`/missive/edit/${this.state.formId}/?id=${item.InfoId}`}>
                         {text}
                     </Link>
                 </span>

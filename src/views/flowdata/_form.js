@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Input, Radio, message, Row, Col, Button, Checkbox } from 'antd'
+import { Input, Radio, message, Row, Col, Button, Checkbox, Modal } from 'antd'
 import Form from '../shared/_form'
 import SelectUser from '../shared/_user_select'
 import api from '../../models/api'
@@ -25,21 +25,35 @@ class FlowNodeDataForm extends Component {
                 message.error("请先选择发送人")
                 return false
             }
-            if (!data.Result && !confirm('你确定要退回吗？')) return false
 
-            api.FlowData.Submit(data, json => {
-                this.setState({ visible: false }, () => {
-                    message.success("提交成功")
-                    if (this.state.sms) {
-                        api.Sms.Send(data.ToUserId, data.InfoId);
-                    }
-                    if (this.props.onSubmit) {
-                        this.props.onSubmit(json)
+            if (!data.Result) {
+                Modal.confirm({
+                    title: '提醒',
+                    content: '你确定要退回吗？',
+                    okText: '确认',
+                    cancelText: '取消',
+                    onOk: () => {
+                        this.submitFlowData(data)
                     }
                 })
-            })
-
+            } else {
+                this.submitFlowData(data)
+            }
         });
+    }
+
+    submitFlowData = data => {
+        api.FlowData.Submit(data, json => {
+            this.setState({ visible: false }, () => {
+                message.success("提交成功")
+                if (this.state.sms) {
+                    api.Sms.Send(data.ToUserId, data.InfoId);
+                }
+                if (this.props.onSubmit) {
+                    this.props.onSubmit(json)
+                }
+            })
+        })
     }
 
     getNextNodes = () => {
@@ -82,10 +96,10 @@ class FlowNodeDataForm extends Component {
             items.push({
                 title: '审核结果',
                 render:
-                <Radio.Group value={this.state.result} onChange={e => this.setState({ result: e.target.value })}>
-                    <Radio.Button value={true}>同意</Radio.Button>
-                    <Radio.Button value={false}>不同意</Radio.Button>
-                </Radio.Group>
+                    <Radio.Group value={this.state.result} onChange={e => this.setState({ result: e.target.value })}>
+                        <Radio.Button value={true}>同意</Radio.Button>
+                        <Radio.Button value={false}>不同意</Radio.Button>
+                    </Radio.Group>
             })
         }
 
@@ -109,13 +123,13 @@ class FlowNodeDataForm extends Component {
                 items.push({
                     title: '选择发送人员',
                     render:
-                    <SelectUser
-                        ref="selectUserForm"
-                        flowNodeId={nextFlowNodeId}
-                        onSubmit={this.handleSelect}
-                        flowDataId={flowData.ID}
-                        formType="flow"
-                    />,
+                        <SelectUser
+                            ref="selectUserForm"
+                            flowNodeId={nextFlowNodeId}
+                            onSubmit={this.handleSelect}
+                            flowDataId={flowData.ID}
+                            formType="flow"
+                        />,
                     after: <div><Checkbox checked={this.state.sms} onChange={e => this.setState({ sms: e.target.checked })}>短信通知</Checkbox></div>
                 })
             }

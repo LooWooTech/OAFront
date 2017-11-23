@@ -60,15 +60,22 @@ class MailReceiveList extends Component {
 
     handleStar = (id, isStar) => {
         if (isStar) {
-            api.Mail.Unstar(id, this.loadData)
+            api.UserInfo.Unstar(id, this.loadData)
         }
         else {
-            api.Mail.Star(id, this.loadData)
+            api.UserInfo.Star(id, this.loadData)
         }
     }
 
-    handleDelete = id => {
-        api.Mail.Delete(id, this.loadData)
+    handleDelete = item => {
+        if (item.IsDraft) {
+            api.Mail.Delete(item.MailId, this.loadData)
+        }
+        else if (item.Trash) {
+            api.UserInfo.Delete(item.ID, this.loadData)
+        } else {
+            api.UserInfo.Trash(item.ID, this.loadData)
+        }
     }
 
     handleEdit = id => {
@@ -77,6 +84,9 @@ class MailReceiveList extends Component {
 
     handleForward = id => {
         utils.Redirect('/email/post?forwardId=' + id);
+    }
+    handleRecovery = id => {
+        api.UserInfo.Recovery(id, this.loadData)
     }
 
     getColumns = () => {
@@ -90,15 +100,15 @@ class MailReceiveList extends Component {
         } else {
             items.push({
                 //星标
-                title: '', dataIndex: 'Star', width: 50,
-                render: (text, item) => <Icon style={{ color: 'orange' }} onClick={() => this.handleStar(item.ID, item.Star)} type={item.Star ? 'star' : 'star-o'} />
+                title: '', dataIndex: 'Starred', width: 50,
+                render: (text, item) => <Icon style={{ color: 'orange' }} onClick={() => this.handleStar(item.ID, item.Starred)} type={item.Starred ? 'star' : 'star-o'} />
             })
-            items.push({ title: '发件人', dataIndex: 'FromUserName', width: 100, });
+            items.push({ title: '发件人', dataIndex: 'FromUser', width: 100, });
         }
         return items.concat([
             {
                 title: '主题', dataIndex: 'Subject',
-                render: (text, item) => <Link to={`/email/${this.state.type === 'draft' ? 'post' : 'detail'}?id=${item.ID}`}>{item.Subject}</Link>
+                render: (text, item) => <Link to={`/email/${this.state.type === 'draft' ? 'post' : 'detail'}?id=${item.MailId}`}>{item.Subject}</Link>
             },
             {
                 title: '时间', dataIndex: 'CreateTime', width: 150,
@@ -108,12 +118,23 @@ class MailReceiveList extends Component {
                 title: '操作', dataIndex: 'ID', width: 200,
                 render: (text, item) => <div>
                     {this.state.type === 'draft' ? <Button icon="edit" type="primary" title="修改" onClick={() => this.handleEdit(item.MailId)}></Button> : null}
-                    <Popconfirm placement="topRight" title="你确定要删除吗？"
-                        onConfirm={() => this.handleDelete(item.ID)}
+
+                    <Popconfirm placement="topRight" title={item.IsDraft ? '你确定要删除此草稿吗？' : item.Trash ? '你确定要彻底删除吗？' : '移动到回收站？'}
+                        onConfirm={() => this.handleDelete(item)}
                         okText="是" cancelText="否">
                         <Button type="danger" icon="delete" title="删除"></Button>
                     </Popconfirm>
-                    <Button icon="select" title="转发" onClick={() => this.handleForward(item.MailId)}></Button>
+
+                    {item.Trash ?
+                        <Popconfirm placement="topRight" title="还原到收件箱？"
+                            onConfirm={() => this.handleRecovery(item.ID)}
+                            okText="是" cancelText="否">
+                            <Button type="" icon="rollback" title="还原"></Button>
+                        </Popconfirm>
+                        : null}
+                    {!item.IsDraft ?
+                        <Button icon="retweet" title="转发" onClick={() => this.handleForward(item.MailId)}></Button>
+                        : null}
                 </div>
             }
         ]);

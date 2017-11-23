@@ -8,17 +8,14 @@ import Editor from 'react-lz-editor'
 
 class EmailForm extends Component {
 
-    state = {
-        id: this.props.location.query.id || 0,
-        replyId: this.props.location.query.replyId || 0,
-        forwardId: this.props.location.query.forwardId || 0,
-    }
+    state = {}
 
     componentWillMount() {
-        this.loadData(this.state.id, this.state.forwardId);
+        this.loadData();
     }
 
-    loadData = (id, forwardId, replyId) => {
+    loadData = () => {
+        const { id, forwardId, replyId } = this.props.location.query;
         if (id || forwardId || replyId) {
             api.Mail.Model(id || forwardId || replyId, data => {
                 this.setState({
@@ -34,8 +31,8 @@ class EmailForm extends Component {
     submitFormData = (callback) => {
         this.refs.form.validateFields((err, values) => {
             let formData = values;
-            let toUsers = this.refs.toUsersForm.getSelectedUsers().map(e => { return { MailId: formData.ID, UserId: e.ID }; });
-            let ccUsers = this.refs.ccUsersForm.getSelectedUsers().map(e => { return { MailId: formData.ID, UserId: e.ID, CC: true, }; });
+            let toUsers = this.refs.toUsersForm.getSelectedUsers().map(e => { return { InfoId: formData.ID, UserId: e.ID }; });
+            let ccUsers = this.refs.ccUsersForm.getSelectedUsers().map(e => { return { InfoId: formData.ID, UserId: e.ID, CC: true, }; });
             formData.Content = this.state.changed ? this.state.content : this.state.model ? this.state.model.Content : '';
             formData.Users = toUsers.concat(ccUsers);
             formData.attachments = this.state.attachments;
@@ -103,9 +100,11 @@ class EmailForm extends Component {
     }
     getFormItems = () => {
         const model = this.state.model || {}
+        const { id, forwardId, replyId } = this.props.location.query;
         var items = [
-            { name: 'ID', defaultValue: this.state.id || 0, render: <Input type="hidden" /> },
-            { name: 'ForwardId', defaultValue: this.state.forwardId, render: <Input type="hidden" /> },
+            { name: 'ID', defaultValue: id || 0, render: <Input type="hidden" /> },
+            { name: 'ReplyId', defaultValue: replyId || 0, render: <Input type="hidden" /> },
+            { name: 'ForwardId', defaultValue: forwardId || 0, render: <Input type="hidden" /> },
             {
                 title: '收件人',
                 rules: [{ required: true, message: '请选择收件人' }],
@@ -113,7 +112,7 @@ class EmailForm extends Component {
                     title="选择收件人"
                     multiple={true}
                     ref="toUsersForm"
-                    defaultValue={this.state.toUsers} />
+                    defaultValue={replyId && !id ? [this.state.fromUser] : forwardId && !id ? [] : this.state.toUsers} />
             },
             {
                 title: '抄送',
@@ -122,13 +121,13 @@ class EmailForm extends Component {
                     multiple={true}
                     ref="ccUsersForm"
                     nullable={true}
-                    defaultValue={this.state.ccUsers} />
+                    defaultValue={replyId && !id ? this.state.toUsers.concat(this.state.ccUsers || []) :forwardId && !id ? [] : this.state.ccUsers} />
             },
             {
                 name: 'Subject',
                 title: '主题',
                 rules: [{ required: true, message: '请填写邮件主题' }],
-                defaultValue: model.Subject,
+                defaultValue: (replyId ? "回复：" : forwardId ? "转发：" : '') + (model.Subject || ''),
                 render: <Input />
             },
             {
@@ -156,7 +155,7 @@ class EmailForm extends Component {
                 title: '正文',
                 render: <Editor
                     cbReceiver={this.handleContentChange}
-                    importContent={this.state.content === undefined ? this.state.replyId > 0 ? `<pre><code>${model.Content}</code></pre>` : model.Content : this.state.content}
+                    importContent={this.state.content === undefined ? replyId > 0 ? `<p></p><br /><br /><label>------原文---------------------------------------------------------</label><pre><code>${model.Content}</code></pre>` : model.Content : this.state.content}
                     video={false}
                     audio={false}
                     image={false}
@@ -164,12 +163,13 @@ class EmailForm extends Component {
                 />
             }
         ];
-
         return items;
     }
 
     render() {
-        if ((this.state.id || this.state.forwardId) && !this.state.model) {
+        const { id, forwardId, replyId } = this.props.location.query;
+
+        if ((id || forwardId || replyId) && !this.state.model) {
             return null;
         }
 

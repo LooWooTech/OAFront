@@ -18,10 +18,6 @@ class TodoModal extends Component {
     }
     render() {
         const model = this.props.model || {}
-        let today = new Date();
-        function disabledDate(current) {
-            return current && current.valueOf() < today.valueOf();
-        }
 
         return (
             <Modal
@@ -46,7 +42,7 @@ class TodoModal extends Component {
                     {
                         title: '计划完成时间', name: 'ScheduleDate',
                         defaultValue: model.ScheduleDate ? moment(model.ScheduleDate) : '',
-                        render: <DatePicker format="YYYY-MM-DD" disabledDate={disabledDate} />
+                        render: <DatePicker format="YYYY-MM-DD" />
                     },
                 ]}
                 onSubmit={this.handleSubmit}

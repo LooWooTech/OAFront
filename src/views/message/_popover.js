@@ -54,7 +54,7 @@ class MessagePopover extends Component {
                 <i className={form.Icon}></i>
             </div>
             <div className="message-content">
-                <p>{item.FromUser}向你提交了{form.Name}流程</p>
+                <p>来自{item.FromUser}-{form.Name}的消息</p>
                 <p>{item.Title}</p>
                 <p className="datetime">
                     {moment(item.CreateTime).fromNow()}

@@ -35,10 +35,6 @@ class SubTaskModal extends Component {
     }
 
     getItems = (model) => {
-        let today = new Date();
-        function disabledDate(current) {
-            return current && current.valueOf() < today.valueOf();
-        }
         let users = this.state.users || []
         if (model.ToUserId) {
             users.push({ ID: model.ToUserId, RealName: model.ToUserName })
@@ -61,7 +57,7 @@ class SubTaskModal extends Component {
             {
                 title: '计划完成时间', name: 'ScheduleDate',
                 defaultValue: model.ScheduleDate ? moment(model.ScheduleDate) : null,
-                render: <DatePicker format="YYYY-MM-DD" disabledDate={disabledDate} />
+                render: <DatePicker format="YYYY-MM-DD" />
             },
             {
                 title: '选择' + (parentId ? '协办' : '主办') + '科室', name: 'ToDepartmentId', defaultValue: model.ToDepartmentId === undefined ? "" : model.ToDepartmentId.toString(),

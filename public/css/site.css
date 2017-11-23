@@ -387,13 +387,14 @@ hr {
     /* float: left; */
     margin-left: 40px;
 }
-.form-icon-1{background: #84a7ea;}
-.form-icon-2{background: #8bcce6;}
+.form-icon-1{background: #5476b4;}
+.form-icon-2{background: #599db8;}
 .form-icon-3{background: #aebf8f;}
 .form-icon-4{background: #8fbfa5;}
 .form-icon-5{background: #bfae8f;}
 .form-icon-6{background: #ea9090;}
 .form-icon-7{background: #9290ea;}
+.form-icon-8{background: #c9bf6d;}
 
 .message-content .datetime {
     font-size: .7rem;
@@ -407,12 +408,14 @@ hr {
 }
 
 .mail-header {
-    background: #f5f5f5;
-    padding: 10px;
-    border-radius: 5px;
+    background: #fff;
+    border-bottom: solid 2px #ddd;
+    padding: 10px 0;
     margin: 10px 0;
 }
-
+.mail-header .ant-row {
+    margin: 5px 0;
+}
 /*滚动条宽度*/  
 ::-webkit-scrollbar {  
     width: 8px;  

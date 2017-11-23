@@ -42,11 +42,6 @@ class FlowDataList extends Component {
         }
     }
 
-    componentWillReceiveProps(nextProps) {
-        this.loadData(nextProps)
-    }
-
-
     render() {
         const { infoId,flowData, flowNodeData, canSubmitFlow, canSubmitFreeFlow, freeFlowNodeData } = this.props
         return (

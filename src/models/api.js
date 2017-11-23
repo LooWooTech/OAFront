@@ -517,20 +517,28 @@ module.exports = {
         Send: (data, cb, err) => {
             invokeApi('mail/send', HTTP_POST, data, cb, err);
         },
-        Star: (id, cb, err) => {
-            invokeApi('mail/star?id=' + id, HTTP_GET, null, cb, err);
-        },
-        Unstar: (id, cb, err) => {
-            invokeApi('mail/unstar?id=' + id, HTTP_GET, null, cb, err);
+        Model: (id, cb, err) => {
+            invokeApi('mail/model?id=' + id, HTTP_GET, null, cb, err);
         },
         Delete: (id, cb, err) => {
             invokeApi('mail/delete?id=' + id, HTTP_DELETE, null, cb, err);
+        }
+    },
+    UserInfo: {
+        Star: (id, cb, err) => {
+            invokeApi('userinfo/star?id=' + id, HTTP_GET, null, cb, err);
+        },
+        Unstar: (id, cb, err) => {
+            invokeApi('userinfo/unstar?id=' + id, HTTP_GET, null, cb, err);
+        },
+        Trash: (id, cb, err) => {
+            invokeApi('userinfo/trash?id=' + id, HTTP_DELETE, null, cb, err);
+        },
+        Delete: (id, cb, err) => {
+            invokeApi('userinfo/delete?id=' + id, HTTP_DELETE, null, cb, err);
         },
         Recovery: (id, cb, err) => {
-            invokeApi('mail/recovery?id=' + id, HTTP_GET, null, cb, err);
-        },
-        Model: (id, cb, err) => {
-            invokeApi('mail/model?id=' + id, HTTP_GET, null, cb, err);
+            invokeApi('userinfo/recovery?id=' + id, HTTP_GET, null, cb, err);
         }
     }
 };

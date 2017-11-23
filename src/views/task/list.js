@@ -121,7 +121,7 @@ class TaskList extends Component {
                             render: (text, item) => text ? moment(text).format('ll') : null
                         },
                         {
-                            title: '更新日期', dataIndex: 'UpdateTime', width: 130,
+                            title: '更新日期', dataIndex: 'UpdateTime', width: 150,
                             render: (text, item) => text ? moment(text).format('ll') : null
                         },
                         {
