@@ -111,14 +111,14 @@ export default class MissiveList extends React.Component {
                         if (item.Completed) {
                             if (!item.Uid && item.FormId === api.Forms.Missive.ID) {
                                 buttons.push(<Popconfirm title="你确定要上报吗？"
-                                    onConfirm={() => this.handleReport(item.ID)} >
+                                    onConfirm={() => this.handleReport(item.InfoId)} >
                                     <Button type="primary">上报</Button>
                                 </Popconfirm>);
                             }
                         }
                         else {
                             buttons.push(<Popconfirm title="删除后无法恢复，你确定要删除吗? "
-                                onConfirm={() => this.handleDelete(item.ID)} >
+                                onConfirm={() => this.handleDelete(item.InfoId)} >
                                 <Button type="danger" icon="delete"></Button>
                             </Popconfirm>);
                         }

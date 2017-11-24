@@ -45,7 +45,7 @@ class EmailForm extends Component {
         this.submitFormData(data => {
             api.Mail.Save(data, json => {
                 //跳转到草稿箱
-                utils.Redirect('/email/?type=draft');
+                utils.Redirect('/mail/?type=draft');
             });
         });
     }
@@ -62,7 +62,7 @@ class EmailForm extends Component {
             }
             api.Mail.Send(data, json => {
                 //跳转到发件箱
-                utils.Redirect('/email/?type=send');
+                utils.Redirect('/mail/?type=send');
             })
         });
     }

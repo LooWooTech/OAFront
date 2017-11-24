@@ -16,7 +16,7 @@ const Forms = {
     MeetingRoom: { ID: 5, FlowId: 5, Name: '会议室', Icon: 'fa fa-television', InfoLink: '/extend1/approvals/5' },
     Seal: { ID: 6, FlowId: 6, Name: '图章', Icon: 'fa fa-dot-circle-o', InfoLink: '/extend1/approvals/6' },
     Leave: { ID: 7, FlowId: 7, Name: '请假', Icon: 'fa fa-calendar-check-o', InfoLink: '/extend1/approvals/7' },
-    Mail: { ID: 8, Name: '邮件', Icon: 'fa fa-envelope-o', InfoLink: '/email/detail?id={ID}' },
+    Mail: { ID: 8, Name: '邮件', Icon: 'fa fa-envelope-o', InfoLink: '/mail/detail?id={ID}' },
 };
 
 function getExceptionMessage(ex) {
@@ -66,7 +66,7 @@ module.exports = {
         EditPassword: (data, cb, err) => invokeApi('user/UpdatePassword', HTTP_GET, data, cb, err),
         //找回密码
         FindPasswordSendMail: (data, cb, err) => {
-            invokeApi('user/sendpasswordemail', HTTP_GET, data, cb, err);
+            invokeApi('user/sendpasswordmail', HTTP_GET, data, cb, err);
         },
         List: (data, cb, err) => {
             invokeApi('user/list', HTTP_GET, data, cb, err);

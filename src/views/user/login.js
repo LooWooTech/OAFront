@@ -3,6 +3,7 @@ import { Form, Icon, Input, Button, message } from 'antd';
 import auth from '../../models/auth'
 import api from '../../models/api'
 import utils from '../../utils'
+import DocumentTitle from 'react-document-title'
 const FormItem = Form.Item;
 
 class Login extends Component {
@@ -28,6 +29,7 @@ class Login extends Component {
         const { getFieldDecorator} = this.props.form;
 
         return (
+          <DocumentTitle title="登录">
             <div className="container login-page">
                 <div className="login">
                 <h1>舟山市国土局定海分局
@@ -68,6 +70,7 @@ class Login extends Component {
                 </Form>
               </div>
             </div>
+            </DocumentTitle>
         );
     }
 }

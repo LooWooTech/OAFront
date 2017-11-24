@@ -79,11 +79,11 @@ class MailReceiveList extends Component {
     }
 
     handleEdit = id => {
-        utils.Redirect('/email/post?id=' + id)
+        utils.Redirect('/mail/post?id=' + id)
     }
 
     handleForward = id => {
-        utils.Redirect('/email/post?forwardId=' + id);
+        utils.Redirect('/mail/post?forwardId=' + id);
     }
     handleRecovery = id => {
         api.UserInfo.Recovery(id, this.loadData)
@@ -108,7 +108,7 @@ class MailReceiveList extends Component {
         return items.concat([
             {
                 title: '主题', dataIndex: 'Subject',
-                render: (text, item) => <Link to={`/email/${this.state.type === 'draft' ? 'post' : 'detail'}?id=${item.MailId}`}>{item.Subject}</Link>
+                render: (text, item) => <Link to={`/mail/${this.state.type === 'draft' ? 'post' : 'detail'}?id=${item.MailId}`}>{item.Subject}</Link>
             },
             {
                 title: '时间', dataIndex: 'CreateTime', width: 150,

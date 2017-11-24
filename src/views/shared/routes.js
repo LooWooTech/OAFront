@@ -46,9 +46,9 @@ import AttendanceGroupList from '../attendance/groups'
 
 import MessageList from '../message/list'
 
-import EmailList from '../email/list'
-import EmailForm from '../email/form'
-import EmailDetail from '../email/detail'
+import MailList from '../mail/list'
+import MailForm from '../mail/form'
+import MailDetail from '../mail/detail'
 import ContactList from '../user/contacts'
 
 const authorize = (nextState, replace) => {
@@ -106,10 +106,10 @@ export default class Routes extends React.Component {
                     <IndexRoute component={MessageList} />
                 </Route>
 
-                <Route path="email">
-                    <IndexRoute component={EmailList} />
-                    <Route path="post" component={EmailForm} />
-                    <Route path="detail" component={EmailDetail} />
+                <Route path="mail">
+                    <IndexRoute component={MailList} />
+                    <Route path="post" component={MailForm} />
+                    <Route path="detail" component={MailDetail} />
                     <Route path="contacts" component={ContactList} />
                 </Route>
 
