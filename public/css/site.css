@@ -285,6 +285,7 @@ hr {
     min-height: 100%;
     padding: 110px 0 144px 0;
     position: relative;
+    background-image: url('/images/bg.jpg');
 }
 .login {
     width: 360px;
@@ -445,3 +446,13 @@ hr {
 ::-webkit-scrollbar-thumb:vertical:active{  
     background-color: rgba(0,0,0,0.7);  
 }  
+
+.login {
+    width: 500px;
+    margin: 0 auto;
+}
+
+.login .ant-form.ant-form-horizontal {
+    width: 300px;
+    margin: 0 auto;
+}

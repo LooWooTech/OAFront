@@ -203,7 +203,6 @@ module.exports = {
         if (path === '/') {
             return data[0];
         }
-
         var menu = data.find(item => item.children.find(menu => menu.items.find(m => m.path.indexOf(path) === 0)));
         if (!menu) {
             menu = data.find(item => path.indexOf(item.name) === 1);
