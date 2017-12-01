@@ -118,14 +118,14 @@ class MissiveEditForm extends React.Component {
                     onRemove={this.handleDeleteFile}
                     withCredentials={true}
                     showUploadList={false}
-                    accept=".doc,.docx,.pdf,.tiff,.tif"
+                    accept=".doc,.docx,.pdf,.tiff,.tif,.jpg,.jpge,.png"
                     disabled={disabled}
                 >
                     <div style={{ textAlign: 'left', padding: '0 10px' }}>
                         <Spin spinning={this.state.uploading}>
                             <p className="ant-upload-text">
                                 <i className="fa fa-file-o"></i>
-                                &nbsp;&nbsp; {content.ID ? content.FileName : '仅限Word、Pdf、Tiff文件格式'}
+                                &nbsp;&nbsp; {content.ID ? content.FileName : '仅限Word、Pdf、Tiff、JPG文件格式'}
                             </p>
                         </Spin>
                     </div>

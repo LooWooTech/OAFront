@@ -285,7 +285,7 @@ hr {
     min-height: 100%;
     padding: 110px 0 144px 0;
     position: relative;
-    background-image: url('/images/bg.jpg');
+    /*background-image: url('/images/bg.jpg');*/
 }
 .login {
     width: 360px;
@@ -300,7 +300,7 @@ hr {
 .login h1 span {
     font-size: 1rem;
     color: #666;
-    display: inline-block;
+    display: block;
 }
 .login button[type='submit'] {
     width: 100%;

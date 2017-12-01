@@ -92,7 +92,9 @@ class EmailForm extends Component {
                 return;
             }
         }
-        this.setState({ attachments: fileList.map(e => e.response) })
+        else if (file.status !== 'uploading') {
+            this.setState({ attachments: fileList.map(e => e.response) })
+        }
     }
 
     handleContentChange = (content) => {
@@ -101,6 +103,7 @@ class EmailForm extends Component {
     getFormItems = () => {
         const model = this.state.model || {}
         const { id, forwardId, replyId } = this.props.location.query;
+
         var items = [
             { name: 'ID', defaultValue: id || 0, render: <Input type="hidden" /> },
             { name: 'ReplyId', defaultValue: replyId || 0, render: <Input type="hidden" /> },
@@ -121,7 +124,7 @@ class EmailForm extends Component {
                     multiple={true}
                     ref="ccUsersForm"
                     nullable={true}
-                    defaultValue={replyId && !id ? this.state.toUsers.concat(this.state.ccUsers || []) :forwardId && !id ? [] : this.state.ccUsers} />
+                    defaultValue={replyId && !id ? this.state.toUsers.concat(this.state.ccUsers || []) : forwardId && !id ? [] : this.state.ccUsers} />
             },
             {
                 name: 'Subject',

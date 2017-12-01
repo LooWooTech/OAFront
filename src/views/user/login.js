@@ -34,7 +34,8 @@ class Login extends Component {
           <div className="login">
             <img src="/images/logo.png" alt="logo" />
             <h1>
-              <img src="/images/title.png" alt="舟山市国土局定海分局办公自动化系统" />
+              舟山市国土局定海分局
+              <span>办公自动化系统</span>
             </h1>
             <Form onSubmit={this.handleSubmit}>
               <FormItem>
