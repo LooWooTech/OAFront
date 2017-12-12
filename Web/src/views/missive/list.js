@@ -96,6 +96,7 @@ export default class MissiveList extends React.Component {
                 render: (text, item) => <span>
                     {item.JJ_DJ ? <Icon type="exclamation" className="red" /> : null}
                     {item.Important ? <Icon type="flag" /> : null}
+                    {item.Uid ? <Icon type="sync" /> : null}
                     <Link to={`/missive/edit/${this.state.formId}/?id=${item.InfoId}`}>
                         {text}
                     </Link>
