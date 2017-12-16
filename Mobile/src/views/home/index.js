@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { View } from 'react-native';
+import { View,Text } from 'react-native';
 
 class HomeIndexView extends Component {
     render() {
+        console.log("welcome")
         return (
-            <div>
-
-            </div>
+            <View>
+                <Text>欢迎</Text>
+            </View>
         );
     }
 }
