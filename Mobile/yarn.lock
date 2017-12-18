@@ -113,11 +113,11 @@ ansi@^0.3.0, ansi@~0.3.1:
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/ansi/-/ansi-0.3.1.tgz#0c42d4fb17160d5a9af1e484bace1c66922c1b21"
 
-antd-mobile@^2.1.1:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/antd-mobile/-/antd-mobile-2.1.1.tgz#09aeab83107456340255425473fd7213bb1e7c86"
+antd-mobile@^2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/antd-mobile/-/antd-mobile-2.1.2.tgz#a974a3328e67f5fb0c4532df21f7150b622d0b5d"
   dependencies:
-    array-tree-filter "~1.0.0"
+    array-tree-filter "~2.0.0"
     babel-runtime "6.x"
     classnames "^2.2.1"
     normalize.css "^7.0.0"
@@ -206,9 +206,13 @@ array-reduce@~0.0.0:
   version "0.0.0"
   resolved "https://registry.yarnpkg.com/array-reduce/-/array-reduce-0.0.0.tgz#173899d3ffd1c7d9383e4479525dbe278cab5f2b"
 
-array-tree-filter@1.0.x, array-tree-filter@~1.0.0:
+array-tree-filter@1.0.x:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/array-tree-filter/-/array-tree-filter-1.0.1.tgz#0a8ad1eefd38ce88858632f9cc0423d7634e4d5d"
+
+array-tree-filter@~2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/array-tree-filter/-/array-tree-filter-2.0.0.tgz#20fbc2d5a0de83242c0a9eb90894d4bfb7e2a69e"
 
 array-uniq@^1.0.2:
   version "1.0.3"
@@ -3150,6 +3154,10 @@ mobx-react@^4.3.5:
 mobx@^3.4.1:
   version "3.4.1"
   resolved "https://registry.yarnpkg.com/mobx/-/mobx-3.4.1.tgz#37abe5ee882d401828d9f26c6c1a2f47614bbbef"
+
+moment@^2.20.0:
+  version "2.20.0"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.20.0.tgz#53396358994dd3a551e966a66af715ecb6c30ad0"
 
 morgan@~1.6.1:
   version "1.6.1"

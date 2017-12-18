@@ -1,23 +1,32 @@
 import React, { Component } from 'react';
+import { NavigationActions } from 'react-navigation'
 import { StyleSheet, Text, View, Image } from 'react-native';
+import { WhiteSpace } from 'antd-mobile'
 import { observer, inject } from 'mobx-react'
 import LoginForm from '../user/_login'
-import { WhiteSpace } from 'antd-mobile'
 import { observable } from 'mobx';
 
 @inject('stores')
 @observer
-class HomeWelcome extends Component {
+class Welcome extends Component {
+    static navigationOptions = {
+        header: null
+    }
 
     render() {
-        const user = this.props.stores.userStore.getUser()
-        if (user) {
-            setTimeout(() => {
-                this.props.navigation.navigate('Home')
-            }, 1000);
-        }
+        setTimeout(() => {
+            if (this.props.stores.userStore.hasLogin) {
+                const resetAction = NavigationActions.reset({
+                    index: 0,
+                    actions: [
+                        NavigationActions.navigate({ routeName: 'Home' })
+                    ]
+                })
+                this.props.navigation.dispatch(resetAction);
+            }
+        }, 1000);
         return (
-            <View style={styles.container}>
+            <View style={styles.container} >
                 <Image source={require('../../resources/logo.png')} style={styles.logo} />
                 <WhiteSpace size="lg" />
                 <Text style={styles.title}>
@@ -27,7 +36,7 @@ class HomeWelcome extends Component {
                     办公自动化系统v1.0
                 </Text>
                 <WhiteSpace size="lg" />
-                {user ? null : <LoginForm />}
+                {this.props.stores.userStore.hasLogin ? null : <LoginForm />}
             </View>
         );
     }
@@ -40,4 +49,4 @@ const styles = StyleSheet.create({
     subTitle: { fontSize: 12, color: '#ccc' },
 });
 
-export default HomeWelcome;
+export default Welcome;

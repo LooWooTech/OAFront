@@ -29,11 +29,12 @@ function throwException(ex) {
 
 async function request(path, data, httpMethod) {
     let url = API_HOST + path
-    const headers = {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'token': userStore.getToken(),
-        'method': httpMethod
+    let options = {
+        'method': httpMethod,
+        'headers': {
+            'token': userStore.token || '',
+            'Content-Type': 'application/json',
+        }
     }
     try {
         let result = undefined;
@@ -41,12 +42,13 @@ async function request(path, data, httpMethod) {
             case 'GET':
             case 'DELETE':
                 url += '?' + jsonToQueryString(data)
-                result = await fetch(url, headers)
+                result = await fetch(url, options)
                 break;
             case 'POST':
-                result = await fetch(url, headers, data)
+                result = await fetch(url, options, data)
                 break;
         }
+        console.log(result._bodyText)
         switch (result.status) {
             case 200:
             case 204:
@@ -54,7 +56,7 @@ async function request(path, data, httpMethod) {
                     return JSON.parse(result._bodyText)
                 break;
             default:
-            throwException(JSON.parse(result._bodyText))
+                throwException(JSON.parse(result._bodyText))
                 break;
         }
     } catch (err) {

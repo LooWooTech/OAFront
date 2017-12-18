@@ -7,41 +7,43 @@ class UserStore {
     @observable inProgress = false
     @observable user = null
 
-    async login(username, password) {
+    constructor() {
+        AsyncStorage.getItem(userKey, (err, json) => {
+            console.log('constructor', json)
+            if (json) {
+                const data = JSON.parse(json)
+                if (data && data.ID) {
+                    this.user = data
+                }
+            }
+        });
+    }
+
+    @computed get hasLogin() {
+        return this.user && this.user.ID > 0
+    }
+
+    @computed get token() {
+        return this.user ? this.user.Token : null;
+    }
+
+    @action async login(username, password) {
         this.inProgress = true
-        let user = await api.User.Login(username, password)
-        if (user && user.ID) {
-            console.debug("user", user)
-            this.user = user
-            await AsyncStorage.setItem(userKey, JSON.stringify(user))
+        const data = await api.user.login(username, password)
+        if (data && data.ID) {
+            this.user = data
+            await AsyncStorage.setItem(userKey, JSON.stringify(data))
         }
         this.inProgress = false
     }
 
-    async logout() {
+    @action async logout() {
         await AsyncStorage.removeItem(userKey)
-        user = null;
-    }
-
-    async getUser() {
-        if (!this.user) {
-            let data = await AsyncStorage.getItem(userKey)
-            console.log(data)
-            this.user = JSON.parse(data)
-        }
-        return this.user;
-    }
-
-    hasLogin() {
-        return this.getUser().ID > 0
-    }
-
-    getToken() {
-        return this.getUser().Token;
+        this.user = null;
     }
 
     isCurrentUser(userId) {
-        return this.getUser().ID === userId
+        return this.user && this.user.ID === userId;
     }
 }
 const userStore = new UserStore()
