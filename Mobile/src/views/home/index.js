@@ -1,57 +1,57 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { ScrollView, View, Text, StyleSheet, TouchableHighlight, TouchableOpacity } from 'react-native';
-import { WingBlank, WhiteSpace, Grid, Popover, Icon, Button, Badge } from 'antd-mobile'
+import { ScrollView, View, Text, StyleSheet, TouchableHighlight, TouchableOpacity, Image } from 'react-native';
+import { WingBlank, WhiteSpace, TabBar, Grid, Popover, Icon, Button, Badge } from 'antd-mobile'
 import { observer, inject } from 'mobx-react'
-import UnreadMessages from '../message/unreads'
 
 @inject('stores')
 @observer
 class HomePage extends Component {
-
-    static navigationOptions = ({
-        header: null
-    });
-
-    handleClickBell = () => {
-        this.props.navigation.navigate('MessageList')
+    static navigationOptions = ({ navigation }) => {
+        //console.log(navigation)
+        return {
+            header: null,
+            // headerTitle: (
+            //     <Text style={{ flex: 4, lineHeight: 40, fontSize: 18, paddingLeft: 20, color: '#fff' }}>
+            //         <Icon type={'\uf2be'} color="#eee" /> 欢迎
+            //     </Text>
+            // ),
+            // headerRight: (
+            //     <TouchableOpacity style={{ margin: 10, justifyContent: 'center', width: 40 }} onPress={() => navigation.navigate('settings')}>
+            //         <Icon type={'\uf013'} color="#eee" />
+            //     </TouchableOpacity>
+            // ),
+            // headerStyle: { backgroundColor: '#108ee9' },
+            tabBarLabel: '首页',
+            tabBarIcon: ({ tintColor }) => (
+                <Icon type={'\uf009'} color={tintColor} />
+            )
+        };
     }
 
-    handleClickSetting = () => {
+    state = {}
 
-    }
 
     render() {
-        const user = this.props.stores.userStore.user
+        const user = this.props.stores.userStore.user || {}
         return (
             <View style={styles.container}>
                 <View style={styles.header}>
-                    <Text style={{ flex: 4, lineHeight:40, fontSize: 18, paddingLeft: 20, color: '#fff' }}>
+                    <Text style={{ flex: 4, lineHeight: 40, fontSize: 18, paddingLeft: 20, color: '#fff' }}>
                         <Icon type={'\uf2be'} color="#eee" /> 欢迎您：{user.RealName}
                     </Text>
-                    <TouchableOpacity style={{ margin: 10, justifyContent: 'center', width: 40 }} onPress={this.handleClickBell}>
-                        <Badge dot={this.props.stores.messageStore.unreads.length > 0}>
-                            <Icon type={'\uf0a2'} color="#eee" />
-                        </Badge>
-                    </TouchableOpacity>
                     <TouchableOpacity style={{ margin: 10, justifyContent: 'center', width: 40 }} onPress={this.handleClickSetting}>
                         <Icon type={'\uf013'} color="#eee" />
                     </TouchableOpacity>
                 </View>
-
-                <ScrollView style={{ flex: 1 }}>
-                    <View style={{ backgroundColor: '#fff' }}>
-                        <Text style={styles.title}>业务类型</Text>
-                        <Grid data={this.props.stores.formStore.getForms()}
-                            columnNum={3}
-                            renderItem={form => <GridItem model={form} />}
-                        />
-                    </View>
-                    <View>
-                        <Text style={styles.title}>最新消息</Text>
-                        <UnreadMessages />
-                    </View>
+                <ScrollView>
+                    <Text style={styles.title}>功能模块</Text>
+                    <Grid data={this.props.stores.formStore.getForms()}
+                        columnNum={3}
+                        renderItem={form => <GridItem model={form} />}
+                    />
                 </ScrollView>
+
             </View>
         );
     }
@@ -60,7 +60,6 @@ class HomePage extends Component {
 class GridItem extends Component {
     handleClick = () => {
         const form = this.props.model
-        console.log(form)
     }
     render() {
         const form = this.props.model
@@ -77,6 +76,7 @@ class GridItem extends Component {
 
 const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: '#fff' },
+    icon: { width: 26, height: 26, },
     header: { flexDirection: 'row', justifyContent: 'space-between', height: 60, backgroundColor: '#108ee9', overflow: 'visible' },
     title: { fontSize: 14, padding: 10, backgroundColor: '#eee' },
     btnForm: { width: '100%', height: 100, alignItems: 'center', paddingTop: 20, paddingBottom: 20, }

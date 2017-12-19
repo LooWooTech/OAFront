@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { observer, inject } from 'mobx-react'
 import { Text, StyleSheet } from 'react-native'
-import { List } from 'antd-mobile'
+import { List, Icon } from 'antd-mobile'
 import moment from 'moment'
+
+@inject('stores')
 class MessageItem extends Component {
     handleClick = () => {
         const { model } = this.props
@@ -10,8 +12,13 @@ class MessageItem extends Component {
 
     render() {
         const { model } = this.props
+        const form = this.props.stores.formStore.getForm(model.FormId)
         return (
-            <List.Item onClick={this.handleClick}>
+            <List.Item
+                thumb={<Text style={{ padding: 10 }}><Icon type={form.Icon} color={form.Color || '#666'} /></Text>}
+                onClick={this.handleClick}
+                arrow="horizontal" multipleLine
+            >
                 <Text style={styles.title}>{model.Title}</Text>
                 <List.Item.Brief>
                     <Text style={styles.subTitle}>来自{model.FromUser}-{model.FormName}的消息 {moment(model.CreateTime).format('ll')}</Text>
@@ -21,7 +28,7 @@ class MessageItem extends Component {
     }
 }
 const styles = StyleSheet.create({
-    title: { fontSize: 14 },
-    subTitle: { fontSize: 11 },
+    title: { fontSize: 15, lineHeight: 25 },
+    subTitle: { fontSize: 11, lineHeight: 20 },
 })
 export default MessageItem;

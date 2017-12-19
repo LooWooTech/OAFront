@@ -15,8 +15,8 @@ module.exports = {
         readAll: () => {
             return $.get('message/readall');
         },
-        list: (parameters) => {
-            return $.get('message/list', parameters);
+        list: (hasRead, page = 1, rows = 10) => {
+            return $.get('message/list', { hasRead, page, rows, action: 'receive' });
         },
         delete: (id) => {
             return $.get('message/delete?id=' + id);

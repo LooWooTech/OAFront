@@ -19,7 +19,7 @@ class Welcome extends Component {
                 const resetAction = NavigationActions.reset({
                     index: 0,
                     actions: [
-                        NavigationActions.navigate({ routeName: 'Home' })
+                        NavigationActions.navigate({ routeName: 'Index' })
                     ]
                 })
                 this.props.navigation.dispatch(resetAction);

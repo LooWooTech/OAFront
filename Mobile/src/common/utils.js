@@ -48,7 +48,7 @@ async function request(path, data, httpMethod) {
                 result = await fetch(url, options, data)
                 break;
         }
-        console.log(result._bodyText)
+        console.log('result._bodyText', result._bodyText)
         switch (result.status) {
             case 200:
             case 204:
