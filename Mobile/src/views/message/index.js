@@ -13,6 +13,7 @@ class Messages extends Component {
             <SegmentedControl
                 style={{ marginLeft: 10, marginRight: 10 }}
                 values={['未读', '已读']}
+                selectedIndex={messageStore.hasRead ? 1 : 0}
                 onChange={(e) => {
                     const hasRead = e.nativeEvent.selectedSegmentIndex !== 0
                     messageStore.setStatus(hasRead)
@@ -27,8 +28,6 @@ class Messages extends Component {
         )
     });
 
-    rowHeight = 80
-
     componentWillMount() {
         this.loadData(1)
     }
@@ -42,18 +41,12 @@ class Messages extends Component {
     refreshData = () => {
         this.props.stores.messageStore.refreshData()
     }
-    handleReadAll = ()=>{
-        this.props.stores.messageStore.readAll();
-    }
 
-    getItemLayout = (data, index) => ({ length: this.rowHeight, offset: this.rowHeight * index, index })
     keyExtractor = (item, index) => item.ID;
     renderItem = ({ item }) => <MessageItem model={item} />
-    
-    render() {
 
-        const list = this.props.stores.messageStore.list
-        const hasRead = this.props.stores.messageStore.hasRead
+    render() {
+        const { list, hasRead, readAll, read } = this.props.stores.messageStore
         return (
             <View style={{ flex: 1, backgroundColor: '#fff' }}>
                 <FlatList
@@ -73,7 +66,7 @@ class Messages extends Component {
                         </View>
                     )}
                 />
-                {!hasRead ? <Button onClick={this.handleReadAll}><Icon type={'\uf1f7'} size="sm" color="#666"/><Text style={{ fontSize: 14, color: '#666' }}>全部标记为已读</Text></Button> : null}
+                {!hasRead ? <Button onClick={readAll}><Icon type={'\uf1f7'} size="sm" color="#666" /><Text style={{ fontSize: 14, color: '#666' }}>全部标记为已读</Text></Button> : null}
             </View>
         );
     }

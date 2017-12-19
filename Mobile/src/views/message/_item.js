@@ -21,7 +21,7 @@ class MessageItem extends Component {
             >
                 <Text style={styles.title}>{model.Title}</Text>
                 <List.Item.Brief>
-                    <Text style={styles.subTitle}>来自{model.FromUser}-{model.FormName}的消息 {moment(model.CreateTime).format('ll')}</Text>
+                    <Text style={styles.subTitle}>{model.FromUser} {moment(model.CreateTime).format('ll')}</Text>
                 </List.Item.Brief>
             </List.Item>
         );

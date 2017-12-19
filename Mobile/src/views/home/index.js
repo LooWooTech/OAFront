@@ -31,6 +31,9 @@ class HomePage extends Component {
 
     state = {}
 
+    handleClickSetting = ()=>{
+        this.props.navigation.navigate('Settings')
+    }
 
     render() {
         const user = this.props.stores.userStore.user || {}
