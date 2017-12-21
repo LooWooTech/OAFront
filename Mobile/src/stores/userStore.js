@@ -9,7 +9,6 @@ class UserStore {
 
     constructor() {
         AsyncStorage.getItem(userKey, (err, json) => {
-            console.log('constructor', json)
             if (json) {
                 const data = JSON.parse(json)
                 if (data && data.ID) {
@@ -38,8 +37,8 @@ class UserStore {
     }
 
     @action async logout() {
-        await AsyncStorage.removeItem(userKey)
         this.user = null;
+        await AsyncStorage.removeItem(userKey)
     }
 
     isCurrentUser(userId) {

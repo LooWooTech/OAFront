@@ -1,54 +1,44 @@
-import { observable, computed, action } from 'mobx'
+import mobx, { isObservable, observable, computed, action } from 'mobx'
 import userStore from './userStore'
 import api from '../common/api'
+import FlatListData from './FlatListData'
 
 class MessageStore {
-    @observable loading = false
-    //消息列表
-    @observable list = []
-    @observable finished = false
     @observable hasRead = false
-    @observable page = 1
-    rows = 10
+
+    @observable.shallow data = new FlatListData((page, rows) => {
+        return api.message.list(this.hasRead, page, rows)
+    })
+
+    @computed get list() {
+        return this.data.list
+    }
 
     @action async read(id) {
-        for (var i = 0; i < list.length; i++) {
-            let item = list[i]
-            if (item.ID === id) {
-                list.splice(i, 1)
-            }
-        }
+        const i = this.data.list.findIndex(e => e.ID === id);
+        this.data.list.splice(i, 1)
         await api.message.read(id)
     }
 
     @action async readAll() {
-        this.list = []
+        this.data.list = []
         await api.message.readAll()
-    }
-
-    @action refreshData() {
-        this.list = []
-        this.finished = false
-        this.loadData(1)
     }
 
     @action setStatus(hasRead) {
         this.hasRead = hasRead
     }
 
-    @action async loadData(page) {
-        this.loading = true;
-        const shouldLoad = !this.finished && ((page === 1 && this.list.length === 0) || page !== this.page)
-        if (shouldLoad) {
-            const data = await api.message.list(this.hasRead, page, this.rows)
-            if (data.Page.pageCount <= this.page) {
-                this.finished = true;
-            }
-            this.page = data.Page.current
-            this.list = this.list.concat(data.List)
-        }
-        this.loading = false;
-        return this.list
+    @action refreshData() {
+        this.data.refreshData()
+    }
+
+    @action loadData(page) {
+        return this.data.loadData(page)
+    }
+
+    @action loadNextPageData() {
+        return this.data.loadData(this.data.page + 1)
     }
 }
 const messageStore = new MessageStore()

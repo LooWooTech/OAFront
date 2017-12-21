@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { NavigationActions } from 'react-navigation'
-import { StyleSheet, Text, View, Image } from 'react-native';
-import { WhiteSpace } from 'antd-mobile'
+import { StyleSheet, Image } from 'react-native';
 import { observer, inject } from 'mobx-react'
+import { Container, Content, Text, View } from 'native-base'
+import CounterDown from '../shared/CounterDown'
 import LoginForm from '../user/_login'
-import { observable } from 'mobx';
 
 @inject('stores')
 @observer
@@ -14,8 +14,10 @@ class Welcome extends Component {
     }
 
     render() {
+
+        const { hasLogin, inProgress } = this.props.stores.userStore
         setTimeout(() => {
-            if (this.props.stores.userStore.hasLogin) {
+            if (hasLogin) {
                 const resetAction = NavigationActions.reset({
                     index: 0,
                     actions: [
@@ -26,18 +28,16 @@ class Welcome extends Component {
             }
         }, 1000);
         return (
-            <View style={styles.container} >
-                <Image source={require('../../resources/logo.png')} style={styles.logo} />
-                <WhiteSpace size="lg" />
+            <Container style={{ alignItems: 'center', backgroundColor: '#108ee9' }}>
+                <Image source={require('../../resources/logo.png')} style={{ marginTop: 40, marginBottom: 10 }} />
                 <Text style={styles.title}>
                     舟山市国土局定海分局
                 </Text>
                 <Text style={styles.subTitle}>
                     办公自动化系统v1.0
                 </Text>
-                <WhiteSpace size="lg" />
-                {this.props.stores.userStore.hasLogin ? null : <LoginForm />}
-            </View>
+                <LoginForm />
+            </Container>
         );
     }
 }

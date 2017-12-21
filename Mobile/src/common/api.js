@@ -21,5 +21,16 @@ module.exports = {
         delete: (id) => {
             return $.get('message/delete?id=' + id);
         }
-    }
+    },
+    missive: {
+        list: (parameters) => {
+            return $.get('missive/list', parameters)
+        },
+        model: (id) => {
+            return $.get('missive/model?id=' + id)
+        },
+        report: (id) => {
+            return $.get('missive/report?id=' + id)
+        }
+    },
 }

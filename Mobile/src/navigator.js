@@ -6,6 +6,8 @@ import Welcome from './views/home/welcome'
 import HomePage from './views/home/index'
 import Settings from './views/home/settings'
 import Messages from './views/message/index'
+import MissvieList from './views/missive/index'
+
 
 const Index = TabNavigator(
     {
@@ -44,8 +46,10 @@ export const RootNavigator = StackNavigator(
         Welcome: { screen: Welcome },
         Index: { screen: Index },
         Settings: { screen: Settings },
+        'Missive.List': { screen: MissvieList },
     },
     {
         initialRouteName: 'Welcome',
+        headerMode:'none',
     }
 )
