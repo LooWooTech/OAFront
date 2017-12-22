@@ -47,7 +47,6 @@ class Messages extends Component {
                 </Header>
                 <Content>
                     <FlatList
-                        ref="list"
                         data={list}
                         renderItem={this.renderItem}
                         onEndReachedThreshold={0.1}
@@ -56,7 +55,6 @@ class Messages extends Component {
                         onRefresh={this.refreshData}
                         refreshing={this.props.stores.messageStore.data.loading}
                         style={{ height: Dimensions.get('window').height - 140 }}
-                        getItemLayout={this.getItemLayout}
                         ListEmptyComponent={(
                             <View style={{ alignItems: 'center', justifyContent: 'center', paddingTop: 50, paddingBottom: 50 }}>
                                 <Icon name="bell-o" style={{ fontSize: 60, color: '#999' }} />

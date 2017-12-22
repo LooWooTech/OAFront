@@ -25,7 +25,7 @@ class HomePage extends Component {
     handleClickForm = (form) => {
         const action = NavigationActions.navigate({
             routeName: form.List,
-            params: { formId: form.ID }
+            params: { formId: form.ID, ...form.Params }
         })
         this.props.navigation.dispatch(action)
     }
@@ -37,12 +37,12 @@ class HomePage extends Component {
                 <Header>
                     <Body>
                         <Title>
-                            <Icon name="user-circle" style={{ color: '#fff', fontSize: 20 }} /> 欢迎您：{user.RealName}
+                            <Icon name="user-circle" style={{ color: '#fff' }} /> 欢迎您：{user.RealName}
                         </Title>
                     </Body>
                     <Right>
                         <TouchableOpacity onPress={this.handleClickSetting}>
-                            <Icon name="gear" style={{ color: '#fff', fontSize: 20 }} />
+                            <Icon name="gear" style={{ color: '#fff' }} />
                         </TouchableOpacity>
                     </Right>
                 </Header>

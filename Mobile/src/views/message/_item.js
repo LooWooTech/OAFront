@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { observer, inject } from 'mobx-react'
 import { Left, Body, Right, ListItem, Icon, Text } from 'native-base'
 import moment from 'moment'
@@ -24,4 +25,7 @@ class MessageItem extends Component {
         );
     }
 }
+MessageItem.propTypes = {
+    model:PropTypes.object.isRequired
+};
 export default MessageItem;

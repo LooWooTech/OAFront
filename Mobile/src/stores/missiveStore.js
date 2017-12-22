@@ -1,5 +1,6 @@
 import { observable, computed, action } from 'mobx'
 import { FORMS } from '../common/config'
+import api from '../common/api'
 import FlatListData from './FlatListData'
 
 class MissiveStore {
@@ -19,7 +20,7 @@ class MissiveStore {
     }
 
     @action setParams(obj) {
-        Object.assign(obj, this.params)
+        this.params = Object.assign(this.params, obj)
     }
 
     @action refreshData() {

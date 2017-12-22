@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import PropTypes, { number } from 'prop-types';
+import PropTypes from 'prop-types';
 import { Left, Body, Right, ListItem, Icon, Text } from 'native-base'
 
 class ListRow extends Component {
@@ -10,7 +10,7 @@ class ListRow extends Component {
                 {left ? <Left style={{ height: null }}>
                     {left}
                 </Left> : null}
-                <Body style={{ height: height || 105, paddingTop: 5, paddingBottom: 5 }}>
+                <Body style={{ height: height || null, paddingTop: 8, paddingBottom: 8 }}>
                     <Text style={{ fontSize: fontSize || 16, lineHeight: 25 }}>{title}</Text>
                     {subTitle ? <Text note>{subTitle}</Text> : null}
                 </Body>

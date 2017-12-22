@@ -1,5 +1,7 @@
-import { Toast } from 'antd-mobile'
+import Toast from 'react-native-root-toast'
 import { API_HOST } from '../common/config'
+import { NavigationActions } from 'react-navigation'
+
 import userStore from '../stores/userStore'
 function queryStringToJson(str) {
     let json = {}
@@ -48,6 +50,7 @@ async function request(path, data, httpMethod) {
                 result = await fetch(url, options, data)
                 break;
         }
+        console.log(url)
         console.log('result._bodyText', result._bodyText)
         switch (result.status) {
             case 200:
@@ -73,5 +76,14 @@ module.exports = {
     },
     delete(path, parameters) {
         return request(path, parameters, 'DELETE');
+    },
+    reload(navigation, viewName, params) {
+        const resetAction = NavigationActions.reset({
+            index: 0,
+            actions: [
+                NavigationActions.navigate({ routeName: viewName, params: params })
+            ]
+        })
+        navigation.dispatch(resetAction);
     }
 }

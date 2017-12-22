@@ -30,7 +30,7 @@ class UserLogin extends Component {
                         <Input onChangeText={this.handleChangeName} />
                     </Item>
                     <Item inlineLabel>
-                        <Label>密码</Label>
+                        <Label>密&nbsp;&nbsp;&nbsp;&nbsp;码</Label>
                         <Input secureTextEntry={true} onChangeText={this.handleChangePw} />
                     </Item>
                 </Form>
