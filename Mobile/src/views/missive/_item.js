@@ -7,9 +7,10 @@ import moment from 'moment'
 import ListRow from '../shared/ListRow'
 
 class MissiveListItem extends Component {
-    handleClick = ()=>{
+    handleClick = () => {
         const model = this.props.model
-        console.log(model)
+        
+        this.props.onClick(model)
     }
     render() {
         const model = this.props.model
@@ -19,7 +20,7 @@ class MissiveListItem extends Component {
             <ListRow
                 title={model.Title}
                 left={<Icon name={iconName} style={{ color: iconColor }} />}
-                subTitle={`${model.FlowStep}  ${model.UpdateTime ? moment(model.UpdateTime).format('ll') : ''}`}
+                subTitle={`${model.FlowStep ? '所在流程：' + model.FlowStep : ''}     ${model.UpdateTime ? moment(model.UpdateTime).format('ll') : ''}`}
                 onClick={this.handleClick}
             />
         );

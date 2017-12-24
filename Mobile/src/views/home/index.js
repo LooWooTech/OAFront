@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { BackHandler, TouchableOpacity, Image, ToastAndroid } from 'react-native';
+import { BackHandler, Image, ToastAndroid } from 'react-native';
 import { observer, inject } from 'mobx-react'
 import { NavigationActions } from 'react-navigation'
-import { Container, Header, Text, View, Left, Body, Content, Title, Right, Icon, List, ListItem } from 'native-base'
+import { Container, Header, Text, View, Left, Body, Content, Title, Right, Icon, List, ListItem, Button } from 'native-base'
 import HomeFormGrid from './_formGrid'
 
 @inject('stores')
@@ -23,11 +23,7 @@ class HomePage extends Component {
     }
 
     handleClickForm = (form) => {
-        const action = NavigationActions.navigate({
-            routeName: form.List,
-            params: { formId: form.ID, ...form.Params }
-        })
-        this.props.navigation.dispatch(action)
+        this.props.navigation.navigate(form.List,{ formId: form.ID, ...form.Params })
     }
 
     render() {
@@ -41,21 +37,19 @@ class HomePage extends Component {
                         </Title>
                     </Body>
                     <Right>
-                        <TouchableOpacity onPress={this.handleClickSetting}>
+                        <Button transparent onPress={this.handleClickSetting}>
                             <Icon name="gear" style={{ color: '#fff' }} />
-                        </TouchableOpacity>
+                        </Button>
                     </Right>
                 </Header>
-                <Content>
-                    <Image source={require('../../resources/banner.png')} style={{ height: 170, width: '100%' }} />
+                <Content style={{ backgroundColor: '#fff' }}>
+                    <Image source={require('../../resources/banner.png')} style={{ height: 195, width: '100%' }} />
                     <List>
                         <ListItem itemDivider >
                             <Text>功能模块</Text>
                         </ListItem>
-                        <ListItem last>
-                            <HomeFormGrid onClick={this.handleClickForm} />
-                        </ListItem>
                     </List>
+                    <HomeFormGrid onClick={this.handleClickForm} />
                 </Content>
             </Container>
         );

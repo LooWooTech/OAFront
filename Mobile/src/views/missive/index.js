@@ -6,7 +6,7 @@ import MissiveItem from './_item'
 import missiveStore from '../../stores/missiveStore'
 import Popover from '../components/Popover'
 import NavbarPopover from '../shared/NavbarPopover'
-import EmptyListTips from '../shared/EmptyListTips'
+import ListEmptyComponent from '../shared/ListEmptyComponent'
 import $ from '../../common/utils'
 
 @inject('stores')
@@ -48,7 +48,11 @@ class MissiveList extends Component {
     }
 
     keyExtractor = (item, index) => item.ID;
-    renderItem = ({ item }) => <MissiveItem model={item} />
+
+    handleClickItem = (item) => {
+        this.props.navigation.navigate('Missive.Detail', { id: item.InfoId })
+    }
+    renderItem = ({ item }) => <MissiveItem model={item} onClick={this.handleClickItem} />
 
     render() {
         const { stores, navigation } = this.props
@@ -57,6 +61,7 @@ class MissiveList extends Component {
         const form = stores.formStore.getForm(formId)
         const { list } = stores.missiveStore
         const statusText = this.menuData[status - 1].label
+        const loading = stores.missiveStore.data.loading
         return (
             <Container>
                 <Header>
@@ -66,9 +71,9 @@ class MissiveList extends Component {
                         </Title>
                     </Body>
                     <Right>
-                        <TouchableOpacity ref='button' onPress={this.showPopover}>
+                        <Button transparent onPress={this.showPopover}>
                             <Icon name="bars" />
-                        </TouchableOpacity>
+                        </Button>
                     </Right>
                 </Header>
                 <Content>
@@ -79,9 +84,9 @@ class MissiveList extends Component {
                         keyExtractor={this.keyExtractor}
                         onEndReached={this.loadNextPageData}
                         onRefresh={this.refreshData}
-                        refreshing={stores.missiveStore.data.loading}
-                        style={{ height: Dimensions.get('window').height - 80 }}
-                        ListEmptyComponent={<EmptyListTips icon="file-o" text={`暂无${statusText}`} />}
+                        refreshing={loading}
+                        style={{ height: Dimensions.get('window').height - 80, backgroundColor: '#fff' }}
+                        ListEmptyComponent={<ListEmptyComponent icon="file-o" text={`暂无${statusText}`} loading={loading} />}
                     />
                 </Content>
                 <NavbarPopover ref="menu" data={this.menuData} onSelect={this.handleSelectStatus} />

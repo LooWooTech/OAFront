@@ -6,17 +6,19 @@ class ListRow extends Component {
     render() {
         const { left, right, title, subTitle, onClick, height, fontSize } = this.props
         return (
-            <ListItem icon onPress={onClick} style={{ marginLeft: 0, paddingLeft: 10, height: null }}>
-                {left ? <Left style={{ height: null }}>
+            <ListItem icon onPress={onClick} style={{ backgroundColor: null, height: null }}>
+                {left ? <Left style={{ height: height || null }}>
                     {left}
                 </Left> : null}
                 <Body style={{ height: height || null, paddingTop: 8, paddingBottom: 8 }}>
                     <Text style={{ fontSize: fontSize || 16, lineHeight: 25 }}>{title}</Text>
                     {subTitle ? <Text note>{subTitle}</Text> : null}
                 </Body>
-                <Right style={{ height: null }}>
-                    {right || <Icon name="chevron-right" />}
-                </Right>
+                {right === null ? null :
+                    <Right style={{ height: height || null }}>
+                        {right || <Icon name="chevron-right" />}
+                    </Right>
+                }
             </ListItem>
         );
     }

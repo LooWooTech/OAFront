@@ -193,10 +193,6 @@ export default (variables = variable) => {
       flex: platform === "ios" && platformStyle !== "material" ? 1 : 0.5,
       alignSelf: "center",
       alignItems: "flex-start",
-      "NativeBase.Icon": {
-        color: variables.toolbarBtnColor,
-        fontSize: variables.iconHeaderSize,
-      },
    },
     "NativeBase.Body": {
       flex: 1,
@@ -296,10 +292,6 @@ export default (variables = variable) => {
       alignItems: "flex-end",
       flexDirection: "row",
       justifyContent: "flex-end",
-      "NativeBase.Icon": {
-        color: variables.toolbarBtnColor,
-        fontSize: variables.iconHeaderSize,
-      },
     },
     backgroundColor: variables.toolbarDefaultBg,
     flexDirection: "row",

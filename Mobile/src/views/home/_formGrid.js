@@ -40,10 +40,10 @@ class HomeFormGrid extends Component {
 
     render() {
         return (
-            <Grid>
-                {this.getFormRows(3).map((row, i) => <Row key={'row-' + i}>
+            <Grid style={{ borderTopWidth: 1, borderTopColor: '#f7f7f7', borderLeftWidth: 1, borderLeftColor: '#f7f7f7' }}>
+                {this.getFormRows(3).map((row, i) => <Row key={'row-' + i} style={{ borderBottomWidth: 1, borderBottomColor: '#f7f7f7' }}>
                     {row.map(form => (
-                        <Col key={form.ID}>
+                        <Col key={form.ID} style={{ borderRightWidth: 1, borderRightColor: '#f7f7f7' }}>
                             <GridItem model={form} onClick={this.props.onClick} />
                         </Col>
                     ))}

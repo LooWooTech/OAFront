@@ -5,6 +5,7 @@ import FlatListData from './FlatListData'
 
 class MissiveStore {
 
+    //列表页
     @observable params = {
         formId: FORMS.Missive.ID,
         status: 0,
@@ -33,6 +34,14 @@ class MissiveStore {
 
     @action loadNextPageData() {
         return this.data.loadData(this.data.page + 1)
+    }
+
+    //详细页
+    @observable model = null
+    @action async getModel(id) {
+        const data = await api.missive.model(id)
+        this.model = data
+        return data
     }
 }
 const missiveStore = new MissiveStore()

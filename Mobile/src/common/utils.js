@@ -16,7 +16,7 @@ function queryStringToJson(str) {
 }
 function jsonToQueryString(json) {
     if (!json)
-        return null;
+        return '';
     return Object
         .keys(json)
         .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(json[key]))
@@ -43,7 +43,11 @@ async function request(path, data, httpMethod) {
         switch (httpMethod) {
             case 'GET':
             case 'DELETE':
-                url += '?' + jsonToQueryString(data)
+                if (url.indexOf('?') > -1) {
+                    url += jsonToQueryString(data)
+                } else {
+                    url += '?' + jsonToQueryString(data)
+                }
                 result = await fetch(url, options)
                 break;
             case 'POST':

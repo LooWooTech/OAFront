@@ -3,7 +3,7 @@ import { observer, inject } from 'mobx-react'
 import { FlatList, Dimensions, } from 'react-native'
 import { Container, View, Image, Header, Body, Left, Right, Content, Title, Badge, Icon, Segment, Button, Text, H1 } from 'native-base'
 import MessageItem from './_item'
-import messageStore from '../../stores/messageStore'
+import ListEmptyComponent from '../shared/ListEmptyComponent'
 
 @inject('stores')
 @observer
@@ -33,6 +33,7 @@ class Messages extends Component {
 
     render() {
         const { list, hasRead, readAll, read } = this.props.stores.messageStore
+        const loading = this.props.stores.messageStore.data.loading
         return (
             <Container>
                 <Header hasSegment={true}>
@@ -53,14 +54,9 @@ class Messages extends Component {
                         keyExtractor={this.keyExtractor}
                         onEndReached={this.loadNextPageData}
                         onRefresh={this.refreshData}
-                        refreshing={this.props.stores.messageStore.data.loading}
-                        style={{ height: Dimensions.get('window').height - 140 }}
-                        ListEmptyComponent={(
-                            <View style={{ alignItems: 'center', justifyContent: 'center', paddingTop: 50, paddingBottom: 50 }}>
-                                <Icon name="bell-o" style={{ fontSize: 60, color: '#999' }} />
-                                <Text style={{ lineHeight: 30, color: '#999' }}>暂无新的消息</Text>
-                            </View>
-                        )}
+                        refreshing={loading}
+                        style={{ height: Dimensions.get('window').height - 140, backgroundColor: '#fff' }}
+                        ListEmptyComponent={<ListEmptyComponent icon="bell-o" text="暂无消息" loading={loading} />}
                     />
                     {!hasRead && list.length > 0 ? <Button onPress={readAll}><Icon type={'\uf1f7'} size="sm" color="#666" /><Text style={{ fontSize: 14, color: '#666' }}>全部标记为已读</Text></Button> : null}
                 </Content>

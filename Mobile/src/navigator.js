@@ -4,10 +4,11 @@ import { StackNavigator, TabNavigator, NavigationActions, StackRouter } from 're
 import { Badge, Icon } from 'antd-mobile'
 import Welcome from './views/home/welcome'
 import HomePage from './views/home/index'
+import Search from './views/search/index'
 import Settings from './views/home/settings'
 import Messages from './views/message/index'
 import MissvieList from './views/missive/index'
-
+import MissiveDetail from './views/missive/detail'
 
 const Index = TabNavigator(
     {
@@ -47,9 +48,10 @@ export const RootNavigator = StackNavigator(
         Index: { screen: Index },
         Settings: { screen: Settings },
         'Missive.List': { screen: MissvieList },
+        'Missive.Detail': { screen: MissiveDetail },
     },
     {
         initialRouteName: 'Welcome',
-        headerMode:'none',
+        headerMode: 'none',
     }
 )
