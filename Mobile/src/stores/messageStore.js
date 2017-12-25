@@ -6,7 +6,7 @@ import FlatListData from './FlatListData'
 class MessageStore {
     @observable hasRead = false
 
-    @observable.shallow data = new FlatListData((page, rows) => {
+    @observable.ref data = new FlatListData((page, rows) => {
         return api.message.list(this.hasRead, page, rows)
     })
 

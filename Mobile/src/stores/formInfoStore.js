@@ -2,6 +2,7 @@ import { observable, action, computed } from 'mobx'
 import api from '../common/api'
 
 class FormInfoStore {
+
     @observable model = null
 
     @action async getModel(id) {
