@@ -29,7 +29,7 @@ class Messages extends Component {
         this.refreshData();
     }
     keyExtractor = (item, index) => item.ID;
-    renderItem = ({ item }) => <MessageItem model={item} />
+    renderItem = ({ item }) => <MessageItem data={item} />
 
     render() {
         const { list, hasRead, readAll, read } = this.props.stores.messageStore

@@ -9,6 +9,7 @@ import Settings from './views/home/settings'
 import Messages from './views/message/index'
 import MissvieList from './views/missive/index'
 import MissiveDetail from './views/missive/detail'
+import FilePreview from './views/file/preview'
 
 const Index = TabNavigator(
     {
@@ -49,6 +50,7 @@ export const RootNavigator = StackNavigator(
         Settings: { screen: Settings },
         'Missive.List': { screen: MissvieList },
         'Missive.Detail': { screen: MissiveDetail },
+        'File.Preview': { screen: FilePreview },
     },
     {
         initialRouteName: 'Welcome',

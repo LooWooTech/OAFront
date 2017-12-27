@@ -5,15 +5,7 @@ import { Form, Item, Input, Label, Picker, Switch, Text, View, ListItem, List, L
 const SharedFormItem = ({ item, disabled }) => {
     let multiline = false
     switch (item.type) {
-        case 'data':
-            <ListItem icon>
-                <Left>
-                    <Text>{item.title}</Text>
-                </Left>
-                <Body>
-                    <Input value={(item.defaultValue || '').toString()} disabled={disabled} />
-                </Body>
-            </ListItem>
+        case 'date':
         default:
             multiline = item.defaultValue != null && item.defaultValue.length > 16
             return (

@@ -5,10 +5,10 @@ import { observer, inject } from 'mobx-react'
 
 class GridItem extends Component {
     handleClick = () => {
-        this.props.onClick(this.props.model)
+        this.props.onClick(this.props.data)
     }
     render() {
-        const form = this.props.model
+        const form = this.props.data
         return (
             <TouchableOpacity onPress={this.handleClick}>
                 <View style={{ width: '100%', height: 100, alignItems: 'center', paddingTop: 20, paddingBottom: 20, }}>
@@ -44,7 +44,7 @@ class HomeFormGrid extends Component {
                 {this.getFormRows(3).map((row, i) => <Row key={'row-' + i} style={{ borderBottomWidth: 1, borderBottomColor: '#f7f7f7' }}>
                     {row.map(form => (
                         <Col key={form.ID} style={{ borderRightWidth: 1, borderRightColor: '#f7f7f7' }}>
-                            <GridItem model={form} onClick={this.props.onClick} />
+                            <GridItem data={form} onClick={this.props.onClick} />
                         </Col>
                     ))}
                 </Row>)}

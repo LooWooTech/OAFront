@@ -39,7 +39,9 @@ class FileList extends Component {
                             subTitle={item.DisplaySize}
                         />
                     )
-                }) : <ListItem><ListEmptyComponent icon="files-o" text="没有相关附件" /></ListItem>}
+                }) : <ListItem style={{ alignItems: 'center', justifyContent: 'center' }}>
+                        <ListEmptyComponent icon="files-o" text="没有相关附件" />
+                    </ListItem>}
             </List>
         );
     }

@@ -8,24 +8,24 @@ import ListRow from '../shared/ListRow'
 @inject('stores')
 class MessageItem extends Component {
     handleClick = () => {
-        const { model } = this.props
+        const data = this.props.data
     }
 
     render() {
-        const { model } = this.props
-        const form = this.props.stores.formStore.getForm(model.FormId)
+        const data = this.props.data
+        const form = this.props.stores.formStore.getForm(data.FormId)
         return (
             <ListRow
                 height={105}
-                title={model.Title}
+                title={data.Title}
                 left={<Icon name={form.Icon} style={{ color: form.Color, }} />}
-                subTitle={`${model.FromUser || ''}  ${moment(model.CreateTime).format('ll')}`}
+                subTitle={`${data.FromUser || ''}  ${moment(data.CreateTime).format('ll')}`}
                 onClick={this.handleClick}
             />
         );
     }
 }
 MessageItem.propTypes = {
-    model:PropTypes.object.isRequired
+    data:PropTypes.object.isRequired
 };
 export default MessageItem;

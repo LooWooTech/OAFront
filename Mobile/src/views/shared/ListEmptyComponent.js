@@ -7,7 +7,7 @@ class ListEmptyComponent extends Component {
         const { style, icon, text, loading } = this.props
         return (
             <View style={style}>
-                <Icon name={loading ? 'spinner' : icon} style={{ fontSize: 48, color: '#999' }} />
+                <Icon name={loading ? 'spinner' : icon} style={{ fontSize: 24, color: '#999' }} />
                 <Text style={{ lineHeight: 30, color: '#999' }}>{loading ? '加载中...' : text}</Text>
             </View>
         );
@@ -21,7 +21,7 @@ ListEmptyComponent.propTypes = {
     loading: PropTypes.bool
 };
 ListEmptyComponent.defaultProps = {
-    style: { alignItems: 'center', justifyContent: 'center', paddingTop: 50, paddingBottom: 50 }
+    style: { alignItems: 'center', justifyContent: 'center', height: 300 }
 }
 
 export default ListEmptyComponent;

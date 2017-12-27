@@ -254,9 +254,9 @@ export default {
   tabTextColor: "#222222",
 
   // Text
-  textColor: "#000",
+  textColor: "#333",
   inverseTextColor: "#fff",
-  noteFontSize: 14,
+  noteFontSize: 12,
 
   // Title
   titleFontfamily: platform === "ios" ? "System" : "Roboto_medium",
@@ -268,9 +268,9 @@ export default {
   titleFontColor: "#FFF",
 
   // Other
-  borderRadiusBase: platform === "ios" ? 5 : 2,
-  borderWidth: 1 / PixelRatio.getPixelSizeForLayoutSize(1),
-  contentPadding: 10,
+  borderRadiusBase: 5,
+  borderWidth: 1,
+  contentPadding: 7,
 
   get darkenHeader() {
     return color(this.tabBgColor)

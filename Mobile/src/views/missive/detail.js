@@ -39,10 +39,19 @@ class MissiveDetail extends Component {
                 <Content>
                     <Tabs tabBarPosition="top">
                         <Tab heading={<TabHeading><Text>拟稿表单</Text></TabHeading>}>
-                            <MissiveForm formId={info.FormId} model={missive}/>
+                            <MissiveForm formId={info.FormId} data={missive} />
                         </Tab>
                         <Tab heading={<TabHeading><Text>审核流程</Text></TabHeading>}>
-                            <FlowDataList infoId={info.ID} />
+                            <FlowDataList infoId={info.ID}
+                                flowData={info.FlowData}
+                                flowNodeData={data.flowNodeData}
+                                freeFlowNodeData={data.freeFlowNodeData}
+                                canSubmitFlow={data.canSubmitFlow}
+                                canSubmitFreeFlow={data.canSubmitFreeFlow}
+                                canBack={data.canBack}
+                                canCancel={data.canCancel}
+                                canComplete={data.canComplete}
+                            />
                         </Tab>
                         <Tab heading={<TabHeading><Text>附件信息</Text></TabHeading>}>
                             <AttachmentList infoId={info.ID} />
