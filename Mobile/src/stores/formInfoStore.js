@@ -17,6 +17,16 @@ class FormInfoStore {
         this.model = data
         return data
     }
+
+    @action async submitFreeflow(id, infoId, flowNodeDataId, toUserIds, ccUserIds) {
+        await api.freeflowData.submit(id, infoId, flowNodeDataId, toUserIds, ccUserIds)
+        await this.getModel(infoId)
+    }
+
+    @action async completeFreeFlow(infoId, freeflowDataId) {
+        await api.freeflowData.complete(freeflowDataId, infoId)
+        await this.getModel(infoId)
+    }
 }
 const formInfoStore = new FormInfoStore()
 export default formInfoStore

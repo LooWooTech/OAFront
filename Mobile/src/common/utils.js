@@ -1,7 +1,6 @@
-import Toast from 'react-native-root-toast'
 import { API_HOST } from '../common/config'
 import { NavigationActions } from 'react-navigation'
-
+import { Toast } from 'antd-mobile'
 import userStore from '../stores/userStore'
 function queryStringToJson(str) {
     let json = {}

@@ -4,8 +4,10 @@ import { observer, inject } from 'mobx-react'
 import { Container, Header, Left, Body, Right, Title, Content, View, Text, Segment, Button, Icon, Tabs, Tab, TabHeading, List, ListItem, H2 } from 'native-base'
 import BackButton from '../shared/BackButton'
 import AttachmentList from '../file/list'
-import MissiveForm from './_form'
+import MissiveFormInfo from './_info'
 import FlowDataList from '../flow/list'
+import MissiveFooter from './_footer'
+
 @inject('stores')
 @observer
 class MissiveDetail extends Component {
@@ -17,6 +19,12 @@ class MissiveDetail extends Component {
         }
         this.props.stores.missiveStore.getModel(id)
         this.props.stores.formInfoStore.getModel(id)
+    }
+
+
+    handleCompleteFreeFlow = () => {
+        const data = this.props.stores.formInfoStore.model
+        const flowNodeData = data.flowNodeData;
     }
 
     render() {
@@ -36,28 +44,24 @@ class MissiveDetail extends Component {
                     <Right>
                     </Right>
                 </Header>
-                <Content>
-                    <Tabs tabBarPosition="top">
-                        <Tab heading={<TabHeading><Text>拟稿表单</Text></TabHeading>}>
-                            <MissiveForm formId={info.FormId} data={missive} />
-                        </Tab>
-                        <Tab heading={<TabHeading><Text>审核流程</Text></TabHeading>}>
-                            <FlowDataList infoId={info.ID}
-                                flowData={info.FlowData}
-                                flowNodeData={data.flowNodeData}
-                                freeFlowNodeData={data.freeFlowNodeData}
-                                canSubmitFlow={data.canSubmitFlow}
-                                canSubmitFreeFlow={data.canSubmitFreeFlow}
-                                canBack={data.canBack}
-                                canCancel={data.canCancel}
-                                canComplete={data.canComplete}
-                            />
-                        </Tab>
-                        <Tab heading={<TabHeading><Text>附件信息</Text></TabHeading>}>
+                <Tabs tabBarPosition="top">
+                    <Tab heading={<TabHeading><Text>拟稿表单</Text></TabHeading>}>
+                        <Content>
+                            <MissiveFormInfo formId={info.FormId} data={missive} />
+                        </Content>
+                    </Tab>
+                    <Tab heading={<TabHeading><Text>审核流程</Text></TabHeading>}>
+                        <Content>
+                            <FlowDataList data={info.FlowData.Nodes} />
+                        </Content>
+                    </Tab>
+                    <Tab heading={<TabHeading><Text>附件信息</Text></TabHeading>}>
+                        <Content>
                             <AttachmentList infoId={info.ID} />
-                        </Tab>
-                    </Tabs>
-                </Content>
+                        </Content>
+                    </Tab>
+                </Tabs>
+                <MissiveFooter data={data} navigation={this.props.navigation} />
             </Container>
         );
     }

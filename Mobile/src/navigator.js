@@ -1,7 +1,4 @@
-import React, { Component } from 'react'
-import { Image, Text } from 'react-native'
 import { StackNavigator, TabNavigator, NavigationActions, StackRouter } from 'react-navigation'
-import { Badge, Icon } from 'antd-mobile'
 import Welcome from './views/home/welcome'
 import HomePage from './views/home/index'
 import Search from './views/search/index'
@@ -10,6 +7,9 @@ import Messages from './views/message/index'
 import MissvieList from './views/missive/index'
 import MissiveDetail from './views/missive/detail'
 import FilePreview from './views/file/preview'
+import FreeFlowForm from './views/freeflow/form'
+import FlowForm from './views/flow/form'
+import SelectUser from './views/shared/SelectUser'
 
 const Index = TabNavigator(
     {
@@ -51,6 +51,9 @@ export const RootNavigator = StackNavigator(
         'Missive.List': { screen: MissvieList },
         'Missive.Detail': { screen: MissiveDetail },
         'File.Preview': { screen: FilePreview },
+        'Flow.Form': { screen: FlowForm },
+        'FreeFlow.Form': { screen: FreeFlowForm },
+        'SelectUser': { screen: SelectUser }
     },
     {
         initialRouteName: 'Welcome',

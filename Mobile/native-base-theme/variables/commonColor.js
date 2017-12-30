@@ -137,7 +137,7 @@ export default {
 
   // Footer
   footerHeight: isIphoneX ? 89 : 55,
-  footerDefaultBg: "#2874F0",
+  footerDefaultBg: "#fff",
   footerPaddingBottom: isIphoneX ? 34 : 0,
 
   // FooterTab

@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Input, Label } from 'native-base'
-import Form from '../shared/Form'
+import Detail from '../shared/Detail'
 import { FORMS } from '../../common/config'
 import moment from 'moment'
 
-class MissiveForm extends Component {
+class MissiveDetail extends Component {
 
     getItems = () => {
         const data = this.props.data
@@ -62,14 +62,14 @@ class MissiveForm extends Component {
         const data = this.props.data
         if (!data) return null
         return (
-            <Form formId={this.props.formId} items={this.getItems()} disabled={true} />
+            <Detail formId={this.props.formId} items={this.getItems()} disabled={true} />
         );
     }
 }
 
-MissiveForm.propTypes = {
+MissiveDetail.propTypes = {
     formId: PropTypes.number.isRequired,
     data: PropTypes.object.isRequired,
 };
 
-export default MissiveForm;
+export default MissiveDetail;

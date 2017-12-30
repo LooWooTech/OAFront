@@ -4,6 +4,9 @@ import messageStore from './messageStore'
 import missiveStore from './missiveStore'
 import formInfoStore from './formInfoStore'
 import fileStore from './fileStore'
+import freeflowStore from './freeflowStore'
+import userSelectStore from './userSelectStore'
+
 export default {
     userStore,
     formStore,
@@ -11,4 +14,6 @@ export default {
     messageStore,
     missiveStore,
     fileStore,
+    freeflowStore,
+    userSelectStore,
 }
