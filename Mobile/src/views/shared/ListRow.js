@@ -10,15 +10,14 @@ class ListRow extends Component {
                 {left ? <Left style={{ height: height || null }}>
                     {left}
                 </Left> : null}
-                <Body style={{ height: height || null, paddingTop: 8, paddingBottom: 8 }}>
+                {body || this.props.children || <Body style={{ height: height || null, paddingTop: 8, paddingBottom: 8 }}>
                     <Text style={{ fontSize: fontSize || 16, lineHeight: 25 }}>{title}</Text>
                     {subTitle ? <Text note>{subTitle}</Text> : null}
                 </Body>
-                {right === null ? null :
-                    <Right style={{ height: height || null }}>
-                        {right || <Icon name="chevron-right" />}
-                    </Right>
                 }
+                {right ? <Right style={{ height: height || null }}>
+                    {right}
+                </Right> : null}
             </ListItem>
         );
     }

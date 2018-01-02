@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Content, Form, Item, Input, Label, Picker, Switch, Text, View, ListItem, List, Left, Body, Right, Textarea } from 'native-base'
 import { Dimensions, TextInput } from 'react-native';
 import DatePicker from 'react-native-datepicker'
+import ListRow from './ListRow'
 
 class SharedFormItem extends Component {
     state = {}
@@ -20,49 +21,54 @@ class SharedFormItem extends Component {
             return null
         }
         let multiline = false
-        const label = item.title ? <Label>{item.title}</Label> : null
+        const left = item.title ? <Label>{item.title}</Label> : (item.left || null)
         switch (item.type) {
             case 'date':
                 return (
-                    <Item inlineLabel>
-                        {label}
-                        <DatePicker onDateChange={this.handleChangeValue} />
-                    </Item>
+                    <ListRow
+                        left={left}
+                        body={<DatePicker onDateChange={this.handleChangeValue} />}
+                        right={item.right}
+                    />
                 )
             case 'textarea':
                 return (
-                    <Item inlineLabel>
-                        {label}
-                        <Input multiline={true} placeholder={item.placeholder}
+                    <ListRow
+                        left={left}
+                        body={<Input multiline={true} placeholder={item.placeholder}
                             defaultValue={item.defaultValue}
                             onChangeText={this.handleChangeValue}
-                        />
-                    </Item>
+                            style={{ borderBottomWidth: 0.5, borderBottomColor: '#ccc' }}
+                        />}
+                        right={item.right}
+                    />
                 );
             default:
                 if (item.render) {
                     return (
-                        label ?
-                            <Item inlineLabel>
-                                {label}
-                                {item.render}
-                            </Item>
-                            : item.render
+                        <ListRow
+                            left={left}
+                            body={item.render}
+                            right={item.right}
+                        />
                     )
                 }
                 multiline = item.defaultValue != null && item.defaultValue.length > 16
                 return (
-                    <Item inlineLabel>
-                        {label}
-                        <Input placeholder={item.placeholder} multiline={multiline} defaultValue={item.defaultValue} onChangeText={this.handleChangeValue} />
-                    </Item>
+                    <ListRow
+                        left={left}
+                        body={<Input placeholder={item.placeholder} multiline={multiline} defaultValue={item.defaultValue} onChangeText={this.handleChangeValue} />}
+                        right={item.right}
+                    />
                 );
             case 'file':
                 return <Item><Label>暂不支持文件上传</Label></Item>
             case 'select':
                 return (
-                    <Item inlineLabel>
-                        {label}
+                    <ListRow
+                        left={left}
+                        right={item.right}
+                    >
                         <Picker disabled={disabled}
                             mode='dialog'
                             placeholder={item.title}
@@ -72,7 +78,7 @@ class SharedFormItem extends Component {
                         >
                             {item.options.map(opt => <Item key={opt.value} label={opt.text} value={opt.value} />)}
                         </Picker>
-                    </Item>
+                    </ListRow>
                 )
                 break;
             case 'hidden':
@@ -84,15 +90,11 @@ class SharedFormItem extends Component {
             case 'switch':
             case 'toggle':
                 return (
-                    <ListItem icon>
-                        <Left>
-                            <Text>{item.title}</Text>
-                        </Left>
-                        <Body></Body>
-                        <Right>
-                            <Switch value={item.defaultValue} onValueChange={this.handleChangeValue} />
-                        </Right>
-                    </ListItem>
+                    <ListRow
+                        left={left}
+                        body={<Text> </Text>}
+                        right={<Switch value={item.defaultValue} onValueChange={this.handleChangeValue} />}
+                    />
                 )
         }
     }
@@ -101,9 +103,9 @@ class SharedFormItem extends Component {
 export default class SharedForm extends Component {
     render() {
         return (
-            <Form style={{backgroundColor:'#fff'}}>
+            <List style={{ backgroundColor: '#fff' }}>
                 {this.props.items.map((item, key) => <SharedFormItem key={'form-item' + key} item={item} disabled={this.props.disabled} />)}
-            </Form>
+            </List>
         );
     }
 }

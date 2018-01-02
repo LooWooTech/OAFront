@@ -62,7 +62,7 @@ export default class MissiveList extends React.Component {
 
     componentWillMount() {
         this.loadData(this.state.formId, {
-            searchKey: this.searchKey,
+            searchKey: this.state.searchKey,
             status: this.state.status,
             page: this.state.page.current,
         });

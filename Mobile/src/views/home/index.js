@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BackHandler, Image, ToastAndroid } from 'react-native';
+import { BackHandler, Image, Keyboard } from 'react-native';
 import { observer, inject } from 'mobx-react'
 import { NavigationActions } from 'react-navigation'
 import { Container, Header, Text, View, Left, Body, Content, Title, Right, Icon, List, ListItem, Button } from 'native-base'
@@ -17,13 +17,16 @@ class HomePage extends Component {
             )
         };
     }
+    componentWillMount() {
+        Keyboard.dismiss()
+    }
 
     handleClickSetting = () => {
         this.props.navigation.navigate('Settings')
     }
 
     handleClickForm = (form) => {
-        this.props.navigation.navigate(form.List,{ formId: form.ID, ...form.Params })
+        this.props.navigation.navigate(form.List, { formId: form.ID, ...form.Params })
     }
 
     render() {

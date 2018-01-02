@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { NavigationActions } from 'react-navigation'
-import { StyleSheet, Image } from 'react-native';
+import { StyleSheet, Image, Keyboard } from 'react-native';
 import { observer, inject } from 'mobx-react'
 import { Container, Content, Text, View } from 'native-base'
 import CounterDown from '../shared/CounterDown'
@@ -13,8 +13,11 @@ class Welcome extends Component {
         header: null
     }
 
-    render() {
+    componentWillMount() {
+        Keyboard.dismiss()
+    }
 
+    render() {
         const { hasLogin, inProgress } = this.props.stores.userStore
         setTimeout(() => {
             if (hasLogin) {

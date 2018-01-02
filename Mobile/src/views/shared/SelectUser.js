@@ -4,6 +4,7 @@ import { Container, Header, Body, Left, Right, Title, Content, Footer, Button, T
 import BackButton from './BackButton'
 import ListRow from './ListRow'
 import { inject, observer } from 'mobx-react';
+import { Keyboard } from 'react-native'
 import { SearchBar } from 'antd-mobile'
 
 @inject('stores')
@@ -12,6 +13,7 @@ class SelectUserModal extends Component {
 
     state = { selectAll: false }
     componentWillMount() {
+        Keyboard.dismiss()
         let params = this.props.navigation.state.params
         this.props.stores.userSelectStore.setParams(params)
         this.props.stores.userSelectStore.data.loadData()

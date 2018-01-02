@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Alert, StyleSheet } from 'react-native'
-import { Button, Text, Footer, Icon } from 'native-base'
+import { Button, Text, Footer, Icon, Left, Right } from 'native-base'
 import { observer, inject } from 'mobx-react'
 @inject('stores')
 @observer
@@ -41,36 +41,52 @@ class MissiveDetailFooter extends Component {
 
         const show = canSubmitFlow || canSubmitFreeFlow || canCompleteFreeFlow || canCancel
 
+        const leftButtons = []
+        const rightButtons = []
+        if (canSubmitFreeFlow && freeFlowNodeData && !freeFlowNodeData.Submited) {
+            leftButtons.push(
+                <Button key="read" iconLeft success transparent style={styles.button} onPress={this.handleClickRead}>
+                    <Icon name="check" />
+                    <Text>已阅</Text>
+                </Button>
+            )
+        }
+        if (canSubmitFreeFlow) {
+            leftButtons.push(
+                <Button key="submitfreeflow" iconLeft warning transparent style={styles.button} onPress={this.handleClickShare}>
+                    <Icon name="share" />
+                    <Text>转发</Text>
+                </Button>
+            )
+        }
+        if (canCompleteFreeFlow) {
+            rightButtons.push(
+                <Button key="completefreeflow" iconLeft danger transparent style={styles.button} onPress={this.props.onClickComplete}>
+                    <Icon name="close" />
+                    <Text>结束转发</Text>
+                </Button>
+            )
+        }
+        if (canCancel) {
+            rightButtons.push(
+                <Button key="cancel" iconLeft warning transparent style={styles.button} onPress={this.handleCancelFlow}>
+                    <Icon name="undo" />
+                    <Text>撤销</Text>
+                </Button>
+            )
+        }
+        if (canSubmitFlow && flowNodeData && !flowNodeData.Submited) {
+            rightButtons.push(
+                <Button key="submitflow" iconLeft primary transparent style={styles.button} onPress={this.props.onSubmitFlow}>
+                    <Icon name="check" />
+                    <Text>审核</Text>
+                </Button>
+            )
+        }
         return !show ? null : (
             <Footer style={{ borderTopColor: "#ddd", borderTopWidth: 1, backgroundColor: '#fff', bottom: 0 }}>
-                {canSubmitFreeFlow && freeFlowNodeData && !freeFlowNodeData.Submited ?
-                    <Button iconLeft success transparent style={styles.button} onPress={this.handleClickRead}>
-                        <Icon name="check" />
-                        <Text>已阅</Text>
-                    </Button>
-                    : null}
-                {canSubmitFreeFlow ?
-                    <Button iconLeft warning transparent style={styles.button} onPress={this.handleClickShare}>
-                        <Icon name="share" />
-                        <Text>自由发送</Text>
-                    </Button>
-                    : null}
-                {canCompleteFreeFlow ?
-                    <Button iconLeft danger transparent style={styles.button} onPress={this.props.onClickComplete}>
-                        <Icon name="close" />
-                        <Text>结束自由发送</Text>
-                    </Button> : null}
-                {canCancel ?
-                    <Button iconLeft warning transparent style={styles.button} onPress={this.handleCancelFlow}>
-                        <Icon name="undo" />
-                        <Text>撤销</Text>
-                    </Button> : null}
-                {canSubmitFlow && flowNodeData && !flowNodeData.Submited ?
-                    <Button iconLeft primary transparent style={styles.button} onPress={this.props.onSubmitFlow}>
-                        <Icon name="check" />
-                        <Text>主流程审核</Text>
-                    </Button>
-                    : null}
+                {leftButtons}
+                {rightButtons}
             </Footer>
         );
     }
