@@ -53,8 +53,8 @@ class ResultTab extends Component {
             <Row>
                 <Col span={1}>{this.getTaskStatusRender(model.Status)}</Col>
                 <Col span={12}>{model.Content}</Col>
-                <Col span={4}>{model.ScheduleDate ? moment(model.ScheduleDate).format('ll') : null}</Col>
-                <Col span={4}>{model.UpdateTime ? moment(model.UpdateTime).format('ll') : null}</Col>
+                <Col span={4}>{model.ScheduleDate ? moment(model.ScheduleDate).format('YYYY-MM-DD') : null}</Col>
+                <Col span={4}>{model.UpdateTime ? moment(model.UpdateTime).format('YYYY-MM-DD HH:mm') : null}</Col>
                 <Col span={3}>{model.ToUserName}</Col>
             </Row>
             {model.children ? model.children.map(child => this.getSubTaskRender(child)) : null}
@@ -67,7 +67,7 @@ class ResultTab extends Component {
             {model.Content.split('\n').map((item, key) => <span key={key}>{item}<br /></span>)}
             {model.IsMaster ? this.state.flowData.Nodes.filter(e => e.ExtendId === model.ID)
                 .sort((a, b) => a.ID - b.ID)
-                .map(item => <Alert key={item.ID} message={this.getFlowNodeRender(item)} type="success" />)
+                .map(item => <Alert key={item.ID} message={this.getFlowNodeRender(item)} style={{margin:'5px',background:'#fdfdfd'}} />)
                 : null}
         </div>
     }
@@ -83,7 +83,7 @@ class ResultTab extends Component {
             <p className="content"> {model.Content}</p>
             <div>
                 <span className="signature">{model.Signature}</span>
-                <span className="datetime">{model.UpdateTime ? moment(model.UpdateTime).format('ll') : null}</span>
+                <span className="datetime">{model.UpdateTime ? moment(model.UpdateTime).format('YYYY-MM-DD HH:mm') : null}</span>
             </div>
         </div>;
     }
@@ -169,9 +169,9 @@ class ResultTab extends Component {
                                             </span>
                                         },
                                         { title: '责任人', width: 80, render: (text, item) => item.ToUserName || '未指派' },
-                                        { title: '创建时间', width: 130, dataIndex: 'CreateTime', render: (text) => text ? moment(text).format('ll') : '' },
-                                        { title: '计划完成时间', width: 130, dataIndex: 'ScheduleDate', render: (text) => text ? moment(text).format('ll') : '' },
-                                        { title: '提交完成时间', width: 130, dataIndex: 'UpdateTime', render: (text) => text ? moment(text).format('ll') : '' },
+                                        { title: '创建时间', width: 120, dataIndex: 'CreateTime', render: (text) => text ? moment(text).format('lll') : '' },
+                                        { title: '计划完成时间', width: 120, dataIndex: 'ScheduleDate', render: (text) => text ? moment(text).format('ll') : '' },
+                                        { title: '提交完成时间', width: 120, dataIndex: 'UpdateTime', render: (text) => text ? moment(text).format('lll') : '' },
 
                                     ]}
                                     dataSource={this.state.list}

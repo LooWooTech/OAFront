@@ -118,11 +118,11 @@ class TaskList extends Component {
                         },
                         {
                             title: '计划完成时间', dataIndex: 'ScheduleDate', width: 150,
-                            render: (text, item) => text ? moment(text).format('ll') : null
+                            render: (text, item) => text ? moment(text).format('YYYY-MM-DD') : null
                         },
                         {
                             title: '更新日期', dataIndex: 'UpdateTime', width: 150,
-                            render: (text, item) => text ? moment(text).format('ll') : null
+                            render: (text, item) => text ? moment(text).format('YYYY-MM-DD HH:mm') : null
                         },
                         {
                             title: '操作', render: this.buttonsRender

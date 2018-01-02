@@ -9,7 +9,7 @@ import moment from 'moment'
 export default class MissiveList extends React.Component {
     state = {
         loading: true,
-        searchKey: '',
+        searchKey: this.props.location.query.searchKey || '',
         formId: this.props.params.formId,
         status: this.props.location.query.status,
         page: {
@@ -61,7 +61,11 @@ export default class MissiveList extends React.Component {
     }
 
     componentWillMount() {
-        this.loadData();
+        this.loadData(this.state.formId, {
+            searchKey: this.searchKey,
+            status: this.state.status,
+            page: this.state.page.current,
+        });
     }
 
     componentWillUnmount() {
@@ -96,29 +100,29 @@ export default class MissiveList extends React.Component {
                 render: (text, item) => <span>
                     {item.JJ_DJ ? <Icon type="exclamation" className="red" /> : null}
                     {item.Important ? <Icon type="flag" /> : null}
-                    {item.Uid ? <Icon type="sync" /> : null}
                     <Link to={`/missive/edit/${this.state.formId}/?id=${item.InfoId}`}>
                         {text}
                     </Link>
+                    {item.Uid ? <Icon type="link" /> : null}
                 </span>
             },
-            { title: '办理期限', width: 140, dataIndex: 'QX_RQ', render: (text, item) => text ? moment(text).format('ll') : null },
+            { title: '办理期限', width: 140, dataIndex: 'QX_RQ', render: (text, item) => text ? moment(text).format('YYYY-MM-DD') : null },
             { title: '所在流程', width: 150, dataIndex: 'FlowStep' },
-            { title: '处理日期', width: 140, dataIndex: 'UpdateTime', render: (text, item) => text ? moment(text).format('ll') : null },
+            { title: '处理日期', width: 180, dataIndex: 'UpdateTime', render: (text, item) => text ? moment(text).format('YYYY-MM-DD HH:mm:ss') : null },
             {
                 title: '操作', width: 120, render: (text, item) => {
                     var buttons = [];
                     if (auth.isCurrentUser(item.PostUserId)) {
                         if (item.Completed) {
                             if (!item.Uid && item.FormId === api.Forms.Missive.ID) {
-                                buttons.push(<Popconfirm title="你确定要上报吗？"
+                                buttons.push(<Popconfirm title="你确定要上报吗？" key={item.ID}
                                     onConfirm={() => this.handleReport(item.InfoId)} >
                                     <Button type="primary">上报</Button>
                                 </Popconfirm>);
                             }
                         }
                         else {
-                            buttons.push(<Popconfirm title="删除后无法恢复，你确定要删除吗? "
+                            buttons.push(<Popconfirm title="删除后无法恢复，你确定要删除吗? " key={item.ID}
                                 onConfirm={() => this.handleDelete(item.InfoId)} >
                                 <Button type="danger" icon="delete"></Button>
                             </Popconfirm>);

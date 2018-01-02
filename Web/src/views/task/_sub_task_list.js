@@ -115,40 +115,52 @@ class SubTaskList extends Component {
     }
 
     getButtons = (subTask) => {
+        let buttons = [];
+        if (auth.isCurrentUser(subTask.CreatorId)) {
+            buttons.push(
+                <EditModal
+                    model={subTask}
+                    list={this.state.list}
+                    trigger={<Button icon="edit">修改</Button>}
+                    onSubmit={this.loadData}
+                />
+            )
+        }
         switch (subTask.Status) {
             case 3:
             case 0:
                 if (auth.isCurrentUser(subTask.ToUserId)) {
-                    return <span>
+                    buttons.push(
                         <SubTaskSubmitModal
                             model={subTask}
                             onSubmit={this.loadData}
                             trigger={<Button type="primary" icon="check">提交</Button>}
                         />
+                    );
+                    buttons.push(
                         <TodoEditModal
                             title="添加子任务"
                             model={{ SubTaskId: subTask.ID }}
-                            trigger={<Button  icon="plus">子任务</Button>}
+                            trigger={<Button icon="plus">子任务</Button>}
                             onSubmit={this.loadData}
                         />
-                    </span>
+                    )
                 }
-                if (auth.isCurrentUser(subTask.CreatorId)) {
-                    return <span>
-                        {subTask.IsMaster && this.state.canAddSubTask ? <EditModal
-                            trigger={<Button type="primary" icon="plus">协办</Button>}
-                            model={{ TaskId: subTask.TaskId, ParentId: subTask.ID, }}
-                            list={this.state.list}
-                            onSubmit={this.loadData}
-                        /> : null}
-                        <EditModal
-                            model={subTask}
-                            list={this.state.list}
-                            trigger={<Button icon="edit">修改</Button>}
-                            onSubmit={this.loadData}
-                        />
+                else if (auth.isCurrentUser(subTask.CreatorId)) {
+                    if (subTask.IsMaster && this.state.canAddSubTask) {
+                        buttons.push(
+                            <EditModal
+                                trigger={<Button type="primary" icon="plus">协办</Button>}
+                                model={{ TaskId: subTask.TaskId, ParentId: subTask.ID, }}
+                                list={this.state.list}
+                                onSubmit={this.loadData}
+                            />
+                        )
+
+                    }
+                    buttons.push(
                         <Button icon="delete" type="danger" onClick={() => this.handleDeleteSubTask(subTask)}>删除</Button>
-                    </span>
+                    )
                 }
                 break;
             case 2:
@@ -157,20 +169,26 @@ class SubTaskList extends Component {
                 let logs = list.filter(e => e.ExtendId === subTask.ID)
                 let checkNodeData = list.find(e => !e.Submited && e.ExtendId === subTask.ID && auth.isCurrentUser(e.UserId));
                 let parentNodeData = checkNodeData ? list.find(e => e.ID === checkNodeData.ParentId) : null
-                return <span>
+                buttons.push(
                     <SubTaskFlowModal list={logs}
                         trigger={<Button>审核记录</Button>}
                     />
-                    {checkNodeData ? <SubTaskCheckModal
-                        model={checkNodeData}
-                        parent={parentNodeData}
-                        trigger={<Button>审核</Button>}
-                        onSubmit={this.loadData}
-                    /> : null}
-                </span>
+                );
+                if (checkNodeData) {
+                    buttons.push(
+                        <SubTaskCheckModal
+                            model={checkNodeData}
+                            parent={parentNodeData}
+                            trigger={<Button>审核</Button>}
+                            onSubmit={this.loadData}
+                        />
+                    )
+                }
+                break;
             default:
-                return null;
+                break;
         }
+        return buttons;
     }
 
     contentRender = (text, item) => {
@@ -202,7 +220,7 @@ class SubTaskList extends Component {
         if (list.length === 0) {
             return null;
         }
-        if(!this.canViewTodos(subTask)){
+        if (!this.canViewTodos(subTask)) {
             return null;
         }
 
@@ -218,8 +236,8 @@ class SubTaskList extends Component {
                     render: text => text.split('\n').map((item, key) => <span key={key}>{item}<br /></span>)
                 },
                 { title: '负责人', width: 100, dataIndex: 'ToUserName' },
-                { title: '创建时间', width: 150, dataIndex: 'CreateTime', render: (text) => text ? moment(text).format('ll') : '' },
-                { title: '计划完成时间', width: 150, dataIndex: 'ScheduleDate', render: (text) => text ? moment(text).format('ll') : '' },
+                { title: '创建时间', width: 170, dataIndex: 'CreateTime', render: (text) => text ? moment(text).format('YYYY-MM-DD HH:mm') : '' },
+                { title: '计划完成时间', width: 150, dataIndex: 'ScheduleDate', render: (text) => text ? moment(text).format('YYYY-MM-DD') : '' },
                 {
                     title: '操作', width: 240, render: (text, item) => <span>
                         {auth.isCurrentUser(item.ToUserId) ?
@@ -294,11 +312,11 @@ class SubTaskList extends Component {
                             </span>
                         },
                         { title: '责任人', width: 80, render: (text, item) => item.ToUserName || '未指派' },
-                        { title: '创建时间', width: 130, dataIndex: 'CreateTime', render: (text) => text ? moment(text).format('ll') : '' },
-                        { title: '计划完成时间', width: 130, dataIndex: 'ScheduleDate', render: (text) => text ? moment(text).format('ll') : '' },
+                        { title: '创建时间', width: 170, dataIndex: 'CreateTime', render: (text) => text ? moment(text).format('YYYY-MM-DD HH:mm') : '' },
+                        { title: '计划完成时间', width: 130, dataIndex: 'ScheduleDate', render: (text) => text ? moment(text).format('YYYY-MM-DD') : '' },
                         {
                             title: '操作', width: 200, render: (text, item) => <span>
-                                {this.getButtons(item)}
+                                {this.getButtons(item).map((item, key) => <span key={key}>{item}</span>)}
                             </span>
                         }
                     ]}
