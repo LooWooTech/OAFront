@@ -30,7 +30,7 @@ class FreeFlowDataList extends Component {
             columns={[
                 { title: '收件人', dataIndex: 'Signature', width: 150, },
                 { title: '意见', dataIndex: 'Content', render: (text, item) => this.contentRender(text, item) },
-                { title: '日期', dataIndex: 'UpdateTime', width: 150, render: (text, item) => text ? moment(text).format('ll') : null },
+                { title: '日期', dataIndex: 'UpdateTime', width: 170, render: (text, item) => text ? moment(text).format('YYYY-MM-DD HH:mm:ss') : null },
                 { title: '', width: 140 }
             ]}
         />

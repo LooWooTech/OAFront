@@ -111,8 +111,8 @@ class MailReceiveList extends Component {
                 render: (text, item) => <Link to={`/mail/${this.state.type === 'draft' ? 'post' : 'detail'}?id=${item.MailId}`}>{item.Subject}</Link>
             },
             {
-                title: '时间', dataIndex: 'CreateTime', width: 150,
-                render: (text) => moment(text).format('ll')
+                title: '时间', dataIndex: 'CreateTime', width: 170,
+                render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss')
             },
             {
                 title: '操作', dataIndex: 'ID', width: 200,

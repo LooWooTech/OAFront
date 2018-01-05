@@ -85,7 +85,7 @@ class Extend1ListComponent extends Component {
             { title: '审批人', dataIndex: 'ApprovalUser' },
             {
                 title: '申请日期', dataIndex: 'CreateTime',
-                render: (text, item) => moment(text).format('ll')
+                render: (text, item) => moment(text).format('YYYY-MM-DD HH:mm:ss')
             },
             {
                 title: '申请结果', dataIndex: 'Result', render: (text, item) => {
@@ -101,7 +101,7 @@ class Extend1ListComponent extends Component {
             },
             {
                 title: '处理日期', dataIndex: 'UpdateTime',
-                render: (text, item) => text ? moment(text).format('ll') : null
+                render: (text, item) => text ? moment(text).format('YYYY-MM-DD HH:mm:ss') : null
             },
             {
                 title: '操作', render: this.props.buttons

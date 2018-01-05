@@ -1,38 +1,41 @@
 import React, { Component } from 'react';
-import { Input, AutoComplete, Upload, Button, Icon, message } from 'antd'
+import { Input, AutoComplete, Upload, Button, Icon, message, Alert, Tag } from 'antd'
 import Form from '../shared/_form'
 import api from '../../models/api'
-import utils from '../../utils'
 class ImportSalary extends Component {
 
-    state = { files: [] }
+    state = { fails: [], files: [] }
 
     handleSubmit = (data) => {
         this.refs.form.validateFields((err, values) => {
             if (err) {
-                console.log(err);
                 return false;
             }
             let data = values;
-            data.files = this.state.files.map(file => file.AbsolutelyPath)
+            data.files = this.state.files.map(file => file.response.AbsolutelyPath)
             api.Salary.Import(data, json => {
                 message.success("导入完毕");
-                utils.ReloadPage()
+                const fails = json.map(err => {
+                    const file = this.state.files.find(f => f.response.SaveName === err.fileName);
+                    return { "file": file.response.FileName, rows: err.failRows }
+                })
+                this.setState({ fails, files: [] })
+                this.refs.uploader.setState({ fileList: [] })
             })
         })
     }
 
-    handleUpload = info => {
-        let files = info.fileList.map(file => file.response)
-        console.log(files)
-        this.setState({ files })
+    handleUpload = ({ file, fileList }) => {
+        if (file.status === 'done') {
+            this.setState({ files: fileList })
+        }
     }
 
     render() {
         return (
             <div>
                 <div className="toolbar">
-                    <h3>导入工资单</h3>                 
+                    <h3>导入工资单</h3>
                 </div>
                 <Form
                     ref="form"
@@ -45,7 +48,7 @@ class ImportSalary extends Component {
                             render: <Input />
                         },
                         {
-                            title: '月份', name: 'Month', defaultValue: new Date().getMonth().toString(),
+                            title: '月份', name: 'Month', defaultValue: (new Date().getMonth() + 1).toString(),
                             rules: [{ required: true, message: '请填写月份' }],
                             render: <AutoComplete dataSource={['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']} />
                         },
@@ -57,11 +60,26 @@ class ImportSalary extends Component {
                                 withCredentials={true}
                                 accept=".xls,.xlsx"
                                 onChange={this.handleUpload}
+                                ref="uploader"
                             >
                                 <Button>
                                     <Icon type="upload" /> 点击上传Excel
                                 </Button>
-                            </Upload>
+                            </Upload>,
+                        },
+                        {
+                            title: this.state.fails.length > 0 ? '导入结果' : null,
+                            render: this.state.fails.length > 0 ? (
+
+                                <Alert style={{ margin: '10px', width: '400px' }}
+                                    type="error"
+                                    message="导入失败"
+                                    description={this.state.fails.map((e, i) => <p key={i}>
+                                        {e.file} <br />
+                                        第{e.rows.join('，')}行 导入失败
+                                </p>)}
+                                />
+                            ) : ''
                         }
                     ]}
                     buttons={[
@@ -69,6 +87,7 @@ class ImportSalary extends Component {
                         <a className="btn" href="/templates/salary_templates.zip" target="_blank">下载导入模板</a>
                     ]}
                 />
+
             </div>
         );
     }

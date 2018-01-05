@@ -86,8 +86,8 @@ class FlowDataList extends Component {
                             render: this.contentRender
                         },
                         {
-                            title: '审核日期', dataIndex: 'UpdateTime', width: 150,
-                            render: (text, item) => text ? moment(text).format('ll') : null
+                            title: '审核日期', dataIndex: 'UpdateTime', width: 170,
+                            render: (text, item) => text ? moment(text).format('YYYY-MM-DD HH:mm:ss') : null
                         },
                         { title: '流程环节', dataIndex: 'FlowNodeName', width: 150 }
                     ]}

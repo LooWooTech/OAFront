@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Input, AutoComplete, Button, Table, Row, Col } from 'antd'
+import { AutoComplete, Button, Table, Row, Col } from 'antd'
 import api from '../../models/api'
 import Form from '../shared/_form'
 import utils from '../../utils'
@@ -11,6 +11,10 @@ class SalarySearch extends Component {
             current: this.props.location.query.page || 1,
             total: 0
         },
+    }
+
+    componentWillMount() {
+        this.loadData({ year: new Date().getFullYear(), month: new Date().getMonth() + 1 })
     }
 
     loadData = (query) => {
@@ -58,6 +62,16 @@ class SalarySearch extends Component {
         </Row>
     }
     render() {
+        let years = []
+        const currentYear = new Date().getFullYear()
+        if (this.state.currentYear === currentYear) {
+            years = [(currentYear - 1).toString(), currentYear.toString()]
+        }
+        else {
+            for (var i = this.state.currentYear; i <= currentYear; i++) {
+                years.push(i.toString());
+            }
+        }
         return (
             <div>
                 <div className="toolbar">
@@ -82,8 +96,8 @@ class SalarySearch extends Component {
                                             </AutoComplete.Option>)}
                                     </AutoComplete>
                                 },
-                                { name: 'year', defaultValue: this.state.currentYear, render: <Input placeholder="年份" style={{ width: '60px' }} /> },
-                                { name: 'month', defaultValue: new Date().getMonth(), render: <Input placeholder="月份" style={{ width: '60px' }} /> },
+                                { name: 'year', defaultValue: this.state.currentYear, render: <AutoComplete dataSource={years} placeholder="年" style={{ width: '60px' }} /> },
+                                { name: 'month', defaultValue: this.state.month, render: <AutoComplete dataSource={['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']} placeholder="月" style={{ width: '60px' }} /> },
                                 {
                                     render: <Button icon="search" type="primary" htmlType="submit" />
                                 }
