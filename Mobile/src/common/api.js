@@ -31,7 +31,7 @@ export default api = {
         }
     },
     freeflowData: {
-        submit: (freeflowNodeDataId, infoId, flowNodeDataId, toUserIds, ccUserIds) => {
+        submit: (freeflowNodeDataId, infoId, flowNodeDataId, toUserIds = '', ccUserIds = '') => {
             return $.post(`freeflowdata/submit?flowNodeDataId=${flowNodeDataId}&infoId=${infoId}&toUserIds=${toUserIds}&ccUserIds=${ccUserIds}`, { ID: freeflowNodeDataId })
         },
         complete: (freeflowDataId, infoId) => {

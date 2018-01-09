@@ -3,7 +3,13 @@ import { FORMS } from '../common/config'
 import api from '../common/api'
 import FlatListData from './FlatListData'
 
-class MissiveStore {
+class MissiveStore extends FlatListData {
+
+    constructor(){
+        super((page, rows) => {
+            return api.missive.list({ ...this.params, page, rows })
+        })
+    }
 
     //列表页
     @observable params = {
@@ -12,28 +18,8 @@ class MissiveStore {
         searchKey: ''
     }
 
-    @observable.ref data = new FlatListData((page, rows) => {
-        return api.missive.list({ ...this.params, page, rows })
-    })
-
-    @computed get list() {
-        return this.data.list
-    }
-
     @action setParams(obj) {
         this.params = Object.assign(this.params, obj)
-    }
-
-    @action refreshData() {
-        this.data.refreshData()
-    }
-
-    @action loadData(page) {
-        return this.data.loadData(page)
-    }
-
-    @action loadNextPageData() {
-        return this.data.loadData(this.data.page + 1)
     }
 
     //详细页

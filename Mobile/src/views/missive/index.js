@@ -61,7 +61,7 @@ class MissiveList extends Component {
         const form = stores.formStore.getForm(formId)
         const { list } = stores.missiveStore
         const statusText = this.menuData[status - 1].label
-        const loading = stores.missiveStore.data.loading
+        const loading = stores.missiveStore.loading
         return (
             <Container>
                 <Header>

@@ -33,7 +33,7 @@ class Messages extends Component {
 
     render() {
         const { list, hasRead, readAll, read } = this.props.stores.messageStore
-        const loading = this.props.stores.messageStore.data.loading
+        const loading = this.props.stores.messageStore.loading
         return (
             <Container>
                 <Header hasSegment={true}>
@@ -58,7 +58,12 @@ class Messages extends Component {
                         style={{ height: Dimensions.get('window').height - 140, backgroundColor: '#fff' }}
                         ListEmptyComponent={<ListEmptyComponent icon="bell-o" text="暂无消息" loading={loading} />}
                     />
-                    {!hasRead && list.length > 0 ? <Button onPress={readAll}><Icon type={'\uf1f7'} size="sm" color="#666" /><Text style={{ fontSize: 14, color: '#666' }}>全部标记为已读</Text></Button> : null}
+                    {!hasRead && list.length > 0 ? (
+                        <Button onPress={readAll} full transparent dark>
+                            <Icon name="bell-slash-o" style={{ color: "#666" }} />
+                            <Text style={{ fontSize: 14, color: '#666' }}>全部标记为已读</Text>
+                        </Button>
+                    ) : null}
                 </Content>
             </Container>
         );

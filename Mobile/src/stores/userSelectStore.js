@@ -16,8 +16,7 @@ class UserSelectData {
     @action async loadData() {
         //判断params 是否变化，如果没变化，则不加载
         if (!this.hasChange) return this.users;
-
-        hasChange = false
+        this.hasChange = false
         const formType = this.params.formType
         switch (formType) {
             case 'flow':

@@ -24,7 +24,7 @@ function jsonToQueryString(json) {
 
 function throwException(ex) {
     console.debug("error", ex)
-    let msg = ex.Message || ex.ReferenceError || '未知错误'
+    const msg = ex.ExceptionMessage || ex.Message || ex.ReferenceError || '未知错误'
     Toast.fail(msg, 1)
 }
 
@@ -34,7 +34,7 @@ async function request(path, data, httpMethod) {
         'method': httpMethod,
         'headers': {
             'token': userStore.token || '',
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json'
         }
     }
     try {
@@ -50,11 +50,12 @@ async function request(path, data, httpMethod) {
                 result = await fetch(url, options)
                 break;
             case 'POST':
-                result = await fetch(url, options, data)
+                options.body = JSON.stringify(data)
+                result = await fetch(url, options)
                 break;
         }
-        console.log(url)
-        console.log('result._bodyText', result._bodyText)
+        console.debug(url)
+        console.debug('result._bodyText', result._bodyText)
         switch (result.status) {
             case 200:
             case 204:

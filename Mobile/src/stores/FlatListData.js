@@ -31,4 +31,8 @@ export default class FlatListData {
         this.loading = false;
         return this.list
     }
+
+    @action async loadNextPageData() {
+        return await this.loadData(this.page + 1)
+    }
 }

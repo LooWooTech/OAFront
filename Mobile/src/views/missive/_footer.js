@@ -17,7 +17,7 @@ class MissiveDetailFooter extends Component {
     } = this.props
 
     handleClickRead = () => {
-        const { model, flowNodeData, freeFlowNodeData, onClickRead } = this.props
+        const { model, flowNodeData, freeFlowNodeData } = this.props.data
         Alert.alert('提醒', '确定已阅吗？', [
             { text: '取消', onPress: () => { }, style: 'cancel' },
             {

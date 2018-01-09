@@ -34,6 +34,10 @@ class SelectUserModal extends Component {
         this.props.stores.userSelectStore.data.setAllUserSelected(selected)
     }
 
+    handleSubmit = () => {
+        this.props.navigation.goBack()
+    }
+
     render() {
         const { users, departments, multiple } = this.props.stores.userSelectStore.data
         return (

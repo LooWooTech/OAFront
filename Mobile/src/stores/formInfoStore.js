@@ -18,7 +18,7 @@ class FormInfoStore {
         return data
     }
 
-    @action async submitFreeflow(id, infoId, flowNodeDataId, toUserIds, ccUserIds) {
+    @action async submitFreeFlow(id, infoId, flowNodeDataId, toUserIds, ccUserIds) {
         await api.freeflowData.submit(id, infoId, flowNodeDataId, toUserIds, ccUserIds)
         await this.getModel(infoId)
     }
