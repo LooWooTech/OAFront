@@ -18,18 +18,12 @@ class MissiveDetail extends Component {
             throw new Error('公文参数不正确');
         }
         this.props.stores.missiveStore.getModel(id)
-        this.props.stores.formInfoStore.getModel(id)
-    }
-
-
-    handleCompleteFreeFlow = () => {
-        const data = this.props.stores.formInfoStore.model
-        const flowNodeData = data.flowNodeData;
+        this.props.stores.formInfoStore.getData(id)
     }
 
     render() {
         const missive = this.props.stores.missiveStore.model
-        const data = this.props.stores.formInfoStore.model
+        const data = this.props.stores.formInfoStore.data
         if (!missive || !data) return null
         const info = data.model
         return (

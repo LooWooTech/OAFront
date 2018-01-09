@@ -4,19 +4,25 @@ class UserSelectData {
     @observable users = []
     @observable departments = []
     @observable params = {}
-    @observable hasChange = false
+    @observable hasChanged = false
     @action setParams(params) {
         Object.keys(params).map(key => {
-            if (params[key] !== this.params[key]) {
+            if (!this.params[key]) {
                 this.params[key] = params[key]
-                this.hasChange = true
+                this.hasChanged = true
+            }
+            else if (this.params[key] != params[key]) {
+                if (typeof (params[key]) === 'string' || typeof (params[key]) === 'number') {
+                    this.params[key] = params[key]
+                    this.hasChanged = true
+                }
             }
         })
     }
     @action async loadData() {
         //判断params 是否变化，如果没变化，则不加载
-        if (!this.hasChange) return this.users;
-        this.hasChange = false
+        if (!this.hasChanged) return this.users;
+        this.hasChanged = false
         const formType = this.params.formType
         switch (formType) {
             case 'flow':
@@ -109,10 +115,6 @@ class UserSelectStore {
             this.datas[this.key] = new UserSelectData()
         }
         return this.datas[this.key]
-        // if (!this.datas.has(this.key)) {
-        //     this.datas.set(this.key, new UserSelectData())
-        // }
-        // return this.datas.get(this.key)
     }
     @action setParams(params) {
         if (params.key) {

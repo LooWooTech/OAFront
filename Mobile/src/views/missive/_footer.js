@@ -22,7 +22,7 @@ class MissiveDetailFooter extends Component {
             { text: '取消', onPress: () => { }, style: 'cancel' },
             {
                 text: '确定', onPress: () => {
-                    this.props.stores.formInfoStore.submitFreeFlow(freeFlowNodeData.ID, model.ID, flowNodeData.ID)
+                    this.props.stores.formInfoStore.flagRead(freeFlowNodeData.ID, model.ID, flowNodeData.ID)
                 }
             }], {
                 cancelable: true
@@ -32,6 +32,30 @@ class MissiveDetailFooter extends Component {
 
     handleClickShare = () => {
         this.props.navigation.navigate('FreeFlow.Form')
+    }
+
+    handleClickComplete = () => {
+        const { model, flowNodeData, freeFlowNodeData } = this.props.data
+        const list = flowNodeData.FreeFlowData.Nodes.filter(e => !e.IsCc && !e.Submited).map(e => e.Signature);
+        let content = '你确定要提前结束自由发送流程吗？\n'
+        if (list.length > 0) {
+            if (list.length < 5) {
+                content += '以下人员尚未阅读：\n' + list.join(' ')
+            } else {
+                content += '还有' + list.length + '人尚未阅读';
+            }
+        }
+        Alert.alert('提醒', content, [
+            { text: '取消', onPress: () => { }, style: 'cancel' },
+            {
+                text: '确定', onPress: () => {
+                    console.log(flowNodeData)
+                    this.props.stores.formInfoStore.completeFreeFlow(model.ID, flowNodeData.ID)
+                }
+            }], {
+                cancelable: true
+            }
+        )
     }
 
     render() {
@@ -61,7 +85,7 @@ class MissiveDetailFooter extends Component {
         }
         if (canCompleteFreeFlow) {
             rightButtons.push(
-                <Button key="completefreeflow" iconLeft danger transparent style={styles.button} onPress={this.props.onClickComplete}>
+                <Button key="completefreeflow" iconLeft danger transparent style={styles.button} onPress={this.handleClickComplete}>
                     <Icon name="close" />
                     <Text>结束转发</Text>
                 </Button>

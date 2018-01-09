@@ -28,11 +28,14 @@ class Messages extends Component {
         this.props.stores.messageStore.setStatus(hasRead)
         this.refreshData();
     }
+    handleClickReadAll = () => {
+        this.props.stores.messageStore.readAll();
+    }
     keyExtractor = (item, index) => item.ID;
     renderItem = ({ item }) => <MessageItem data={item} />
 
     render() {
-        const { list, hasRead, readAll, read } = this.props.stores.messageStore
+        const { list, hasRead, read } = this.props.stores.messageStore
         const loading = this.props.stores.messageStore.loading
         return (
             <Container>
@@ -59,7 +62,7 @@ class Messages extends Component {
                         ListEmptyComponent={<ListEmptyComponent icon="bell-o" text="暂无消息" loading={loading} />}
                     />
                     {!hasRead && list.length > 0 ? (
-                        <Button onPress={readAll} full transparent dark>
+                        <Button onPress={this.handleClickReadAll} transparent full>
                             <Icon name="bell-slash-o" style={{ color: "#666" }} />
                             <Text style={{ fontSize: 14, color: '#666' }}>全部标记为已读</Text>
                         </Button>

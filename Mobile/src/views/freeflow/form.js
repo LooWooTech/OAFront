@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { inject, observer } from 'mobx-react';
 import { TouchableHighlight } from 'react-native'
-import { Container, Header, Content, Left, Body, Title, Right, Text, View, Icon, Button, CheckBox, ListItem, Col, Row, Label } from 'native-base'
+import { Container, Header, Content, Left, Body, Title, Right, Text, View, Icon, Button, CheckBox, ListItem, Col, Row, Label, Footer } from 'native-base'
 import BackButton from '../shared/BackButton'
 import Form from '../shared/Form'
 import ListRow from '../shared/ListRow';
@@ -11,41 +11,80 @@ import ListRow from '../shared/ListRow';
 @observer
 class FreeFlowSubmitForm extends Component {
 
-    state = { sms_to: true, sms_cc: false }
+    state = { toUsers: [], ccUsers: [], sms_to: true, sms_cc: false }
 
     handleSelectUser = () => {
         this.props.navigation.navigate('SelectUser', {
             formType: 'freeflow',
             key: 'missive_freeflow',
-            flowNodeDataId: this.props.stores.formInfoStore.model.flowNodeData.ID
+            flowNodeDataId: this.props.stores.formInfoStore.data.flowNodeData.ID,
+            onSubmit: (users) => {
+                this.setState({ toUsers: users })
+            }
         })
     }
     handleSelectCcUser = () => {
         this.props.navigation.navigate('SelectUser', {
             formType: 'freeflow',
             key: 'missive_freeflow_cc',
-            flowNodeDataId: this.props.stores.formInfoStore.model.flowNodeData.ID
+            flowNodeDataId: this.props.stores.formInfoStore.data.flowNodeData.ID,
+            onSubmit: (users) => {
+                this.setState({ ccUsers: users })
+            }
         })
     }
+
     handleClickSms = () => {
-        console.log('handleClickSms')
         this.setState({ sms_to: !this.state.sms_to })
     }
     handleClickSmsCc = () => {
-        console.log('handleClickSmsCc')
         this.setState({ sms_cc: !this.state.sms_cc })
     }
+    handleSubmit = () => {
+        const { model, flowNodeData } = this.props.stores.formInfoStore.data
+        let formData = this.refs.form.getData()
+        const toUserIds = this.state.toUsers.map(user => user.ID)
+        const ccUserIds = this.state.ccUsers.map(user => user.ID)
+        if (toUserIds.length <= 0) {
+            throw new Error('没有选择要发送的人员');
+        }
 
-    getToUserButtonText = () => {
+        this.props.stores.formInfoStore.submitFreeFlow(model.ID, flowNodeData.ID,
+            toUserIds,
+            ccUserIds,
+            formData);
 
+        if (this.state.sms_to) {
+            this.props.stores.formInfoStore.sendSms(toUserIds, model.ID)
+        }
+        if (this.state.sms_cc) {
+            this.props.stores.formInfoStore.sendSms(ccUserIds, model.ID)
+        }
+        this.props.navigation.goBack()
     }
-    getCcUsersButtonText = () => {
 
+    getButtonText = (users) => {
+        const maxNum = 5
+        if (users.length > 0) {
+            let text = '已选'
+            for (var i = 0; i < maxNum; i++) {
+                if (i < users.length) {
+                    text += ' ' + users[i].RealName;
+                }
+            }
+            if (users.length > maxNum) {
+                text += ' 等' + users.length + '人';
+
+            }
+            return text;
+        }
+        else {
+            return '点击选择人员'
+        }
     }
-
 
     getFormItems = () => {
-        let { flowNodeData, freeFlowNodeData, model } = this.props.stores.formInfoStore.model
+        let { flowNodeData, freeFlowNodeData, model } = this.props.stores.formInfoStore.data
         freeFlowNodeData = freeFlowNodeData || {}
         return [
             { name: 'InfoId', defaultValue: model.ID, type: 'hidden' },
@@ -58,7 +97,7 @@ class FreeFlowSubmitForm extends Component {
                 render: (
                     <Body>
                         <Button transparent onPress={this.handleSelectUser}>
-                            <Text>选择人员</Text>
+                            <Text>{this.getButtonText(this.state.toUsers)}</Text>
                         </Button>
                     </Body>
                 ),
@@ -67,7 +106,7 @@ class FreeFlowSubmitForm extends Component {
                 title: '通知', render: (
                     <Body>
                         <Row style={{ alignItems: 'center' }} onTouchEnd={this.handleClickSms}>
-                            <Col size={1}><CheckBox checked={this.state.sms_to}/></Col>
+                            <Col size={1}><CheckBox checked={this.state.sms_to} /></Col>
                             <Col size={9}><Text>发送短信</Text></Col>
                         </Row>
                     </Body>
@@ -78,7 +117,7 @@ class FreeFlowSubmitForm extends Component {
                 render: (
                     <Body>
                         <Button transparent onPress={this.handleSelectCcUser}>
-                            <Text>选择人员</Text>
+                            <Text>{this.getButtonText(this.state.ccUsers)}</Text>
                         </Button>
                     </Body>
                 )
@@ -108,8 +147,14 @@ class FreeFlowSubmitForm extends Component {
                     </Body>
                 </Header>
                 <Content>
-                    <Form items={this.getFormItems()} />
+                    <Form ref="form" items={this.getFormItems()} />
                 </Content>
+                <Footer>
+                    <Button iconLeft transparent onPress={this.handleSubmit}>
+                        <Icon name="check" />
+                        <Text>提交</Text>
+                    </Button>
+                </Footer>
             </Container>
         );
     }

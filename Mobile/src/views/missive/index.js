@@ -34,9 +34,6 @@ class MissiveList extends Component {
     }
 
     componentWillMount() {
-        this.props.stores.missiveStore.setParams({
-            ...this.props.navigation.state.params
-        })
         this.props.stores.missiveStore.setParams(this.props.navigation.state.params)
         this.props.stores.missiveStore.refreshData()
     }

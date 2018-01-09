@@ -7,12 +7,11 @@ import ListRow from './ListRow'
 
 class SharedFormItem extends Component {
     state = {}
-    getValue = () => {
+
+    handleChangeValue = (val) => {
         const item = this.props.item
-        return this.state.value === undefined ? item.defaultValue : this.state.value
-    }
-    handleChangeValue = val => {
-        this.setState({ value: val })
+        item.value = val;
+        this.props.onChange(item)
     }
 
     render() {
@@ -101,10 +100,39 @@ class SharedFormItem extends Component {
 }
 
 export default class SharedForm extends Component {
+    componentWillMount() {
+        let data = {};
+        this.props.items.map(item => {
+            if (item.name) {
+                data[item.name] = item.defaultValue
+            }
+        })
+        this.setState({ data })
+    }
+
+    handleItemChangedValue = (item) => {
+        if (item.name) {
+            let data = this.state.data
+            data[item.name] = item.value
+            this.setState({ data })
+        }
+    }
+
+    getData = () => {
+        return this.state.data
+    }
+
     render() {
         return (
             <List style={{ backgroundColor: '#fff' }}>
-                {this.props.items.map((item, key) => <SharedFormItem key={'form-item' + key} item={item} disabled={this.props.disabled} />)}
+                {this.props.items.map((item, key) => (
+                    <SharedFormItem
+                        key={'form-item' + key}
+                        item={item}
+                        onChange={this.handleItemChangedValue}
+                        disabled={this.props.disabled}
+                    />
+                ))}
             </List>
         );
     }

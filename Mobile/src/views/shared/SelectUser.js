@@ -19,6 +19,13 @@ class SelectUserModal extends Component {
         this.props.stores.userSelectStore.data.loadData()
     }
 
+    componentWillUnmount() {
+        const onSubmit = this.props.navigation.state.params.onSubmit
+        if (onSubmit) {
+            onSubmit(this.props.stores.userSelectStore.data.users.filter(e => e.selected))
+        }
+    }
+    
     handleChangeSearchKey = (val) => {
         this.props.stores.userSelectStore.setParams({ searchKey: val })
         this.props.stores.userSelectStore.data.loadData()

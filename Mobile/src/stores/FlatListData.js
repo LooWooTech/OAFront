@@ -14,19 +14,20 @@ export default class FlatListData {
     @action refreshData() {
         this.list = []
         this.finished = false
-        this.page = 1
-        this.loadData(1, this.rows)
+        this.loadData(1)
     }
     @action async loadData(page) {
         this.loading = true;
         const shouldLoad = !this.finished && (this.list.length === 0 || page !== this.page)
         if (shouldLoad) {
             const data = await this.asyncLoadData(page, this.rows)
-            if (data.Page.pageCount <= this.page) {
-                this.finished = true;
+            if (data) {
+                if (data.Page.pageCount <= this.page) {
+                    this.finished = true;
+                }
+                this.page = data.Page.current
+                this.list = this.list.concat(data.List)
             }
-            this.page = data.Page.current
-            this.list = this.list.concat(data.List)
         }
         this.loading = false;
         return this.list

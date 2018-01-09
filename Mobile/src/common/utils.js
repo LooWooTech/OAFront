@@ -28,8 +28,15 @@ function throwException(ex) {
     Toast.fail(msg, 1)
 }
 
-async function request(path, data, httpMethod) {
+async function request(path, query, data, httpMethod) {
     let url = API_HOST + path
+    if (query) {
+        if (url.indexOf('?') > -1) {
+            url += jsonToQueryString(query)
+        } else {
+            url += '?' + jsonToQueryString(query)
+        }
+    }
     let options = {
         'method': httpMethod,
         'headers': {
@@ -42,11 +49,6 @@ async function request(path, data, httpMethod) {
         switch (httpMethod) {
             case 'GET':
             case 'DELETE':
-                if (url.indexOf('?') > -1) {
-                    url += jsonToQueryString(data)
-                } else {
-                    url += '?' + jsonToQueryString(data)
-                }
                 result = await fetch(url, options)
                 break;
             case 'POST':
@@ -72,14 +74,14 @@ async function request(path, data, httpMethod) {
 }
 
 module.exports = {
-    get(path, parameters) {
-        return request(path, parameters, 'GET');
+    get(path, query) {
+        return request(path, query, null, 'GET');
     },
-    post(path, data) {
-        return request(path, data, 'POST');
+    post(path, query, data) {
+        return request(path, query, data, 'POST');
     },
-    delete(path, parameters) {
-        return request(path, parameters, 'DELETE');
+    delete(path, query) {
+        return request(path, query, null, 'DELETE');
     },
     reload(navigation, viewName, params) {
         const resetAction = NavigationActions.reset({
