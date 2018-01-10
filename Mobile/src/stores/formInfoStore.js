@@ -5,7 +5,7 @@ class FormInfoStore {
 
     @observable data = null
 
-    @action async getData(id) {
+    @action async loadData(id) {
         let data = await api.formInfo.model(id)
         if (data.flowNodeData) {
             data.flowNodeData = data.model.FlowData.Nodes.find(n => n.$id === data.flowNodeData.$ref);
@@ -18,19 +18,28 @@ class FormInfoStore {
         return data
     }
 
+    @action async submitFlow(data) {
+        await api.flowData.submit(data)
+        await this.loadData(data.InfoId)
+    }
+    @action async cancelFlow(infoId) {
+        await api.flowData.cancel(infoId)
+        await this.loadData(infoId)
+    }
+
     @action async flagRead(freeFlowNodeDataId, infoId, flowNodeDataId) {
         await api.freeflowData.submit(infoId, flowNodeDataId, null, null, { ID: freeFlowNodeDataId })
-        await this.getData(infoId)
+        await this.loadData(infoId)
     }
 
     @action async submitFreeFlow(infoId, flowNodeDataId, toUserIds, ccUserIds, formData) {
         await api.freeflowData.submit(infoId, flowNodeDataId, toUserIds, ccUserIds, formData)
-        await this.getData(infoId)
+        await this.loadData(infoId)
     }
 
     @action async completeFreeFlow(infoId, freeflowDataId) {
         await api.freeflowData.complete(freeflowDataId, infoId)
-        await this.getData(infoId)
+        await this.loadData(infoId)
     }
     async sendSms(userIds, infoId) {
         await api.sms.send(userIds, infoId);

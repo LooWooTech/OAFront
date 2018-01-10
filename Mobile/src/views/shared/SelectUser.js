@@ -25,7 +25,7 @@ class SelectUserModal extends Component {
             onSubmit(this.props.stores.userSelectStore.data.users.filter(e => e.selected))
         }
     }
-    
+
     handleChangeSearchKey = (val) => {
         this.props.stores.userSelectStore.setParams({ searchKey: val })
         this.props.stores.userSelectStore.data.loadData()
@@ -75,7 +75,10 @@ class SelectUserModal extends Component {
                             </Content>
                         </Col>
                     </Grid>
-                ) : departments.map(item => <DepartmentRow key={item.ID} data={item} />)}
+                ) : <Content>
+                        {departments.map(item => <DepartmentRow key={item.ID} data={item} />)}
+                    </Content>
+                }
                 <Footer>
                     <Left>
                         {multiple ?
@@ -83,7 +86,7 @@ class SelectUserModal extends Component {
                                 <Icon name={this.state.selectAll ? "check-square" : "square-o"} />
                                 <Text>全选</Text>
                             </Button>
-                            : <Text>已选：{users.find(e => e.selected).RealName}</Text>}
+                            : <Text> 已选：{((users || []).find(e => e.selected) || {}).RealName || ''}</Text>}
                     </Left>
                     <Right>
                         <Button iconLeft primary transparent onPress={this.handleSubmit}>

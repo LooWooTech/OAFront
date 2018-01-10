@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Content, Item, Input, Label, Picker, Switch, Text, View, ListItem, List, Left, Body, Right, Textarea } from 'native-base'
+import { Content, Item, Input, Label, Picker, Switch, Text, View, ListItem, List, Left, Body, Right, Textarea, Icon } from 'native-base'
 import { Dimensions, FlatList } from 'react-native';
 import ListRow from '../shared/ListRow'
 
@@ -44,7 +44,7 @@ const SharedDetailItem = ({ item }) => {
                 <ListRow
                     left={<Text>{item.title}</Text>}
                     title={' '}
-                    right={<Switch value={item.defaultValue} disabled={true} />}
+                    right={<Icon name={item.value ? "check" : "close"} />}
                 />
             )
     }

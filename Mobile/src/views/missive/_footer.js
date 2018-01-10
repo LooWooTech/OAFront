@@ -16,7 +16,7 @@ class MissiveDetailFooter extends Component {
         canCancel
     } = this.props
 
-    handleClickRead = () => {
+    handleReadFreeFlow = () => {
         const { model, flowNodeData, freeFlowNodeData } = this.props.data
         Alert.alert('提醒', '确定已阅吗？', [
             { text: '取消', onPress: () => { }, style: 'cancel' },
@@ -30,11 +30,11 @@ class MissiveDetailFooter extends Component {
         )
     }
 
-    handleClickShare = () => {
+    handleSubmitFreeFlow = () => {
         this.props.navigation.navigate('FreeFlow.Form')
     }
 
-    handleClickComplete = () => {
+    handleCompleteFreeFlow = () => {
         const { model, flowNodeData, freeFlowNodeData } = this.props.data
         const list = flowNodeData.FreeFlowData.Nodes.filter(e => !e.IsCc && !e.Submited).map(e => e.Signature);
         let content = '你确定要提前结束自由发送流程吗？\n'
@@ -49,8 +49,25 @@ class MissiveDetailFooter extends Component {
             { text: '取消', onPress: () => { }, style: 'cancel' },
             {
                 text: '确定', onPress: () => {
-                    console.log(flowNodeData)
                     this.props.stores.formInfoStore.completeFreeFlow(model.ID, flowNodeData.ID)
+                }
+            }], {
+                cancelable: true
+            }
+        )
+    }
+
+    handleSubmitFlow = () => {
+        this.props.navigation.navigate('Flow.Form')
+    }
+
+    handleCancelFlow = () => {
+        const { model } = this.props.data
+        Alert.alert('提醒', '你确定要撤销流程吗', [
+            { text: '取消', onPress: () => { }, style: 'cancel' },
+            {
+                text: '确定', onPress: () => {
+                    this.props.stores.formInfoStore.cancelFlow(model.ID)
                 }
             }], {
                 cancelable: true
@@ -69,7 +86,7 @@ class MissiveDetailFooter extends Component {
         const rightButtons = []
         if (canSubmitFreeFlow && freeFlowNodeData && !freeFlowNodeData.Submited) {
             leftButtons.push(
-                <Button key="read" iconLeft success transparent style={styles.button} onPress={this.handleClickRead}>
+                <Button key="read" iconLeft success transparent style={styles.button} onPress={this.handleReadFreeFlow}>
                     <Icon name="check" />
                     <Text>已阅</Text>
                 </Button>
@@ -77,7 +94,7 @@ class MissiveDetailFooter extends Component {
         }
         if (canSubmitFreeFlow) {
             leftButtons.push(
-                <Button key="submitfreeflow" iconLeft warning transparent style={styles.button} onPress={this.handleClickShare}>
+                <Button key="submitfreeflow" iconLeft warning transparent style={styles.button} onPress={this.handleSubmitFreeFlow}>
                     <Icon name="share" />
                     <Text>转发</Text>
                 </Button>
@@ -85,7 +102,7 @@ class MissiveDetailFooter extends Component {
         }
         if (canCompleteFreeFlow) {
             rightButtons.push(
-                <Button key="completefreeflow" iconLeft danger transparent style={styles.button} onPress={this.handleClickComplete}>
+                <Button key="completefreeflow" iconLeft danger transparent style={styles.button} onPress={this.handleCompleteFreeFlow}>
                     <Icon name="close" />
                     <Text>结束转发</Text>
                 </Button>
@@ -101,7 +118,7 @@ class MissiveDetailFooter extends Component {
         }
         if (canSubmitFlow && flowNodeData && !flowNodeData.Submited) {
             rightButtons.push(
-                <Button key="submitflow" iconLeft primary transparent style={styles.button} onPress={this.props.onSubmitFlow}>
+                <Button key="submitflow" iconLeft primary transparent style={styles.button} onPress={this.handleSubmitFlow}>
                     <Icon name="check" />
                     <Text>审核</Text>
                 </Button>

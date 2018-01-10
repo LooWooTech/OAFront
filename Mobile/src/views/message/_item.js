@@ -9,14 +9,14 @@ import ListRow from '../shared/ListRow'
 class MessageItem extends Component {
     handleClick = () => {
         const data = this.props.data
+        if (this.props.onClick)
+            this.props.onClick(data)
     }
-
     render() {
         const data = this.props.data
         const form = this.props.stores.formStore.getForm(data.FormId)
         return (
             <ListRow
-                height={105}
                 title={data.Title}
                 left={<Icon name={form.Icon} style={{ color: form.Color, }} />}
                 subTitle={`${data.FromUser || ''}  ${moment(data.CreateTime).format('ll')}`}
@@ -26,6 +26,6 @@ class MessageItem extends Component {
     }
 }
 MessageItem.propTypes = {
-    data:PropTypes.object.isRequired
+    data: PropTypes.object.isRequired,
 };
 export default MessageItem;

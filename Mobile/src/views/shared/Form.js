@@ -91,8 +91,8 @@ class SharedFormItem extends Component {
                 return (
                     <ListRow
                         left={left}
-                        body={<Text> </Text>}
-                        right={<Switch value={item.defaultValue} onValueChange={this.handleChangeValue} />}
+                        title={item.text || ' '}
+                        right={<Switch value={item.value === undefined ? item.defaultValue : item.value} onValueChange={this.handleChangeValue} />}
                     />
                 )
         }

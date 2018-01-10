@@ -31,8 +31,15 @@ class Messages extends Component {
     handleClickReadAll = () => {
         this.props.stores.messageStore.readAll();
     }
+    handleClickItem = (data) => {
+        this.props.stores.messageStore.read(data.MessageId)
+        const form = this.props.stores.formStore.getForm(data.FormId)
+        if (form) {
+            this.props.navigation.navigate(form.Detail, { id: data.InfoId })
+        }
+    }
     keyExtractor = (item, index) => item.ID;
-    renderItem = ({ item }) => <MessageItem data={item} />
+    renderItem = ({ item }) => <MessageItem data={item} onClick={this.handleClickItem} />
 
     render() {
         const { list, hasRead, read } = this.props.stores.messageStore
@@ -40,14 +47,25 @@ class Messages extends Component {
         return (
             <Container>
                 <Header hasSegment={true}>
-                    <Segment>
-                        <Button first active={!hasRead} onPress={() => this.handleClickHasRead(false)}>
-                            <Text>未读</Text>
-                        </Button>
-                        <Button last active={hasRead} onPress={() => this.handleClickHasRead(true)}>
-                            <Text>已读</Text>
-                        </Button>
-                    </Segment>
+                    <Left>
+                    </Left>
+                    <Body>
+                        <Segment>
+                            <Button first active={!hasRead} onPress={() => this.handleClickHasRead(false)}>
+                                <Text>未读</Text>
+                            </Button>
+                            <Button last active={hasRead} onPress={() => this.handleClickHasRead(true)}>
+                                <Text>已读</Text>
+                            </Button>
+                        </Segment>
+                    </Body>
+                    <Right>
+                        {!hasRead && list.length > 0 ? (
+                            <Button onPress={this.handleClickReadAll} transparent>
+                                <Icon name="bell-slash-o" />
+                            </Button>
+                        ) : null}
+                    </Right>
                 </Header>
                 <Content>
                     <FlatList
@@ -61,12 +79,6 @@ class Messages extends Component {
                         style={{ height: Dimensions.get('window').height - 140, backgroundColor: '#fff' }}
                         ListEmptyComponent={<ListEmptyComponent icon="bell-o" text="暂无消息" loading={loading} />}
                     />
-                    {!hasRead && list.length > 0 ? (
-                        <Button onPress={this.handleClickReadAll} transparent full>
-                            <Icon name="bell-slash-o" style={{ color: "#666" }} />
-                            <Text style={{ fontSize: 14, color: '#666' }}>全部标记为已读</Text>
-                        </Button>
-                    ) : null}
                 </Content>
             </Container>
         );

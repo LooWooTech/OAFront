@@ -18,7 +18,7 @@ class MissiveDetail extends Component {
             throw new Error('公文参数不正确');
         }
         this.props.stores.missiveStore.getModel(id)
-        this.props.stores.formInfoStore.getData(id)
+        this.props.stores.formInfoStore.loadData(id)
     }
 
     render() {

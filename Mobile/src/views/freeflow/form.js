@@ -6,33 +6,13 @@ import { Container, Header, Content, Left, Body, Title, Right, Text, View, Icon,
 import BackButton from '../shared/BackButton'
 import Form from '../shared/Form'
 import ListRow from '../shared/ListRow';
+import SelectUserButton from '../shared/SelectUserButton'
 
 @inject('stores')
 @observer
 class FreeFlowSubmitForm extends Component {
 
-    state = { toUsers: [], ccUsers: [], sms_to: true, sms_cc: false }
-
-    handleSelectUser = () => {
-        this.props.navigation.navigate('SelectUser', {
-            formType: 'freeflow',
-            key: 'missive_freeflow',
-            flowNodeDataId: this.props.stores.formInfoStore.data.flowNodeData.ID,
-            onSubmit: (users) => {
-                this.setState({ toUsers: users })
-            }
-        })
-    }
-    handleSelectCcUser = () => {
-        this.props.navigation.navigate('SelectUser', {
-            formType: 'freeflow',
-            key: 'missive_freeflow_cc',
-            flowNodeDataId: this.props.stores.formInfoStore.data.flowNodeData.ID,
-            onSubmit: (users) => {
-                this.setState({ ccUsers: users })
-            }
-        })
-    }
+    state = { sms_to: true, sms_cc: false }
 
     handleClickSms = () => {
         this.setState({ sms_to: !this.state.sms_to })
@@ -43,8 +23,8 @@ class FreeFlowSubmitForm extends Component {
     handleSubmit = () => {
         const { model, flowNodeData } = this.props.stores.formInfoStore.data
         let formData = this.refs.form.getData()
-        const toUserIds = this.state.toUsers.map(user => user.ID)
-        const ccUserIds = this.state.ccUsers.map(user => user.ID)
+        const toUserIds = this.refs.selectUser.getSelectedUsers().map(user => user.ID)
+        const ccUserIds = this.refs.selectCcUser.getSelectedUsers().map(user => user.ID)
         if (toUserIds.length <= 0) {
             throw new Error('没有选择要发送的人员');
         }
@@ -60,27 +40,8 @@ class FreeFlowSubmitForm extends Component {
         if (this.state.sms_cc) {
             this.props.stores.formInfoStore.sendSms(ccUserIds, model.ID)
         }
+            
         this.props.navigation.goBack()
-    }
-
-    getButtonText = (users) => {
-        const maxNum = 5
-        if (users.length > 0) {
-            let text = '已选'
-            for (var i = 0; i < maxNum; i++) {
-                if (i < users.length) {
-                    text += ' ' + users[i].RealName;
-                }
-            }
-            if (users.length > maxNum) {
-                text += ' 等' + users.length + '人';
-
-            }
-            return text;
-        }
-        else {
-            return '点击选择人员'
-        }
     }
 
     getFormItems = () => {
@@ -96,9 +57,12 @@ class FreeFlowSubmitForm extends Component {
                 title: '转发',
                 render: (
                     <Body>
-                        <Button transparent onPress={this.handleSelectUser}>
-                            <Text>{this.getButtonText(this.state.toUsers)}</Text>
-                        </Button>
+                        <SelectUserButton
+                            ref="selectUser"
+                            type="freeflow"
+                            name="missive_freeflow"
+                            params={{ flowNodeDataId: flowNodeData.ID }}
+                        />
                     </Body>
                 ),
             },
@@ -116,9 +80,12 @@ class FreeFlowSubmitForm extends Component {
                 title: '抄送',
                 render: (
                     <Body>
-                        <Button transparent onPress={this.handleSelectCcUser}>
-                            <Text>{this.getButtonText(this.state.ccUsers)}</Text>
-                        </Button>
+                        <SelectUserButton
+                            ref="selectCcUser"
+                            type="freeflow"
+                            name="missive_freeflow_cc"
+                            params={{ flowNodeDataId: flowNodeData.ID }}
+                        />
                     </Body>
                 )
             },

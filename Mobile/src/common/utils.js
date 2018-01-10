@@ -18,7 +18,7 @@ function jsonToQueryString(json) {
         return '';
     return Object
         .keys(json)
-        .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(json[key]))
+        .map(key => encodeURIComponent(key) + '=' + encodeURIComponent((json[key] === null || json[key] === undefined) ? '' : json[key]))
         .join('&');
 }
 

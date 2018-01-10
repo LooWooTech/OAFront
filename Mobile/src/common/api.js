@@ -28,6 +28,15 @@ export default api = {
     flowData: {
         users: (flowId, flowNodeId, flowDataId, flowStep = 1) => {
             return $.get('flowdata/userlist', { flowId, flowNodeId, flowDataId, flowStep })
+        },
+        submit: (data) => {
+            const toUserId = data.ToUserId || 0;
+            const infoId = data.InfoId || 0;
+            const nextFlowNodeId = data.NextFlowNodeId || 0;
+            return $.post('flowdata/submit', { toUserId, infoId, nextFlowNodeId }, data);
+        },
+        cancel: (infoId) => {
+            $.get('flowdata/Cancel', { infoId })
         }
     },
     freeflowData: {

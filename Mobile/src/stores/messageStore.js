@@ -11,10 +11,10 @@ class MessageStore extends FlatListData {
         })
     }
 
-    @action async read(id) {
-        const i = super.list.findIndex(e => e.ID === id);
+    @action async read(msgId) {
+        const i = super.list.findIndex(e => e.MessageId === msgId);
         super.list.splice(i, 1)
-        await api.message.read(id)
+        await api.message.read(msgId)
     }
 
     @action async readAll() {
