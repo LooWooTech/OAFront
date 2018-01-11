@@ -19,7 +19,7 @@ class MessageItem extends Component {
             <ListRow
                 title={data.Title}
                 left={<Icon name={form.Icon} style={{ color: form.Color, }} />}
-                subTitle={`${data.FromUser || ''}  ${moment(data.CreateTime).format('ll')}`}
+                subTitle={`${data.FromUser || ''}  ${moment(data.CreateTime).format('YYYY-MM-DD HH:mm')}`}
                 onClick={this.handleClick}
             />
         );

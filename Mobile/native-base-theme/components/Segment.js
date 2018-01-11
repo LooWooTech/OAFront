@@ -13,7 +13,7 @@ export default (variables = variable) => {
 			alignSelf: "center",
 			marginTop: 8,
 			borderRadius: 0,
-			paddingHorizontal: 20,
+			paddingHorizontal: 15,
 			height: 30,
 			backgroundColor: "transparent",
 			borderWidth: 1,

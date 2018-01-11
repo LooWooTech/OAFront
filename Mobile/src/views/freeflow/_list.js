@@ -14,7 +14,7 @@ const FreeFlowDataItem = ({ data }) => {
             style={{ backgroundColor: '#f2f2f2', paddingLeft: 10, marginRight: 10 }}
             left={<Icon name={iconName} style={{ color: iconColor, fontSize: 13 }} />}
             title={title}
-            subTitle={data.Signature + ' ' + (data.UpdateTime ? moment(data.UpdateTime).format('ll') : '')}
+            subTitle={data.Signature + ' ' + (data.UpdateTime ? moment(data.UpdateTime).format('YYYY-MM-DD HH:mm') : '')}
             right={null}
         />
     )

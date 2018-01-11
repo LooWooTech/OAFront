@@ -323,14 +323,14 @@ export default (variables = variable) => {
           justifyContent: "center"
         },
         "NativeBase.Icon": {
-          width: variables.iconFontSize - 5,
+          width: variables.iconFontSize - 2,
           fontSize: variables.iconFontSize - 2
         },
         "NativeBase.IconNB": {
-          width: variables.iconFontSize - 5,
+          width: variables.iconFontSize - 2,
           fontSize: variables.iconFontSize - 2
         },
-        paddingRight: variables.listItemPadding + 5,
+        paddingRight: variables.listItemPadding + 2,
         flex: 0,
         height: 44,
         justifyContent: "center",

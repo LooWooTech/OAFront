@@ -20,7 +20,7 @@ class MissiveListItem extends Component {
             <ListRow
                 title={model.Title}
                 left={<Icon name={iconName} style={{ color: iconColor }} />}
-                subTitle={`${model.FlowStep ? '所在流程：' + model.FlowStep : ''}     ${model.UpdateTime ? moment(model.UpdateTime).format('ll') : ''}`}
+                subTitle={`${model.FlowStep ? '所在流程：' + model.FlowStep : ''}     ${model.UpdateTime ? moment(model.UpdateTime).format('YYYY-MM-DD HH:mm') : ''}`}
                 onClick={this.handleClick}
             />
         );

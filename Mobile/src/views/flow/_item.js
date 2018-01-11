@@ -28,7 +28,7 @@ class FlowDataListItem extends Component {
                     onClick={this.handleClick}
                     left={<Icon name={iconName} style={{ color: iconColor, fontSize: 16 }} />}
                     title={title}
-                    subTitle={data.Signature + ' ' + (data.UpdateTime ? moment(data.UpdateTime).format('ll') : '')}
+                    subTitle={data.Signature + ' ' + (data.UpdateTime ? moment(data.UpdateTime).format('YYYY-MM-DD HH:mm') : '')}
                     right={
                         <Text note>{data.FlowNodeName} {data.FreeFlowData ?
                             <Icon name={`chevron-${this.state.showAll ? 'down' : 'right'}`} style={{ fontSize: 12 }} /> : null}
