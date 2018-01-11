@@ -19,7 +19,7 @@ class MissiveDetail extends Component {
         const numberControl = { name: 'WJ_ZH', title: '文件字号', defaultValue: data.WJ_ZH, }
         const titleControl = { name: 'WJ_BT', title: '文件标题', defaultValue: data.WJ_BT, }
         const mjControl = { name: 'WJ_MJ', title: '是否保密', defaultValue: data.WJ_MJ > 0, type: 'switch', }
-        const qxControl = { name: 'QX_RQ', title: '办理期限', placeholder: "选择日期", defaultValue: data.QX_RQ ? moment(data.QX_RQ).format('ll') : null, type: 'date' }
+        const qxControl = { name: 'QX_RQ', title: '办理期限', placeholder: "选择日期", defaultValue: data.QX_RQ, type: 'date' }
 
         //如果是收文
         if (this.props.formId === FORMS.ReceiveMissive.ID) {
@@ -27,7 +27,7 @@ class MissiveDetail extends Component {
                 numberControl,
                 { name: 'WJ_LY', title: '来文单位', defaultValue: data.WJ_LY, },
                 titleControl,
-                { name: 'JB_RQ', title: '交办日期', defaultValue: data.JB_RQ ? moment(data.JB_RQ).format('ll') : null, type: 'date' },
+                { name: 'JB_RQ', title: '交办日期', defaultValue: data.JB_RQ, type: 'date' },
                 qxControl,
                 { name: 'DJR', title: '登记人', defaultValue: data.DJR, },
                 uploadControl,
@@ -39,7 +39,7 @@ class MissiveDetail extends Component {
                 numberControl,
                 titleControl,
                 mjControl,
-                { name: 'FW_RQ', title: '发文日期', defaultValue: data.FW_RQ ? moment(data.FW_RQ).format('ll') : null, type: 'date' },
+                { name: 'FW_RQ', title: '发文日期', defaultValue: data.FW_RQ, type: 'date' },
                 {
                     name: 'ZW_GK', title: '政务公开', defaultValue: data.ZW_GK || 1, type: 'select',
                     options: [
@@ -66,7 +66,6 @@ class MissiveDetail extends Component {
         );
     }
 }
-
 MissiveDetail.propTypes = {
     formId: PropTypes.number.isRequired,
     data: PropTypes.object.isRequired,

@@ -4,7 +4,7 @@ import { observer, inject } from 'mobx-react'
 import { Container, Header, Left, Body, Right, Title, Content, View, Text, Segment, Button, Icon, Tabs, Tab, TabHeading, List, ListItem, H2 } from 'native-base'
 import BackButton from '../shared/BackButton'
 import AttachmentList from '../file/list'
-import MissiveFormInfo from './_info'
+import MissiveInfo from './_info'
 import FlowDataList from '../flow/list'
 import MissiveFooter from './_footer'
 
@@ -41,7 +41,7 @@ class MissiveDetail extends Component {
                 <Tabs tabBarPosition="top">
                     <Tab heading={<TabHeading><Text>拟稿表单</Text></TabHeading>}>
                         <Content>
-                            <MissiveFormInfo formId={info.FormId} data={missive} />
+                            <MissiveInfo formId={info.FormId} data={missive} />
                         </Content>
                     </Tab>
                     <Tab heading={<TabHeading><Text>审核流程</Text></TabHeading>}>

@@ -1,4 +1,6 @@
 import $ from './utils'
+import { HOST, API_HOST } from './config'
+
 export default api = {
     user: {
         login: (username, password) => {
@@ -63,6 +65,9 @@ export default api = {
     file: {
         list: (infoId, inline = false) => {
             return $.get('file/list', { infoId, inline, page: 1, rows: 100 })
+        },
+        getUrl: (fileId) => {
+            return API_HOST + 'file/download?id=' + fileId
         }
     },
     missive: {
