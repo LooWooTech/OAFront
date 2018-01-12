@@ -7,7 +7,6 @@ import missiveStore from '../../stores/missiveStore'
 import Popover from '../components/Popover'
 import NavbarPopover from '../shared/NavbarPopover'
 import ListEmptyComponent from '../shared/ListEmptyComponent'
-import $ from '../../common/utils'
 
 @inject('stores')
 @observer

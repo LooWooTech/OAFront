@@ -5,7 +5,6 @@ import BackButton from './BackButton'
 import ListRow from './ListRow'
 import { inject, observer } from 'mobx-react';
 import { Keyboard } from 'react-native'
-import { SearchBar } from 'antd-mobile'
 
 @inject('stores')
 @observer
@@ -28,6 +27,8 @@ class SelectUserModal extends Component {
 
     handleChangeSearchKey = (val) => {
         this.props.stores.userSelectStore.setParams({ searchKey: val })
+    }
+    handleSubmitSearch = () => {
         this.props.stores.userSelectStore.data.loadData()
     }
 
@@ -49,15 +50,18 @@ class SelectUserModal extends Component {
         const { users, departments, multiple } = this.props.stores.userSelectStore.data
         return (
             <Container>
-                <Header>
-                    <Left>
+                <Header searchBar rounded>
+                    <Item>
                         <BackButton />
-                    </Left>
-                    <Body>
-                        <Title>选择人员</Title>
-                    </Body>
+                        <Input placeholder="输入姓名查询"
+                            onChangeText={this.handleChangeSearchKey}
+                            onSubmitEditing={this.handleSubmitSearch}
+                        />
+                    </Item>
+                    <Button transparent onPress={this.handleSubmitSearch}>
+                        <Icon name="search" />
+                    </Button>
                 </Header>
-                <SearchBar placeholder="输入姓名" onSubmit={this.handleChangeSearchKey} />
                 {multiple ? (
                     <Grid style={{ backgroundColor: '#fff' }}>
                         <Col size={3}>

@@ -10,7 +10,7 @@ class SharedDetailItem extends Component {
         const item = this.props.item
         const file = item.defaultValue || {}
         if (file.ID) {
-            this.context.navigation.navigate('File.Preview', { id: file.ID })
+            this.context.navigation.navigate('File.Preview', { file })
         }
     }
     render() {
