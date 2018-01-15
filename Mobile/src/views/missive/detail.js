@@ -35,8 +35,6 @@ class MissiveDetail extends Component {
                     <Body>
                         <Title>{info.Form.Name}详细</Title>
                     </Body>
-                    <Right>
-                    </Right>
                 </Header>
                 <Tabs tabBarPosition="top">
                     <Tab heading={<TabHeading><Text>拟稿表单</Text></TabHeading>}>
@@ -51,7 +49,7 @@ class MissiveDetail extends Component {
                     </Tab>
                     <Tab heading={<TabHeading><Text>附件信息</Text></TabHeading>}>
                         <Content>
-                            <AttachmentList infoId={info.ID} />
+                            <AttachmentList infoId={info.ID}  navigation={this.props.navigation}/>
                         </Content>
                     </Tab>
                 </Tabs>
@@ -60,5 +58,4 @@ class MissiveDetail extends Component {
         );
     }
 }
-
 export default MissiveDetail;

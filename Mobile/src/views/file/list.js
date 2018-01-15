@@ -18,6 +18,10 @@ class FileList extends Component {
         this.props.stores.fileStore.getList(infoId)
     }
 
+    handleClick = (file) => {
+        this.props.navigation.navigate('File.Preview', { file })
+    }
+
     render() {
         const list = this.props.stores.fileStore.list
         return (
@@ -37,6 +41,7 @@ class FileList extends Component {
                             left={<Icon name={iconName} />}
                             title={item.FileName}
                             subTitle={item.DisplaySize}
+                            onClick={() => this.handleClick(item)}
                         />
                     )
                 }) : <ListItem style={{ alignItems: 'center', justifyContent: 'center' }}>
@@ -45,6 +50,9 @@ class FileList extends Component {
             </List>
         );
     }
+}
+FileList.contextTypes = {
+    navigation: PropTypes.object.isRequired
 }
 FileList.propTypes = {
     infoId: PropTypes.number.isRequired

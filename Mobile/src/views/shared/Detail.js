@@ -45,6 +45,7 @@ class SharedDetailItem extends Component {
                     />
                 );
             case 'select':
+               
                 return (
                     <ListRow
                         left={<Text>{item.title}</Text>}
@@ -61,8 +62,7 @@ class SharedDetailItem extends Component {
                 return (
                     <ListRow
                         left={<Text>{item.title}</Text>}
-                        title={' '}
-                        right={<Icon name={item.value ? "check" : "close"} />}
+                        title={item.value ? "是" : "否"}
                     />
                 )
         }

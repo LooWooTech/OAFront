@@ -84,7 +84,6 @@ class MessagePopover extends Component {
             <Popover className="message-box"
                 visible={this.state.visible}
                 onVisibleChange={this.handleVisibleChange}
-                placement="bottomRight"
                 trigger="click"
                 content={this.getNotificationBox()}
                 style={{padding:'0'}}

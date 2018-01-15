@@ -46,7 +46,7 @@ class HomePage extends Component {
                     </Right>
                 </Header>
                 <Content style={{ backgroundColor: '#fff' }}>
-                    <Image source={require('../../resources/banner.png')} style={{ height: 195, width: '100%' }} />
+                    <Image source={require('../../resources/banner.jpg')} style={{ height: 195, width: '100%' }} />
                     <List>
                         <ListItem itemDivider >
                             <Text>功能模块</Text>

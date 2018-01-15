@@ -1,24 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Platform } from 'react-native'
 import { inject, observer } from 'mobx-react'
-import {
-    Platform,
-    Alert,
-    ActivityIndicator,
-    NativeAppEventEmitter,
-    DeviceEventEmitter,
-    NativeModules,
-    NativeEventEmitter,
-    TouchableHighlight
-} from 'react-native';
-import OpenFile from 'react-native-doc-viewer';
 import { Container, Header, Left, Right, Body, Title, Content, View, Text, Button, ProgressBar, Icon, Footer } from 'native-base'
 import BackButton from '../shared/BackButton'
 import SharedDetail from '../shared/Detail'
+import OpenFile from 'react-native-doc-viewer'
 import RNFS from 'react-native-fs'
-
-const SavePath = Platform.OS === 'ios' ? RNFS.MainBundlePath : RNFS.DocumentDirectoryPath;
-
 @inject('stores')
 @observer
 class FilePreview extends Component {
@@ -105,11 +93,12 @@ class FilePreview extends Component {
                         </Title>
                     </Body>
                 </Header>
-                <Content>
+                <Content style={{ backgroundColor: "#fff" }}>
                     <SharedDetail
                         items={[
                             { name: 'filename', title: '文件名称', defaultValue: file.FileName },
                             { name: 'filesize', title: '文件大小', defaultValue: file.DisplaySize },
+                            { name: 'createtime', title: '上传日期', defaultValue: file.CreateTime, type: 'date' }
                         ]}
                     />
                 </Content>

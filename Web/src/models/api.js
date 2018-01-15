@@ -56,6 +56,9 @@ module.exports = {
     ApiUrl: (path) => {
         return host + apiPath + path;
     },
+    App: {
+        qrCodeUrl: host + "client/qrcode",
+    },
     Config: {
         List: (cb, err) => invokeApi('config/list', HTTP_GET, null, cb, err),
         Save: (data, cb, err) => invokeApi('config/save', HTTP_POST, data, cb, err),

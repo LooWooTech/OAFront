@@ -49,7 +49,7 @@ export default class TopNav extends React.Component {
     };
 
     getUserMenuRender = () => <Popover
-        content={<div className="user-menu">
+        content={<div className="user-menu" style={{ width: '120px' }}>
             <div><EditPasswordModal trigger={<a href="javascript:;"><Icon type="lock" /> 修改密码</a>} /></div>
             <div><a onClick={this.handleLogout}><Icon type="poweroff" /> 退出登录</a></div>
         </div>}
@@ -68,6 +68,11 @@ export default class TopNav extends React.Component {
             <Menu theme="dark" mode="horizontal" className="right">
                 <Menu.SubMenu title={<MessagePopover />} />
                 <Menu.SubMenu title={this.getUserMenuRender()} />
+                <Menu.SubMenu title={<Popover placement="bottomRight" content={<ul>
+                    <li>安卓(Android)客户端：<br />
+                        <img src={api.App.qrCodeUrl} width="200" alt="Android" />
+                    </li>
+                </ul>}>APP下载</Popover>} />
             </Menu>
         </div>
     }
