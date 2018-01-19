@@ -11,6 +11,10 @@ import FreeFlowForm from './views/freeflow/form'
 import FlowForm from './views/flow/form'
 import SelectUser from './views/shared/SelectUser'
 
+import TaskList from './views/task/index'
+import TaskDetail from './views/task/detail'
+import SubTaskDetail from './views/task/subTaskDetail'
+
 const Index = TabNavigator(
     {
         Home: { screen: HomePage, },
@@ -53,7 +57,10 @@ export const RootNavigator = StackNavigator(
         'File.Preview': { screen: FilePreview },
         'Flow.Form': { screen: FlowForm },
         'FreeFlow.Form': { screen: FreeFlowForm },
-        'SelectUser': { screen: SelectUser }
+        'SelectUser': { screen: SelectUser },
+        'Task.List': { screen: TaskList },
+        'Task.Detail': { screen: TaskDetail },
+        'SubTask.Detail': { screen: SubTaskDetail }
     },
     {
         initialRouteName: 'Welcome',

@@ -4,9 +4,13 @@ import { Left, Body, Right, ListItem, Icon, Text } from 'native-base'
 
 class ListRow extends Component {
     render() {
-        const { style, left, body, right, title, subTitle, onClick, height, fontSize } = this.props
+        const { style, left, body, right, title, subTitle, onClick, onLongPress, height, fontSize } = this.props
         return (
-            <ListItem icon onPress={onClick} style={{ backgroundColor: null, height: null, ...style }}>
+            <ListItem icon
+                onPress={onClick}
+                onLongPress={onLongPress}
+                style={{ backgroundColor: null, height: null, ...style }}
+            >
                 {left ? <Left style={{ height: height || null }}>
                     {left}
                 </Left> : null}

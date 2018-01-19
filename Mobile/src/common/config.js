@@ -4,7 +4,7 @@ export const API_HOST = HOST + API_PATH;
 export const FORMS = {
     Missive: { ID: 1, FlowId: 1, Name: '发文', Icon: 'pencil', Color: '#07a214', Detail: 'Missive.Detail', List: 'Missive.List', Params: { status: 1 } },
     ReceiveMissive: { ID: 2, FlowId: 2, Name: '收文', Icon: 'file-o', Color: '#4176b9', Detail: 'Missive.Detail', List: 'Missive.List', Params: { status: 1 } },
-    Task: { ID: 4, FlowId: 4, Name: '任务', Icon: 'tasks', Color: '#079aa2', Detail: 'Extend1.Detail', List: 'Extend1.List' },
+    Task: { ID: 4, FlowId: 4, Name: '任务', Icon: 'tasks', Color: '#079aa2', Detail: 'Task.Detail', List: 'Task.List', Params: { status: 1 } },
     Leave: { ID: 7, FlowId: 7, Name: '请假', Icon: 'calendar-check-o', Color: '#d834bb', Detail: 'Leave.Detail', List: 'Leave.List' },
     Salary: { ID: 9, Name: '工资单', Icon: 'credit-card', Color: '#daa731', Detail: 'Salary.Detail', List: 'Salary.List' },
     Mail: { ID: 8, Name: '邮件', Icon: 'envelope-o', Color: '#1f91b5', Detail: 'Mail.Detail', List: 'Mail.List' },

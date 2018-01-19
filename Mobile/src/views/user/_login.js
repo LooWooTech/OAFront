@@ -15,15 +15,12 @@ class UserLogin extends Component {
         if (!this.state.username || !this.state.password) {
             return false;
         }
-       this.props.stores.userStore.login(this.state.username, this.state.password)
+        this.props.stores.userStore.login(this.state.username, this.state.password)
     }
 
     render() {
-        if(this.props.stores.userStore.hasLogin){
-            return null
-        }
-        return (
-            <View style={{ borderRadius: 5, backgroundColor: '#fff', width: '90%', padding: 10, marginTop: 10 }}>
+        if (!this.props.stores.userStore.hasLogin) {
+            return <View style={{ borderRadius: 5, backgroundColor: '#fff', width: '90%', padding: 10, marginTop: 10 }}>
                 <Form style={{ paddingTop: 5, paddingBottom: 5 }}>
                     <Item inlineLabel>
                         <Label>用户名</Label>
@@ -39,7 +36,8 @@ class UserLogin extends Component {
                     <Text style={{ fontSize: 17 }}>{this.props.stores.userStore.inProgress ? '登陆中' : '登录'}</Text>
                 </Button>
             </View>
-        );
+        }
+        return null;
     }
 }
 

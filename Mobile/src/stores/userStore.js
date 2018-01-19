@@ -19,7 +19,7 @@ class UserStore {
     }
 
     @computed get hasLogin() {
-        return this.user && this.user.ID > 0
+        return this.user != null && this.user.ID > 0
     }
 
     @computed get token() {

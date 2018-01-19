@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { Input, Label } from 'native-base'
 import Detail from '../shared/Detail'
 import { FORMS } from '../../common/config'
-import moment from 'moment'
 
 class MissiveDetail extends Component {
 

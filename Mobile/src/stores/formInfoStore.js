@@ -1,5 +1,6 @@
 import { observable, action, computed } from 'mobx'
 import api from '../common/api'
+import userStore from './userStore'
 
 class FormInfoStore {
 
@@ -16,6 +17,13 @@ class FormInfoStore {
         }
         this.data = data
         return data
+    }
+
+    @computed get isMyFlow() {
+        return this.data &&
+        this.data.flowNodeData &&
+        this.data.flowNodeData.ParentId === 0 &&
+        userStore.isCurrentUser(this.data.flowNodeData.UserId)
     }
 
     @action async submitFlow(data) {

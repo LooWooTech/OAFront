@@ -81,4 +81,30 @@ export default api = {
             return $.get('missive/report', { id });
         }
     },
+    task: {
+        list: (query) => {
+            return $.get('task/list', query)
+        },
+        model: (id) => {
+            return $.get('task/model', { id });
+        },
+        subTaskList: (taskId) => {
+            return $.get('task/subtasklist', { taskId })
+        },
+        submitSubTask: (id, content) => {
+            return $.post('task/submitsubtask', { id }, { content })
+        },
+        checkSubTask: (id, result, content) => {
+            return $.post('task/checksubTask', { id, result }, { content })
+        },
+        checkList: (taskId, userId) => {
+            return $.get('task/checklist', { taskId, userId })
+        },
+        todoList: (subTaskId) => {
+            return $.get('task/todolist', { subTaskId })
+        },
+        updateTodoStatus: (todoId) => {
+            return $.get('task/updatetodostatus', { id: todoId })
+        }
+    },
 }

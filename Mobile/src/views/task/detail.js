@@ -4,24 +4,22 @@ import { observer, inject } from 'mobx-react'
 import { Container, Header, Left, Body, Right, Title, Content, View, Text, Segment, Button, Icon, Tabs, Tab, TabHeading, List, ListItem, H2 } from 'native-base'
 import BackButton from '../shared/BackButton'
 import AttachmentList from '../file/list'
-import MissiveInfo from './_info'
-import FlowDataList from '../flow/list'
-import MissiveFooter from './_footer'
-
+import TaskInfo from './_info'
+import SubTaskList from './_subTaskList'
 @inject('stores')
 @observer
-class MissiveDetail extends Component {
+class TaskDetail extends Component {
 
     componentWillMount() {
         const id = this.props.navigation.state.params.id
-        this.props.stores.missiveStore.getModel(id)
+        this.props.stores.taskStore.getModel(id)
         this.props.stores.formInfoStore.loadData(id)
     }
 
     render() {
-        const missive = this.props.stores.missiveStore.model
+        const task = this.props.stores.taskStore.model
         const data = this.props.stores.formInfoStore.data
-        if (!missive || !data) return null
+        if (!task || !data) return null
         const info = data.model
         return (
             <Container>
@@ -33,26 +31,25 @@ class MissiveDetail extends Component {
                         <Title>{info.Form.Name}详细</Title>
                     </Body>
                 </Header>
-                <Tabs tabBarPosition="top">
-                    <Tab heading={<TabHeading><Text>拟稿表单</Text></TabHeading>}>
+                <Tabs tabBarPosition="top" locked>
+                    <Tab heading={<TabHeading><Text>任务列表</Text></TabHeading>}>
                         <Content>
-                            <MissiveInfo formId={info.FormId} data={missive} />
+                            <SubTaskList taskId={task.ID} />
                         </Content>
                     </Tab>
-                    <Tab heading={<TabHeading><Text>审核流程</Text></TabHeading>}>
+                    <Tab heading={<TabHeading><Text>任务落实单</Text></TabHeading>}>
                         <Content>
-                            <FlowDataList data={info.FlowData.Nodes} />
+                            <TaskInfo data={task} />
                         </Content>
                     </Tab>
                     <Tab heading={<TabHeading><Text>附件信息</Text></TabHeading>}>
                         <Content>
-                            <AttachmentList infoId={info.ID}  navigation={this.props.navigation}/>
+                            <AttachmentList infoId={task.ID} navigation={this.props.navigation} />
                         </Content>
                     </Tab>
                 </Tabs>
-                <MissiveFooter data={data} navigation={this.props.navigation} />
             </Container>
         );
     }
 }
-export default MissiveDetail;
+export default TaskDetail;

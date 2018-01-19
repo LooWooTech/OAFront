@@ -6,6 +6,7 @@ import formInfoStore from './formInfoStore'
 import fileStore from './fileStore'
 import freeflowStore from './freeflowStore'
 import userSelectStore from './userSelectStore'
+import taskStore from './taskStore'
 
 export default {
     userStore,
@@ -16,4 +17,5 @@ export default {
     fileStore,
     freeflowStore,
     userSelectStore,
+    taskStore,
 }
