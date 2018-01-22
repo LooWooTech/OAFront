@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BackHandler, Image, Keyboard } from 'react-native';
+import { BackHandler, Image, Keyboard, Linking, Alert } from 'react-native';
 import { observer, inject } from 'mobx-react'
 import { NavigationActions } from 'react-navigation'
 import { Container, Header, Text, View, Left, Body, Content, Title, Right, Icon, List, ListItem, Button } from 'native-base'
@@ -19,6 +19,16 @@ class HomePage extends Component {
     }
     componentWillMount() {
         Keyboard.dismiss()
+        if (this.props.stores.clientStore.shouldUpgrade) {
+            Alert.alert('提醒', '有最新的版本，请升级', [
+                {
+                    text: '确定', onPress: () => {
+                        const downloadUrl = this.props.stores.clientStore.getDownloadUrl();
+                        Linking.openURL(downloadUrl).catch(err => console.error(err))
+                    }
+                }
+            ])
+        }
     }
 
     handleClickSetting = () => {

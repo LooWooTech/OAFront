@@ -2,6 +2,14 @@ import $ from './utils'
 import { HOST, API_HOST } from './config'
 
 export default api = {
+    client: {
+        lastVersion: () => {
+            return $.get(HOST + 'client/LastVersion')
+        },
+        downloadUrl: () => {
+            return HOST + 'client/download'
+        }
+    },
     user: {
         login: (username, password) => {
             return $.get('user/login', { username, password })

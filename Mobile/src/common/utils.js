@@ -29,7 +29,10 @@ function throwException(ex) {
 }
 
 async function request(path, query, data, httpMethod) {
-    let url = API_HOST + path
+    let url = path
+    if (path.indexOf('http') != 0) {
+        url = API_HOST + path
+    }
     if (query) {
         if (url.indexOf('?') > -1) {
             url += jsonToQueryString(query)

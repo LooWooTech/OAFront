@@ -7,6 +7,7 @@ import fileStore from './fileStore'
 import freeflowStore from './freeflowStore'
 import userSelectStore from './userSelectStore'
 import taskStore from './taskStore'
+import clientStore from './clientStore'
 
 export default {
     userStore,
@@ -18,4 +19,5 @@ export default {
     freeflowStore,
     userSelectStore,
     taskStore,
+    clientStore,
 }

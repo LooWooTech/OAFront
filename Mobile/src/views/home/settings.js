@@ -1,37 +1,70 @@
 import React, { Component } from 'react';
-import { ScrollView, View, Text } from 'react-native'
-import { WhiteSpace, WingBlank, List, Button, Switch } from 'antd-mobile'
-import { observer,inject } from 'mobx-react'
+import { Alert, Linking, IntentAndroid } from 'react-native'
+import { observer, inject } from 'mobx-react'
+import { Container, Header, Text, View, Left, Body, Content, Title, Right, Icon, List, ListItem, Button } from 'native-base'
+import BackButton from '../shared/BackButton'
 
 @inject('stores')
 @observer
 class Settings extends Component {
-    static navigationOptions = ({
-        title: '软件设置'
-    });
 
-    handleClickLogout = () => {
+
+    componentWillMount() {
+        this.props.stores.clientStore.checkVersion();
+    }
+
+    handleLogout = () => {
         this.props.stores.userStore.logout()
         this.props.navigation.navigate('Welcome')
     }
 
+    handleUpgrade = () => {
+        const downloadUrl = this.props.stores.clientStore.getDownloadUrl();
+        Linking.openURL(downloadUrl).catch(err => console.error(err))
+    }
+
     render() {
+        const { lastVersion, currentVersion, shouldUpgrade } = this.props.stores.clientStore
         return (
-            <ScrollView style={{ paddingTop: 10 }}>
-                <WingBlank>
-                    <List renderHeader={() => "系统设置"}>
-                        <List.Item
-                            extra={<Switch checked={true} disabled={true} />}
-                        >
-                            <Text>接收通知</Text>
-                        </List.Item>
+            <Container>
+                <Header>
+                    <Left>
+                        <BackButton />
+                    </Left>
+                    <Body>
+                        <Title>
+                            系统设置
+                        </Title>
+                    </Body>
+                </Header>
+                <Content>
+                    <List>
+                        <ListItem>
+                            <Body>
+                                <Text>当前版本{!shouldUpgrade ? "（最新版）" : null}</Text>
+                            </Body>
+                            <Right>
+                                <Text note>v{currentVersion}</Text>
+                            </Right>
+                        </ListItem>
+                        {shouldUpgrade ?
+                            <ListItem onPress={this.handleUpgrade}>
+                                <Body>
+                                    <Text>最新版本（点击升级）</Text>
+                                </Body>
+                                <Right>
+                                    <Text note>v{lastVersion}</Text>
+                                </Right>
+                            </ListItem>
+                            : null}
                     </List>
-                </WingBlank>
-                <WhiteSpace size="lg" />
-                <WingBlank>
-                    <Button onClick={this.handleClickLogout}>退出登录</Button>
-                </WingBlank>
-            </ScrollView>
+                    <View style={{ margin: 10 }}>
+                        <Button danger full onPress={this.handleLogout}>
+                            <Text>退出系统</Text>
+                        </Button>
+                    </View>
+                </Content>
+            </Container>
         );
     }
 }
