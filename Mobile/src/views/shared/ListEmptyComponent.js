@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { View, Icon, Text } from 'native-base';
+import { Dimensions } from 'react-native'
 
 class ListEmptyComponent extends Component {
     render() {
@@ -21,7 +22,7 @@ ListEmptyComponent.propTypes = {
     loading: PropTypes.bool
 };
 ListEmptyComponent.defaultProps = {
-    style: { alignItems: 'center', justifyContent: 'center', height: 300 }
+    style: { alignItems: 'center', justifyContent: 'center', height: Dimensions.get('window').height - 160 }
 }
 
 export default ListEmptyComponent;

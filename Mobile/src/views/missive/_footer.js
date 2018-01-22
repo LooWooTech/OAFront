@@ -104,7 +104,7 @@ class MissiveDetailFooter extends Component {
             rightButtons.push(
                 <Button key="completefreeflow" iconLeft danger transparent style={styles.button} onPress={this.handleCompleteFreeFlow}>
                     <Icon name="close" />
-                    <Text>结束转发</Text>
+                    <Text>结束</Text>
                 </Button>
             )
         }

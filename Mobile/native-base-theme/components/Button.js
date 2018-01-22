@@ -406,21 +406,21 @@ export default (variables = variable) => {
       color: variables.inverseTextColor,
       fontSize: variables.btnTextSize,
       lineHeight: variables.btnLineHeight,
-      paddingHorizontal: 16,
+      paddingHorizontal: 8,
       backgroundColor: 'transparent',
       // childPosition: 1
     },
 
     'NativeBase.Icon': {
       color: variables.inverseTextColor,
-      fontSize: 24,
-      marginHorizontal: 16,
+      fontSize: 18,
+      marginHorizontal: 8,
       paddingTop: platform === 'ios' ? 2 : undefined,
     },
     'NativeBase.IconNB': {
       color: variables.inverseTextColor,
-      fontSize: 24,
-      marginHorizontal: 16,
+      fontSize: 18,
+      marginHorizontal: 8,
       paddingTop: platform === 'ios' ? 2 : undefined,
     },
 
@@ -430,11 +430,11 @@ export default (variables = variable) => {
       },
       'NativeBase.IconNB': {
         marginRight: 0,
-        marginLeft: 16,
+        marginLeft: 8,
       },
       'NativeBase.Icon': {
         marginRight: 0,
-        marginLeft: 16,
+        marginLeft: 8,
       },
     },
     '.iconRight': {
@@ -443,11 +443,11 @@ export default (variables = variable) => {
       },
       'NativeBase.IconNB': {
         marginLeft: 0,
-        marginRight: 16,
+        marginRight: 8,
       },
       'NativeBase.Icon': {
         marginLeft: 0,
-        marginRight: 16,
+        marginRight: 8,
       },
     },
     '.picker': {
