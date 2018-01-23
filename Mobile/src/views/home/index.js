@@ -36,7 +36,7 @@ class HomePage extends Component {
     }
 
     handleClickForm = (form) => {
-        this.props.navigation.navigate(form.List, { formId: form.ID, ...form.Params })
+        this.props.navigation.navigate(form.Home, { formId: form.ID, ...form.Params })
     }
 
     render() {

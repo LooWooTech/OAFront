@@ -8,6 +8,7 @@ import freeflowStore from './freeflowStore'
 import userSelectStore from './userSelectStore'
 import taskStore from './taskStore'
 import clientStore from './clientStore'
+import attendanceStore from './attendanceStore'
 
 export default {
     userStore,
@@ -20,4 +21,5 @@ export default {
     userSelectStore,
     taskStore,
     clientStore,
+    attendanceStore,
 }

@@ -184,7 +184,7 @@ export default class AttendanceIndex extends React.Component {
                         {this.state.logsOfDate.length > 0 ?
                             <ul>
                                 {this.state.logsOfDate.map(item => <li key={item.ID}>
-                                    {moment(item.CreateTime).format('lll')} {JSON.parse(item.ApiContent).msg}
+                                    {moment(item.CreateTime).format('YYYY-MM-DD HH:mm')} {JSON.parse(item.ApiContent).msg}
                                 </li>)
                                 }</ul>
                             : <span>未打卡</span>
@@ -192,7 +192,7 @@ export default class AttendanceIndex extends React.Component {
                     </Card>
                     <Card title="请假记录" style={{ marginTop: "10px" }}>
                         {this.state.leavesOfDate.length > 0 ? this.state.leavesOfDate.map(item => <span key={item.ID}>
-                            {moment(item.ScheduleBeginTime).format('lll')}~{moment(item.ScheduleEndTime).format('lll')}
+                            {moment(item.ScheduleBeginTime).format('YYYY-MM-DD HH:mm')}~{moment(item.ScheduleEndTime).format('YYYY-MM-DD HH:mm')}
                         </span>)
                             : <span>未请假</span>
                         }

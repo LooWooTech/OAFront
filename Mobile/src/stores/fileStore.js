@@ -12,6 +12,10 @@ class FileStore {
         return data
     }
 
+    getUrl(fileId) {
+        return api.file.getUrl(fileId)
+    }
+
     getSource(fileId) {
         const fileUrl = api.file.getUrl(fileId)
         return {

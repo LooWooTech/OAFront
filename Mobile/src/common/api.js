@@ -115,4 +115,9 @@ export default api = {
             return $.get('task/updatetodostatus', { id: todoId })
         }
     },
+    attendance: {
+        month: (year, month) => {
+            return $.get('attendance/month', { year, month })
+        },
+    },
 }

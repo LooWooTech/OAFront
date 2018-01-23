@@ -15,6 +15,8 @@ import TaskList from './views/task/index'
 import TaskDetail from './views/task/detail'
 import SubTaskDetail from './views/task/subTaskDetail'
 
+import Attendance from './views/attendance/index'
+
 const Index = TabNavigator(
     {
         Home: { screen: HomePage, },
@@ -60,7 +62,8 @@ export const RootNavigator = StackNavigator(
         'SelectUser': { screen: SelectUser },
         'Task.List': { screen: TaskList },
         'Task.Detail': { screen: TaskDetail },
-        'SubTask.Detail': { screen: SubTaskDetail }
+        'SubTask.Detail': { screen: SubTaskDetail },
+        'Attendance': { screen: Attendance }
     },
     {
         initialRouteName: 'Welcome',
