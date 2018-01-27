@@ -344,7 +344,7 @@ module.exports = {
             invokeApi('FormInfoExtend1/List', HTTP_GET, parameters, cb, err);
         },
         Approval: (id, result = true, toUserId = 0, cb, err) => {
-            invokeApi('attendance/approval', HTTP_GET, { id, result, toUserId }, cb, err);
+            invokeApi('FormInfoExtend1/approval', HTTP_GET, { id, result, toUserId }, cb, err);
         },
         Back: (infoId, backTime, cb, err) => {
             invokeApi('FormInfoExtend1/Back?id=' + infoId + '&backTime=' + backTime, HTTP_GET, null, cb, err);

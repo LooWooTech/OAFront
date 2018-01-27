@@ -5,14 +5,28 @@ import { Container, Header, Left, Right, Body, Title, Content, View, Text, Butto
 import { Calendar, LocaleConfig } from 'react-native-calendars'
 import BackButton from '../shared/BackButton'
 import ListRow from '../shared/ListRow'
-
+import NavbarPopover from '../shared/NavbarPopover'
 import moment from 'moment'
+import { FORMS } from '../../common/config';
 
 @inject('stores')
 @observer
 class Attendance extends Component {
 
+    menuData = []
+
     componentWillMount() {
+        this.menuData = [
+            { label: '我要请假', value: 'Leave.Form', icon: 'calendar-plus-o' },
+            {
+                label: '请假记录', value: 'Extend1.List', icon: 'calendar-check-o',
+                params: { formId: FORMS.Attendance.ID, userId: this.props.stores.userStore.user.ID }
+            }
+        ]
+        if (this.props.stores.userStore.isManager) {
+            this.menuData.push({ label: '请假审批', value: 'Leave.Check', icon: 'calendar-times-o' })
+        }
+
         LocaleConfig.locales['zh'] = {
             monthNames: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
             monthNamesShort: ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二'],
@@ -24,12 +38,24 @@ class Attendance extends Component {
         this.props.stores.attendanceStore.loadData(new Date().getFullYear(), new Date().getMonth() + 1)
     }
 
+    handleSelectMenu = (item) => {
+        this.props.navigation.navigate(item.value, item.params);
+    }
+
+    showMenu = () => {
+        this.refs.menu.show();
+    }
+
     handleChangeMonth = (date) => {
         this.props.stores.attendanceStore.loadData(date.year, date.month)
     }
 
     handleSelectDay = (date) => {
         this.props.stores.attendanceStore.selectDate(new Date(date.year, date.month - 1, date.day))
+    }
+
+    handleClickLeave = () => {
+        this.props.navigation.navigate('Leave.List')
     }
 
     render() {
@@ -41,10 +67,12 @@ class Attendance extends Component {
                         <BackButton />
                     </Left>
                     <Body>
-                        <Title>考勤情况</Title>
+                        <Title>我的考勤</Title>
                     </Body>
                     <Right>
-
+                        <Button transparent onPress={this.showMenu}>
+                            <Icon name="list" />
+                        </Button>
                     </Right>
                 </Header>
                 <Content style={{ backgroundColor: "#fff" }}>
@@ -70,6 +98,7 @@ class Attendance extends Component {
                         }
                     </List>
                 </Content>
+                <NavbarPopover ref="menu" data={this.menuData} onSelect={this.handleSelectMenu} />
             </Container>
         );
     }

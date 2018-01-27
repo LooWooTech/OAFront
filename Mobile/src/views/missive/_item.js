@@ -15,7 +15,7 @@ class MissiveListItem extends Component {
     render() {
         const model = this.props.model
         const iconName = model.Important ? 'flag' : model.JJ_DJ ? 'warning' : model.Uid ? 'link' : 'file-o'
-        const iconColor = model.Important ? '#21b384' : model.JJ_DJ ? '#b32121' : model.Uid ? '#215ab3' : '#666'
+        const iconColor = model.Important ? '#108ee9' : model.JJ_DJ ? '#da382f' : model.Uid ? '#00a854' : '#888'
         return (
             <ListRow
                 title={model.Title}

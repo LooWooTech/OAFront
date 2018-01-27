@@ -21,10 +21,9 @@ class MissiveList extends Component {
         this.refs.menu.show();
     }
 
-    handleSelectStatus = val => {
-        this.props.navigation.setParams({ status: val })
-        this.props.stores.missiveStore.setParams({ status: val })
-        this.refs.menu.hide();
+    handleSelectMenu = item => {
+        this.props.navigation.setParams({ status: item.value })
+        this.props.stores.missiveStore.setParams({ status: item.value })
         this.refreshData()
     }
 
@@ -81,7 +80,7 @@ class MissiveList extends Component {
                         ListEmptyComponent={<ListEmptyComponent icon="file-o" text={`暂无${statusText}`} loading={loading} />}
                     />
                 </Content>
-                <NavbarPopover ref="menu" data={this.menuData} onSelect={this.handleSelectStatus} />
+                <NavbarPopover ref="menu" data={this.menuData} onSelect={this.handleSelectMenu} />
             </Container>
         );
     }

@@ -12,3 +12,8 @@ export const FORMS = {
     MeetingRoom: { ID: 5, FlowId: 5, Name: '会议室', 'Icon': 'tv', Color: '#eee', Detail: 'Extend1.Detail', Home: 'Extend1.List' },
     Seal: { ID: 6, FlowId: 6, Name: '图章', Icon: 'ticket', Color: '#eee', Detail: 'Extend1.Detail', Home: 'Extend1.List' },
 };
+export const USER_ROLE = {
+    User: 1,
+    Manager: 2,
+    Administrator: 3
+}

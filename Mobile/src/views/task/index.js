@@ -19,10 +19,9 @@ class TaskList extends Component {
     showPopover = () => {
         this.refs.menu.show();
     }
-    handleSelectStatus = val => {
-        this.props.navigation.setParams({ status: val })
-        this.props.stores.taskStore.setParams({ status: val })
-        this.refs.menu.hide();
+    handleSelectMenu = item => {
+        this.props.navigation.setParams({ status: item.value })
+        this.props.stores.taskStore.setParams({ status: item.value })
         this.refreshData()
     }
     componentWillMount() {
@@ -74,7 +73,7 @@ class TaskList extends Component {
                         ListEmptyComponent={<ListEmptyComponent icon="file-o" text={`暂无任务记录`} loading={loading} />}
                     />
                 </Content>
-                <NavbarPopover ref="menu" data={this.menuData} onSelect={this.handleSelectStatus} />
+                <NavbarPopover ref="menu" data={this.menuData} onSelect={this.handleSelectMenu} />
             </Container>
         );
     }

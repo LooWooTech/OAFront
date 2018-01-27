@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Content, Form, Item, Input, Label, Picker, Switch, Text, View, ListItem, List, Left, Body, Right, Textarea } from 'native-base'
-import { Dimensions, TextInput } from 'react-native';
+import { Content, Form, Item, Input, Label, Picker, Switch, Text, View, ListItem, List, Left, Body, Right, Textarea, Row, Col, Icon } from 'native-base'
+import { Dimensions, TextInput, StyleSheet } from 'react-native';
 import DatePicker from 'react-native-datepicker'
 import ListRow from './ListRow'
 
@@ -23,12 +23,27 @@ class SharedFormItem extends Component {
         const left = item.title ? <Label>{item.title}</Label> : (item.left || null)
         switch (item.type) {
             case 'date':
+            case 'datetime':
                 return (
-                    <ListRow
-                        left={left}
-                        body={<DatePicker onDateChange={this.handleChangeValue} />}
-                        right={item.right}
-                    />
+                    <Row>
+                        <Col style={styles.left}>
+                            {left}
+                        </Col>
+                        <Col style={styles.body}>
+                            <DatePicker
+                                mode={item.type}
+                                date={item.value || item.defaultValue || ''}
+                                onDateChange={this.handleChangeValue}
+                                showIcon={false}
+                                is24Hour={true}
+                                customStyles={{
+                                    dateIcon: { fontSize: 8, paddingRight: 10, width: 80, },
+                                    dateInput: { borderWidth: 0, alignSelf: 'auto', flexDirection: 'row', justifyContent: 'space-between', height: 44 },
+                                }}
+                                style={{ flex: 0, width: '99%' }}
+                            />
+                        </Col>
+                    </Row>
                 )
             case 'textarea':
                 return (
@@ -64,20 +79,23 @@ class SharedFormItem extends Component {
                 return <Item><Label>暂不支持文件上传</Label></Item>
             case 'select':
                 return (
-                    <ListRow
-                        left={left}
-                        right={item.right}
-                    >
-                        <Picker disabled={disabled}
-                            mode='dialog'
-                            placeholder={item.title}
-                            selectedValue={item.defaultValue}
-                            disabled={disabled}
-                            onValueChange={this.handleChangeValue}
-                        >
-                            {item.options.map(opt => <Item key={opt.value} label={opt.text} value={opt.value} />)}
-                        </Picker>
-                    </ListRow>
+                    <Row>
+                        <Col style={styles.left}>
+                            {left}
+                        </Col>
+                        <Col style={styles.body}>
+                            <Picker disabled={disabled}
+                                mode='dialog'
+                                placeholder={item.placeholder || item.title}
+                                selectedValue={item.value || item.defaultValue || 0}
+                                disabled={disabled}
+                                onValueChange={this.handleChangeValue}
+                            >
+                                <Item label={item.placeholder || item.title || '请选择'} value='' />
+                                {item.options.map(opt => <Item key={opt.value} label={opt.text} value={opt.value} />)}
+                            </Picker>
+                        </Col>
+                    </Row>
                 )
                 break;
             case 'hidden':
@@ -99,12 +117,30 @@ class SharedFormItem extends Component {
     }
 }
 
+const styles = StyleSheet.create({
+    left: {
+        flex: 0,
+        height: 44,
+        width: 100,
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    body: { borderBottomWidth: 0.5, borderBottomColor: '#c9c9c9' },
+    right: {
+        flex: 0,
+        height: 44,
+        maxWidth: 100,
+        justifyContent: "center",
+        alignItems: "center"
+    }
+})
+
 export default class SharedForm extends Component {
     componentWillMount() {
         let data = {};
         this.props.items.map(item => {
             if (item.name) {
-                data[item.name] = item.defaultValue
+                data[item.name] = item.value || item.defaultValue
             }
         })
         this.setState({ data })

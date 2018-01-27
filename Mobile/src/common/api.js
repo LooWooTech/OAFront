@@ -14,8 +14,11 @@ export default api = {
         login: (username, password) => {
             return $.get('user/login', { username, password })
         },
-        list: (query) => {
-            return $.get('user/list', query)
+        list: (params) => {
+            return $.get('user/list', params)
+        },
+        leaders: (userId = 0) => {
+            return $.get('user/parentTitleUserList', { userId })
         }
     },
     message: {
@@ -79,8 +82,8 @@ export default api = {
         }
     },
     missive: {
-        list: (query) => {
-            return $.get('missive/list', query)
+        list: (params) => {
+            return $.get('missive/list', params)
         },
         model: (id) => {
             return $.get('missive/model', { id });
@@ -90,8 +93,8 @@ export default api = {
         }
     },
     task: {
-        list: (query) => {
-            return $.get('task/list', query)
+        list: (params) => {
+            return $.get('task/list', params)
         },
         model: (id) => {
             return $.get('task/model', { id });
@@ -119,5 +122,16 @@ export default api = {
         month: (year, month) => {
             return $.get('attendance/month', { year, month })
         },
+        leave: (data) => {
+            return $.post('attendance/apply', null, data)
+        }
     },
+    formExtend1: {
+        list: (params) => {
+            return $.get('formInfoExtend1/list', params)
+        },
+        approval: (id, result = true, toUserId = 0) => {
+            return $.get('FormInfoExtend1/approval', { id, result, toUserId })
+        }
+    }
 }

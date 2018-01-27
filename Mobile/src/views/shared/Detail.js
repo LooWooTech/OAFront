@@ -35,17 +35,18 @@ class SharedDetailItem extends Component {
                     />
                 );
             case 'file':
-                multiline = item.defaultValue != null && item.defaultValue.FileName.length > 16
+                const fileName = item.defaultValue ? item.defaultValue.FileName : null
+                multiline = fileName ? fileName.length > 16 : false
                 return (
                     <ListRow
                         left={<Text>{item.title}</Text>}
-                        title={(item.defaultValue || {}).FileName.toString()}
+                        title={fileName || '还没上传文件'}
                         right={<Icon name="external-link" />}
-                        onClick={this.handleClickFile}
+                        onClick={fileName ? this.handleClickFile : null}
                     />
                 );
             case 'select':
-               
+
                 return (
                     <ListRow
                         left={<Text>{item.title}</Text>}

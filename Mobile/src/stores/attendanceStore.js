@@ -71,6 +71,11 @@ class AttendanceStore {
         this.data = await api.attendance.month(year, month)
         this.month = new Date(year, month - 1, 1)
     }
+
+    //请假
+    async submitLeave(formData) {
+        await api.attendance.leave(formData)
+    }
 }
 
 export default new AttendanceStore()

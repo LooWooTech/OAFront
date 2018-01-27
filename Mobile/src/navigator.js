@@ -16,6 +16,9 @@ import TaskDetail from './views/task/detail'
 import SubTaskDetail from './views/task/subTaskDetail'
 
 import Attendance from './views/attendance/index'
+import LeaveForm from './views/attendance/leave_form';
+
+import Extend1List from './views/extend1/list'
 
 const Index = TabNavigator(
     {
@@ -63,7 +66,9 @@ export const RootNavigator = StackNavigator(
         'Task.List': { screen: TaskList },
         'Task.Detail': { screen: TaskDetail },
         'SubTask.Detail': { screen: SubTaskDetail },
-        'Attendance': { screen: Attendance }
+        'Attendance': { screen: Attendance },
+        'Leave.Form': { screen: LeaveForm },
+        'Extend1.List': { screen: Extend1List }
     },
     {
         initialRouteName: 'Welcome',

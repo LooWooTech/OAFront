@@ -15,7 +15,7 @@ class ClientStore {
     }
 
     @computed get shouldUpgrade() {
-        return this.lastVersion != this.currentVersion
+        return  parseFloat(this.lastVersion) > parseFloat(this.currentVersion)
     }
 
     async checkVersion() {

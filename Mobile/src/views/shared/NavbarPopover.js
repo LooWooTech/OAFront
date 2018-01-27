@@ -14,6 +14,7 @@ class NavbarPopover extends Component {
         this.setState({ isVisible: false });
     }
     handleSelect = (val) => {
+        this.setState({ isVisible: false })
         if (this.props.onSelect) {
             this.props.onSelect(val)
         }
@@ -28,7 +29,7 @@ class NavbarPopover extends Component {
                 onClose={this.hide}>
                 <List style={{ width: 240 }}>
                     {this.props.data.map(item => (
-                        <ListItem icon key={item.value} onPress={() => this.handleSelect(item.value)}>
+                        <ListItem icon key={item.value} onPress={() => this.handleSelect(item)}>
                             <Left>
                                 <Icon name={item.icon} style={{ fontSize: 18 }} />
                             </Left>

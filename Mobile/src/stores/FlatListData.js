@@ -11,10 +11,10 @@ export default class FlatListData {
         this.asyncLoadData = loadDataMethod
         this.rows = rows
     }
-    @action refreshData() {
+    @action async refreshData() {
         this.list = []
         this.finished = false
-        this.loadData(1)
+        await this.loadData(1)
     }
     @action async loadData(page) {
         this.loading = true;

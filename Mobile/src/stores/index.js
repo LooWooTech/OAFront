@@ -9,7 +9,7 @@ import userSelectStore from './userSelectStore'
 import taskStore from './taskStore'
 import clientStore from './clientStore'
 import attendanceStore from './attendanceStore'
-
+import extend1Store from './extend1Store'
 export default {
     userStore,
     formStore,
@@ -22,4 +22,5 @@ export default {
     taskStore,
     clientStore,
     attendanceStore,
+    extend1Store,
 }
