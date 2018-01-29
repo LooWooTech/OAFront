@@ -19,7 +19,7 @@ class UserStore {
     }
 
     @computed get isManager() {
-        return this.user.Role === USER_ROLE.Manager
+        return this.user.Role >= USER_ROLE.Manager
     }
 
     hasRight(rightName) {

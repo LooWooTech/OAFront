@@ -28,8 +28,8 @@ class NavbarPopover extends Component {
                 fromRect={{ x: WINDOW_WIDTH - 80, y: 0, width: 80, height: 50 }}
                 onClose={this.hide}>
                 <List style={{ width: 240 }}>
-                    {this.props.data.map(item => (
-                        <ListItem icon key={item.value} onPress={() => this.handleSelect(item)}>
+                    {this.props.data.map((item, key) => (
+                        <ListItem icon key={key || item.value} onPress={() => this.handleSelect(item)}>
                             <Left>
                                 <Icon name={item.icon} style={{ fontSize: 18 }} />
                             </Left>

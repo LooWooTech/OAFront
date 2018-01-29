@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { FlatList, Dimensions } from 'react-native'
 import { inject, observer } from 'mobx-react'
-import { Container, Header, Left, Body, Right, Title, Segment, Tab, TabHeading, Tabs, View, Content, Text, Button, } from 'native-base'
+import { Container, Header, Left, Body, Right, Title, Segment, View, Content, Text, Button, } from 'native-base'
 import BackButton from '../shared/BackButton'
 import ListRow from '../shared/ListRow'
 import ListEmptyComponent from '../shared/ListEmptyComponent'
@@ -12,6 +12,7 @@ import FormExtend1Item from './_item'
 class FormExtend1List extends Component {
 
     componentWillMount() {
+        console.log(this.props.navigation.state.params)
         this.props.stores.extend1Store.setParams(this.props.navigation.state.params)
         this.props.stores.extend1Store.refreshData()
     }
@@ -23,6 +24,11 @@ class FormExtend1List extends Component {
         this.props.stores.extend1Store.refreshData()
     }
 
+    handleChangeStatus = status => {
+        this.props.stores.extend1Store.setParams({ status })
+        this.refreshData()
+    }
+
     keyExtractor = (item, index) => item.ID;
 
     handleClickItem = (item) => {
@@ -31,19 +37,34 @@ class FormExtend1List extends Component {
     renderItem = ({ item }) => <FormExtend1Item model={item} onClick={this.handleClickItem} />
 
     render() {
-        const params = this.props.navigation.state.params
-        const isMyList = this.props.stores.userStore.isCurrentUser(params.userId)
+        const { list, loading, params } = this.props.stores.extend1Store
+        const hasSegment = !this.props.stores.userStore.isCurrentUser(params.userId)
         const form = this.props.stores.formStore.getForm(params.formId)
-        const { list, loading } = this.props.stores.extend1Store
+
         return (
             <Container>
-                <Header hasSegment={!isMyList}>
+                <Header hasSegment={hasSegment}>
                     <Left>
                         <BackButton />
                     </Left>
                     <Body>
-                        <Title>{isMyList ? `我的${form.Name}` : `${form.Name}审批`}</Title>
+                        {hasSegment ?
+                            <Segment>
+                                <Button first active={!params.status} onPress={() => this.handleChangeStatus(0)}>
+                                    <Text>全部</Text>
+                                </Button>
+                                <Button active={params.status === 1} onPress={() => this.handleChangeStatus(1)}>
+                                    <Text>未审</Text>
+                                </Button>
+                                <Button last active={params.status === 2} onPress={() => this.handleChangeStatus(2)}>
+                                    <Text>已审</Text>
+                                </Button>
+                            </Segment>
+                            :
+                            <Title>我的{form.Name}</Title>
+                        }
                     </Body>
+                    <Right></Right>
                 </Header>
                 <Content>
                     <FlatList

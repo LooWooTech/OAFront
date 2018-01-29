@@ -16,17 +16,18 @@ class Attendance extends Component {
     menuData = []
 
     componentWillMount() {
+        const userId = this.props.stores.userStore.user.ID
         this.menuData = [
             { label: '我要请假', value: 'Leave.Form', icon: 'calendar-plus-o' },
             {
                 label: '请假记录', value: 'Extend1.List', icon: 'calendar-check-o',
-                params: { formId: FORMS.Attendance.ID, userId: this.props.stores.userStore.user.ID }
+                params: { formId: FORMS.Attendance.ID, userId: userId, approvalUserId: 0 }
+            },
+            {
+                label: '请假审批', value: 'Extend1.List', icon: 'calendar-times-o',
+                params: { formId: FORMS.Attendance.ID, status: 1, approvalUserId: userId, userId: 0 }
             }
         ]
-        if (this.props.stores.userStore.isManager) {
-            this.menuData.push({ label: '请假审批', value: 'Leave.Check', icon: 'calendar-times-o' })
-        }
-
         LocaleConfig.locales['zh'] = {
             monthNames: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
             monthNamesShort: ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二'],
