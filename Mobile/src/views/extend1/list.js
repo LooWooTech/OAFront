@@ -12,7 +12,6 @@ import FormExtend1Item from './_item'
 class FormExtend1List extends Component {
 
     componentWillMount() {
-        console.log(this.props.navigation.state.params)
         this.props.stores.extend1Store.setParams(this.props.navigation.state.params)
         this.props.stores.extend1Store.refreshData()
     }
@@ -32,7 +31,8 @@ class FormExtend1List extends Component {
     keyExtractor = (item, index) => item.ID;
 
     handleClickItem = (item) => {
-        //this.props.navigation.navigate('.Detail', { id: item.InfoId })
+        this.props.stores.extend1Store.checkModel(item)
+        this.props.navigation.navigate('Extend1.Check')
     }
     renderItem = ({ item }) => <FormExtend1Item model={item} onClick={this.handleClickItem} />
 

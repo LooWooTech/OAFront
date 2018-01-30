@@ -132,6 +132,9 @@ export default api = {
         },
         approval: (id, result = true, toUserId = 0) => {
             return $.get('FormInfoExtend1/approval', { id, result, toUserId })
+        },
+        back: (id, backTime) => {
+            return $.get('FormInfoExtend1/back', { id, backTime })
         }
     }
 }

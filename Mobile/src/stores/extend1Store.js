@@ -1,4 +1,4 @@
-import { observable, action, computed } from 'mobx'
+import mobx, { observable, action, computed } from 'mobx'
 import api from '../common/api'
 import moment from 'moment'
 import FlatListData from './FlatListData'
@@ -22,6 +22,19 @@ class FormExtend1Store extends FlatListData {
 
     @action setParams(obj) {
         this.params = Object.assign(this.params, obj)
+    }
+
+    @observable model = null
+
+    @action checkModel(model) {
+        this.model = model
+    }
+
+    @action async back(id, time) {
+        if (this.model) {
+            this.model.RealEndTime = time || moment().format('lll')
+        }
+        await api.formExtend1.back(id, time)
     }
 }
 

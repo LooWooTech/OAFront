@@ -15,10 +15,8 @@ class SharedFormItem extends Component {
     }
 
     render() {
-        const { item, disabled } = this.props
-        if (!item.name && !item.render) {
-            return null
-        }
+        const { item } = this.props
+        const disabled = item.disabled || this.props.disabled
         let multiline = false
         const left = item.title ? <Label>{item.title}</Label> : (item.left || null)
         switch (item.type) {
@@ -38,9 +36,10 @@ class SharedFormItem extends Component {
                                 is24Hour={true}
                                 customStyles={{
                                     dateIcon: { fontSize: 8, paddingRight: 10, width: 80, },
-                                    dateInput: { borderWidth: 0, alignSelf: 'auto', flexDirection: 'row', justifyContent: 'space-between', height: 44 },
+                                    dateInput: { backgroundColor: 'transparent', borderWidth: 0, alignSelf: 'auto', flexDirection: 'row', justifyContent: 'space-between', height: 44 },
                                 }}
                                 style={{ flex: 0, width: '99%' }}
+                                disabled={disabled}
                             />
                         </Col>
                     </Row>
@@ -49,10 +48,12 @@ class SharedFormItem extends Component {
                 return (
                     <ListRow
                         left={left}
-                        body={<Input multiline={true} placeholder={item.placeholder}
+                        body={<Input multiline={true}
+                            placeholder={item.placeholder}
                             defaultValue={item.defaultValue}
                             onChangeText={this.handleChangeValue}
                             style={{ borderBottomWidth: 0.5, borderBottomColor: '#ccc' }}
+                            disabled={disabled}
                         />}
                         right={item.right}
                     />
@@ -71,13 +72,21 @@ class SharedFormItem extends Component {
                 return (
                     <ListRow
                         left={left}
-                        body={<Input placeholder={item.placeholder} multiline={multiline} defaultValue={item.defaultValue} onChangeText={this.handleChangeValue} />}
+                        body={<Input placeholder={item.placeholder}
+                            multiline={multiline}
+                            defaultValue={item.defaultValue}
+                            onChangeText={this.handleChangeValue}
+                            disabled={disabled}
+                        />}
                         right={item.right}
                     />
                 );
             case 'file':
                 return <Item><Label>暂不支持文件上传</Label></Item>
             case 'select':
+                if (!item.options || !item.options.length) {
+                    return null
+                }
                 return (
                     <Row>
                         <Col style={styles.left}>
@@ -92,7 +101,7 @@ class SharedFormItem extends Component {
                                 onValueChange={this.handleChangeValue}
                             >
                                 <Item label={item.placeholder || item.title || '请选择'} value='' />
-                                {item.options.map(opt => <Item key={opt.value} label={opt.text} value={opt.value} />)}
+                                {item.options.map(opt => <Item key={opt.value} label={opt.label || opt.text} value={opt.value} />)}
                             </Picker>
                         </Col>
                     </Row>
@@ -101,7 +110,7 @@ class SharedFormItem extends Component {
             case 'hidden':
                 return (
                     <View style={{ height: 0, opacity: 0 }} >
-                        <TextInput editable={false} defaultValue={(item.defaultValue || '').toString()} />
+                        <TextInput editable={false} defaultValue={(item.defaultValue || '').toString()} disabled={disabled} />
                     </View>
                 )
             case 'switch':
@@ -110,7 +119,11 @@ class SharedFormItem extends Component {
                     <ListRow
                         left={left}
                         title={item.text || ' '}
-                        right={<Switch value={item.value === undefined ? item.defaultValue : item.value} onValueChange={this.handleChangeValue} />}
+                        right={<Switch
+                            value={item.value === undefined ? item.defaultValue : item.value}
+                            onValueChange={this.handleChangeValue}
+                            disabled={disabled}
+                        />}
                     />
                 )
         }
