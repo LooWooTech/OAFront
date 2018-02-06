@@ -48,7 +48,7 @@ module.exports = {
         let queryIndex = pathAndQuery.indexOf('?')
         let queryString = queryIndex > -1 ? pathAndQuery.substring(queryIndex + 1) : ''
         let params = this.queryStringToJson(queryString)
-        Object.keys(parameters).map(key => params[key] = parameters[key])
+        params = { ...params, ...parameters };
         let newQueryString = this.jsonToQueryString(params)
         let path = queryIndex === -1 ? pathAndQuery : pathAndQuery.substring(0, queryIndex)
         let newUrl = path + '?' + newQueryString
@@ -59,7 +59,7 @@ module.exports = {
         str.split('&').map(kv => {
             let arr = kv.split('=')
             if (arr.length === 2) {
-                json[arr[0]] =  decodeURIComponent(arr[1])
+                json[arr[0]] = decodeURIComponent(arr[1])
             }
             return json
         })
@@ -70,7 +70,7 @@ module.exports = {
             return null;
         return Object
             .keys(json)
-            .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(json[key]))
+            .map(key => key + '=' + encodeURIComponent(json[key]))
             .join('&');
     },
     Request(url, method, data, cb, err, async) {

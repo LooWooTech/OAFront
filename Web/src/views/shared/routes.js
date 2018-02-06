@@ -38,8 +38,9 @@ import FeedIndex from '../feed/index'
 import TaskIndex from '../task/list'
 import TaskEdit from '../task/edit'
 
-import SalaryIndex from '../salary/list'
 import SalarySearch from '../salary/search'
+import SalaryList from '../salary/list'
+import SalaryIndex from '../salary/my'
 import SalaryImport from '../salary/import'
 
 import AttendanceGroupList from '../attendance/groups'
@@ -72,6 +73,7 @@ export default class Routes extends React.Component {
                 </Route>
                 <Route path="salary">
                     <IndexRoute component={SalaryIndex} />
+                    <Route path="list" component={SalaryList} />
                     <Route path="search" component={SalarySearch} />
                     <Route path="import" component={SalaryImport} />
                 </Route>

@@ -1,35 +1,30 @@
 import React, { Component } from 'react'
 import { Button, Table, Row, Col } from 'antd'
 import api from '../../models/api'
+import utils from '../../utils'
 
 class SalaryList extends Component {
     state = {
         loading: true,
         years: [new Date().getFullYear()],
-        currentYear: this.props.location.query.year || new Date().getFullYear()
+        currentYear: this.props.location.query.year || new Date().getFullYear(),
+        salaryId: this.props.location.query.salaryId || 0,
+        searchKey: this.props.location.query.searchKey || '',
+        userId: this.props.location.query.userId || 0,
     }
 
     componentWillMount() {
-        api.Salary.Years(0, list => {
-            this.setState({ years: list });
-            if (list.length > 0) {
-                this.loadData(list[list.length - 1]);
-            } else {
-                this.setState({ loading: false })
-            }
-        });
+        this.loadData()
     }
 
     loadData = (year) => {
-        api.Salary.List({ year }, json => {
+        api.Salary.SalaryDatas({
+            userId: this.state.userId,
+            salaryId: this.state.salaryId,
+            searchKey: this.state.searchKey,
+        }, json => {
             this.setState({ list: json.List, loading: false })
         });
-    }
-
-    getToolbarRender = () => {
-        return <Button.Group>
-            {this.state.years.map(year => <Button key={year} onClick={() => this.loadData(year)}>{year}年</Button>)}
-        </Button.Group>
     }
 
     expandedRowRender = (model) => {
@@ -43,20 +38,15 @@ class SalaryList extends Component {
         return (
             <div>
                 <div className="toolbar">
-                    <h3>我的工资单</h3>
-                    {this.getToolbarRender()}
+                    <h3>工资单列表</h3>
+                    <Button onClick={() => utils.GoBack()}>返回</Button>
                 </div>
                 <Table
                     rowKey="ID"
                     loading={this.state.loading}
                     dataSource={this.state.list}
                     pagination={false}
-                    columns={[
-                        {
-                            title: '年/月', dataIndex: 'ID',
-                            render: (text, item) => { return item.Year + '年' + item.Month + '月' }
-                        },
-                    ]}
+                    columns={[{ title: '姓名', dataIndex: 'UserName' }]}
                     expandedRowRender={this.expandedRowRender}
                 />
             </div>

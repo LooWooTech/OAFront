@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { Input, AutoComplete, Upload, Button, Icon, message, Alert, Tag } from 'antd'
+import { Input, Upload, Button, Icon, message, Alert, Tag } from 'antd'
 import Form from '../shared/_form'
 import api from '../../models/api'
 class ImportSalary extends Component {
 
-    state = { fails: [], files: [] }
+    state = { file: null, failRows: [] }
 
     handleSubmit = (data) => {
         this.refs.form.validateFields((err, values) => {
@@ -12,23 +12,77 @@ class ImportSalary extends Component {
                 return false;
             }
             let data = values;
-            data.files = this.state.files.map(file => file.response.AbsolutelyPath)
+            data.file = this.state.file.response.PhysicalPath
             api.Salary.Import(data, json => {
                 message.success("导入完毕");
-                const fails = json.map(err => {
-                    const file = this.state.files.find(f => f.response.SaveName === err.fileName);
-                    return { "file": file.response.FileName, rows: err.failRows }
-                })
-                this.setState({ fails, files: [] })
-                this.refs.uploader.setState({ fileList: [] })
+                this.setState({ failRows: json, file: null })
+                this.refs.uploader.setState({ file: null })
             })
         })
     }
 
     handleUpload = ({ file, fileList }) => {
         if (file.status === 'done') {
-            this.setState({ files: fileList })
+            this.setState({ file })
         }
+    }
+
+    handleDeleteFile = () => {
+        this.setState({ file: null })
+    }
+
+    getItems = () => {
+        const items = [{
+            title: '年份', name: 'Year', defaultValue: new Date().getFullYear(),
+            rules: [{ required: true, message: '请填年份' }],
+            render: <Input />
+        }];
+        if (this.state.file) {
+            items.push({
+                title: '工资单',
+                render: <Tag onClose={this.handleDeleteFile} closable={true}>{this.state.file.response.FileName}</Tag>
+            })
+        } else {
+            items.push({
+                title: '工资单',
+                tips: '选择Excel文件',
+                render: <Upload
+                    action={api.Salary.ImportUrl()}
+                    withCredentials={true}
+                    accept=".xls,.xlsx"
+                    onChange={this.handleUpload}
+                    ref="uploader"
+                    multiple={false}
+                    showUploadList={false}
+                >
+                    <Button>
+                        <Icon type="upload" /> 点击上传Excel
+                    </Button>
+                </Upload>,
+            })
+        }
+        items.push({
+            title: '工资单名称',
+            tips: '建议名称包含年份和月份',
+            name: 'Title',
+            defaultValue: this.state.file ? this.state.file.response.FileName : '',
+            render: <Input type="text" />
+        });
+
+        if (this.state.failRows.length > 0) {
+            items.push({
+                title: '导入结果',
+                render: <Alert style={{ margin: '10px', width: '400px' }}
+                    type="error"
+                    message="导入失败"
+                    description={this.state.failRows.map((row) => <p key={row}>
+                        第{row}行 导入失败
+                    </p>)}
+                />
+            })
+        }
+
+        return items;
     }
 
     render() {
@@ -41,47 +95,7 @@ class ImportSalary extends Component {
                     ref="form"
                     onSubmit={this.handleSubmit}
                     itemLayout={{ labelCol: { span: 6 }, wrapperCol: { span: 6 } }}
-                    children={[
-                        {
-                            title: '年份', name: 'Year', defaultValue: new Date().getFullYear(),
-                            rules: [{ required: true, message: '请填年份' }],
-                            render: <Input />
-                        },
-                        {
-                            title: '月份', name: 'Month', defaultValue: (new Date().getMonth() + 1).toString(),
-                            rules: [{ required: true, message: '请填写月份' }],
-                            render: <AutoComplete dataSource={['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']} />
-                        },
-                        {
-                            title: '工资单',
-                            tips: '每种类型选择一份Excel文件',
-                            render: <Upload
-                                action={api.Salary.ImportUrl()}
-                                withCredentials={true}
-                                accept=".xls,.xlsx"
-                                onChange={this.handleUpload}
-                                ref="uploader"
-                            >
-                                <Button>
-                                    <Icon type="upload" /> 点击上传Excel
-                                </Button>
-                            </Upload>,
-                        },
-                        {
-                            title: this.state.fails.length > 0 ? '导入结果' : null,
-                            render: this.state.fails.length > 0 ? (
-
-                                <Alert style={{ margin: '10px', width: '400px' }}
-                                    type="error"
-                                    message="导入失败"
-                                    description={this.state.fails.map((e, i) => <p key={i}>
-                                        {e.file} <br />
-                                        第{e.rows.join('，')}行 导入失败
-                                </p>)}
-                                />
-                            ) : ''
-                        }
-                    ]}
+                    children={this.getItems()}
                     buttons={[
                         <Button icon="import" type="primary" onClick={this.handleSubmit}>导入</Button>,
                         <a className="btn" href="/templates/salary_templates.zip" target="_blank">下载导入模板</a>

@@ -476,8 +476,11 @@ module.exports = {
         Years: (userId, cb, err) => {
             invokeApi('salary/getyears', HTTP_GET, { userId }, cb, err);
         },
-        List: (data, cb, err) => {
-            invokeApi('salary/list', HTTP_GET, data, cb, err);
+        Salaries: (data, cb, err) => {
+            invokeApi('salary/salaries', HTTP_GET, data, cb, err);
+        },
+        SalaryDatas: (data, cb, err) => {
+            invokeApi('salary/salaryDatas', HTTP_GET, data, cb, err);
         },
         Delete: (id, cb, err) => {
             invokeApi('salary/delete', HTTP_DELETE, { id }, cb, err);
