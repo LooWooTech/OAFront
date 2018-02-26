@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Table, Row, Col } from 'antd'
+import {  Button, Table, Row, Col } from 'antd'
 import api from '../../models/api'
 import utils from '../../utils'
 
@@ -22,6 +22,8 @@ class SalaryList extends Component {
             userId: this.state.userId,
             salaryId: this.state.salaryId,
             searchKey: this.state.searchKey,
+            page: 1,
+            rows: 9999,
         }, json => {
             this.setState({ list: json.List, loading: false })
         });

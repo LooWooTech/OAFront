@@ -95,9 +95,9 @@ const data = [
         children: [
             {
                 title: '工资单', items: [
-                    { path: '/salary/', icon: 'fa fa-file-text-o', text: '我的工资单' },
+                    { path: '/salary', icon: 'fa fa-file-text-o', text: '我的工资单' },
                     { path: '/salary/search', icon: 'fa fa-search', text: '工资单查询', right: 'Form.Salary.View' },
-                    { path: '/salary/import', icon: 'fa fa-save', text: '导入工资单', role: 3 }
+                    { path: '/salary/import', icon: 'fa fa-save', text: '导入工资单', right: 'Form.Salary.Edit' }
                 ],
             }
         ]

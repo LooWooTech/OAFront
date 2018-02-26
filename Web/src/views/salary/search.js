@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Input, Button, Table, Row, Col } from 'antd'
+import { Popconfirm, Input, Button, Table, Row, Col } from 'antd'
 import { Link } from 'react-router'
 import api from '../../models/api'
 import Form from '../shared/_form'
@@ -35,6 +35,11 @@ class SalarySearch extends Component {
             this.loadData(nextProps.location.query)
     }
 
+    handleDelete = (id) => {
+        api.Salary.Delete(id, () => {
+            this.loadData(this.state.currentYear)
+        });
+    }
 
     handleSearch = data => {
         data.userId = data.userId || 0;
@@ -42,7 +47,7 @@ class SalarySearch extends Component {
         utils.ReloadPage(data)
         return false
     }
-    
+
     handlePageChange = page => {
         utils.ReloadPage({ page })
     }
@@ -90,10 +95,20 @@ class SalarySearch extends Component {
                     rowKey="ID"
                     loading={this.state.loading}
                     dataSource={this.state.list}
-                    columns={[{
-                        title: '工资单名称', dataIndex: 'Title',
-                        render: (text, item) => <Link to={`/salary/list?salaryId=${item.ID}`}>{text}</Link>
-                    }]}
+                    columns={[
+                        {
+                            title: '工资单名称', dataIndex: 'Title',
+                            render: (text, item) => <Link to={`/salary/list?salaryId=${item.ID}`}>{text}</Link>
+                        },
+                        {
+                            title: '操作', dataIndex: 'ID', render: (text, item) => (
+                                <Popconfirm title="删除后无法恢复，你确定要删除吗? " key={item.ID}
+                                    onConfirm={() => this.handleDelete(item.ID)} >
+                                    <Button type="danger" icon="delete"></Button>
+                                </Popconfirm>
+                            )
+                        }
+                    ]}
                     pagination={{
                         size: 5, ...this.state.page,
                         onChange: this.handlePageChange,
