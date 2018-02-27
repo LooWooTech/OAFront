@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Table, Tag, Modal } from 'antd'
+import { Button, Table, Tag, Modal, Icon } from 'antd'
 import moment from 'moment'
 import EditModal from './_edit_sub_task'
 import SubTaskCheckModal from './_sub_task_check'
@@ -198,23 +198,64 @@ class SubTaskList extends Component {
     }
 
     canViewTodos = (subTask) => {
-        var result = this.state.canViewAllSubTasks
-            || auth.isCurrentUser(subTask.CreatorId)
-            || auth.isCurrentUser(subTask.ToUserId);
+        var result = auth.isCurrentUser(subTask.ToUserId);
 
         if (!result) {
             result = subTask.Todos.find(t => auth.isCurrentUser(t.ToUserId))
         }
-        if (!result) {
-            if (subTask.IsMaster) {
-                result = subTask.children ? subTask.children.find(e => this.canViewSubTask(e)) : false;
-            } else if (parent) {
-                result = this.canViewSubTask(parent)
-            }
-        }
         return result;
     }
 
+    todoStatusColumnRender = (text, item) => <Tag color={item.Completed ? "green" : ''}>{item.Completed ? "完成" : '未完成'}</Tag>
+    contentColumnRender = (text, item) => (
+        <span>
+            {moment(item.ScheduleDate) <= moment() ? <Icon type="exclamation" className="red" /> : null}
+            {text.split('\n').map((item, key) => <span key={key}>{item}<br /></span>)}
+        </span>
+    )
+    createTimeColumnRender = (text, item) => text ? moment(text).format('YYYY-MM-DD HH:mm') : ''
+    scheduleDateColumnRender = (text, item) => text ? moment(text).format('YYYY-MM-DD') : ''
+    todoOperateColumnRender = (text, item) => (
+        <span>
+            {auth.isCurrentUser(item.ToUserId) ?
+                <span>
+                    <Button type="success" onClick={() => this.handleUpdateStatus(item)}>{item.Completed ? '标记未完成' : '标记完成'}</Button>
+                </span>
+                : null
+            }
+            {auth.isCurrentUser(item.CreatorId) ?
+                <span>
+                    <TodoEditModal
+                        model={item}
+                        trigger={<Button icon="edit">修改</Button>}
+                        onSubmit={this.loadData}
+                    />
+                    <Button type="error" icon="delete" onClick={() => this.handleDeleteTodo(item)}>删除</Button>
+                </span>
+                : null}
+        </span>
+    )
+    departmentColumnRender = (text, item) => (
+        <span>
+            {item.IsMaster ? <Tag color="green">主办</Tag> : <Tag color="blue">协办</Tag>}
+            {item.ToDepartmentName}
+        </span>
+    )
+    userNameColumnRender = (text, item) => item.ToUserName || '未指派'
+    buttonsColumnRender = (text, item) => this.getButtons(item).map((item, key) => <span key={key}>{item}</span>)
+    statusColumnRender = (text, item) => {
+        switch (item.Status) {
+            default:
+            case 0:
+                return <Tag color="#108ee9">执行</Tag>
+            case 1:
+                return <Tag color="#f50">审核</Tag>
+            case 2:
+                return <Tag color="#87d068">完成</Tag>
+            case 3:
+                return <Tag color="#ff0">退回</Tag>
+        }
+    }
     expandedRowRender = (subTask) => {
         let list = subTask.Todos;
         if (list.length === 0) {
@@ -227,42 +268,18 @@ class SubTaskList extends Component {
         return <Table
             rowKey="ID"
             columns={[
-                {
-                    title: '状态', dataIndex: 'Completed', width: 60,
-                    render: (text, item) => <Tag color={item.Completed ? "green" : ''}>{item.Completed ? "完成" : '未完成'}</Tag>
-                },
-                {
-                    title: '内容', dataIndex: 'Content',
-                    render: text => text.split('\n').map((item, key) => <span key={key}>{item}<br /></span>)
-                },
+                { title: '状态', dataIndex: 'Completed', width: 60, render: this.todoStatusColumnRender },
+                { title: '内容', dataIndex: 'Content', render: this.contentColumnRender },
                 { title: '负责人', width: 100, dataIndex: 'ToUserName' },
-                { title: '创建时间', width: 170, dataIndex: 'CreateTime', render: (text) => text ? moment(text).format('YYYY-MM-DD HH:mm') : '' },
-                { title: '计划完成时间', width: 150, dataIndex: 'ScheduleDate', render: (text) => text ? moment(text).format('YYYY-MM-DD') : '' },
-                {
-                    title: '操作', width: 240, render: (text, item) => <span>
-                        {auth.isCurrentUser(item.ToUserId) ?
-                            <span>
-                                <Button type="success" onClick={() => this.handleUpdateStatus(item)}>{item.Completed ? '标记未完成' : '标记完成'}</Button>
-                            </span>
-                            : null
-                        }
-                        {auth.isCurrentUser(item.CreatorId) ?
-                            <span>
-                                <TodoEditModal
-                                    model={item}
-                                    trigger={<Button icon="edit">修改</Button>}
-                                    onSubmit={this.loadData}
-                                />
-                                <Button type="error" icon="delete" onClick={() => this.handleDeleteTodo(item)}>删除</Button>
-                            </span>
-                            : null}
-                    </span>
-                }
+                { title: '创建时间', width: 170, dataIndex: 'CreateTime', render: this.createTimeColumnRender },
+                { title: '计划完成时间', width: 150, dataIndex: 'ScheduleDate', render: this.scheduleDateColumnRender },
+                { title: '操作', width: 240, render: this.todoOperateColumnRender }
             ]}
             pagination={false}
             dataSource={list}
         />
     }
+
     render() {
         const taskId = this.props.task.ID
         if (this.state.loading) return null;
@@ -284,41 +301,13 @@ class SubTaskList extends Component {
                     pagination={false}
                     expandedRowRender={this.expandedRowRender}
                     columns={[
-                        {
-                            title: '状态', dataIndex: 'Completed', width: 90,
-                            render: (text, item) => {
-                                switch (item.Status) {
-                                    default:
-                                    case 0:
-                                        return <Tag color="#108ee9">执行</Tag>
-                                    case 1:
-                                        return <Tag color="#f50">审核</Tag>
-                                    case 2:
-                                        return <Tag color="#87d068">完成</Tag>
-                                    case 3:
-                                        return <Tag color="#ff0">退回</Tag>
-                                }
-                            }
-                        },
-                        {
-                            title: '任务目标', dataIndex: 'Content',
-                            render: this.contentRender
-                        },
-                        {
-                            title: '科室', width: 150,
-                            render: (text, item) => <span>
-                                {item.IsMaster ? "[主]" : "[协]"}
-                                {item.ToDepartmentName}
-                            </span>
-                        },
-                        { title: '责任人', width: 80, render: (text, item) => item.ToUserName || '未指派' },
-                        { title: '创建时间', width: 170, dataIndex: 'CreateTime', render: (text) => text ? moment(text).format('YYYY-MM-DD HH:mm') : '' },
-                        { title: '计划完成时间', width: 130, dataIndex: 'ScheduleDate', render: (text) => text ? moment(text).format('YYYY-MM-DD') : '' },
-                        {
-                            title: '操作', width: 200, render: (text, item) => <span>
-                                {this.getButtons(item).map((item, key) => <span key={key}>{item}</span>)}
-                            </span>
-                        }
+                        { title: '状态', dataIndex: 'Completed', width: 90, render: this.statusColumnRender },
+                        { title: '任务目标', dataIndex: 'Content', render: this.contentColumnRender },
+                        { title: '科室', width: 170, render: this.departmentColumnRender },
+                        { title: '责任人', width: 80, render: this.userNameColumnRender },
+                        { title: '创建时间', width: 170, dataIndex: 'CreateTime', render: this.createTimeColumnRender },
+                        { title: '计划完成时间', width: 130, dataIndex: 'ScheduleDate', render: this.scheduleDateColumnRender },
+                        { title: '操作', width: 200, render: this.buttonsColumnRender }
                     ]}
                 />
             </div>

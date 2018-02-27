@@ -73,55 +73,41 @@ class Extend1ListComponent extends Component {
         });
     }
 
+    createTimeColumnRender = (text, item) => moment(text).format('YYYY-MM-DD HH:mm:ss')
+    updateTimeColumnRender = (text, item) => moment(text).format('YYYY-MM-DD HH:mm:ss')
+    resultColumnRender = (text, item) => {
+        switch (item.Result) {
+            case true:
+                return <Tag color="green">通过</Tag>
+            case false:
+                return <Tag color="red">失败</Tag>
+            default:
+                return <Tag>审核中</Tag>
+        }
+    }
+    titleColumnRender = (text, item) => <span key={item.ID}>{item.Title}<br />{item.Reason}</span>
     getColumns = () => {
         var columns = []
         let { userId, formId } = this.state
         let formName = api.Form.GetName(formId)
-        columns.push({ title: formName, dataIndex:'title', render: (text, item) => <span key={item.ID}>{item.Title}<br />{item.Reason}</span> })
+        columns.push({ title: formName, dataIndex: 'title', render: this.titleColumnRender })
         if (!userId) {
             columns.push({ title: '申请人', dataIndex: 'ApplyUser' })
         }
         columns = columns.concat([
             { title: '审批人', dataIndex: 'ApprovalUser' },
-            {
-                title: '申请日期', dataIndex: 'CreateTime',
-                render: (text, item) => moment(text).format('YYYY-MM-DD HH:mm:ss')
-            },
-            {
-                title: '申请结果', dataIndex: 'Result', render: (text, item) => {
-                    switch (item.Result) {
-                        case true:
-                            return <Tag color="green">通过</Tag>
-                        case false:
-                            return <Tag color="red">失败</Tag>
-                        default:
-                            return <Tag>审核中</Tag>
-                    }
-                }
-            },
-            {
-                title: '处理日期', dataIndex: 'UpdateTime',
-                render: (text, item) => text ? moment(text).format('YYYY-MM-DD HH:mm:ss') : null
-            },
-            {
-                title: '操作', render: this.props.buttons
-            }
+            { title: '申请日期', dataIndex: 'CreateTime', render: this.createTimeColumnRender },
+            { title: '申请结果', dataIndex: 'Result', render: this.resultColumnRender },
+            { title: '处理日期', dataIndex: 'UpdateTime', render: this.updateTimeColumnRender },
+            { title: '操作', render: this.props.buttons }
         ]);
         return columns;
     }
 
-    handlePageChange = page => {
-        utils.ReloadPage({ page })
-    }
-
-    handleStatusChange = val => {
-        utils.ReloadPage({ status: val })
-    }
-
-    reload = () => {
-        this.loadData()
-    }
-
+    handlePageChange = page =>  utils.ReloadPage({ page })
+    handleStatusChange = e => utils.ReloadPage({ status: e.target.value })
+    reload = () => this.loadData()
+    
     render() {
         if (!this.state.formId) {
             return <Alert message="缺少formId参数" type="error" />
@@ -132,7 +118,7 @@ class Extend1ListComponent extends Component {
                 {this.props.toolbar !== false ?
                     <div className="toolbar">
                         <h2>{this.props.title || ''}</h2>
-                        <Radio.Group defaultValue={this.state.status} onChange={e => this.handleStatusChange(e.target.value)}>
+                        <Radio.Group defaultValue={this.state.status} onChange={this.handleStatusChange}>
                             <Radio.Button value={0}>全部</Radio.Button>
                             <Radio.Button value={1}>待审核</Radio.Button>
                             <Radio.Button value={2}>已审核</Radio.Button>

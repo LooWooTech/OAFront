@@ -47,6 +47,19 @@ class FeedIndex extends Component {
         utils.ReloadPage({ page })
     }
 
+    itemRender = (item) => (
+        <div key={item.ID} className="item-feed">
+            <div className="item-feed-header">
+                <a href="#">{item.FromUser}</a>
+                {item.Action}了{item.FormName}{item.Type === item.FormName ? '' : item.Type}
+                <span className="datetime"> {moment(item.CreateTime).format('lll')}</span>
+            </div>
+            <div className="item-feed-body">
+                {this.itemContentRender(item)}
+            </div>
+        </div>
+    )
+
     itemContentRender = item => {
         var form = api.Form.GetForm(item.FormId);
         if (!form) return null;
@@ -59,20 +72,11 @@ class FeedIndex extends Component {
         if (this.state.loading) return null
         return (
             <div className="feeds">
-                {this.state.list.length > 0 ? this.state.list.map(item =>
-                    <div key={item.ID} className="item-feed">
-                        <div className="item-feed-header">
-                            <a href="#">{item.FromUser}</a>
-                            {item.Action}了{item.FormName}{item.Type === item.FormName ? '' : item.Type}
-                            <span className="datetime"> {moment(item.CreateTime).format('lll')}</span>
-                        </div>
-                        <div className="item-feed-body">
-                            {this.itemContentRender(item)}
-                        </div>
-                    </div>
-                ) : <span>
+                {this.state.list.length > 0 ? this.state.list.map(this.itemRender) : (
+                    <span>
                         <Alert message="Tips" description="暂无相关动态" />
-                    </span>}
+                    </span>
+                )}
                 <Pagination {...this.state.page} onChange={this.handlePageChange}
                     style={{ padding: '20px', float: 'right' }}
                 />

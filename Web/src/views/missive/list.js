@@ -92,45 +92,47 @@ export default class MissiveList extends React.Component {
         });
     }
 
+    titleColumnRender = (text, item) => (
+        <span>
+            {item.JJ_DJ ? <Icon type="exclamation" className="red" /> : null}
+            {item.Important ? <Icon type="flag" /> : null}
+            <Link to={`/missive/edit/${this.state.formId}/?id=${item.InfoId}`}>
+                {text}
+            </Link>
+            {item.Uid ? <Icon type="link" /> : null}
+        </span>
+    )
+    qXRQColumnRender = (text, item) => text ? moment(text).format('YYYY-MM-DD') : null
+    updateTimeColumnRender = (text, item) => text ? moment(text).format('YYYY-MM-DD HH:mm:ss') : null
+    operateColumnRender = (text, item) => {
+        var buttons = [];
+        if (auth.isCurrentUser(item.PostUserId)) {
+            if (item.Completed) {
+                if (!item.Uid && item.FormId === api.Forms.Missive.ID) {
+                    buttons.push(<Popconfirm title="你确定要上报吗？" key={item.ID}
+                        onConfirm={() => this.handleReport(item.InfoId)} >
+                        <Button type="primary">上报</Button>
+                    </Popconfirm>);
+                }
+            }
+            else {
+                buttons.push(<Popconfirm title="删除后无法恢复，你确定要删除吗? " key={item.ID}
+                    onConfirm={() => this.handleDelete(item.InfoId)} >
+                    <Button type="danger" icon="delete"></Button>
+                </Popconfirm>);
+            }
+        }
+        return buttons;
+    }
+
     getColumns = () => {
         let items = [
             { title: '文号', dataIndex: 'WJ_ZH', width: 200, },
-            {
-                title: '标题', dataIndex: 'Title',
-                render: (text, item) => <span>
-                    {item.JJ_DJ ? <Icon type="exclamation" className="red" /> : null}
-                    {item.Important ? <Icon type="flag" /> : null}
-                    <Link to={`/missive/edit/${this.state.formId}/?id=${item.InfoId}`}>
-                        {text}
-                    </Link>
-                    {item.Uid ? <Icon type="link" /> : null}
-                </span>
-            },
-            { title: '办理期限', width: 140, dataIndex: 'QX_RQ', render: (text, item) => text ? moment(text).format('YYYY-MM-DD') : null },
+            { title: '标题', dataIndex: 'Title', render: this.titleColumnRender },
+            { title: '办理期限', width: 140, dataIndex: 'QX_RQ', render: this.qXRQColumnRender },
             { title: '所在流程', width: 150, dataIndex: 'FlowStep' },
-            { title: '处理日期', width: 180, dataIndex: 'UpdateTime', render: (text, item) => text ? moment(text).format('YYYY-MM-DD HH:mm:ss') : null },
-            {
-                title: '操作', width: 120, render: (text, item) => {
-                    var buttons = [];
-                    if (auth.isCurrentUser(item.PostUserId)) {
-                        if (item.Completed) {
-                            if (!item.Uid && item.FormId === api.Forms.Missive.ID) {
-                                buttons.push(<Popconfirm title="你确定要上报吗？" key={item.ID}
-                                    onConfirm={() => this.handleReport(item.InfoId)} >
-                                    <Button type="primary">上报</Button>
-                                </Popconfirm>);
-                            }
-                        }
-                        else {
-                            buttons.push(<Popconfirm title="删除后无法恢复，你确定要删除吗? " key={item.ID}
-                                onConfirm={() => this.handleDelete(item.InfoId)} >
-                                <Button type="danger" icon="delete"></Button>
-                            </Popconfirm>);
-                        }
-                    }
-                    return buttons;
-                }
-            }
+            { title: '处理日期', width: 180, dataIndex: 'UpdateTime', render: this.updateTimeColumnRender },
+            { title: '操作', width: 120, render: this.operateColumnRender }
         ];
         return items
     }

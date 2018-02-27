@@ -2,7 +2,6 @@ import React from 'react'
 import { Menu } from 'antd'
 import auth from '../../models/auth'
 import utils from '../../utils'
-import nav from '../shared/_nav'
 
 class Sider extends React.Component {
 

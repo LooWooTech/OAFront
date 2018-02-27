@@ -86,6 +86,24 @@ class TaskList extends Component {
         })
     }
 
+    titleColumnRender = (text, item) => (
+        <span>
+            {item.Reminded ? <Icon type="exclamation" className="red" /> : null}
+            {moment(item.ScheduleDate) <= moment() ? <Icon type="exclamation" className="red" /> : null}
+            <Link to={`/task/edit?id=${item.ID}`}>{text}</Link>
+        </span>
+    )
+
+    fromColumnRender = (text, item) => (
+        <span>
+            {item.FromType === 1 ? '省' : item.FromType === 2 ? '市' : item.FromType === 3 ? '区' : ''}
+            {item.From}
+        </span>
+    )
+
+    schduleDateColumnRender = (text, item) => (text ? moment(text).format('YYYY-MM-DD') : null)
+    updateTimeColumnRender = (text, item) => (text ? moment(text).format('YYYY-MM-DD HH:mm') : null)
+
     render() {
 
         return (
@@ -106,27 +124,11 @@ class TaskList extends Component {
                     loading={this.state.loading}
                     columns={[
                         { title: '任务单号', dataIndex: 'Number', width: 100 },
-                        {
-                            title: '任务事项', dataIndex: 'Name',
-                            render: (text, item) => <span>{item.Reminded ? <Icon type="exclamation" className="red"  /> : null}  <Link to={`/task/edit?id=${item.ID}`}>{text}</Link></span>
-                        },
-                        {
-                            title: '任务来源', render: (text, item) => <span>
-                                {item.FromType === 1 ? '省' : item.FromType === 2 ? '市' : item.FromType === 3 ? '区' : ''}
-                                {item.From}
-                            </span>
-                        },
-                        {
-                            title: '计划完成时间', dataIndex: 'ScheduleDate', width: 150,
-                            render: (text, item) => text ? moment(text).format('YYYY-MM-DD') : null
-                        },
-                        {
-                            title: '更新日期', dataIndex: 'UpdateTime', width: 150,
-                            render: (text, item) => text ? moment(text).format('YYYY-MM-DD HH:mm') : null
-                        },
-                        {
-                            title: '操作', render: this.buttonsRender
-                        }
+                        { title: '任务事项', dataIndex: 'Name', render: this.titleColumnRender },
+                        { title: '任务来源', render: this.fromColumnRender },
+                        { title: '计划完成时间', dataIndex: 'ScheduleDate', width: 150, render: this.schduleDateColumnRender },
+                        { title: '更新日期', dataIndex: 'UpdateTime', width: 150, render: this.updateTimeColumnRender },
+                        { title: '操作', render: this.buttonsRender }
                     ]}
                     dataSource={this.state.data}
                     pagination={{

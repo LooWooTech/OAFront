@@ -9,7 +9,7 @@ import utils from '../../utils'
 
 class FlowDataList extends Component {
     state = { showAll: false, }
-    contentRender = (text, item) => {
+    contentColumnRender = (text, item) => {
         if (!text) {
             text = item.Result === null ? item.FreeFlowData ? '传阅中' : '待审核' : item.Result ? '同意' : '不同意';
         }
@@ -42,8 +42,16 @@ class FlowDataList extends Component {
         }
     }
 
+    signatureColumnRender = (text, item) => (
+        <span>
+            <Badge status={item.Result ? 'success' : item.Result === null ? 'processing' : 'error'} />
+            {text}
+        </span>
+    )
+    updateTimeColumnRender = (text, item) => text ? moment(text).format('YYYY-MM-DD HH:mm:ss') : null
+
     render() {
-        const { infoId,flowData, flowNodeData, canSubmitFlow, canSubmitFreeFlow, freeFlowNodeData } = this.props
+        const { infoId, flowData, flowNodeData, canSubmitFlow, canSubmitFreeFlow, freeFlowNodeData } = this.props
         return (
             <div>
                 {canSubmitFreeFlow && freeFlowNodeData && !freeFlowNodeData.Submited && !freeFlowNodeData.IsCc ?
@@ -74,21 +82,9 @@ class FlowDataList extends Component {
                     defaultExpandAllRows={true}
                     expandedRowRender={this.expandedRowRender}
                     columns={[
-                        {
-                            title: '审核人', dataIndex: 'Signature', width: 150,
-                            render: (text, item) => <span>
-                                <Badge status={item.Result ? 'success' : item.Result === null ? 'processing' : 'error'} />
-                                {text}
-                            </span>
-                        },
-                        {
-                            title: '意见', dataIndex: 'Content',
-                            render: this.contentRender
-                        },
-                        {
-                            title: '审核日期', dataIndex: 'UpdateTime', width: 170,
-                            render: (text, item) => text ? moment(text).format('YYYY-MM-DD HH:mm:ss') : null
-                        },
+                        { title: '审核人', dataIndex: 'Signature', width: 150, render: this.signatureColumnRender },
+                        { title: '意见', dataIndex: 'Content', render: this.contentColumnRender },
+                        { title: '审核日期', dataIndex: 'UpdateTime', width: 170, render: this.updateTimeColumnRender },
                         { title: '流程环节', dataIndex: 'FlowNodeName', width: 150 }
                     ]}
                 />
