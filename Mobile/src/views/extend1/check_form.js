@@ -41,11 +41,11 @@ class FormExtend1Check extends Component {
         //判断是否可以结束
         if (!model.RealEndTime) {
             if (model.Result && this.props.stores.userStore.isCurrentUser(model.UserId)) {
-                items.push({ title: this.getBackTitle(), name: 'backTime', type: 'datetime' })
+                items.push({ title: this.getBackTitle(model), name: 'backTime', type: 'datetime' })
             }
         }
         else {
-            items.push({ title: this.getBackTitle(), name: 'backTime', type: 'datetime', value: model.RealEndTime, disabled })
+            items.push({ title: this.getBackTitle(model), name: 'backTime', type: 'datetime', value: model.RealEndTime, disabled: true })
         }
         //判断是否审批
         if (this.props.stores.userStore.isCurrentUser(model.ApprovalUserId)) {
@@ -53,7 +53,7 @@ class FormExtend1Check extends Component {
                 { title: '是否同意', name: 'result', value: true, type: 'switch' },
                 {
                     title: '审 核 人', name: 'toUserId', type: 'select',
-                    placeholder:'如需要领导审批，请选择',
+                    placeholder: '如需要领导审批，请选择',
                     options: leaders.map(user => ({ label: user.RealName, value: user.ID }))
                 }
             ]);
@@ -64,8 +64,6 @@ class FormExtend1Check extends Component {
 
     handleSubmit = () => {
         let formData = this.refs.form.getData()
-        console.log(formData)
-        return
         this.props.stores.extend1Store.submitCheck(formData.id, formData.result, formData.toUserId);
         this.props.navigation.goBack()
     }

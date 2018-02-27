@@ -100,6 +100,10 @@ export default (variables = variable) => {
           lineHeight: 24,
           height: variables.searchBarInputHeight,
         },
+        "NativeBase.Button": {
+          paddingBottom: 12,
+          paddingHorizontal: 5,
+        },
         alignSelf: "center",
         alignItems: "center",
         justifyContent: "flex-start",
@@ -123,7 +127,7 @@ export default (variables = variable) => {
     },
     ".rounded": {
       "NativeBase.Item": {
-        borderRadius: platform === "ios" && platformStyle !== "material" ? 25 : 3,
+        borderRadius: platform === "ios" && platformStyle !== "material" ? 25 : 5,
       },
     },
     "NativeBase.Left": {

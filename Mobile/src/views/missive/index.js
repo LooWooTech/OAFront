@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { observer, inject } from 'mobx-react'
 import { FlatList, Dimensions } from 'react-native'
-import { Container, Header, Body, Left, Text, View, Right, Content, Title, Icon, Button, List, ListItem, H1 } from 'native-base'
+import { Container, Header, Body, Left, Text, View, Right, Content, Title, Icon, Button, List, ListItem, Item, H1, Input } from 'native-base'
 import MissiveItem from './_item'
+import BackButton from '../shared/BackButton'
 import NavbarPopover from '../shared/NavbarPopover'
 import ListEmptyComponent from '../shared/ListEmptyComponent'
 
@@ -38,8 +39,14 @@ class MissiveList extends Component {
         this.props.stores.missiveStore.refreshData()
     }
 
-    keyExtractor = (item, index) => item.ID;
+    handleChangeSearchKey = (key) => {
+        this.props.stores.missiveStore.setParams({ searchKey: key })
+    }
+    handleSubmitSearch = () => {
+        this.refreshData()
+    }
 
+    keyExtractor = (item, index) => item.ID;
     handleClickItem = (item) => {
         this.props.navigation.navigate('Missive.Detail', { id: item.InfoId })
     }
@@ -55,17 +62,20 @@ class MissiveList extends Component {
         const loading = stores.missiveStore.loading
         return (
             <Container>
-                <Header>
-                    <Body>
-                        <Title>
-                            <Icon name={form.Icon} /> {form.Name} - {statusText}
-                        </Title>
-                    </Body>
-                    <Right>
+                <Header searchBar rounded>
+                    <Item>
+                        <BackButton />
+                        <Input placeholder={`${form.Name} - ${statusText}`}
+                            onChangeText={this.handleChangeSearchKey}
+                            onSubmitEditing={this.handleSubmitSearch}
+                        />
+                        <Button transparent onPress={this.handleSubmitSearch}>
+                            <Icon name="search" />
+                        </Button>
                         <Button transparent onPress={this.showPopover}>
                             <Icon name="bars" />
                         </Button>
-                    </Right>
+                    </Item>
                 </Header>
                 <Content>
                     <FlatList

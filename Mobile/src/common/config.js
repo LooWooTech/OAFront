@@ -5,7 +5,7 @@ export const FORMS = {
     Missive: { ID: 1, FlowId: 1, Name: '发文', Icon: 'edit', Color: '#46b946', Detail: 'Missive.Detail', Home: 'Missive.List', Params: { status: 1 } },
     ReceiveMissive: { ID: 2, FlowId: 2, Name: '收文', Icon: 'file-o', Color: '#f04848', Detail: 'Missive.Detail', Home: 'Missive.List', Params: { status: 1 } },
     Task: { ID: 4, FlowId: 4, Name: '任务', Icon: 'tasks', Color: '#48a9f0', Detail: 'Task.Detail', Home: 'Task.List', Params: { status: 1 } },
-    Attendance: { ID: 7, FlowId: 7, Name: '考勤', Icon: 'calendar-check-o', Color: '#9266f9', Home: 'Attendance' },
+    Attendance: { ID: 7, FlowId: 7, Name: '考勤', Icon: 'calendar-check-o', Color: '#9266f9',Detail:'', Home: 'Attendance' },
     Salary: { ID: 9, Name: '工资单', Icon: 'credit-card', Color: '#eee', Detail: 'Salary.Detail', Home: 'Salary.List' },
     Mail: { ID: 8, Name: '邮件', Icon: 'envelope-o', Color: '#eee', Detail: 'Mail.Detail', Home: 'Mail.List' },
     Car: { ID: 3, FlowId: 3, Name: '用车', Color: '#eee', Icon: 'car', Detail: 'Extend1.Detail', Home: 'Extend1.List' },

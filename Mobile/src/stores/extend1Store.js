@@ -36,6 +36,10 @@ class FormExtend1Store extends FlatListData {
         }
         await api.formExtend1.back(id, time)
     }
+
+    @action async submitCheck(id, result = true, toUserId = 0) {
+        await api.formExtend1.approval(id, result, toUserId)
+    }
 }
 
 

@@ -34,7 +34,7 @@ class Messages extends Component {
     handleClickItem = (data) => {
         this.props.stores.messageStore.read(data.MessageId)
         const form = this.props.stores.formStore.getForm(data.FormId)
-        if (form) {
+        if (form && form.Detail) {
             this.props.navigation.navigate(form.Detail, { id: data.InfoId })
         }
     }
