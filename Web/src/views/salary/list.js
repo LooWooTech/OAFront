@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {  Button, Table, Row, Col } from 'antd'
+import { Button, Table, Row, Col } from 'antd'
 import api from '../../models/api'
 import utils from '../../utils'
 
@@ -33,7 +33,14 @@ class SalaryList extends Component {
         let data = model.Data;
         let keys = Object.keys(data);
         return <Row>
-            {keys.map(key => <Col key={key} span={6}><label>{key}：</label> <span>{data[key]}</span></Col>)}
+            {keys.map(key => {
+                let val = data[key]
+                let num = parseFloat(val)
+                if (!isNaN(num)) {
+                    val = num.toFixed(2).replace(".00", "")
+                }
+                return <Col key={key} span={6}><label>{key}：</label> <span>{val}</span></Col>;
+            })}
         </Row>
     }
     render() {

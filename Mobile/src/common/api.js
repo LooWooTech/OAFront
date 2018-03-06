@@ -136,5 +136,16 @@ export default api = {
         back: (id, backTime) => {
             return $.get('FormInfoExtend1/back', { id, backTime })
         }
+    },
+    salary: {
+        years: (userId) => {
+            return $.get('salary/getyears', { userId })
+        },
+        salaries: (params) => {
+            return $.get('salary/salaries', params)
+        },
+        salaryDatas: (params) => {
+            return $.get('salary/salaryDatas', params)
+        },
     }
 }

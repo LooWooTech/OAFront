@@ -10,6 +10,8 @@ import taskStore from './taskStore'
 import clientStore from './clientStore'
 import attendanceStore from './attendanceStore'
 import extend1Store from './extend1Store'
+import salaryStore from './salaryStore'
+
 export default {
     userStore,
     formStore,
@@ -23,4 +25,5 @@ export default {
     clientStore,
     attendanceStore,
     extend1Store,
+    salaryStore,
 }

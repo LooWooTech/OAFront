@@ -8,7 +8,7 @@ class MessagePopover extends Component {
     state = { count: 0, list: [] }
     componentWillMount() {
         this.loadData();
-        var intervalId = setInterval(this.loadData, 1000 * 5);
+        const intervalId = setInterval(this.loadData, 1000 * 60);
         this.setState({ intervalId: intervalId });
     }
 

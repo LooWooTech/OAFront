@@ -18,6 +18,9 @@ import SubTaskDetail from './views/task/subTaskDetail'
 import Attendance from './views/attendance/index'
 import LeaveForm from './views/attendance/leave_form';
 
+import MySalary from './views/salary/my';
+import SalaryDetail from './views/salary/detail'
+
 import Extend1List from './views/extend1/list'
 import Extend1Check from './views/extend1/check_form'
 
@@ -71,6 +74,8 @@ export const RootNavigator = StackNavigator(
         'Leave.Form': { screen: LeaveForm },
         'Extend1.List': { screen: Extend1List },
         'Extend1.Check': { screen: Extend1Check },
+        'Salary.My': { screen: MySalary },
+        'Salary.Detail': { screen: SalaryDetail }
     },
     {
         initialRouteName: 'Welcome',
