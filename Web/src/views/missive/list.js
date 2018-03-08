@@ -129,11 +129,16 @@ export default class MissiveList extends React.Component {
         let items = [
             { title: '文号', dataIndex: 'WJ_ZH', width: 200, },
             { title: '标题', dataIndex: 'Title', render: this.titleColumnRender },
+        ];
+        if (this.state.formId == api.Forms.ReceiveMissive.ID) {
+            items.push({ title: '来文单位', width: 200, dataIndex: 'LW_DW' })
+        }
+        items = items.concat([
             { title: '办理期限', width: 140, dataIndex: 'QX_RQ', render: this.qXRQColumnRender },
             { title: '所在流程', width: 150, dataIndex: 'FlowStep' },
             { title: '处理日期', width: 180, dataIndex: 'UpdateTime', render: this.updateTimeColumnRender },
             { title: '操作', width: 120, render: this.operateColumnRender }
-        ];
+        ])
         return items
     }
 
