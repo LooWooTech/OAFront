@@ -1,6 +1,7 @@
 import { API_HOST } from '../common/config'
 import { NavigationActions } from 'react-navigation'
 import userStore from '../stores/userStore'
+import { Toast } from 'native-base'
 function queryStringToJson(str) {
     let json = {}
     str.split('&').map(kv => {
@@ -25,6 +26,7 @@ function throwException(ex) {
     console.debug("error", ex)
     const msg = ex.ExceptionMessage || ex.Message || ex.ReferenceError || '未知错误'
     //Toast.showLongCenter(msg)
+    Toast.show({ text: msg, type: 'danger' })
 }
 
 async function request(path, query, data, httpMethod) {
@@ -47,6 +49,7 @@ async function request(path, query, data, httpMethod) {
         }
     }
     try {
+        console.debug(url)
         let result = undefined;
         switch (httpMethod) {
             case 'GET':
@@ -58,7 +61,6 @@ async function request(path, query, data, httpMethod) {
                 result = await fetch(url, options)
                 break;
         }
-        console.debug(url)
         console.debug('result._bodyText', result._bodyText)
         switch (result.status) {
             case 200:

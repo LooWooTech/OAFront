@@ -177,9 +177,9 @@ export default {
 
   // Icon
   iconFamily: "FontAwesome",
-  iconFontSize: platform === "ios" ? 30 : 24,
+  iconFontSize: platform === "ios" ? 24 : 24,
   iconMargin: 7,
-  iconHeaderSize: platform === "ios" ? 33 : 22,
+  iconHeaderSize: platform === "ios" ? 22 : 22,
 
   // InputGroup
   inputFontSize: 17,

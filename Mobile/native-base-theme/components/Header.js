@@ -81,20 +81,7 @@ export default (variables = variable) => {
     },
     ".searchBar": {
       "NativeBase.Item": {
-        "NativeBase.Icon": {
-          backgroundColor: "transparent",
-          color: variables.dropdownLinkColor,
-          fontSize: variables.toolbarSearchIconSize,
-          alignItems: "center",
-          marginTop: 2,
-          paddingRight: 10,
-          paddingLeft: 10,
-        },
-        "NativeBase.IconNB": {
-          backgroundColor: "transparent",
-          color: null,
-          alignSelf: "center",
-        },
+
         "NativeBase.Input": {
           alignSelf: "center",
           lineHeight: 24,
@@ -103,6 +90,20 @@ export default (variables = variable) => {
         "NativeBase.Button": {
           paddingBottom: 12,
           paddingHorizontal: 5,
+          "NativeBase.Icon": {
+            backgroundColor: "transparent",
+            color: variables.dropdownLinkColor,
+            fontSize: platform == 'ios' ? variables.toolbarSearchIconSize - 4 : variables.toolbarSearchIconSize,
+            alignItems: "center",
+            marginTop: platform == 'ios' ? -10 : 2,
+            //paddingRight: 10,
+            //paddingLeft: 10,
+          },
+          "NativeBase.IconNB": {
+            backgroundColor: "transparent",
+            color: null,
+            alignSelf: "center",
+          },
         },
         alignSelf: "center",
         alignItems: "center",
@@ -160,7 +161,7 @@ export default (variables = variable) => {
           marginLeft: -3,
           "NativeBase.Icon": {
             color: variables.toolbarBtnColor,
-            fontSize: variables.iconHeaderSize,
+            fontSize: variables.iconHeaderSize - 4,
             marginTop: 2,
             marginRight: 2,
             marginLeft: 2,
@@ -200,7 +201,7 @@ export default (variables = variable) => {
     },
     "NativeBase.Body": {
       flex: 1,
-      alignItems: platform === "ios" && platformStyle !== "material" ? "center" : "flex-start",
+      alignItems: "flex-start",
       alignSelf: "center",
       "NativeBase.Segment": {
         borderWidth: 0,
@@ -232,7 +233,7 @@ export default (variables = variable) => {
           height: 30,
           "NativeBase.Icon": {
             color: variables.toolbarBtnColor,
-            fontSize: variables.iconHeaderSize - 2,
+            fontSize: variables.iconHeaderSize - 4,
             marginTop: 2,
             marginRight: 2,
             marginLeft: 5,
@@ -244,7 +245,7 @@ export default (variables = variable) => {
           },
           "NativeBase.IconNB": {
             color: variables.toolbarBtnColor,
-            fontSize: variables.iconHeaderSize - 2,
+            fontSize: variables.iconHeaderSize - 4,
             marginTop: 2,
             marginRight: 2,
             marginLeft: 5,
@@ -256,16 +257,14 @@ export default (variables = variable) => {
           borderRadius: 50,
           "NativeBase.Icon": {
             color: variables.toolbarBtnColor,
-            fontSize:
-              platform === "ios" ? variables.iconHeaderSize - 6 : variables.iconHeaderSize - 2,
+            fontSize: variables.iconHeaderSize - 4,
             marginTop: 2,
             marginLeft: 2,
             marginRight: 2,
           },
           "NativeBase.IconNB": {
             color: variables.toolbarBtnColor,
-            fontSize:
-              platform === "ios" ? variables.iconHeaderSize - 6 : variables.iconHeaderSize - 2,
+            fontSize: variables.iconHeaderSize - 4,
             marginTop: 2,
             marginLeft: 2,
             marginRight: 2,
