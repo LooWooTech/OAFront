@@ -1,6 +1,5 @@
 import { API_HOST } from '../common/config'
 import { NavigationActions } from 'react-navigation'
-import Toast from '@remobile/react-native-toast'
 import userStore from '../stores/userStore'
 function queryStringToJson(str) {
     let json = {}
@@ -25,7 +24,7 @@ function jsonToQueryString(json) {
 function throwException(ex) {
     console.debug("error", ex)
     const msg = ex.ExceptionMessage || ex.Message || ex.ReferenceError || '未知错误'
-    Toast.showLongCenter(msg)
+    //Toast.showLongCenter(msg)
 }
 
 async function request(path, query, data, httpMethod) {

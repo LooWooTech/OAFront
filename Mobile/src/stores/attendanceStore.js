@@ -1,5 +1,4 @@
 import { observable, action, computed } from 'mobx'
-import DeviceInfo from 'react-native-device-info'
 import api from '../common/api'
 import moment from 'moment'
 

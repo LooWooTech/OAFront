@@ -7,7 +7,6 @@
     "test": "jest"
   },
   "dependencies": {
-    "@remobile/react-native-toast": "^1.0.7",
     "mobx": "^3.4.1",
     "mobx-react": "^4.3.5",
     "moment": "^2.20.0",
@@ -16,7 +15,6 @@
     "react-native": "0.51.0",
     "react-native-calendars": "^1.16.1",
     "react-native-datepicker": "^1.6.0",
-    "react-native-device-info": "^0.13.0",
     "react-native-doc-viewer": "^2.7.3",
     "react-native-fs": "^2.9.7",
     "react-navigation": "^1.0.0-beta.21"

@@ -1,6 +1,7 @@
-export const HOST = process.env.NODE_ENV === 'production' ? 'http://120.27.147.171:8080/' : 'http://192.168.2.128:8012/';
+export const HOST = process.env.NODE_ENV === 'production' ? 'http://120.27.147.171:8080/' : 'http://192.168.2.163:8012/';
 export const API_PATH = "api/";
 export const API_HOST = HOST + API_PATH;
+export const VERSION = "0.13";
 export const FORMS = {
     Missive: { ID: 1, FlowId: 1, Name: '发文', Icon: 'edit', Color: '#46b946', Detail: 'Missive.Detail', Home: 'Missive.List', Params: { status: 1 } },
     ReceiveMissive: { ID: 2, FlowId: 2, Name: '收文', Icon: 'file-o', Color: '#f04848', Detail: 'Missive.Detail', Home: 'Missive.List', Params: { status: 1 } },

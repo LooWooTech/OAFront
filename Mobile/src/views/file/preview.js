@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Platform } from 'react-native'
+import { Platform, Linking } from 'react-native'
 import { inject, observer } from 'mobx-react'
 import { Container, Header, Left, Right, Body, Title, Content, View, Text, Button, ProgressBar, Icon, Footer } from 'native-base'
 import BackButton from '../shared/BackButton'
@@ -25,6 +25,10 @@ class FilePreview extends Component {
     handleDownloadFile = () => {
         const file = this.props.navigation.state.params.file
         const source = this.props.stores.fileStore.getSource(file.ID)
+        
+        Linking.openURL(source.uri).catch(err => console.error(err))
+
+        return;
         const task = RNFS.downloadFile({
             fromUrl: source.uri,
             toFile: this.getLocalPath(),

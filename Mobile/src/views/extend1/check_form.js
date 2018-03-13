@@ -3,7 +3,6 @@ import { inject, observer } from 'mobx-react'
 import { Container, Header, Left, Body, Right, Title, View, Content, Text, Button, Footer, Icon, ListItem } from 'native-base'
 import BackButton from '../shared/BackButton'
 import Form from '../shared/Form'
-import Toast from '@remobile/react-native-toast'
 import moment from 'moment'
 import { FORMS } from '../../common/config';
 

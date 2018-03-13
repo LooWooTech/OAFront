@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react'
-import { Container, Header, Left, Body, Right, Title, View, Content, Text, Button, Footer, Icon } from 'native-base'
+import { Toast, Container, Header, Left, Body, Right, Title, View, Content, Text, Button, Footer, Icon } from 'native-base'
 import BackButton from '../shared/BackButton'
 import Form from '../shared/Form'
-import Toast from '@remobile/react-native-toast'
 import moment from 'moment'
 
 @inject('stores')
@@ -16,16 +15,16 @@ class LeaveForm extends Component {
     handleSubmit = () => {
         const formData = this.refs.form.getData()
         if (!formData.ApprovalUserId) {
-            Toast.showShortCenter('请选择审批人', )
+            Toast.show({ text: '请选择审批人', position: 'top' })
             return false;
         }
-        if(!formData.Reason){
-            Toast.showShortCenter('没有填写请假理由');
+        if (!formData.Reason) {
+            Toast.show({ text: '没有填写请假理由', position: 'top' });
             return false;
         }
         this.props.stores.attendanceStore.submitLeave(formData)
         this.props.navigation.goBack()
-        Toast.showShortCenter('申请完成，请等待审核');
+        Toast.show({ text: '申请完成，请等待审核', position: 'top' });
     }
 
     getFormItems = () => {

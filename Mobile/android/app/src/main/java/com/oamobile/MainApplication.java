@@ -3,10 +3,9 @@ package com.oamobile;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
-import com.learnium.RNDeviceInfo.RNDeviceInfo;
+
 import com.reactlibrary.RNReactNativeDocViewerPackage;
 import com.rnfs.RNFSPackage;
-import com.remobile.toast.RCTToastPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -27,8 +26,6 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new RCTToastPackage(), 
-            new RNDeviceInfo(),
             new RNReactNativeDocViewerPackage(),
             new RNFSPackage()
       );

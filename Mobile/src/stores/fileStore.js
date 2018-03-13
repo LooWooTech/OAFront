@@ -17,7 +17,8 @@ class FileStore {
     }
 
     getSource(fileId) {
-        const fileUrl = api.file.getUrl(fileId)
+        const fileUrl = api.file.getUrl(fileId) + "&token=" + userStore.token;
+        console.log(fileUrl)
         return {
             uri: fileUrl,
             method: 'GET',

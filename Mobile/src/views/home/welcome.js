@@ -5,8 +5,7 @@ import { observer, inject } from 'mobx-react'
 import { Container, Content, Text, View } from 'native-base'
 import CounterDown from '../shared/CounterDown'
 import LoginForm from '../user/_login'
-import DeviceInfo from 'react-native-device-info'
-
+import {VERSION} from '../../common/config'
 @inject('stores')
 @observer
 class Welcome extends Component {
@@ -38,7 +37,7 @@ class Welcome extends Component {
                     舟山市国土局定海分局
                 </Text>
                 <Text style={styles.subTitle}>
-                    办公自动化系统 v{DeviceInfo.getVersion()}
+                    办公自动化系统 v{VERSION}
                 </Text>
                 <LoginForm />
             </Container>

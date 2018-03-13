@@ -148,8 +148,6 @@ android {
 }
 
 dependencies {
-    compile project(':react-native-toast')
-    compile project(':react-native-device-info')
     compile project(':react-native-doc-viewer')
     compile project(':react-native-fs')
     compile fileTree(dir: "libs", include: ["*.jar"])
