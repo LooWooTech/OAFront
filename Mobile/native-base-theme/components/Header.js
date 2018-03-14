@@ -93,7 +93,7 @@ export default (variables = variable) => {
           "NativeBase.Icon": {
             backgroundColor: "transparent",
             color: variables.dropdownLinkColor,
-            fontSize: platform == 'ios' ? variables.toolbarSearchIconSize - 4 : variables.toolbarSearchIconSize,
+            fontSize: variables.toolbarSearchIconSize - 4,
             alignItems: "center",
             marginTop: platform == 'ios' ? -10 : 2,
             //paddingRight: 10,

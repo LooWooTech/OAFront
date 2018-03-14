@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { observer, inject } from 'mobx-react'
 import { FlatList, Dimensions } from 'react-native'
-import { Container, Header, Body, Left, Text, View, Right, Content, Title, Icon, Button, List, ListItem, H1 } from 'native-base'
+import { Container, Header, Body, Left, Text, View, Right, Content, Title, Icon, Button, List, ListItem, Item, H1, Input } from 'native-base'
+import BackButton from '../shared/BackButton'
 import TaskItem from './_item'
 import NavbarPopover from '../shared/NavbarPopover'
 import ListEmptyComponent from '../shared/ListEmptyComponent'
-import { FORMS } from '../../common/config'
 
 @inject('stores')
 @observer
@@ -18,6 +18,12 @@ class TaskList extends Component {
     ]
     showPopover = () => {
         this.refs.menu.show();
+    }
+    handleChangeSearchKey = (key) => {
+        this.props.stores.taskStore.setParams({ searchKey: key })
+    }
+    handleSubmitSearch = () => {
+        this.refreshData()
     }
     handleSelectMenu = item => {
         this.props.navigation.setParams({ status: item.value })
@@ -48,19 +54,23 @@ class TaskList extends Component {
         const loading = stores.taskStore.loading
         return (
             <Container>
-                <Header>
-                    <Body>
-                        <Title>
-                            <Icon name={menu.icon} /> {menu.label}
-                        </Title>
-                    </Body>
-                    <Right>
+                <Header searchBar rounded>
+                    <Item>
+                        <BackButton />
+                        <Input placeholder={menu.label}
+                            onChangeText={this.handleChangeSearchKey}
+                            onSubmitEditing={this.handleSubmitSearch}
+                        />
+                        <Button transparent onPress={this.handleSubmitSearch}>
+                            <Icon name="search" />
+                        </Button>
                         <Button transparent onPress={this.showPopover}>
                             <Icon name="bars" />
                         </Button>
-                    </Right>
+                    </Item>
                 </Header>
                 <Content>
+                    <NavbarPopover ref="menu" data={this.menuData} onSelect={this.handleSelectMenu} />
                     <FlatList
                         data={list}
                         renderItem={this.renderItem}
@@ -73,7 +83,6 @@ class TaskList extends Component {
                         ListEmptyComponent={<ListEmptyComponent icon="file-o" text={`暂无任务记录`} loading={loading} />}
                     />
                 </Content>
-                <NavbarPopover ref="menu" data={this.menuData} onSelect={this.handleSelectMenu} />
             </Container>
         );
     }

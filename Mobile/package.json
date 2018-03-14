@@ -17,6 +17,7 @@
     "react-native-datepicker": "^1.6.0",
     "react-native-doc-viewer": "^2.7.3",
     "react-native-fs": "^2.9.7",
+    "react-native-popup-menu": "^0.12.3",
     "react-navigation": "^1.0.0-beta.21"
   },
   "devDependencies": {

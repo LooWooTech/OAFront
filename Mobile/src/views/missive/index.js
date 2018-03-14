@@ -23,6 +23,7 @@ class MissiveList extends Component {
     }
 
     handleSelectMenu = item => {
+        console.log(item)
         this.props.navigation.setParams({ status: item.value })
         this.props.stores.missiveStore.setParams({ status: item.value })
         this.refreshData()
@@ -78,6 +79,7 @@ class MissiveList extends Component {
                     </Item>
                 </Header>
                 <Content>
+                    <NavbarPopover ref="menu" data={this.menuData} onSelect={this.handleSelectMenu} />
                     <FlatList
                         data={list}
                         renderItem={this.renderItem}
@@ -90,7 +92,6 @@ class MissiveList extends Component {
                         ListEmptyComponent={<ListEmptyComponent icon="file-o" text={`暂无${statusText}`} loading={loading} />}
                     />
                 </Content>
-                <NavbarPopover ref="menu" data={this.menuData} onSelect={this.handleSelectMenu} />
             </Container>
         );
     }

@@ -2,19 +2,26 @@ import React, { Component } from 'react';
 import { Dimensions } from 'react-native'
 import PropTypes from 'prop-types';
 import { List, ListItem, Icon, Left, Body, Right, Text, View } from 'native-base'
-import Popover from '../components/Popover'
-const WINDOW_WIDTH = Dimensions.get('window').width
-const WINDOW_HEIGHT = Dimensions.get('window').height
+import { Menu, MenuOptions, MenuOption, MenuTrigger, renderers } from 'react-native-popup-menu'
+
+class NavbarOption extends Component {
+
+}
+
 class NavbarPopover extends Component {
-    state = { isVisible: false }
+
+    menu = null
+
     show = () => {
-        this.setState({ isVisible: true })
+        this.menu.open();
     }
-    hide = () => {
-        this.setState({ isVisible: false });
+
+    hide = ()=>{
+        this.menu.close();
     }
+
     handleSelect = (val) => {
-        this.setState({ isVisible: false })
+        this.hide();
         if (this.props.onSelect) {
             this.props.onSelect(val)
         }
@@ -22,26 +29,25 @@ class NavbarPopover extends Component {
 
     render() {
         return (
-            <Popover
-                isVisible={this.state.isVisible}
-                displayArea={{ x: 0, y: 60, width: WINDOW_WIDTH, height: WINDOW_HEIGHT }}
-                fromRect={{ x: WINDOW_WIDTH - 80, y: 0, width: 80, height: 50 }}
-                onClose={this.hide}>
-                <List style={{ width: 240 }}>
+            <Menu ref={r => this.menu = r} renderer={renderers.Popover} rendererProps={{ preferredPlacement: 'bottom' }}>
+                <MenuTrigger />
+                <MenuOptions style={{ width: 240 }}>
                     {this.props.data.map((item, key) => (
-                        <ListItem icon key={key} onPress={() => this.handleSelect(item)}>
-                            <Left>
-                                <Icon name={item.icon} style={{ fontSize: 18 }} />
-                            </Left>
-                            <Body>
-                                <Text>
-                                    {item.label}
-                                </Text>
-                            </Body>
-                        </ListItem>
+                        <MenuOption key={key}>
+                            <ListItem icon onPress={() => this.handleSelect(item)}>
+                                <Left>
+                                    <Icon name={item.icon} style={{ fontSize: 18 }} />
+                                </Left>
+                                <Body>
+                                    <Text>
+                                        {item.label}
+                                    </Text>
+                                </Body>
+                            </ListItem>
+                        </MenuOption>
                     ))}
-                </List>
-            </Popover>
+                </MenuOptions>
+            </Menu>
         );
     }
 }

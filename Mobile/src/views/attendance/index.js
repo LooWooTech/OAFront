@@ -77,6 +77,7 @@ class Attendance extends Component {
                     </Right>
                 </Header>
                 <Content style={{ backgroundColor: "#fff" }}>
+                    <NavbarPopover ref="menu" data={this.menuData} onSelect={this.handleSelectMenu} />
                     <Calendar
                         maxDate={moment().format('YYYY-MM-DD')}
                         onDayPress={this.handleSelectDay}
@@ -99,7 +100,6 @@ class Attendance extends Component {
                         }
                     </List>
                 </Content>
-                <NavbarPopover ref="menu" data={this.menuData} onSelect={this.handleSelectMenu} />
             </Container>
         );
     }
