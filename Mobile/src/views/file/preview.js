@@ -11,75 +11,10 @@ import RNFS from 'react-native-fs'
 @observer
 class FilePreview extends Component {
 
-    state = { inProgress: false, progress: '0', downloaded: false }
-
-    componentWillMount() {
-        const task = RNFS.exists(this.getLocalPath())
-        task.then(exists => {
-            if (exists) {
-                this.setState({ downloaded: true })
-            }
-        });
-    }
-
-    handleDownloadFile = () => {
-        const file = this.props.navigation.state.params.file
-        const source = this.props.stores.fileStore.getSource(file.ID)
-        
-        Linking.openURL(source.uri).catch(err => console.error(err))
-
-        return;
-        const task = RNFS.downloadFile({
-            fromUrl: source.uri,
-            toFile: this.getLocalPath(),
-            headers: source.headers,
-            background: false,
-            progressDivider: 10,
-            begin: () => {
-                this.setState({ inProgress: true, progress: '0' })
-            },
-        })
-        task.promise.then((res) => {
-            this.setState({ inProgress: false, downloaded: true })
-        })
-
-    }
-
-    getLocalPath = () => {
-        const file = this.props.navigation.state.params.file
-        return "file://" + (RNFS.MainBundlePath || RNFS.DocumentDirectoryPath) + '/' + file.SavePath
-    }
-
     handleOpenFile = () => {
         const file = this.props.navigation.state.params.file
-
-        if (Platform.OS === 'ios') {
-            //IOS
-            OpenFile.openDoc([{
-                url: source.uri,
-                fileNameOptional: "sample-test"
-            }], (error, url) => {
-                if (error) {
-                    console.error(error);
-                } else {
-                    console.log(url)
-                }
-            })
-        } else {
-            //Android
-            OpenFile.openDoc([{
-                url: this.getLocalPath(),
-                fileName: file.FileName,
-                cache: false,
-                fileType: file.FileExt.substring(1)
-            }], (error, url) => {
-                if (error) {
-                    console.error(error);
-                } else {
-                    console.log(url)
-                }
-            })
-        }
+        const source = this.props.stores.fileStore.getSource(file.ID)
+        Linking.openURL(source.uri).catch(err => console.error(err))
     }
 
     render() {
@@ -108,17 +43,10 @@ class FilePreview extends Component {
                 </Content>
                 <Footer>
                     <Body>
-                        {this.state.downloaded ?
-                            <Button iconLeft success full transparent onPress={this.handleOpenFile}>
-                                <Icon name="folder-open-o" />
-                                <Text>打开文件</Text>
-                            </Button>
-                            :
-                            <Button iconLeft full transparent onPress={this.handleDownloadFile}>
-                                <Icon name="download" />
-                                <Text>{this.state.inProgress ? "下载中" : "下载文件"}</Text>
-                            </Button>
-                        }
+                        <Button iconLeft success full transparent onPress={this.handleOpenFile}>
+                            <Icon name="folder-open-o" />
+                            <Text>打开文件</Text>
+                        </Button>
                     </Body>
                 </Footer>
             </Container>
