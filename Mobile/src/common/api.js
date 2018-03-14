@@ -78,7 +78,7 @@ export default api = {
             return $.get('file/list', { infoId, inline, page: 1, rows: 100 })
         },
         getUrl: (fileId) => {
-            return API_HOST + 'file/?id=' + fileId
+            return API_HOST + 'file/index?id=' + fileId
         },
         getDownloadUrl: (fileId) => {
             return HOST + 'attachment/download?id=' + fileId;
