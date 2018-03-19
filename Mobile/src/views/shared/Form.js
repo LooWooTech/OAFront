@@ -22,6 +22,7 @@ class SharedFormItem extends Component {
         switch (item.type) {
             case 'date':
             case 'datetime':
+                const val = item.value || item.defaultValue || ''
                 return (
                     <Row>
                         <Col style={styles.left}>
@@ -30,7 +31,7 @@ class SharedFormItem extends Component {
                         <Col style={styles.body}>
                             <DatePicker
                                 mode={item.type}
-                                date={item.value || item.defaultValue || ''}
+                                date={val}
                                 onDateChange={this.handleChangeValue}
                                 showIcon={false}
                                 is24Hour={true}
@@ -38,6 +39,7 @@ class SharedFormItem extends Component {
                                     dateIcon: { fontSize: 8, paddingRight: 10, width: 80, },
                                     dateInput: { backgroundColor: 'transparent', borderWidth: 0, alignSelf: 'auto', flexDirection: 'row', justifyContent: 'space-between', height: 44 },
                                 }}
+                                placeholder={item.placeholder || (val ? val : '请选择日期')}
                                 style={{ flex: 0, width: '99%' }}
                                 disabled={disabled}
                             />

@@ -39,7 +39,7 @@ export default api = {
         }
     },
     flowData: {
-        users: (flowId, flowNodeId, flowDataId, flowStep = 1) => {
+        users: (flowId = 0, flowNodeId = 0, flowDataId = 0, flowStep = 1) => {
             return $.get('flowdata/userlist', { flowId, flowNodeId, flowDataId, flowStep })
         },
         submit: (data) => {
@@ -66,7 +66,7 @@ export default api = {
     formInfo: {
         model: (id) => {
             return $.get('formInfo/model', { id });
-        },
+        }
     },
     sms: {
         send: (userIds, infoId) => {
@@ -149,6 +149,44 @@ export default api = {
         },
         salaryDatas: (params) => {
             return $.get('salary/salaryDatas', params)
+        }
+    },
+    car: {
+        list: () => {
+            return $.get('car/list')
         },
+        apply: data => {
+            return $.post('car/apply', null, data)
+        }
+    },
+    meetingroom: {
+        list: () => {
+            return $.get('meetingroom/list')
+        },
+        apply: data => {
+            return $.post('meetingroom/apply', null, data)
+        }
+    },
+    seal: {
+        list: () => {
+            return $.get('meetingroom/list')
+        },
+        apply: data => {
+            return $.post('seal/apply', null, data)
+        }
+    },
+    mail: {
+        list: (params) => {
+            return $.get('mail/list', params)
+        },
+        send: (data) => {
+            return $.post('mail/send', null, data)
+        },
+        model: (id) => {
+            return $.get('mail/model', { id })
+        },
+        delete: (id) => {
+            return $.delete('mail/delete', { id })
+        }
     }
 }

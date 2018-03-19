@@ -24,6 +24,9 @@ import SalaryDetail from './views/salary/detail'
 import Extend1List from './views/extend1/list'
 import Extend1Check from './views/extend1/check_form'
 
+import CarIndex from './views/car/index'
+import CarForm from './views/car/form'
+
 const Index = TabNavigator(
     {
         Home: { screen: HomePage, },
@@ -75,7 +78,9 @@ export const RootNavigator = StackNavigator(
         'Extend1.List': { screen: Extend1List },
         'Extend1.Check': { screen: Extend1Check },
         'Salary.My': { screen: MySalary },
-        'Salary.Detail': { screen: SalaryDetail }
+        'Salary.Detail': { screen: SalaryDetail },
+        'Car.Index': { screen: CarIndex },
+        'Car.Form': { screen: CarForm }
     },
     {
         initialRouteName: 'Welcome',

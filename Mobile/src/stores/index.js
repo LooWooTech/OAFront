@@ -11,6 +11,10 @@ import clientStore from './clientStore'
 import attendanceStore from './attendanceStore'
 import extend1Store from './extend1Store'
 import salaryStore from './salaryStore'
+import mailStore from './mailStore'
+import meetingroomStore from './meetingroomStore'
+import carStore from './carStore'
+import sealStore from './sealStore'
 
 export default {
     userStore,
@@ -26,4 +30,8 @@ export default {
     attendanceStore,
     extend1Store,
     salaryStore,
+    carStore,
+    sealStore,
+    meetingroomStore,
+    mailStore,
 }
