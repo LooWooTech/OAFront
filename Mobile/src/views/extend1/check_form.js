@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react'
-import { Container, Header, Left, Body, Right, Title, View, Content, Text, Button, Footer, Icon, ListItem } from 'native-base'
+import { Container, Header, Left, Body, Right, Title, View, Content, Text, Button, Footer, Icon, ListItem, Toast } from 'native-base'
 import BackButton from '../shared/BackButton'
 import Form from '../shared/Form'
 import moment from 'moment'
@@ -63,12 +63,16 @@ class FormExtend1Check extends Component {
 
     handleSubmit = () => {
         let formData = this.refs.form.getData()
-        this.props.stores.extend1Store.submitCheck(formData.id, formData.result, formData.toUserId);
+        this.props.stores.extend1Store.submitCheck(formData.id, formData.result, formData.toUserId || 0);
         this.props.navigation.goBack()
     }
 
     handleBack = () => {
         let formData = this.refs.form.getData()
+        if (!formData.backTime) {
+            Toast.show({ text: '请选择归还日期', position: 'top' })
+            return false;
+        }
         this.props.stores.extend1Store.back(formData.id, formData.backTime)
     }
 

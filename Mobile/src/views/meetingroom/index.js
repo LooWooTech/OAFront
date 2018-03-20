@@ -10,22 +10,22 @@ import NavbarPopover from '../shared/NavbarPopover'
 
 @inject('stores')
 @observer
-export default class CarIndex extends Component {
+export default class MeetingRoomIndex extends Component {
 
     menuData = []
 
     componentWillMount() {
-        this.props.stores.carStore.getList();
+        this.props.stores.meetingroomStore.getList();
         const userId = this.props.stores.userStore.user.ID
         this.menuData = [
-            { label: '申请用车', value: 'Car.Apply', icon: 'plus' },
+            { label: '申请会议室', value: 'MeetingRoom.Apply', icon: 'plus' },
             {
                 label: '申请记录', value: 'Extend1.List', icon: 'history',
-                params: { formId: FORMS.Car.ID, userId: userId, approvalUserId: 0, infoId: 0 }
+                params: { formId: FORMS.MeetingRoom.ID, userId: userId, approvalUserId: 0, infoId: 0 }
             },
             {
-                label: '用车审批', value: 'Extend1.List', icon: 'check',
-                params: { formId: FORMS.Car.ID, status: 1, approvalUserId: userId, userId: 0, infoId: 0 }
+                label: '申请审批', value: 'Extend1.List', icon: 'check',
+                params: { formId: FORMS.MeetingRoom.ID, status: 1, approvalUserId: userId, userId: 0, infoId: 0 }
             }
         ]
     }
@@ -33,12 +33,12 @@ export default class CarIndex extends Component {
     showMenu = () => this.refs.menu.show()
     handleSelectMenu = (item) => this.props.navigation.navigate(item.value, item.params);
     handleItemClick = (item) => this.props.navigation.navigate('Extend1.List', {
-        formId: FORMS.Car.ID,
+        formId: FORMS.MeetingRoom.ID,
         infoId: item.ID,
     })
 
     render() {
-        const { list } = this.props.stores.carStore
+        const { list } = this.props.stores.meetingroomStore
         return (
             <Container>
                 <Header>
@@ -46,7 +46,7 @@ export default class CarIndex extends Component {
                         <BackButton />
                     </Left>
                     <Body>
-                        <Title>车辆申请</Title>
+                        <Title>会议室</Title>
                     </Body>
                     <Right>
                         <Button transparent onPress={this.showMenu}>
@@ -56,13 +56,13 @@ export default class CarIndex extends Component {
                 </Header>
                 <Content>
                     <NavbarPopover ref="menu" data={this.menuData} onSelect={this.handleSelectMenu} />
-                    {list.map(item => <CarItem key={item.ID} model={item} onClick={this.handleItemClick} />)}
+                    {list.map(item => <MeetingRoomItem key={item.ID} model={item} onClick={this.handleItemClick} />)}
                 </Content>
             </Container>
         )
     }
 }
-class CarItem extends Component {
+class MeetingRoomItem extends Component {
 
     handleClick = () => {
         this.props.onClick(this.props.model)
@@ -73,7 +73,7 @@ class CarItem extends Component {
         return (
             <ListRow
                 key={model.ID}
-                left={<Icon name={FORMS.Car.Icon} style={{ color: model.Status === 0 ? "green" : model.Status === 2 ? "gray" : "red" }} />}
+                left={<Icon name={FORMS.MeetingRoom.Icon} style={{ color: model.Status === 0 ? "green" : model.Status === 2 ? "gray" : "red" }} />}
                 title={model.Name}
                 subTitle={model.Number}
                 right={<Text note><Icon name="chevron-right" style={{ fontSize: 12 }} /></Text>}
@@ -82,7 +82,7 @@ class CarItem extends Component {
         )
     }
 }
-CarItem.propTypes = {
+MeetingRoomItem.propTypes = {
     model: PropTypes.object.isRequired,
     onClick: PropTypes.func.isRequired
 }

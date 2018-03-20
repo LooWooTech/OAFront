@@ -72,7 +72,7 @@ class Attendance extends Component {
                     </Body>
                     <Right>
                         <Button transparent onPress={this.showMenu}>
-                            <Icon name="list" />
+                            <Icon name="bars" />
                         </Button>
                     </Right>
                 </Header>

@@ -169,7 +169,7 @@ export default api = {
     },
     seal: {
         list: () => {
-            return $.get('meetingroom/list')
+            return $.get('seal/list')
         },
         apply: data => {
             return $.post('seal/apply', null, data)

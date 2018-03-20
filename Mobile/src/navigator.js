@@ -25,7 +25,13 @@ import Extend1List from './views/extend1/list'
 import Extend1Check from './views/extend1/check_form'
 
 import CarIndex from './views/car/index'
-import CarForm from './views/car/form'
+import CarApply from './views/car/apply'
+
+import MeetingRoomIndex from './views/meetingroom/index'
+import MeetingRoomApply from './views/meetingroom/apply'
+
+import SealIndex from './views/seal/index'
+import SealApply from './views/seal/apply'
 
 const Index = TabNavigator(
     {
@@ -80,7 +86,11 @@ export const RootNavigator = StackNavigator(
         'Salary.My': { screen: MySalary },
         'Salary.Detail': { screen: SalaryDetail },
         'Car.Index': { screen: CarIndex },
-        'Car.Form': { screen: CarForm }
+        'Car.Apply': { screen: CarApply },
+        'MeetingRoom.Index': { screen: MeetingRoomIndex },
+        'MeetingRoom.Apply': { screen: MeetingRoomApply },
+        'Seal.Index': { screen: SealIndex },
+        'Seal.Apply': { screen: SealApply },
     },
     {
         initialRouteName: 'Welcome',
