@@ -187,6 +187,9 @@ export default api = {
         },
         delete: (id) => {
             return $.delete('mail/delete', { id })
-        }
+        },
+        star: (id, isStar) => {
+            $.get(`userinfo/${isStar ? 'star' : 'unstar'}`, { id })
+        },
     }
 }

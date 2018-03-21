@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Content, Item, Input, Label, Picker, Switch, Text, View, ListItem, List, Left, Body, Right, Textarea, Icon } from 'native-base'
-import { Dimensions, FlatList } from 'react-native';
+import { Dimensions, FlatList, WebView } from 'react-native';
 import moment from 'moment'
 import ListRow from '../shared/ListRow'
 
@@ -64,6 +64,14 @@ class SharedDetailItem extends Component {
                     <ListRow
                         left={<Text>{item.title}</Text>}
                         title={item.value ? "是" : "否"}
+                    />
+                )
+            case 'web':
+            case 'html':
+                return (
+                    <ListRow
+                        left={<Text>{item.title}</Text>}
+                        body={<WebView source={{ html: item.value || item.defaultValue, baseUrl: '' }} style={{ height: 200 }} />}
                     />
                 )
         }

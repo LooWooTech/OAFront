@@ -24,14 +24,18 @@ import SalaryDetail from './views/salary/detail'
 import Extend1List from './views/extend1/list'
 import Extend1Check from './views/extend1/check_form'
 
-import CarIndex from './views/car/index'
+import CarList from './views/car/index'
 import CarApply from './views/car/apply'
 
-import MeetingRoomIndex from './views/meetingroom/index'
+import MeetingRoomList from './views/meetingroom/index'
 import MeetingRoomApply from './views/meetingroom/apply'
 
-import SealIndex from './views/seal/index'
+import SealList from './views/seal/index'
 import SealApply from './views/seal/apply'
+
+import MailList from './views/mail/index'
+import MailDetail from './views/mail/detail'
+import MailForm from './views/mail/form'
 
 const Index = TabNavigator(
     {
@@ -85,12 +89,15 @@ export const RootNavigator = StackNavigator(
         'Extend1.Check': { screen: Extend1Check },
         'Salary.My': { screen: MySalary },
         'Salary.Detail': { screen: SalaryDetail },
-        'Car.Index': { screen: CarIndex },
+        'Car.List': { screen: CarList },
         'Car.Apply': { screen: CarApply },
-        'MeetingRoom.Index': { screen: MeetingRoomIndex },
+        'MeetingRoom.List': { screen: MeetingRoomList },
         'MeetingRoom.Apply': { screen: MeetingRoomApply },
-        'Seal.Index': { screen: SealIndex },
+        'Seal.List': { screen: SealList },
         'Seal.Apply': { screen: SealApply },
+        'Mail.List': { screen: MailList },
+        'Mail.Detail': { screen: MailDetail },
+        'Mail.Form':{screen:MailForm},
     },
     {
         initialRouteName: 'Welcome',
