@@ -10,7 +10,7 @@ import ListRow from '../shared/ListRow'
 import moment from 'moment'
 
 const menuData = [
-    { label: '写邮件', path: 'Mail.Post', value: 'edit', icon: 'edit' },
+    { label: '写邮件', path: 'Mail.Form', value: 'edit', icon: 'edit' },
     { label: '收件箱', value: 'receive', icon: 'envelope-open-o' },
     { label: '星标邮件', value: 'star', icon: 'star-o' },
     { label: '草稿箱', value: 'draft', icon: 'pencil' },
@@ -25,7 +25,7 @@ export default class MailList extends Component {
     handleChangeSearchKey = (key) => this.props.stores.mailStore.setParams({ searchKey: key })
     handleSubmitSearch = () => this.refreshData()
     handleSelectMenu = item => {
-        if (item.path === 'Mail.Post') {
+        if (item.path == 'Mail.Form') {
             this.props.navigation.navigate(item.path);
             return;
         }

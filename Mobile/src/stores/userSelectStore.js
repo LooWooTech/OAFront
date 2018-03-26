@@ -48,12 +48,14 @@ class UserSelectData {
         return await api.freeflowData.users(flowNodeDataId)
     }
     async _loadAllUsers() {
-        return await api.user.list({ page: 1, rows: 10000 })
+        const data = await api.user.list({ page: 1, rows: 10000 })
+        return data.List;
     }
 
     _filterUsers() {
         this.users = this.users.sort((a, b) => b.Sort - a.Sort)
-        this.users.map(user => extendObservable(user, { selected: false }))
+
+        this.users.map(user => extendObservable(user, { selected: (this.params.users || []).find(e => e.ID == user.ID) }))
         const searchKey = this.params.searchKey || ''
         if (searchKey) {
             this.users = this.users.filter(e => e.RealName.indexOf(searchKey) > -1 || e.Username.indexOf(searchKey) > -1)
@@ -72,7 +74,7 @@ class UserSelectData {
         this.departments = departments.sort((a, b) => a.Sort - b.Sort);
     }
     @computed get multiple() {
-        return this.params.formType === 'freeflow'
+        return this.params.multiple || this.params.formType === 'freeflow'
     }
     @action setUserSelected(id, selected = true) {
         if (selected && !this.multiple) {

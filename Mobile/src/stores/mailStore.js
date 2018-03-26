@@ -20,17 +20,25 @@ class MailStore extends FlatListData {
     //详细页
     @observable data = null
     @action async getDetailData(id) {
-        const data = await api.mail.model(id)
-        this.data = data
-        return data
+        if (!id) return null
+        let data = await api.mail.model(id)
+        let userMail = data.userMail;
+        if (userMail.$ref) {
+            data.userMail = data.model.Users.find(e => e.$id === userMail.$ref)
+        }
+        this.data = data;
+        return this.data
     }
 
     @action async delete(id) {
         await api.mail.delete(id)
     }
 
-    @action async star(id, isStar) {
-        await api.mail.star(id, isStar)
+    @action async send(data) {
+        await api.mail.send(data)
+    }
+    @action    async save(data) {
+        await api.mail.save(data)
     }
 }
 export default new MailStore()

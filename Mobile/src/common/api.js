@@ -182,14 +182,31 @@ export default api = {
         send: (data) => {
             return $.post('mail/send', null, data)
         },
+        save: (data) => {
+            return $.post('mail/save', null, data)
+        },
         model: (id) => {
             return $.get('mail/model', { id })
         },
         delete: (id) => {
             return $.delete('mail/delete', { id })
+        }
+    },
+    userInfo: {
+        star: (id) => {
+            $.get('userinfo/star', { id })
         },
-        star: (id, isStar) => {
-            $.get(`userinfo/${isStar ? 'star' : 'unstar'}`, { id })
+        unStar: id => {
+            $.get('userinfo/unstar', { id })
         },
+        trash: id => {
+            $.delete('userinfo/trash', { id })
+        },
+        delete: id => {
+            $.delete('userinfo/delete', { id })
+        },
+        recovery: id => {
+            $.get('userinfo/recovery', { id })
+        }
     }
 }

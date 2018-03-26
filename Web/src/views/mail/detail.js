@@ -42,44 +42,28 @@ class EmailDetail extends Component {
     }
 
     handleDelete = () => {
-        if (this.isCreator()) {
-            Modal.confirm({
-                title: '提醒',
-                content: '你确定要删除此封邮件吗？',
-                okText: '确认',
-                cancelText: '取消',
-                onOk: () => {
-                    api.Mail.Delete(this.state.model.ID, () => {
-                        utils.GoBack()
-                    })
-                }
-            })
+        const { model, userMail } = this.state
+        let tips = '你确定要删除此封邮件吗？'
+        if (this.isCreator() && model.IsDraft) {
+            tips = '你确定要删除此草稿吗？'
         }
-        else if (this.state.userMail.Trash) {
-            Modal.confirm({
-                title: '提醒',
-                content: '彻底删除将无法恢复，你确定要彻底删除吗？',
-                okText: '确认',
-                cancelText: '取消',
-                onOk: () => {
-                    api.UserInfo.Delete(this.state.userMail.ID, json => {
-                        utils.GoBack()
-                    })
-                }
-            });
-        } else {
-            Modal.confirm({
-                title: '提醒',
-                content: '你确定要将此封邮件移动到回收站吗？',
-                okText: '确认',
-                cancelText: '取消',
-                onOk: () => {
-                    api.UserInfo.Trash(this.state.userMail.ID, json => {
-                        utils.GoBack()
-                    })
-                }
-            });
+        if(userMail.Trash){
+            tips = '彻底删除将无法恢复，你确定要彻底删除吗？'
         }
+        else{
+            tips = '你确定要将此封邮件移动到回收站吗？'
+        }
+        Modal.confirm({
+            title: '提醒',
+            content: tips,
+            okText: '确认',
+            cancelText: '取消',
+            onOk: () => {
+                api.Mail.Delete(this.state.model.ID, () => {
+                    utils.GoBack()
+                })
+            }
+        })
     }
 
     isCreator = () => {

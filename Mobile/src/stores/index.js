@@ -15,7 +15,7 @@ import mailStore from './mailStore'
 import meetingroomStore from './meetingroomStore'
 import carStore from './carStore'
 import sealStore from './sealStore'
-
+import userInfoStore from './userInfoStore'
 export default {
     userStore,
     formStore,
@@ -34,4 +34,5 @@ export default {
     sealStore,
     meetingroomStore,
     mailStore,
+    userInfoStore
 }

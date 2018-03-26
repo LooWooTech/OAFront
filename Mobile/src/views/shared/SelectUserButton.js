@@ -53,7 +53,8 @@ SelectUserButton.contextTypes = {
 }
 SelectUserButton.propTypes = {
     name: PropTypes.string.isRequired,
-    type: PropTypes.string.isRequired,
+    type: PropTypes.string,
+    multiple:PropTypes.bool,
     onSelected: PropTypes.func,
     text: PropTypes.string,
     params: PropTypes.object

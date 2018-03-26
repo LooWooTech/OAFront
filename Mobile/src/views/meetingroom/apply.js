@@ -60,7 +60,7 @@ export default class MeetingRoomApplyForm extends Component {
                             ref="selectUser"
                             type="flow"
                             name="select_user"
-                            params={{ flowId: FORMS.MeetingRoom.ID, flowStep: 2 }}
+                            params={{ flowId: FORMS.MeetingRoom.ID, flowStep: 2, multiple: false }}
                         />
                     </Body>)
             }

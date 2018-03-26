@@ -8,7 +8,7 @@ import { Keyboard } from 'react-native'
 
 @inject('stores')
 @observer
-class SelectUserModal extends Component {
+export default class SelectUserModal extends Component {
 
     state = { selectAll: false }
     componentWillMount() {
@@ -48,6 +48,7 @@ class SelectUserModal extends Component {
 
     render() {
         const { users, departments, multiple } = this.props.stores.userSelectStore.data
+        console.log('multiple', multiple)
         return (
             <Container>
                 <Header searchBar rounded>
@@ -103,7 +104,6 @@ class SelectUserModal extends Component {
         );
     }
 }
-export default SelectUserModal;
 
 @inject('stores')
 @observer
