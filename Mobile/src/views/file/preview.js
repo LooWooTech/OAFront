@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Platform, Linking } from 'react-native'
+import { Platform, NativeEventEmitter, NativeModules } from 'react-native'
 import { inject, observer } from 'mobx-react'
 import { Container, Header, Left, Right, Body, Title, Content, View, Text, Button, ProgressBar, Icon, Footer } from 'native-base'
 import BackButton from '../shared/BackButton'
@@ -14,6 +14,14 @@ class FilePreview extends Component {
     isIOS = Platform.OS === 'ios';
 
     state = { inProgress: false, progress: '0', downloaded: this.isIOS }
+    eventEmitter = new NativeEventEmitter(NativeModules.RNReactNativeDocViewer)
+
+    constructor(props) {
+        super(props)
+        this.eventEmitter.addListener('DoneButtonEvent', (data) => {
+            console.log(data.close);
+        })
+    }
 
     componentWillMount() {
         if (!this.isIOS) {
@@ -24,6 +32,21 @@ class FilePreview extends Component {
                 }
             });
         }
+    }
+
+    componentDidMount() {
+        this.eventEmitter.addListener(
+            'RNDownloaderProgress',
+            (Event) => {
+                console.log("Progress - Download " + Event.progress + " %");
+                this.setState({ progress: parseInt(Event.progress), inProgress: Event.progress < 100 });
+            }
+        );
+    }
+
+    componentWillUnmount() {
+        this.eventEmitter.removeListener()
+        this.eventEmitter.removeListener('RNDownloaderProgress')
     }
 
     handleDownloadFile = () => {
@@ -56,7 +79,17 @@ class FilePreview extends Component {
             //IOS
             const source = this.props.stores.fileStore.getSource(file.ID)
             const url = source.uri + '&token=' + source.headers.token
-            Linking.openURL(url).catch(err => console.error(err))
+            OpenFile.openDocBinaryinUrl([{
+                url,
+                fileName: file.FileName,
+                fileType: file.FileExt.substring(1),
+            }], (err, url) => {
+                if (err) {
+                    console.error('open file err:', err)
+                } else {
+                    console.log(url)
+                }
+            })
         } else {
             //Android
             OpenFile.openDoc([{
@@ -103,7 +136,7 @@ class FilePreview extends Component {
                         {this.state.downloaded || this.isIOS ?
                             <Button iconLeft success full transparent onPress={this.handleOpenFile}>
                                 <Icon name="folder-open-o" />
-                                <Text>打开文件</Text>
+                                <Text>{this.state.inProgress ? `下载中${this.state.progress}%` : '下载并打开'}</Text>
                             </Button>
                             :
                             <Button iconLeft full transparent onPress={this.handleDownloadFile}>

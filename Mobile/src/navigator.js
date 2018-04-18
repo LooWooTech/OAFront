@@ -37,42 +37,11 @@ import MailList from './views/mail/index'
 import MailDetail from './views/mail/detail'
 import MailForm from './views/mail/form'
 
-const Index = TabNavigator(
-    {
-        Home: { screen: HomePage, },
-        Messages: { screen: Messages },
-    },
-    {
-        tabBarPosition: 'bottom',
-        lazy: true,
-        backBehavior: 'none',
-        animationEnabled: true,
-        tabBarOptions: {
-            activeTintColor: '#108ee9',
-            inactiveTintColor: '#333',
-            showIcon: true,
-            showLabel: true,
-            upperCaseLabel: false,
-            pressOpacity: 0.8,
-            style: {
-                backgroundColor: '#fff',
-                paddingBottom: 0,
-                borderTopWidth: 0.5,
-                borderTopColor: '#ccc',
-            },
-            labelStyle: {
-                fontSize: 12,
-                margin: 1
-            },
-            indicatorStyle: { height: 0 },
-        },
-    }
-)
-
 export const RootNavigator = StackNavigator(
     {
         Welcome: { screen: Welcome },
-        Index: { screen: Index },
+        Index: { screen: HomePage },
+        Messages: { screen: Messages },
         Settings: { screen: Settings },
         'Missive.List': { screen: MissvieList },
         'Missive.Detail': { screen: MissiveDetail },
@@ -97,7 +66,7 @@ export const RootNavigator = StackNavigator(
         'Seal.Apply': { screen: SealApply },
         'Mail.List': { screen: MailList },
         'Mail.Detail': { screen: MailDetail },
-        'Mail.Form':{screen:MailForm},
+        'Mail.Form': { screen: MailForm },
     },
     {
         initialRouteName: 'Welcome',
