@@ -10,10 +10,7 @@ import RNFS from 'react-native-fs'
 @inject('stores')
 @observer
 class FilePreview extends Component {
-
-    isIOS = Platform.OS === 'ios';
-
-    state = { inProgress: false, progress: '0', downloaded: this.isIOS }
+    state = { inProgress: false, progress: '0', downloaded: false }
     eventEmitter = new NativeEventEmitter(NativeModules.RNReactNativeDocViewer)
 
     constructor(props) {
@@ -24,14 +21,12 @@ class FilePreview extends Component {
     }
 
     componentWillMount() {
-        if (!this.isIOS) {
-            const task = RNFS.exists(this.getLocalPath())
-            task.then(exists => {
-                if (exists) {
-                    this.setState({ downloaded: true })
-                }
-            });
-        }
+        const task = RNFS.exists(this.getLocalPath())
+        task.then(exists => {
+            if (exists) {
+                this.setState({ downloaded: true })
+            }
+        });
     }
 
     componentDidMount() {
@@ -61,6 +56,14 @@ class FilePreview extends Component {
             begin: () => {
                 this.setState({ inProgress: true, progress: '0' })
             },
+            progress: (res) => {
+                let progress = parseInt(res.bytesWritten / res.contentLength * 100)
+                this.setState({ inProgress: progress < 100, progress })
+                if (process == 100) {
+                    this.setState({ inProgress: false, downloaded: true })
+
+                }
+            }
         })
         task.promise.then((res) => {
             this.setState({ inProgress: false, downloaded: true })
@@ -70,19 +73,19 @@ class FilePreview extends Component {
 
     getLocalPath = () => {
         const file = this.props.navigation.state.params.file
-        return "file://" + (RNFS.MainBundlePath || RNFS.DocumentDirectoryPath) + '/' + file.SavePath
+        const url = (Platform.OS === 'ios' ? RNFS.DocumentDirectoryPath : RNFS.DocumentDirectoryPath) + '/' + file.SavePath
+        console.log(url)
+        return url
     }
 
     handleOpenFile = () => {
         const file = this.props.navigation.state.params.file
-        if (this.isIOS) {
-            //IOS
-            const source = this.props.stores.fileStore.getSource(file.ID)
-            const url = source.uri + '&token=' + source.headers.token
-            OpenFile.openDocBinaryinUrl([{
-                url,
-                fileName: file.FileName,
-                fileType: file.FileExt.substring(1),
+        const localUrl = this.getLocalPath()
+        if (Platform.OS === 'ios') {
+            OpenFile.openDoc([{
+                url: localUrl,
+                fileNameOptional: file.FileName,
+                fileType: file.FileExt.substring(1)
             }], (err, url) => {
                 if (err) {
                     console.error('open file err:', err)
@@ -91,19 +94,19 @@ class FilePreview extends Component {
                 }
             })
         } else {
-            //Android
             OpenFile.openDoc([{
-                url: this.getLocalPath(),
+                url: localUrl,
                 fileName: file.FileName,
                 cache: false,
                 fileType: file.FileExt.substring(1)
-            }], (error, url) => {
-                if (error) {
-                    console.error(error);
+            }], (err, url) => {
+                if (err) {
+                    console.error('open file err:', err)
                 } else {
                     console.log(url)
                 }
             })
+
         }
     }
 
@@ -133,15 +136,15 @@ class FilePreview extends Component {
                 </Content>
                 <Footer>
                     <Body>
-                        {this.state.downloaded || this.isIOS ?
+                        {this.state.downloaded ?
                             <Button iconLeft success full transparent onPress={this.handleOpenFile}>
                                 <Icon name="folder-open-o" />
-                                <Text>{this.state.inProgress ? `下载中${this.state.progress}%` : '下载并打开'}</Text>
+                                <Text>打开文件</Text>
                             </Button>
                             :
                             <Button iconLeft full transparent onPress={this.handleDownloadFile}>
                                 <Icon name="download" />
-                                <Text>{this.state.inProgress ? "下载中" : "下载文件"}</Text>
+                                <Text>{this.state.inProgress ? `下载中${this.state.progress}%` : "下载文件"}</Text>
                             </Button>
                         }
                     </Body>
