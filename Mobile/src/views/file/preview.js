@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Platform, Linking } from 'react-native'
+import { Platform, NativeEventEmitter, NativeModules } from 'react-native'
 import { inject, observer } from 'mobx-react'
 import { Container, Header, Left, Right, Body, Title, Content, View, Text, Button, ProgressBar, Icon, Footer } from 'native-base'
 import BackButton from '../shared/BackButton'
@@ -10,20 +10,38 @@ import RNFS from 'react-native-fs'
 @inject('stores')
 @observer
 class FilePreview extends Component {
+    state = { inProgress: false, progress: '0', downloaded: false }
+    eventEmitter = new NativeEventEmitter(NativeModules.RNReactNativeDocViewer)
 
-    isIOS = Platform.OS === 'ios';
-
-    state = { inProgress: false, progress: '0', downloaded: this.isIOS }
+    constructor(props) {
+        super(props)
+        this.eventEmitter.addListener('DoneButtonEvent', (data) => {
+            console.log(data.close);
+        })
+    }
 
     componentWillMount() {
-        if (!this.isIOS) {
-            const task = RNFS.exists(this.getLocalPath())
-            task.then(exists => {
-                if (exists) {
-                    this.setState({ downloaded: true })
-                }
-            });
-        }
+        const task = RNFS.exists(this.getLocalPath())
+        task.then(exists => {
+            if (exists) {
+                this.setState({ downloaded: true })
+            }
+        });
+    }
+
+    componentDidMount() {
+        this.eventEmitter.addListener(
+            'RNDownloaderProgress',
+            (Event) => {
+                console.log("Progress - Download " + Event.progress + " %");
+                this.setState({ progress: parseInt(Event.progress), inProgress: Event.progress < 100 });
+            }
+        );
+    }
+
+    componentWillUnmount() {
+        this.eventEmitter.removeListener()
+        this.eventEmitter.removeListener('RNDownloaderProgress')
     }
 
     handleDownloadFile = () => {
@@ -38,6 +56,14 @@ class FilePreview extends Component {
             begin: () => {
                 this.setState({ inProgress: true, progress: '0' })
             },
+            progress: (res) => {
+                let progress = parseInt(res.bytesWritten / res.contentLength * 100)
+                this.setState({ inProgress: progress < 100, progress })
+                if (process == 100) {
+                    this.setState({ inProgress: false, downloaded: true })
+
+                }
+            }
         })
         task.promise.then((res) => {
             this.setState({ inProgress: false, downloaded: true })
@@ -47,30 +73,40 @@ class FilePreview extends Component {
 
     getLocalPath = () => {
         const file = this.props.navigation.state.params.file
-        return "file://" + (RNFS.MainBundlePath || RNFS.DocumentDirectoryPath) + '/' + file.SavePath
+        const url = (Platform.OS === 'ios' ? RNFS.DocumentDirectoryPath : RNFS.DocumentDirectoryPath) + '/' + file.SavePath
+        console.log(url)
+        return url
     }
 
     handleOpenFile = () => {
         const file = this.props.navigation.state.params.file
-        if (this.isIOS) {
-            //IOS
-            const source = this.props.stores.fileStore.getSource(file.ID)
-            const url = source.uri + '&token=' + source.headers.token
-            Linking.openURL(url).catch(err => console.error(err))
-        } else {
-            //Android
+        const localUrl = this.getLocalPath()
+        if (Platform.OS === 'ios') {
             OpenFile.openDoc([{
-                url: this.getLocalPath(),
-                fileName: file.FileName,
-                cache: false,
+                url: localUrl,
+                fileNameOptional: file.FileName,
                 fileType: file.FileExt.substring(1)
-            }], (error, url) => {
-                if (error) {
-                    console.error(error);
+            }], (err, url) => {
+                if (err) {
+                    console.error('open file err:', err)
                 } else {
                     console.log(url)
                 }
             })
+        } else {
+            OpenFile.openDoc([{
+                url: localUrl,
+                fileName: file.FileName,
+                cache: false,
+                fileType: file.FileExt.substring(1)
+            }], (err, url) => {
+                if (err) {
+                    console.error('open file err:', err)
+                } else {
+                    console.log(url)
+                }
+            })
+
         }
     }
 
@@ -100,7 +136,7 @@ class FilePreview extends Component {
                 </Content>
                 <Footer>
                     <Body>
-                        {this.state.downloaded || this.isIOS ?
+                        {this.state.downloaded ?
                             <Button iconLeft success full transparent onPress={this.handleOpenFile}>
                                 <Icon name="folder-open-o" />
                                 <Text>打开文件</Text>
@@ -108,7 +144,7 @@ class FilePreview extends Component {
                             :
                             <Button iconLeft full transparent onPress={this.handleDownloadFile}>
                                 <Icon name="download" />
-                                <Text>{this.state.inProgress ? "下载中" : "下载文件"}</Text>
+                                <Text>{this.state.inProgress ? `下载中${this.state.progress}%` : "下载文件"}</Text>
                             </Button>
                         }
                     </Body>

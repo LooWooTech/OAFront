@@ -39,7 +39,7 @@ class SharedFormItem extends Component {
                                     dateIcon: { fontSize: 8, paddingRight: 10, width: 80, },
                                     dateInput: { backgroundColor: 'transparent', borderWidth: 0, alignSelf: 'auto', flexDirection: 'row', justifyContent: 'space-between', height: 44 },
                                 }}
-                                placeholder={item.placeholder || (val ? val : '请选择日期')}
+                                placeholder={item.placeholder || '请选择日期'}
                                 style={{ flex: 0, width: '99%' }}
                                 disabled={disabled}
                             />
@@ -95,15 +95,26 @@ class SharedFormItem extends Component {
                             {left}
                         </Col>
                         <Col style={styles.body}>
-                            <Picker
-                                placeholder={item.placeholder || item.title}
-                                selectedValue={item.value || item.defaultValue || 0}
-                                enabled={!disabled}
-                                onValueChange={this.handleChangeValue}
-                            >
-                                {Platform.OS == 'ios' ? null : <Item label={item.placeholder || item.title || '请选择'} value='' />}
-                                {item.options.map(opt => <Item key={opt.value} label={opt.label || opt.text} value={opt.value} />)}
-                            </Picker>
+                            {Platform.OS === 'ios' ?
+                                <Picker
+                                    placeholder={item.placeholder || item.title}
+                                    selectedValue={item.value || item.defaultValue || 0}
+                                    enabled={!disabled}
+                                    onValueChange={this.handleChangeValue}
+                                >
+                                    {item.options.map(opt => <Item key={opt.value} label={opt.label || opt.text} value={opt.value} />)}
+                                </Picker>
+                                :
+                                <Picker
+                                    placeholder={item.placeholder || item.title}
+                                    selectedValue={item.value || item.defaultValue || 0}
+                                    enabled={!disabled}
+                                    onValueChange={this.handleChangeValue}
+                                >
+                                    <Item label={item.placeholder || item.title || '请选择'} value='' />
+                                    {item.options.map(opt => <Item key={opt.value} label={opt.label || opt.text} value={opt.value} />)}
+                                </Picker>
+                            }
                         </Col>
                     </Row>
                 )

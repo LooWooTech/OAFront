@@ -4,16 +4,11 @@ import { FlatList, Dimensions, } from 'react-native'
 import { Container, View, Image, Header, Body, Left, Right, Content, Title, Badge, Icon, Segment, Button, Text, H1 } from 'native-base'
 import MessageItem from './_item'
 import ListEmptyComponent from '../shared/ListEmptyComponent'
+import BackButton from '../shared/BackButton'
 
 @inject('stores')
 @observer
 class Messages extends Component {
-    static navigationOptions = ({ navigation }) => ({
-        tabBarLabel: '消息',
-        tabBarIcon: ({ tintColor }) => (
-            <Icon name="bell-o" style={{ color: tintColor, fontSize: 25 }} />
-        )
-    });
 
     componentWillMount() {
         this.props.stores.messageStore.loadData(1)
@@ -38,7 +33,7 @@ class Messages extends Component {
             this.props.navigation.navigate(form.Detail, { id: data.InfoId })
         }
     }
-    keyExtractor = (item, index) => item.ID;
+    keyExtractor = (item, index) => index + item.ID;
     renderItem = ({ item }) => <MessageItem data={item} onClick={this.handleClickItem} />
 
     render() {
@@ -48,6 +43,7 @@ class Messages extends Component {
             <Container>
                 <Header hasSegment={true}>
                     <Left>
+                        <BackButton />
                     </Left>
                     <Body>
                         <Segment>

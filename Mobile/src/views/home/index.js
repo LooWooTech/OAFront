@@ -5,19 +5,12 @@ import { NavigationActions } from 'react-navigation'
 import { Container, Header, Text, View, Left, Body, Content, Title, Right, Icon, List, ListItem, Button } from 'native-base'
 import HomeFormGrid from './_formGrid'
 import { BANNER_URL } from '../../common/config';
+import moment from 'moment'
 
 @inject('stores')
 @observer
 class HomePage extends Component {
-    static navigationOptions = ({ navigation }) => {
-        return {
-            header: null,
-            tabBarLabel: '首页',
-            tabBarIcon: ({ tintColor }) => (
-                <Icon name="th" style={{ fontSize: 25, color: tintColor }} />
-            )
-        };
-    }
+
     componentWillMount() {
         Keyboard.dismiss()
         if (Platform.OS == 'android' && this.props.stores.clientStore.shouldUpgrade) {
@@ -33,6 +26,10 @@ class HomePage extends Component {
                 }
             ])
         }
+    }
+
+    handleClickMessage = () => {
+        this.props.navigation.navigate('Messages')
     }
 
     handleClickSetting = () => {
@@ -54,13 +51,16 @@ class HomePage extends Component {
                         </Title>
                     </Body>
                     <Right>
+                        <Button transparent onPress={this.handleClickMessage}>
+                            <Icon name="bell-o" style={{ color: '#fff' }} />
+                        </Button>
                         <Button transparent onPress={this.handleClickSetting}>
                             <Icon name="gear" style={{ color: '#fff' }} />
                         </Button>
                     </Right>
                 </Header>
                 <Content style={{ backgroundColor: '#fff' }}>
-                    <Image source={{ uri: BANNER_URL }} style={{ height: 195, width: '100%' }} />
+                    <Image source={{ uri: BANNER_URL + "?v=" + moment().format('ll') }} style={{ height: 195, width: '100%' }} />
                     <List>
                         <ListItem itemDivider >
                             <Text>功能模块</Text>
