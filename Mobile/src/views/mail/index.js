@@ -8,6 +8,7 @@ import NavbarPopover from '../shared/NavbarPopover'
 import ListEmptyComponent from '../shared/ListEmptyComponent'
 import ListRow from '../shared/ListRow'
 import moment from 'moment'
+import Styles from '../../common/styles'
 
 const menuData = [
     { label: '写邮件', path: 'Mail.Form', value: 'edit', icon: 'edit' },
@@ -81,7 +82,7 @@ export default class MailList extends Component {
                         onEndReached={this.loadNextPageData}
                         onRefresh={this.refreshData}
                         refreshing={loading}
-                        style={{ height: Dimensions.get('window').height - 80, backgroundColor: '#fff' }}
+                        style={Styles.FlatList}
                         ListEmptyComponent={<ListEmptyComponent icon='envelope-o' text={`暂无邮件`} loading={loading} />}
                     />
                 </Content>

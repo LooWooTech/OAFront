@@ -6,6 +6,7 @@ import MissiveItem from './_item'
 import BackButton from '../shared/BackButton'
 import NavbarPopover from '../shared/NavbarPopover'
 import ListEmptyComponent from '../shared/ListEmptyComponent'
+import Styles from '../../common/styles'
 
 @inject('stores')
 @observer
@@ -47,7 +48,7 @@ class MissiveList extends Component {
         this.refreshData()
     }
 
-    keyExtractor = (item, index) => item.ID;
+    keyExtractor = (item, index) => item.ID + index;
     handleClickItem = (item) => {
         this.props.navigation.navigate('Missive.Detail', { id: item.InfoId })
     }
@@ -88,7 +89,7 @@ class MissiveList extends Component {
                         onEndReached={this.loadNextPageData}
                         onRefresh={this.refreshData}
                         refreshing={loading}
-                        style={{ height: Dimensions.get('window').height - 80, backgroundColor: '#fff' }}
+                        style={Styles.FlatList}
                         ListEmptyComponent={<ListEmptyComponent icon="file-o" text={`暂无${statusText}`} loading={loading} />}
                     />
                 </Content>

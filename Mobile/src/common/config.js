@@ -1,7 +1,7 @@
 export const HOST = process.env.NODE_ENV === 'production' ? 'http://120.27.147.171:8080/' : 'http://120.27.147.171:8080/';
 export const API_PATH = "api/";
 export const API_HOST = HOST + API_PATH;
-export const VERSION = "1.0";
+export const VERSION = "1.2.1";
 export const BANNER_URL = HOST + "/images/mobile_banner.jpg"
 export const FORMS = {
     Missive: { ID: 1, FlowId: 1, Name: '发文', Icon: 'edit', Color: '#2f9606', Detail: 'Missive.Detail', Home: 'Missive.List', Params: { status: 1 } },
@@ -18,4 +18,4 @@ export const USER_ROLE = {
     User: 1,
     Manager: 2,
     Administrator: 3
-}
+};

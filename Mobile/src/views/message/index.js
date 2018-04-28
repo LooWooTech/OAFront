@@ -5,6 +5,7 @@ import { Container, View, Image, Header, Body, Left, Right, Content, Title, Badg
 import MessageItem from './_item'
 import ListEmptyComponent from '../shared/ListEmptyComponent'
 import BackButton from '../shared/BackButton'
+import Styles from '../../common/styles'
 
 @inject('stores')
 @observer
@@ -72,7 +73,7 @@ class Messages extends Component {
                         onEndReached={this.loadNextPageData}
                         onRefresh={this.refreshData}
                         refreshing={loading}
-                        style={{ height: Dimensions.get('window').height - 140, backgroundColor: '#fff' }}
+                        style={Styles.FlatList}
                         ListEmptyComponent={<ListEmptyComponent icon="bell-o" text="暂无消息" loading={loading} />}
                     />
                 </Content>
