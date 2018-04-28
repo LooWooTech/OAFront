@@ -45,7 +45,7 @@ async function request(path, query, data, httpMethod) {
         'method': httpMethod,
         'headers': {
             'token': userStore.token || '',
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
         }
     }
     try {

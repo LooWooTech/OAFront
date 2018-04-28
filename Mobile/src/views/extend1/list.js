@@ -6,6 +6,7 @@ import BackButton from '../shared/BackButton'
 import ListRow from '../shared/ListRow'
 import ListEmptyComponent from '../shared/ListEmptyComponent'
 import FormExtend1Item from './_item'
+import Styles from '../../common/styles'
 
 @inject('stores')
 @observer
@@ -75,7 +76,7 @@ class FormExtend1List extends Component {
                         onEndReached={this.loadNextPageData}
                         onRefresh={this.refreshData}
                         refreshing={loading}
-                        style={{ height: Dimensions.get('window').height - 80, backgroundColor: '#fff' }}
+                        style={Styles.FlatList}
                         ListEmptyComponent={<ListEmptyComponent icon="file-o" text={`暂无${form.Name}记录`} loading={loading} />}
                     />
                 </Content>

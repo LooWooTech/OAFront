@@ -1320,13 +1320,14 @@
 					"eact-native-doc-viewerios/**",
 				);
 				INFOPLIST_FILE = OAMobile/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = LoowooTech.OAMobile;
+				PRODUCT_BUNDLE_IDENTIFIER = LoowooTech.OAMobile.iOS;
 				PRODUCT_NAME = OAMobile;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1352,13 +1353,14 @@
 					"eact-native-doc-viewerios/**",
 				);
 				INFOPLIST_FILE = OAMobile/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = LoowooTech.OAMobile;
+				PRODUCT_BUNDLE_IDENTIFIER = LoowooTech.OAMobile.iOS;
 				PRODUCT_NAME = OAMobile;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1490,7 +1492,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jianlong Wang (25TMAJB9P9)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEVELOPMENT_TEAM = 37AXXQ4TJ5;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -1532,7 +1534,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jianlong Wang (25TMAJB9P9)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				DEVELOPMENT_TEAM = 37AXXQ4TJ5;
 				ENABLE_NS_ASSERTIONS = NO;
