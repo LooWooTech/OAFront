@@ -178,7 +178,7 @@ const data = [
                     { path: '/group/list', icon: 'fa fa-users', text: '群组管理' },
                     { path: '/department/list', icon: 'fa fa-sitemap', text: '部门管理' },
                     { path: '/jobtitle/list', icon: 'fa fa-vcard', text: '职称管理' },
-                    { path: '/category/list', icon: 'fa fa-list', text: '分类管理' },
+                    //{ path: '/category/list', icon: 'fa fa-list', text: '分类管理' },
                 ]
             }
         ]

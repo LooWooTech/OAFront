@@ -69,7 +69,7 @@ export default class TopNav extends React.Component {
                 <Menu.SubMenu title={<MessagePopover />} />
                 <Menu.SubMenu title={this.getUserMenuRender()} />
                 <Menu.SubMenu title={<Popover placement="bottomRight" content={<ul>
-                    <li>安卓(Android)客户端：<br />
+                    <li>安卓/苹果客户端：<br />
                         <img src={api.App.qrCodeUrl} width="200" alt="Android" />
                     </li>
                 </ul>}>APP下载</Popover>} />
