@@ -117,7 +117,7 @@ class UserSelect extends Component {
     getRootTreeNode = () => {
         let departments = this.getDepartments()
         //获取所有部门
-        let root = { ID: 0, Name: '全员' }
+        let root = { ID: 0, Name: '全部' }
         return this.getNodeTreeNode(root, departments)
     }
 
@@ -147,16 +147,41 @@ class UserSelect extends Component {
             return d
         });
 
-
-        return currentDepartments.map(node => <TreeNode title={node.Name} key={'c_d_' + node.ID}>
-            {this.state.users.filter(e => e.Departments.find(d => d.ID === node.ID)).map(user =>
-                <TreeNode title={user.RealName} key={user.ID} isLeaf={true} />)
-            }
-        </TreeNode>)
+        const nodes = currentDepartments.map(node => (
+            <TreeNode title={node.Name} key={'c_d_' + node.ID}>
+                {this.state.users.filter(e => e.Departments.find(d => d.ID === node.ID)).map(user =>
+                    <TreeNode title={user.RealName} key={user.ID} isLeaf={true} />)
+                }
+            </TreeNode>
+        ))
+        return this.state.multiple && currentDepartments.length > 1 ?
+            <TreeNode key='root_self_department' title='全部' isLeaf={false}>
+                {nodes}
+            </TreeNode>
+            : nodes;
     }
 
     getLeaderTreeNode = () => {
-        return this.state.users.filter(e => e.JobTitleId === 3).map(e => <TreeNode key={e.ID} isLeaf={true} title={e.RealName}>{e.RealName}</TreeNode>)
+        const nodes = this.state.users
+            .filter(e => e.JobTitleId === 3)
+            .map(user => <TreeNode key={user.ID} isLeaf={true} title={user.RealName} />);
+        return this.state.multiple ?
+            <TreeNode key='root_leaders' title='全部' isLeaf={false} >
+                {nodes}
+            </TreeNode>
+            : nodes;
+    }
+
+    getFavoritesTreeNode = () => {
+        const nodes = this.state.favorites.map(user => {
+            let disabled = !this.state.users.find(e => e.ID === user.ID);
+            return <TreeNode key={user.ID} isLeaf={true} title={user.RealName} disabled={disabled} />
+        })
+        return this.state.multiple && nodes.length > 5 ?
+            <TreeNode key='root_favorites' title='全部' isLeaf={false} >
+                {nodes}
+            </TreeNode>
+            : nodes;
     }
 
     handleCheck = (checkedKeys, { checked, checkedNodes, node, event }) => {
@@ -239,7 +264,7 @@ class UserSelect extends Component {
     }
 
     render() {
-        console.log(this.state)
+
         const multiple = this.state.multiple
         const users = this.state.users || []
         const selectedUsers = this.state.selected || [];
@@ -317,10 +342,7 @@ class UserSelect extends Component {
                             checkedKeys={selectedUserIds}
                             selectedKeys={selectedUserIds}
                         >
-                            {this.state.favorites.map(user => {
-                                let disabled = !this.state.users.find(e => e.ID === user.ID);
-                                return <TreeNode key={user.ID} isLeaf={true} title={user.RealName} disabled={disabled} />
-                            })}
+                            {this.getFavoritesTreeNode()}
                         </Tree>
                         <FlowContactModal onSubmit={this.handleAddFlowContact} />
                     </Tabs.TabPane>
@@ -358,10 +380,9 @@ class UserSelect extends Component {
                             onCheck={this.handleCheck}
                             checkedKeys={selectedUserIds}
                             selectedKeys={selectedUserIds}
+                            defaultExpandAll={true}
                         >
-                            {this.state.users
-                                .filter(e => e.JobTitleId === 3)
-                                .map(user => <TreeNode key={user.ID} isLeaf={true} title={user.RealName} />)}
+                            {this.getLeaderTreeNode()}
                         </Tree>
                     </Tabs.TabPane>
                 </Tabs>

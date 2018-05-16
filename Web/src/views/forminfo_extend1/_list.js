@@ -94,8 +94,16 @@ class Extend1ListComponent extends Component {
         if (!userId) {
             columns.push({ title: '申请人', dataIndex: 'ApplyUser' })
         }
+        let resonColumnName = '用途';
+        switch (formId) {
+            case api.Forms.Car.ID:
+                resonColumnName = '人员名单及用途';
+                break;
+            default: break;
+        }
         columns = columns.concat([
             { title: '审批人', dataIndex: 'ApprovalUser' },
+            { title: resonColumnName, dataIndex: 'Reson' },
             { title: '申请日期', dataIndex: 'CreateTime', render: this.createTimeColumnRender },
             { title: '申请结果', dataIndex: 'Result', render: this.resultColumnRender },
             { title: '处理日期', dataIndex: 'UpdateTime', render: this.updateTimeColumnRender },
@@ -104,10 +112,10 @@ class Extend1ListComponent extends Component {
         return columns;
     }
 
-    handlePageChange = page =>  utils.ReloadPage({ page })
+    handlePageChange = page => utils.ReloadPage({ page })
     handleStatusChange = e => utils.ReloadPage({ status: e.target.value })
     reload = () => this.loadData()
-    
+
     render() {
         if (!this.state.formId) {
             return <Alert message="缺少formId参数" type="error" />
