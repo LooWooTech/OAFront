@@ -22,7 +22,7 @@ export default class TopNav extends React.Component {
     getCurrentPathName = (path) => {
         var paths = path.substring(1).split('/');
         var name = paths[0];
-        if (name === '') return ['feed'];
+        if (name === '') return ['home'];
 
         return this.state.headerNavData.map(item => {
             if (item.name === name || (item.path || '').indexOf(path) === 0) {

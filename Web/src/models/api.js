@@ -545,6 +545,9 @@ module.exports = {
         },
         Recovery: (id, cb, err) => {
             invokeApi('userinfo/recovery?id=' + id, HTTP_GET, null, cb, err);
+        },
+        MyList: (formId, cb, err) => {
+            invokeApi('userinfo/mylist?formId=' + formId, HTTP_GET, null, cb, err);
         }
     }
 };

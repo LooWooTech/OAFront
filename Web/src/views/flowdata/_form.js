@@ -15,7 +15,7 @@ class FlowNodeDataForm extends Component {
         itemLayout: this.props.itemLayout || { labelCol: { span: 2 }, wrapperCol: { span: 16 } }
     }
 
-    submit = (callback) => {
+    submit = () => {
         var form = this.refs.form;
         form.validateFields((err, data) => {
             let users = this.refs.selectUserForm ? this.refs.selectUserForm.getSelectedUsers() : []
@@ -27,6 +27,11 @@ class FlowNodeDataForm extends Component {
             }
 
             if (!data.Result) {
+                if (!data.Content) {
+                    message.error("请填写退回原因");
+                    
+                    return false;
+                }
                 Modal.confirm({
                     title: '提醒',
                     content: '你确定要退回吗？',
@@ -40,6 +45,12 @@ class FlowNodeDataForm extends Component {
                 this.submitFlowData(data)
             }
         });
+    }
+
+    handleDisagree = () => {
+        this.setState({ result: false }, () => {
+            this.submit()
+        })
     }
 
     submitFlowData = data => {
@@ -92,16 +103,6 @@ class FlowNodeDataForm extends Component {
             title: '意见', name: 'Content', defaultValue: flowNodeData.Content,
             render: <Input type="textarea" autosize={{ minRows: 2, maxRows: 6 }} />
         });
-        if (canBack) {
-            items.push({
-                title: '审核结果',
-                render:
-                    <Radio.Group value={this.state.result} onChange={e => this.setState({ result: e.target.value })}>
-                        <Radio.Button value={true}>同意</Radio.Button>
-                        <Radio.Button value={false}>不同意</Radio.Button>
-                    </Radio.Group>
-            })
-        }
 
         if (nextNode && this.state.result) {
             //如果下一个节点可以跳过，则罗列出后面所有可以跳过的节点 直到最后一个不可以跳过的节点为止
@@ -137,10 +138,26 @@ class FlowNodeDataForm extends Component {
 
         if (!this.props.isModal) {
             items.push({
-                render: <Row><Col offset={this.state.itemLayout.labelCol.span}>
-                    <Button type="primary" onClick={this.submit}>提交</Button>
-                </Col></Row>,
+                render: <Row>
+                    <Col offset={this.state.itemLayout.labelCol.span}>
+                        <Button type="primary" onClick={this.submit}>提交</Button>
+                        &nbsp;&nbsp;
+                        {canBack ? <Button type="danger" onClick={this.handleDisagree}>退回</Button> : null}
+                    </Col>
+                </Row>,
             });
+        }
+        else {
+            if (canBack) {
+                items.push({
+                    title: '审核结果',
+                    render:
+                        <Radio.Group value={this.state.result} onChange={e => this.setState({ result: e.target.value })}>
+                            <Radio.Button value={true}>同意</Radio.Button>
+                            <Radio.Button value={false}>不同意</Radio.Button>
+                        </Radio.Group>
+                })
+            }
         }
         return items
     }

@@ -16,7 +16,7 @@ class EditUserModal extends Component {
         const departments = this.props.departments || []
         const groups = this.props.groups || []
         const titles = this.props.titles || []
-        const attendanceGroups = this.props.attendanceGroups  || []
+        const attendanceGroups = this.props.attendanceGroups || []
         return [{
             name: 'ID',
             defaultValue: model.ID,
@@ -60,6 +60,13 @@ class EditUserModal extends Component {
             </Select>
         },
         {
+            title: '排序',
+            name: 'Sort',
+            defaultValue: (model.Sort || 0),
+            layout: { labelCol: { span: 6 }, wrapperCol: { span: 3 } },
+            render: <Input />
+        },
+        {
             title: '考勤组',
             name: 'AttendanceId',
             defaultValue: model.AttendanceId ? model.AttendanceId.toString() : '',
@@ -68,10 +75,10 @@ class EditUserModal extends Component {
             </Select>
         },
         {
-            title: '排序',
-            name: 'Sort',
-            defaultValue: (model.Sort || 0),
-            layout: { labelCol: { span: 6 }, wrapperCol: { span: 3 } },
+            title: '指纹码',
+            name: 'FingerPrintId',
+            defaultValue: model.FingerPrintId || '',
+            layout: { labelCol: { span: 6 }, wrapperCol: { span: 4 } },
             render: <Input />
         }
         ];

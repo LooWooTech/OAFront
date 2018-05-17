@@ -33,7 +33,7 @@ import AttendanceIndex from '../attendance/index'
 import HolidayList from '../attendance/holidays'
 
 import FeedIndex from '../feed/index'
-
+import HomeIndex from '../home/index'
 
 import TaskIndex from '../task/list'
 import TaskEdit from '../task/edit'
@@ -65,7 +65,8 @@ export default class Routes extends React.Component {
     render() {
         return <Router history={hashHistory}>
             <Route path="/" component={Layout} onEnter={authorize}>
-                <IndexRoute component={FeedIndex} />
+                <IndexRoute component={HomeIndex} />
+                <Route path="feed" component={FeedIndex} />
                 <Route path="missive">
                     <Route path="list/:formId" component={MissiveList} />
                     <Route path="edit/:formId" component={MissiveEdit} />

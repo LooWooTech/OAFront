@@ -3,18 +3,19 @@ import api from '../../models/api'
 
 const data = [
     {
-        name: 'feed', text: '动态', icon: 'fa fa-feed', path: '/?scope=all',
+        name: 'home', text: '首页', icon: 'fa fa-home', path: '/',
         children: [
             {
-                title: '动态', items: [
-                    { path: '/?scope=all', icon: 'fa fa-comment', text: '全部动态' },
+                title: '欢迎页', items: [
+                    { path: '/', icon: 'fa fa-list', text: '我的待办' },
+                    { path: '/feed/', icon: 'fa fa-feed', text: '我的动态' },
                 ],
             },
             {
-                title: '类型', items: Object.keys(api.Forms).map(key => {
-                    var form = api.Forms[key]
-                    return { path: '/?formId=' + form.ID, icon: form.Icon, text: form.Name }
-                })
+                title: '消息', items: [
+                    { path: '/message/?action=receive', icon: 'fa fa-envelope-open-o', text: '我收到的' },
+                    { path: '/message/?action=send', icon: 'fa fa-send-o', text: '我发出的' },
+                ]
             }
         ]
     },
@@ -150,23 +151,6 @@ const data = [
                 ]
             }
         ]
-    },
-    {
-        name: 'message', text: '消息', icon: 'fa fa-comment-o', path: '/message/?action=receive',
-        children: [
-            {
-                title: '消息', items: [
-                    { path: '/message/?action=receive', icon: 'fa fa-envelope-open-o', text: '我收到的' },
-                    { path: '/message/?action=send', icon: 'fa fa-send-o', text: '我发出的' },
-                ]
-            },
-            {
-                title: '类型', items: Object.keys(api.Forms).map(key => {
-                    var form = api.Forms[key]
-                    return { path: '/message/?formId=' + form.ID, icon: form.Icon, text: form.Name }
-                })
-            }
-        ],
     },
     {
         name: 'system', text: '系统', icon: 'fa fa-gear', role: 2, path: '/user/list',
