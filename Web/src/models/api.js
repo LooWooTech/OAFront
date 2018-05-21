@@ -89,8 +89,8 @@ module.exports = {
         AddFlowContact: (userId, cb, err) => {
             invokeApi('user/saveflowcontact?userid=' + userId, HTTP_GET, null, cb, err);
         },
-        DeleteFlowContact: (userId, cb, err) => {
-            invokeApi('user/deleteflowcontact?userid=' + userId, HTTP_DELETE, null, cb, err);
+        DeleteFlowContacts: (userIds, cb, err) => {
+            invokeApi('user/DeleteFlowContacts?userids=' + userIds.join(), HTTP_DELETE, null, cb, err);
         },
         ParentTitleUserList: (userId, cb, err) => {
             invokeApi(`user/ParentTitleUserList?userId=${userId || 0}`, HTTP_GET, null, cb, err);

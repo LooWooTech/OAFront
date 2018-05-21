@@ -109,6 +109,7 @@ class MissiveEditForm extends React.Component {
             defaultValue: content,
             //getField: !content.ID,
             rules: [{ required: true }],
+            tips:<span>点击预览没有反应？请<a href="/pageoffice/posetup.exe">下载安装PageOffice插件</a>。</span>,
             render: <span>
                 <Upload.Dragger
                     action={api.File.UploadUrl(content.ID || 0, 0, 0, 'content', true)}

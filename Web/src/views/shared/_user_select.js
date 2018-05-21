@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Select, Button, Tabs, Tag, Tree, Input, Row, Col } from 'antd';
+import { Select, Button, Tabs, Tag, Tree, Input, Row, Col, Modal, message } from 'antd';
 const TreeNode = Tree.TreeNode
-import Modal from './_modal'
+import SharedModal from './_modal'
 import FlowContactModal from '../user/_flow_contact_modal'
 import api from '../../models/api'
 import auth from '../../models/auth'
@@ -175,7 +175,7 @@ class UserSelect extends Component {
     getFavoritesTreeNode = () => {
         const nodes = this.state.favorites.map(user => {
             let disabled = !this.state.users.find(e => e.ID === user.ID);
-            return <TreeNode key={user.ID} isLeaf={true} title={user.RealName} disabled={disabled} />
+            return <TreeNode key={user.ID} isLeaf={true} title={user.RealName} disabled={disabled} disableCheckbox={disabled} />
         })
         return this.state.multiple && nodes.length > 5 ?
             <TreeNode key='root_favorites' title='全部' isLeaf={false} >
@@ -254,6 +254,38 @@ class UserSelect extends Component {
         this.loadInitData();
     }
 
+    handleRemoveFavorites = () => {
+        let selected = this.state.selected;
+        let favorites = this.state.favorites;
+        if (selected.length < 1) {
+            message.error("请先选择常用联系人");
+            return false;
+        }
+        Modal.confirm({
+            title: '你确定要移除选中的常用联系人吗？',
+            onOk: () => {
+                let contacts = [];
+                for (var i = 0; i < selected.length; i++) {
+                    let contact = selected[i];
+                    if (this.state.favorites.filter(e => e.ID === contact)) {
+                        contacts.push(contact);
+                        for (var j = 0; j < favorites.length; j++) {
+                            if (favorites[j].ID === contact.ID) {
+                                favorites.splice(j, 1)
+                            }
+                        }
+                        selected.splice(i, 1);
+                        i--;
+                    }
+                }
+
+                api.User.DeleteFlowContacts(contacts.map(e => e.ID), () => {
+                    this.setState({ selected, favorites })
+                });
+            }
+        })
+    }
+
     handleRemoveSelectedUser = user => {
         let selected = this.state.selected.filter(e => e.ID !== user.ID) || [];
         this.setState({ selected });
@@ -306,7 +338,7 @@ class UserSelect extends Component {
             }
         }
 
-        return <Modal
+        return <SharedModal
             title={this.props.title || "选择人员"}
             trigger={<Button>{this.getButtonText(selectedUsers)}</Button>}
             onSubmit={this.handleSubmit}
@@ -344,7 +376,11 @@ class UserSelect extends Component {
                         >
                             {this.getFavoritesTreeNode()}
                         </Tree>
-                        <FlowContactModal onSubmit={this.handleAddFlowContact} />
+                        <FlowContactModal
+                            onSubmit={this.handleAddFlowContact}
+                            trigger={<Button>添加</Button>}
+                        />
+                        <Button onClick={this.handleRemoveFavorites}>移除</Button>
                     </Tabs.TabPane>
 
                     <Tabs.TabPane tab="全部人员" key="2">

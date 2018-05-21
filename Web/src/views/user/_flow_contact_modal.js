@@ -32,7 +32,7 @@ class FlowContactEditModal extends Component {
         return (
             <Modal
                 title="添加联系人"
-                trigger={<Button>添加联系人</Button>}
+                trigger={this.props.trigger || <Button>添加联系人</Button>}
                 onSubmit={this.handleSubmit}
                 children={[
                     {
