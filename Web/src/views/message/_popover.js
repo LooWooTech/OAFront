@@ -41,7 +41,7 @@ class MessagePopover extends Component {
 
     handleMessageLink = (msgId, link) => {
         this.setState({ visible: false })
-        api.Message.Read(msgId)
+        api.Message.Read(msgId, this.loadData);
         utils.Redirect(link)
     }
 
@@ -86,7 +86,7 @@ class MessagePopover extends Component {
                 onVisibleChange={this.handleVisibleChange}
                 trigger="click"
                 content={this.getNotificationBox()}
-                style={{padding:'0'}}
+                style={{ padding: '0' }}
             >
                 <span className="message_icon">
                     <Badge count={this.state.count} className="badge">

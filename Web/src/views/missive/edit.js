@@ -120,7 +120,16 @@ export default class MissiveEdit extends Component {
     shouldComponentUpdate(nextProps, nextState) {
         return JSON.stringify(nextProps) !== JSON.stringify(this.props) || nextState !== this.state
     }
-    
+
+    componentWillReceiveProps(nextProps) {
+        let formId = nextProps.params.formId;
+        let id = nextProps.location.query.id;
+        if (formId !== this.state.formId || id !== this.state.id) {
+            this.setState({ formId, id }, this.loadData)
+        }
+    }
+
+
     render() {
         const model = this.state.model
         const missive = this.state.missive

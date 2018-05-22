@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { Button, Table, Tag, Modal, Icon } from 'antd'
 import moment from 'moment'
-import EditModal from './_edit_sub_task'
+import SubTaskEditModal from './_edit_sub_task'
+import SubTaskAddModal from './_add_sub_task'
 import SubTaskCheckModal from './_sub_task_check'
 import SubTaskSubmitModal from './_sub_task_submit'
 import SubTaskFlowModal from './_sub_task_flow_modal'
@@ -116,19 +117,21 @@ class SubTaskList extends Component {
 
     getButtons = (subTask) => {
         let buttons = [];
-        if (auth.isCurrentUser(subTask.CreatorId)) {
-            buttons.push(
-                <EditModal
-                    model={subTask}
-                    list={this.state.list}
-                    trigger={<Button icon="edit">修改</Button>}
-                    onSubmit={this.loadData}
-                />
-            )
-        }
         switch (subTask.Status) {
             case 3:
             case 0:
+                if (auth.isCurrentUser(subTask.CreatorId)) {
+                    if (subTask.IsMaster && this.state.canAddSubTask) {
+                        buttons.push(
+                            <SubTaskAddModal
+                                trigger={<Button type="primary" icon="plus">协办</Button>}
+                                parent={subTask}
+                                list={this.state.list}
+                                onSubmit={this.loadData}
+                            />
+                        )
+                    }
+                }
                 if (auth.isCurrentUser(subTask.ToUserId)) {
                     buttons.push(
                         <SubTaskSubmitModal
@@ -144,24 +147,9 @@ class SubTaskList extends Component {
                             trigger={<Button icon="plus">子任务</Button>}
                             onSubmit={this.loadData}
                         />
-                    )
+                    );
                 }
-                else if (auth.isCurrentUser(subTask.CreatorId)) {
-                    if (subTask.IsMaster && this.state.canAddSubTask) {
-                        buttons.push(
-                            <EditModal
-                                trigger={<Button type="primary" icon="plus">协办</Button>}
-                                model={{ TaskId: subTask.TaskId, ParentId: subTask.ID, }}
-                                list={this.state.list}
-                                onSubmit={this.loadData}
-                            />
-                        )
 
-                    }
-                    buttons.push(
-                        <Button icon="delete" type="danger" onClick={() => this.handleDeleteSubTask(subTask)}>删除</Button>
-                    )
-                }
                 break;
             case 2:
             case 1:
@@ -187,6 +175,21 @@ class SubTaskList extends Component {
                 break;
             default:
                 break;
+        }
+        if (auth.isCurrentUser(subTask.CreatorId)) {
+            buttons.push(
+                <SubTaskEditModal
+                    model={subTask}
+                    list={this.state.list}
+                    trigger={<Button icon="edit"></Button>}
+                    onSubmit={this.loadData}
+                />
+            )
+            if (subTask.Status == 0 || subTask.Status == 3) {
+                buttons.push(
+                    <Button icon="delete" type="danger" onClick={() => this.handleDeleteSubTask(subTask)}></Button>
+                )
+            }
         }
         return buttons;
     }
@@ -286,9 +289,9 @@ class SubTaskList extends Component {
         return (
             <div>
                 {this.state.canAddSubTask ?
-                    <EditModal
+                    <SubTaskAddModal
                         trigger={<Button type="primary" icon="plus">添加任务</Button>}
-                        model={{ TaskId: taskId }}
+                        parent={{ TaskId: taskId }}
                         list={this.state.list}
                         onSubmit={this.loadData}
                     /> : null}
@@ -303,7 +306,7 @@ class SubTaskList extends Component {
                     columns={[
                         { title: '状态', dataIndex: 'Completed', width: 90, render: this.statusColumnRender },
                         { title: '任务目标', dataIndex: 'Content', render: this.contentColumnRender },
-                        { title: '科室', width: 170, render: this.departmentColumnRender },
+                        { title: '科室', render: this.departmentColumnRender },
                         { title: '责任人', width: 80, render: this.userNameColumnRender },
                         { title: '创建时间', width: 170, dataIndex: 'CreateTime', render: this.createTimeColumnRender },
                         { title: '计划完成时间', width: 130, dataIndex: 'ScheduleDate', render: this.scheduleDateColumnRender },

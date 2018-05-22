@@ -416,6 +416,9 @@ module.exports = {
         SaveSubTask: (data, cb, err) => {
             invokeApi('task/savesubtask', HTTP_POST, data, cb, err);
         },
+        SaveSubTasks: (data, cb, err) => {
+            invokeApi('task/AddSubTasks', HTTP_POST, data, cb, err)
+        },
         DeleteSubTask: (subTaskId, cb, err) => {
             invokeApi('task/DeleteSubTask?id=' + subTaskId, HTTP_DELETE, null, cb, err);
         },

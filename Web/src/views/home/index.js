@@ -9,10 +9,10 @@ export default class Home extends Component {
             <div className="list-myinfo">
                 <Row gutter={16}>
                     <Col span={12}>
-                        <UserInfoList formId={api.Forms.Missive.ID} title="待办发文" />
+                        <UserInfoList formId={api.Forms.ReceiveMissive.ID} title="待办收文" />
                     </Col>
                     <Col span={12}>
-                        <UserInfoList formId={api.Forms.ReceiveMissive.ID} title="待办收文" />
+                        <UserInfoList formId={api.Forms.Missive.ID} title="待办发文" />
                     </Col>
                 </Row>
                 <Row gutter={16} style={{ marginTop: '10px' }}>

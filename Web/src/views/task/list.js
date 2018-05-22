@@ -67,6 +67,10 @@ class TaskList extends Component {
     }
 
     buttonsRender = (text, item) => {
+        if(!item.Completed && auth.isCurrentUser(item.PostUserId)){
+            //删除按钮
+            
+        }
         if (!item.Reminded && !item.Completed && auth.hasRight('Form.Task.View')) {
             return <Button onClick={() => this.handleRemind(item)}>催办</Button>
         }

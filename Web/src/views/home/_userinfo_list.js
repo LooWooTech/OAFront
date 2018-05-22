@@ -27,7 +27,7 @@ export default class UserInfoList extends Component {
 
         var link = form.InfoLink.replace('{ID}', item.InfoId);
         return (
-            <p>
+            <p key={item.ID} style={{ fontSize: '1rem' }}>
                 <Link to={link}>
                     {item.Reminded ? <Icon type="exclamation" className="red" /> : null}
                     {item.Title}
