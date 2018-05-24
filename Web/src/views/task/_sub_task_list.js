@@ -256,7 +256,7 @@ class SubTaskList extends Component {
             case 2:
                 return <Tag color="#87d068">完成</Tag>
             case 3:
-                return <Tag color="#ff0">退回</Tag>
+                return <Tag color="#f00">退回</Tag>
         }
     }
     expandedRowRender = (subTask) => {
@@ -270,9 +270,10 @@ class SubTaskList extends Component {
 
         return <Table
             rowKey="ID"
+            indentSize={15}
             columns={[
-                { title: '状态', dataIndex: 'Completed', width: 60, render: this.todoStatusColumnRender },
                 { title: '内容', dataIndex: 'Content', render: this.contentColumnRender },
+                { title: '状态', dataIndex: 'Status', width: 60, render: this.todoStatusColumnRender },
                 { title: '负责人', width: 100, dataIndex: 'ToUserName' },
                 { title: '创建时间', width: 170, dataIndex: 'CreateTime', render: this.createTimeColumnRender },
                 { title: '计划完成时间', width: 150, dataIndex: 'ScheduleDate', render: this.scheduleDateColumnRender },
@@ -298,14 +299,14 @@ class SubTaskList extends Component {
                 <Table
                     rowKey="ID"
                     loading={this.state.loading}
-                    indentSize={0}
+                    indentSize={15}
                     defaultExpandAllRows={true}
                     dataSource={this.state.list}
                     pagination={false}
                     expandedRowRender={this.expandedRowRender}
                     columns={[
-                        { title: '状态', dataIndex: 'Completed', width: 90, render: this.statusColumnRender },
                         { title: '任务目标', dataIndex: 'Content', render: this.contentColumnRender },
+                        { title: '状态', dataIndex: 'Completed', width: 90, render: this.statusColumnRender },
                         { title: '科室', render: this.departmentColumnRender },
                         { title: '责任人', width: 80, render: this.userNameColumnRender },
                         { title: '创建时间', width: 170, dataIndex: 'CreateTime', render: this.createTimeColumnRender },

@@ -34,8 +34,8 @@ class ResultTab extends Component {
         return node
     }
 
-    getTaskStatusRender = (status) => {
-        switch (status) {
+    getTaskStatusRender = (text, item) => {
+        switch (item.Status) {
             default:
             case 0:
                 return <Tag color="#108ee9">执行</Tag>
@@ -48,28 +48,14 @@ class ResultTab extends Component {
         }
     }
 
-    getSubTaskRender = (model) => {
-        return <div key={model.ID} className={model.ParentId ? "child-task" : null}>
-            <Row>
-                <Col span={1}>{this.getTaskStatusRender(model.Status)}</Col>
-                <Col span={12}>{model.Content}</Col>
-                <Col span={4}>{model.ScheduleDate ? moment(model.ScheduleDate).format('YYYY-MM-DD') : null}</Col>
-                <Col span={4}>{model.UpdateTime ? moment(model.UpdateTime).format('YYYY-MM-DD HH:mm') : null}</Col>
-                <Col span={3}>{model.ToUserName}</Col>
-            </Row>
-            {model.children ? model.children.map(child => this.getSubTaskRender(child)) : null}
-        </div>
-    }
-
-    getTaskNameRender = (model) => {
-
-        return <div style={{ paddingLeft: model.ParentId > 0 ? '30px' : '0' }}>
+    getTaskNameRender = (text, model) => {
+        return <span>
             {model.Content.split('\n').map((item, key) => <span key={key}>{item}<br /></span>)}
             {model.IsMaster ? this.state.flowData.Nodes.filter(e => e.ExtendId === model.ID)
                 .sort((a, b) => a.ID - b.ID)
-                .map(item => <Alert key={item.ID} message={this.getFlowNodeRender(item)} style={{margin:'5px',background:'#fdfdfd'}} />)
+                .map(item => <div key={item.ID} className="task-flownode">{this.getFlowNodeRender(item)}</div>)
                 : null}
-        </div>
+        </span>
     }
 
     getLDPSRender = () => {
@@ -78,13 +64,13 @@ class ResultTab extends Component {
     }
 
     getFlowNodeRender = (model) => {
-        if (!model) return ''
-        return <div className="flowNode">
-            <p className="content"> {model.Content}</p>
-            <div>
+        if (!model || model.Result === null) return ''
+        return <div className="flownode">
+            <p>
                 <span className="signature">{model.Signature}</span>
                 <span className="datetime">{model.UpdateTime ? moment(model.UpdateTime).format('YYYY-MM-DD HH:mm') : null}</span>
-            </div>
+            </p>
+            <p className="content"> {model.Content}</p>
         </div>;
     }
 
@@ -138,28 +124,16 @@ class ResultTab extends Component {
                                 <Table
                                     rowKey="ID"
                                     loading={this.state.loading}
-                                    indentSize={0}
+                                    indentSize={15}
                                     defaultExpandAllRows={true}
                                     columns={[
                                         {
-                                            title: '状态', dataIndex: 'Completed', width: 110,
-                                            render: (text, item) => {
-                                                switch (item.Status) {
-                                                    default:
-                                                    case 0:
-                                                        return <Tag color="#108ee9">执行</Tag>
-                                                    case 1:
-                                                        return <Tag color="#f50">审核</Tag>
-                                                    case 2:
-                                                        return <Tag color="#87d068">完成</Tag>
-                                                    case 3:
-                                                        return <Tag color="#ff0">退回</Tag>
-                                                }
-                                            }
+                                            title: '任务目标', dataIndex: 'Content',
+                                            render: this.getTaskNameRender
                                         },
                                         {
-                                            title: '任务目标', dataIndex: 'Content',
-                                            render: (text, item) => this.getTaskNameRender(item)
+                                            title: '状态', dataIndex: 'Status', width: 60,
+                                            render: this.getTaskStatusRender,
                                         },
                                         {
                                             title: '科室', width: 180,
