@@ -31,8 +31,8 @@ class SealList extends Component {
             <div>
                 <div className="toolbar">
                     <EditModal
-                        title="添加图章"
-                        trigger={<Button type="primary" icon="add">添加图章</Button>}
+                        title="添加印章"
+                        trigger={<Button type="primary" icon="add">添加印章</Button>}
                         onSubmit={this.handleSubmit}
                     />
                 </div>
@@ -45,7 +45,7 @@ class SealList extends Component {
                         {
                             title: '管理', render: (text, item) => <Button.Group>
                                 <EditModal
-                                    title="修改图章"
+                                    title="修改印章"
                                     model={item}
                                     onSubmit={this.handleSubmit}
                                     trigger={<Button icon="edit">修改</Button>}

@@ -111,9 +111,6 @@ export default api = {
         checkSubTask: (id, result, content) => {
             return $.post('task/checksubTask', { id, result }, { content })
         },
-        checkList: (taskId, userId) => {
-            return $.get('task/checklist', { taskId, userId })
-        },
         todoList: (subTaskId) => {
             return $.get('task/todolist', { subTaskId })
         },

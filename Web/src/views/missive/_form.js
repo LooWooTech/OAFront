@@ -57,7 +57,7 @@ class MissiveEditForm extends React.Component {
                 if (!file || !file.response) return
                 var response = file.response
                 if (response.Message) {
-                    alert(response.Message)
+                    message.error(response.Message)
                     return;
                 }
                 this.setState({ upload: response })

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Input, DatePicker, Button, message, Select } from 'antd'
+import { Input, DatePicker, Button, message, Select, Upload, Icon } from 'antd'
 import FormModal from '../shared/_formmodal'
 import SelectUser from '../shared/_user_select'
 import api from '../../models/api'
@@ -25,13 +25,18 @@ class SealApplyModal extends Component {
             message.error("请选择使用日期")
             return false;
         }
+
         formData.ScheduleBeginTime = formData.ScheduleBeginTime.format()
         formData.ScheduleEndTime = formData.ScheduleEndTime.format()
 
-        api.Seal.Apply(formData, json => {
+        api.Seal.Apply(formData, infoId => {
             message.success('申请完成，请等待审核');
+            if (this.state.file) {
+                let fileId = (this.state.file || {}).ID || 0;
+                api.File.UpdateRelation([fileId], infoId);
+            }
             if (this.props.onSubmit) {
-                this.props.onSubmit(json);
+                this.props.onSubmit(infoId);
             }
         })
     }
@@ -44,25 +49,79 @@ class SealApplyModal extends Component {
         this.setState({ toUser: users[0] })
     }
 
+    handleUploadAttachment = ({ file }) => {
+        switch (file.status) {
+            case 'uploading':
+                //this.setState({ uploading: true })
+                return;
+            case 'done':
+                //this.setState({ uploading: false })
+                if (!file || !file.response) return
+                let response = file.response
+                if (response.Message) {
+                    message.error(response.Message)
+                    return;
+                }
+                if (this.state.file) {
+                    api.File.Delete(this.state.file.ID)
+                }
+                this.setState({ file: response })
+                break;
+            default:
+                //this.setState({ uploading: false })
+                break;
+        }
+    }
+
+    handleDeleteAttachment = () => {
+        let fileId = this.state.file.ID;
+        this.setState({ file: null })
+        api.File.Delete(fileId)
+    }
+
     render() {
 
         const seals = this.props.seals || []
         return (
             <FormModal
-                title="申请图章"
-                trigger={<Button icon="check" type="primary">申请图章</Button>}
+                title="申请印章"
+                trigger={<Button icon="check" type="primary">申请印章</Button>}
                 onSubmit={this.handleSubmit}
                 children={[
                     {
-                        title: '申请图章', name: 'InfoId', defaultValue: '',
-                        rules: [{ required: true, message: '请选择申请图章' }],
+                        title: '申请印章', name: 'InfoId', defaultValue: '',
+                        rules: [{ required: true, message: '请选择申请印章' }],
                         render: <Select>
-                            {seals.map(seal => <Select.Option key={seal.ID}>{seal.Name}（{seal.Number}）</Select.Option>)}
+                            {seals.map(seal => <Select.Option key={seal.ID}>{seal.Name}</Select.Option>)}
                         </Select>
                     },
                     { title: '开始日期', name: 'ScheduleBeginTime', render: <DatePicker />, rules: [{ required: true, message: '请选择开始日期' }], },
                     { title: '结束日期', name: 'ScheduleEndTime', render: <DatePicker />, rules: [{ required: true, message: '请选择结束日期' }], },
                     { title: '申请用途', name: 'Reason', render: <Input type="textarea" autosize={{ minRows: 2, maxRows: 4 }} />, rules: [{ required: true, message: '请填写车辆申请用途' }] },
+                    {
+                        title: '证明文件',
+                        render:
+                            <div>
+                                <Upload.Dragger
+                                    action={api.File.UploadUrl(0, 0, api.Forms.Seal.ID, 'attachment')}
+                                    name="attachment"
+                                    withCredentials={true}
+                                    showUploadList={false}
+                                    onChange={this.handleUploadAttachment}
+                                    accept=".doc,.docx,.pdf,.tiff,.tif,.jpg,.jpge,.png"
+                                >
+                                    <p className="ant-upload-text">
+                                        <i className="fa fa-file-o"></i>
+                                        &nbsp;&nbsp; {this.state.file ? this.state.file.FileName : '支持pdf,jpg,doc,tif格式'}
+                                    </p>
+                                </Upload.Dragger>
+                                {this.state.file ?
+                                    <p className="ant-upload-text">
+                                        <a onClick={this.handleDeleteAttachment}><Icon type="delete" />&nbsp;删除</a>
+                                    </p>
+                                    : null}
+                            </div>
+                    },
                     {
                         title: '审核人',
                         render: <SelectUser

@@ -13,8 +13,8 @@ const data = [
             },
             {
                 title: '消息', items: [
-                    { path: '/message/?action=receive', icon: 'fa fa-envelope-open-o', text: '我收到的' },
-                    { path: '/message/?action=send', icon: 'fa fa-send-o', text: '我发出的' },
+                    { path: '/message/?action=receive', icon: 'fa fa-envelope-open-o', text: '已收消息' },
+                    { path: '/message/?action=send', icon: 'fa fa-send-o', text: '已发消息' },
                 ]
             }
         ]
@@ -136,18 +136,18 @@ const data = [
         ]
     },
     {
-        name: 'seal', text: '公章', icon: 'fa fa-ticket',
+        name: 'seal', text: '印章', icon: 'fa fa-ticket',
         children: [
             {
                 title: '申请', items: [
-                    { path: '/seal', icon: 'fa fa-ticket', text: '图章查询' },
+                    { path: '/seal', icon: 'fa fa-ticket', text: '印章查询' },
                     { path: `/extend1/requests/${api.Forms.Seal.ID}`, icon: 'fa fa-inbox', text: '我的申请' }
                 ]
             },
             {
                 title: '管理&审核', items: [
-                    { path: '/seal/list', icon: 'fa fa-list', text: '图章管理', role: 2 },
-                    { path: `/extend1/approvals/${api.Forms.Seal.ID}`, icon: 'fa fa-check', text: '图章审核' }
+                    { path: '/seal/list', icon: 'fa fa-list', text: '印章管理', role: 2 },
+                    { path: `/extend1/approvals/${api.Forms.Seal.ID}`, icon: 'fa fa-check', text: '印章审核' }
                 ]
             }
         ]

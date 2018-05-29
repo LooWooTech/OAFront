@@ -4,6 +4,7 @@ import api from '../../models/api'
 import auth from '../../models/auth'
 import LeaveApprovalModal from '../attendance/_leave_approval'
 import ApprovalModal from './_approval_modal'
+import CheckLogModal from '../shared/_check_log_modal'
 
 class ApprovalList extends Component {
     state = {
@@ -16,17 +17,20 @@ class ApprovalList extends Component {
     }
 
     defaultButtonsRender = (text, item) => {
-        if (!auth.isCurrentUser(item.ApprovalUserId)) {
-            return '';
+        let buttons = [];
+        if ((auth.isCurrentUser(item.UsreId) || auth.isCurrentUser(item.approvalUserId)) && item.UpdateTime) {
+            buttons.push(<CheckLogModal flowData={item.FlowData} />)
         }
-        else {
+        if (auth.isCurrentUser(item.ApprovalUserId)) {
             switch (this.state.formId) {
                 case api.Forms.Leave.ID:
-                    return <LeaveApprovalModal model={item} onSubmit={this.handleSubmit} />
+                    buttons.push(<LeaveApprovalModal model={item} onSubmit={this.handleSubmit} />);
+                    break;
                 default:
-                    return <ApprovalModal model={item} onSubmit={this.handleSubmit} />
+                    buttons.push(<ApprovalModal model={item} onSubmit={this.handleSubmit} />);
             }
         }
+        return buttons;
     }
 
     render() {

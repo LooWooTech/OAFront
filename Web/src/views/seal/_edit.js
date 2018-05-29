@@ -13,7 +13,7 @@ class SealEditModal extends Component {
         const model = this.props.model || {};
         return (
             <FormModal
-                title={model.ID ? '编辑图章信息' : '添加图章'}
+                title={model.ID ? '编辑印章信息' : '添加印章'}
                 onSubmit={this.handleSubmit}
                 trigger={this.props.trigger}
                 children={[

@@ -5,7 +5,7 @@ import SubTaskEditModal from './_edit_sub_task'
 import SubTaskAddModal from './_add_sub_task'
 import SubTaskCheckModal from './_sub_task_check'
 import SubTaskSubmitModal from './_sub_task_submit'
-import SubTaskFlowModal from './_sub_task_flow_modal'
+import CheckLogModal from '../shared/_check_log_modal'
 import TodoEditModal from './_edit_todo'
 import api from '../../models/api'
 import auth from '../../models/auth'
@@ -154,13 +154,10 @@ class SubTaskList extends Component {
             case 2:
             case 1:
                 let list = this.state.flowData.Nodes.sort((a, b) => a.ID - b.ID);
-                let logs = list.filter(e => e.ExtendId === subTask.ID)
                 let checkNodeData = list.find(e => !e.Submited && e.ExtendId === subTask.ID && auth.isCurrentUser(e.UserId));
                 let parentNodeData = checkNodeData ? list.find(e => e.ID === checkNodeData.ParentId) : null
                 buttons.push(
-                    <SubTaskFlowModal list={logs}
-                        trigger={<Button>审核记录</Button>}
-                    />
+                    <CheckLogModal extendId={subTask.ID} flowData={this.state.flowData} />
                 );
                 if (checkNodeData) {
                     buttons.push(

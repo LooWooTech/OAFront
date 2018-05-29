@@ -52,7 +52,7 @@ class SealIndex extends Component {
                         toolbar={false}
                     />
                     :
-                    <Alert message="还没添加任何图章" />
+                    <Alert message="还没添加任何印章" />
                 }
             </div>
         )

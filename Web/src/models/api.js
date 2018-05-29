@@ -14,7 +14,7 @@ const Forms = {
     Car: { ID: 3, FlowId: 3, Name: '用车', Icon: 'fa fa-car', InfoLink: '/extend1/approvals/3' },
     Task: { ID: 4, FlowId: 4, Name: '任务', Icon: 'fa fa-clock-o', InfoLink: '/task/edit/?id={ID}' },
     MeetingRoom: { ID: 5, FlowId: 5, Name: '会议室', Icon: 'fa fa-television', InfoLink: '/extend1/approvals/5' },
-    Seal: { ID: 6, FlowId: 6, Name: '图章', Icon: 'fa fa-dot-circle-o', InfoLink: '/extend1/approvals/6' },
+    Seal: { ID: 6, FlowId: 6, Name: '印章', Icon: 'fa fa-dot-circle-o', InfoLink: '/extend1/approvals/6' },
     Leave: { ID: 7, FlowId: 7, Name: '请假', Icon: 'fa fa-calendar-check-o', InfoLink: '/extend1/approvals/7' },
     Mail: { ID: 8, Name: '邮件', Icon: 'fa fa-envelope-o', InfoLink: '/mail/detail?id={ID}' },
 };
@@ -235,6 +235,9 @@ module.exports = {
         },
         BackList: (infoId, backId, cb, err) => {
             invokeApi('flowdata/backlist', HTTP_GET, { infoId, backId }, cb, err)
+        },
+        CheckList: (infoId, userId, cb, err) => {
+            invokeApi('flowdata/checklist?infoid=' + infoId + '&userid=' + userId, HTTP_GET, null, cb, err);
         }
     },
     FreeFlowData: {
@@ -343,8 +346,8 @@ module.exports = {
         List: (parameters, cb, err) => {
             invokeApi('FormInfoExtend1/List', HTTP_GET, parameters, cb, err);
         },
-        Approval: (id, result = true, toUserId = 0, cb, err) => {
-            invokeApi('FormInfoExtend1/approval', HTTP_GET, { id, result, toUserId }, cb, err);
+        Approval: (data, cb, err) => {
+            invokeApi('FormInfoExtend1/approval', HTTP_GET, data, cb, err);
         },
         Back: (infoId, backTime, cb, err) => {
             invokeApi('FormInfoExtend1/Back?id=' + infoId + '&backTime=' + backTime, HTTP_GET, null, cb, err);
@@ -427,9 +430,6 @@ module.exports = {
         },
         CheckSubTask: (data, cb, err) => {
             invokeApi(`task/checksubtask?id=${data.ID}&result=${data.Result}`, HTTP_POST, { content: data.Content || '' }, cb, err);
-        },
-        CheckList: (taskId, userId, cb, err) => {
-            invokeApi('task/checklist', HTTP_GET, { taskId, userId }, cb, err);
         },
         TodoList: (subTaskId, cb, err) => {
             invokeApi('task/todolist?subTaskId=' + subTaskId, HTTP_GET, null, cb, err);

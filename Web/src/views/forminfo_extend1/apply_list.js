@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Button } from 'antd'
+import CheckLogModal from '../shared/_check_log_modal'
 import BackModal from './_back_modal'
 import List from './_list'
 import auth from '../../models/auth'
@@ -16,6 +17,10 @@ class ApplyList extends Component {
     }
 
     defaultButtonsRender = (text, item) => {
+        let buttons = [];
+        if (item.UpdateTime) {
+            buttons.push(<CheckLogModal key={'checklog-' + item.ID} flowData={item.FlowData} />)
+        }
         if (!item.RealEndTime && item.Result === true && auth.isCurrentUser(item.UserId)) {
             let text = '归还';
             switch (this.state.formId) {
@@ -32,13 +37,15 @@ class ApplyList extends Component {
                     text = '归还'
                     break;
             }
-            return <BackModal
+            buttons.push(<BackModal
                 title={text}
                 id={item.ID}
+                key={'backmodal-' + item.ID}
                 trigger={<Button>{text}</Button>}
                 onSubmit={this.handleBackSubmit}
-            />
+            />)
         }
+        return buttons;
     }
 
     render() {

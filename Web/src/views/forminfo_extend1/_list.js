@@ -74,7 +74,7 @@ class Extend1ListComponent extends Component {
     }
 
     createTimeColumnRender = (text, item) => moment(text).format('YYYY-MM-DD HH:mm:ss')
-    updateTimeColumnRender = (text, item) => moment(text).format('YYYY-MM-DD HH:mm:ss')
+    updateTimeColumnRender = (text, item) => text ? moment(text).format('YYYY-MM-DD HH:mm:ss') : null
     resultColumnRender = (text, item) => {
         switch (item.Result) {
             case true:
