@@ -16,7 +16,7 @@ class MeetingRoomApplyModal extends Component {
             return false
         }
 
-        let roomId = formData.InfoId;
+        let roomId = formData.ExtendInfoId;
         if (!roomId) {
             message.error("参数不正确");
             return false;
@@ -54,7 +54,7 @@ class MeetingRoomApplyModal extends Component {
                 onSubmit={this.handleSubmit}
                 children={[
                     {
-                        title: '申请会议室', name: 'InfoId', defaultValue: '',
+                        title: '申请会议室', name: 'ExtendInfoId', defaultValue: '',
                         rules: [{ required: true, message: '请选择申请会议室' }],
                         render: <Select>
                             {rooms.map(room => <Select.Option key={room.ID}>{room.Name}（{room.Number}）</Select.Option>)}

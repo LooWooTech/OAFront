@@ -15,7 +15,7 @@ export default class MeetingRoomApplyForm extends Component {
         const formData = this.refs.form.getData()
         const users = this.refs.selectUser.getSelectedUsers() || [];
         formData.ApprovalUserId = users.length > 0 ? users[0].ID : 0;
-        if (!formData.InfoId) {
+        if (!formData.ExtendInfoId) {
             Toast.show({ text: '请先选择会议室', position: 'top' })
             return false;
         }
@@ -44,7 +44,7 @@ export default class MeetingRoomApplyForm extends Component {
     getFormItems = () => {
         let items = [
             {
-                title: '会议室', name: 'InfoId', type: 'select',
+                title: '会议室', name: 'ExtendInfoId', type: 'select',
                 options: this.props.stores.meetingroomStore.list.map(item => ({
                     text: `${item.Name}(${item.Number})`,
                     value: item.ID

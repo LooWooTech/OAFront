@@ -16,7 +16,7 @@ class CarApplyModal extends Component {
             return false
         }
 
-        let carId = formData.InfoId;
+        let carId = formData.ExtendInfoId;
         if (!carId) {
             message.error("请选择正确的车辆");
             return false;
@@ -54,7 +54,7 @@ class CarApplyModal extends Component {
                 onSubmit={this.handleSubmit}
                 children={[
                     {
-                        title: '申请车辆', name: 'InfoId', defaultValue: '',
+                        title: '申请车辆', name: 'ExtendInfoId', defaultValue: '',
                         rules: [{ required: true, message: '请选择申请车辆' }],
                         render: <Select>
                             {cars.map(car => <Select.Option key={car.ID}>{car.Name}（{car.Number}）</Select.Option>)}

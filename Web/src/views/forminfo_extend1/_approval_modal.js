@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Button, Radio, message, Select, Input } from 'antd'
+import { Button, Radio, message, Select, Input, Icon } from 'antd'
 import moment from 'moment'
 import Modal from '../shared/_formmodal'
 import api from '../../models/api'
@@ -33,25 +33,35 @@ class ApprovalModal extends Component {
     getItems = (model) => {
         var items = [
             { title: '申请人', render: model.ApplyUser },
-            { title: '申请时间', render: <span>{moment(model.ScheduleBeginTime).format('ll')} ~ {moment(model.ScheduleEndTime).format('ll')}</span> },
-            {
-                title: '审核结果', name: 'result', defaultValue: true,
-                render: <Radio.Group>
-                    <Radio.Button value={true}>同意</Radio.Button>
-                    <Radio.Button value={false}>不同意</Radio.Button>
-                </Radio.Group>
-            },
-            {
-                title: '审核内容', name: 'Content',
-                render: <Input type="textarea" autosize={{ minRows: 2, maxRows: 6 }} />
-            },
-            {
-                title: '审核人', name: 'toUserId', tips: '如果需要上级领导审核，请选择',
-                render: <Select>
-                    {this.state.toUsers.map(user => <Select.Option key={user.ID}>{user.RealName}</Select.Option>)}
-                </Select>
-            }
-        ];
+            { title: '申请时间', render: <span>{moment(model.ScheduleBeginTime).format('ll')} ~ {moment(model.ScheduleEndTime).format('ll')}</span> }];
+        if (model.AttachmentId > 0) {
+            items.push({
+                title: '附件',
+                render: (
+                    <a href={api.File.PreviewUrl(model.AttachmentId)} target='_blank'>
+                        <Icon type="eye" /> 点击查看
+                    </a>
+                )
+            })
+        }
+
+        items = items.concat([{
+            title: '审核结果', name: 'result', defaultValue: true,
+            render: <Radio.Group>
+                <Radio.Button value={true}>同意</Radio.Button>
+                <Radio.Button value={false}>不同意</Radio.Button>
+            </Radio.Group>
+        },
+        {
+            title: '审核内容', name: 'Content',
+            render: <Input type="textarea" autosize={{ minRows: 2, maxRows: 6 }} />
+        },
+        {
+            title: '审核人', name: 'toUserId', tips: '如果需要上级领导审核，请选择',
+            render: <Select>
+                {this.state.toUsers.map(user => <Select.Option key={user.ID}>{user.RealName}</Select.Option>)}
+            </Select>
+        }]);
         return items;
     }
 

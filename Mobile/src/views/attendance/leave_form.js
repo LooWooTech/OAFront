@@ -31,7 +31,7 @@ class LeaveForm extends Component {
         const leaders = this.props.stores.userStore.leaders || []
         let items = [
             {
-                title: '请假类型', name: 'InfoId', defaultValue: 1, type: 'select',
+                title: '请假类型', name: 'ExtendInfoId', defaultValue: 1, type: 'select',
                 defaultValue: 1,
                 options: [
                     { text: '公事', value: 1 },

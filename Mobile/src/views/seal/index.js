@@ -18,14 +18,14 @@ export default class SealIndex extends Component {
         this.props.stores.sealStore.getList();
         const userId = this.props.stores.userStore.user.ID
         this.menuData = [
-            { label: '申请公章', value: 'Seal.Apply', icon: 'plus' },
+            { label: '申请印章', value: 'Seal.Apply', icon: 'plus' },
             {
                 label: '申请记录', value: 'Extend1.List', icon: 'history',
-                params: { formId: FORMS.Seal.ID, userId: userId, approvalUserId: 0, infoId: 0 }
+                params: { formId: FORMS.Seal.ID, applyUserId: userId, approvalUserId: 0, extendInfoId: 0 }
             },
             {
                 label: '申请审批', value: 'Extend1.List', icon: 'check',
-                params: { formId: FORMS.Seal.ID, status: 1, approvalUserId: userId, userId: 0, infoId: 0 }
+                params: { formId: FORMS.Seal.ID, status: 1, userId: userId, applyUserId: 0, extendInfoId: 0 }
             }
         ]
     }
@@ -34,7 +34,7 @@ export default class SealIndex extends Component {
     handleSelectMenu = (item) => this.props.navigation.navigate(item.value, item.params);
     handleItemClick = (item) => this.props.navigation.navigate('Extend1.List', {
         formId: FORMS.Seal.ID,
-        infoId: item.ID,
+        extendInfoId: item.ID,
     })
 
     render() {
@@ -46,7 +46,7 @@ export default class SealIndex extends Component {
                         <BackButton />
                     </Left>
                     <Body>
-                        <Title>申请公章</Title>
+                        <Title>申请印章</Title>
                     </Body>
                     <Right>
                         <Button transparent onPress={this.showMenu}>

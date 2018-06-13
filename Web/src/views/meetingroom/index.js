@@ -47,7 +47,7 @@ class MeetingRoomIndex extends Component {
                 </Menu>
                 {this.state.roomId ?
                     <ApplyList
-                        infoId={this.state.roomId}
+                        extendInfoId={this.state.roomId}
                         formId={api.Forms.MeetingRoom.ID}
                         toolbar={false}
                     />

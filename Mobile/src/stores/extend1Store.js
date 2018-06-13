@@ -10,6 +10,7 @@ class FormExtend1Store extends FlatListData {
         formId: FORMS.Attendance.ID,
         status: 0,
         infoId: 0,
+        applyUserId: 0,
         approvalUserId: 0,
         userId: 0
     }

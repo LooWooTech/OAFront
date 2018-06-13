@@ -50,7 +50,7 @@ class CarIndex extends Component {
                     )}
                 </Menu>
                 <ApplyList
-                    infoId={this.state.carId}
+                    extendInfoId={this.state.carId}
                     toolbar={false}
                     formId={api.Forms.Car.ID}
                 />

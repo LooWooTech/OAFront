@@ -47,7 +47,7 @@ class SealIndex extends Component {
                 </Menu>
                 {this.state.sealId ?
                     <ApplyList
-                        infoId={this.state.sealId}
+                        extendInfoId={this.state.sealId}
                         formId={api.Forms.Seal.ID}
                         toolbar={false}
                     />

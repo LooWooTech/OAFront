@@ -53,7 +53,7 @@ class ApplyList extends Component {
         return <List
             ref="list"
             title={'我的' + api.Form.GetName(this.state.formId) + '记录'}
-            userId={user.ID}
+            applyUserId={user.ID}
             formId={this.state.formId}
             buttons={this.defaultButtonsRender}
         />

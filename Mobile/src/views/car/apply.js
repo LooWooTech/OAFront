@@ -44,7 +44,7 @@ export default class CarApplyForm extends Component {
     getFormItems = () => {
         let items = [
             {
-                title: '选择车辆', name: 'InfoId', type: 'select',
+                title: '选择车辆', name: 'ExtendInfoId', type: 'select',
                 options: this.props.stores.carStore.list.map(item => ({
                     label: `${item.Name}(${item.Number})`,
                     value: item.ID

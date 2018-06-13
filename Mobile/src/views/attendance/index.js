@@ -21,11 +21,11 @@ class Attendance extends Component {
             { label: '我要请假', value: 'Leave.Form', icon: 'calendar-plus-o' },
             {
                 label: '请假记录', value: 'Extend1.List', icon: 'calendar-check-o',
-                params: { formId: FORMS.Attendance.ID, userId: userId, approvalUserId: 0 }
+                params: { formId: FORMS.Attendance.ID, applyUserId: userId, approvalUserId: 0, userId: 0 }
             },
             {
                 label: '请假审批', value: 'Extend1.List', icon: 'calendar-times-o',
-                params: { formId: FORMS.Attendance.ID, status: 1, approvalUserId: userId, userId: 0 }
+                params: { formId: FORMS.Attendance.ID, status: 1, userId: userId, userId: 0, applyUserId: 0 }
             }
         ]
         LocaleConfig.locales['zh'] = {

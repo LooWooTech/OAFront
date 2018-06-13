@@ -19,15 +19,15 @@ class ApprovalList extends Component {
     defaultButtonsRender = (text, item) => {
         let buttons = [];
         if ((auth.isCurrentUser(item.UsreId) || auth.isCurrentUser(item.approvalUserId)) && item.UpdateTime) {
-            buttons.push(<CheckLogModal flowData={item.FlowData} />)
+            buttons.push(<CheckLogModal key="CheckLogModal" flowData={item.FlowData} />)
         }
         if (auth.isCurrentUser(item.ApprovalUserId)) {
             switch (this.state.formId) {
                 case api.Forms.Leave.ID:
-                    buttons.push(<LeaveApprovalModal model={item} onSubmit={this.handleSubmit} />);
+                    buttons.push(<LeaveApprovalModal key="LeaveApprovalModal" model={item} onSubmit={this.handleSubmit} />);
                     break;
                 default:
-                    buttons.push(<ApprovalModal model={item} onSubmit={this.handleSubmit} />);
+                    buttons.push(<ApprovalModal key="ApprovalModal" model={item} onSubmit={this.handleSubmit} />);
             }
         }
         return buttons;
@@ -38,9 +38,10 @@ class ApprovalList extends Component {
         return <List
             ref="list"
             title={api.Form.GetName(this.state.formId) + '审核'}
-            approvalUserId={user.ID}
+            userId={user.ID}
             formId={this.state.formId}
             buttons={this.defaultButtonsRender}
+            status={this.props.location.query.status}
         />
     }
 }

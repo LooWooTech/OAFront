@@ -15,8 +15,8 @@ export default class SealApplyForm extends Component {
         const formData = this.refs.form.getData()
         const users = this.refs.selectUser.getSelectedUsers() || [];
         formData.ApprovalUserId = users.length > 0 ? users[0].ID : 0;
-        if (!formData.InfoId) {
-            Toast.show({ text: '请先选择公章', position: 'top' })
+        if (!formData.ExtendInfoId) {
+            Toast.show({ text: '请先选择印章', position: 'top' })
             return false;
         }
         if (!formData.ScheduleBeginTime) {
@@ -44,7 +44,7 @@ export default class SealApplyForm extends Component {
     getFormItems = () => {
         let items = [
             {
-                title: '选择公章', name: 'InfoId', type: 'select',
+                title: '选择印章', name: 'ExtendInfoId', type: 'select',
                 options: this.props.stores.sealStore.list.map(item => ({
                     text: `${item.Name}(${item.Number})`,
                     value: item.ID
@@ -77,7 +77,7 @@ export default class SealApplyForm extends Component {
                         <BackButton />
                     </Left>
                     <Body>
-                        <Title>申请公章</Title>
+                        <Title>申请印章</Title>
                     </Body>
                 </Header>
                 <Content>

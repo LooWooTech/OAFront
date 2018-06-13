@@ -21,11 +21,11 @@ export default class MeetingRoomIndex extends Component {
             { label: '申请会议室', value: 'MeetingRoom.Apply', icon: 'plus' },
             {
                 label: '申请记录', value: 'Extend1.List', icon: 'history',
-                params: { formId: FORMS.MeetingRoom.ID, userId: userId, approvalUserId: 0, infoId: 0 }
+                params: { formId: FORMS.MeetingRoom.ID, applyUserId: userId, approvalUserId: 0, extendInfoId: 0 }
             },
             {
                 label: '申请审批', value: 'Extend1.List', icon: 'check',
-                params: { formId: FORMS.MeetingRoom.ID, status: 1, approvalUserId: userId, userId: 0, infoId: 0 }
+                params: { formId: FORMS.MeetingRoom.ID, status: 1, userId: userId, applyUserId: 0, extendInfoId: 0 }
             }
         ]
     }
@@ -34,7 +34,7 @@ export default class MeetingRoomIndex extends Component {
     handleSelectMenu = (item) => this.props.navigation.navigate(item.value, item.params);
     handleItemClick = (item) => this.props.navigation.navigate('Extend1.List', {
         formId: FORMS.MeetingRoom.ID,
-        infoId: item.ID,
+        extendInfoId: item.ID,
     })
 
     render() {

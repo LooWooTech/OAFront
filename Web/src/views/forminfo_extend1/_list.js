@@ -16,8 +16,9 @@ class Extend1ListComponent extends Component {
         list: [],
         loading: true,
         userId: this.props.userId || 0,
+        applyUserId: this.props.applyUserId || 0,
         approvalUserId: this.props.approvalUserId || 0,
-        infoId: this.props.infoId || 0,
+        extendInfoId: this.props.extendInfoId || 0,
         status: this.props.status || 0,
         formId: this.props.formId,
         page: {
@@ -33,14 +34,8 @@ class Extend1ListComponent extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        let formId = nextProps.formId
-        let infoId = nextProps.infoId
-        let status = nextProps.status
-        if (formId !== this.state.formId
-            || infoId !== this.state.infoId
-            || status !== this.state.status
-        ) {
-            this.loadData(nextProps);
+        if (JSON.stringify(nextProps) !== JSON.stringify(this.props)) {
+            this.loadData(nextProps)
         }
     }
 
@@ -48,8 +43,9 @@ class Extend1ListComponent extends Component {
         props = props || {}
         let parameter = {
             formId: this.state.formId,
-            infoId: props.infoId || this.state.infoId || 0,
+            extendInfoId: props.extendInfoId || this.state.extendInfoId || 0,
             userId: this.state.userId,
+            applyUserId: this.state.applyUserId,
             approvalUserId: this.state.approvalUserId,
             status: this.context.router.location.query.status || 0,
             page: this.context.router.location.query.page || this.state.page.current || 1,
@@ -68,7 +64,7 @@ class Extend1ListComponent extends Component {
 
     handleSubmitFlowCallback = flowData => {
         if (!flowData) return;
-        api.FormInfoExtend1.Approval(flowData.InfoId || 0, json => {
+        api.FormInfoExtend1.Approval(flowData.ExtendInfoId || 0, json => {
             this.loadData();
         });
     }
