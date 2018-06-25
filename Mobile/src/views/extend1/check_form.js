@@ -31,6 +31,7 @@ class FormExtend1Check extends Component {
         const leaders = this.props.stores.userStore.leaders
         let items = [
             { name: 'id', value: model.ID, type: 'hidden' },
+            { name: 'infoId', value: model.InfoId, type: 'hidden' },
             { title: '申 请 人', defaultValue: model.ApplyUser, type: 'text', disabled: true },
             { title: '申请日期', value: model.CreateTime, type: 'datetime', disabled: true },
             { title: '申请原由', defaultValue: model.Reason, type: 'text', disabled: true },
@@ -63,7 +64,7 @@ class FormExtend1Check extends Component {
 
     handleSubmit = () => {
         let formData = this.refs.form.getData()
-        this.props.stores.extend1Store.submitCheck(formData.id, formData.result, formData.toUserId || 0);
+        this.props.stores.extend1Store.submitCheck(formData.infoId, formData.result, formData.toUserId || 0);
         this.props.navigation.goBack()
     }
 

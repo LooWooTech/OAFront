@@ -27,7 +27,7 @@ class ApprovalLeaveModal extends Component {
             message.error('请假超过48小时，请提交到局长审批');
             return false
         }
-        api.Attendance.Approval(model.ID, data.result, data.toUserId, json => {
+        api.Attendance.Approval(model.InfoId, data.result, data.toUserId, json => {
             message.success("已提交审核");
             if (this.props.onSubmit) {
                 this.props.onSubmit();

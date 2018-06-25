@@ -18,7 +18,7 @@ class ApprovalModal extends Component {
         let model = this.props.model
         api.FormInfoExtend1.Approval(
             {
-                id: model.ID,
+                id: model.InfoId,
                 result: data.result,
                 toUserId: data.toUserId,
                 content: data.content
@@ -53,7 +53,7 @@ class ApprovalModal extends Component {
             </Radio.Group>
         },
         {
-            title: '审核内容', name: 'Content',
+            title: '审核内容', name: 'content',
             render: <Input type="textarea" autosize={{ minRows: 2, maxRows: 6 }} />
         },
         {

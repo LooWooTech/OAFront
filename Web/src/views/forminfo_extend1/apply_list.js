@@ -56,6 +56,7 @@ class ApplyList extends Component {
             applyUserId={user.ID}
             formId={this.state.formId}
             buttons={this.defaultButtonsRender}
+            status={this.props.location.query.status}
         />
     }
 }

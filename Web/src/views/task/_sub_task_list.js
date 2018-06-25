@@ -213,7 +213,7 @@ class SubTaskList extends Component {
             {text.split('\n').map((item, key) => <span key={key}>{item}<br /></span>)}
         </span>
     )
-    createTimeColumnRender = (text, item) => text ? moment(text).format('YYYY-MM-DD HH:mm') : ''
+    updateTimeColumnRender = (text, item) => text ? moment(text).format('YYYY-MM-DD HH:mm') : ''
     scheduleDateColumnRender = (text, item) => text ? moment(text).format('YYYY-MM-DD') : ''
     todoOperateColumnRender = (text, item) => (
         <span>
@@ -272,7 +272,7 @@ class SubTaskList extends Component {
                 { title: '内容', dataIndex: 'Content', render: this.contentColumnRender },
                 { title: '状态', dataIndex: 'Status', width: 60, render: this.todoStatusColumnRender },
                 { title: '负责人', width: 100, dataIndex: 'ToUserName' },
-                { title: '创建时间', width: 170, dataIndex: 'CreateTime', render: this.createTimeColumnRender },
+                { title: '派单时间', width: 170, dataIndex: 'UpdateTime', render: this.updateTimeColumnRender },
                 { title: '计划完成时间', width: 150, dataIndex: 'ScheduleDate', render: this.scheduleDateColumnRender },
                 { title: '操作', width: 240, render: this.todoOperateColumnRender }
             ]}
@@ -306,7 +306,7 @@ class SubTaskList extends Component {
                         { title: '状态', dataIndex: 'Completed', width: 90, render: this.statusColumnRender },
                         { title: '科室', render: this.departmentColumnRender },
                         { title: '责任人', width: 80, render: this.userNameColumnRender },
-                        { title: '创建时间', width: 170, dataIndex: 'CreateTime', render: this.createTimeColumnRender },
+                        { title: '派单时间', width: 170, dataIndex: 'UpdateTime', render: this.updateTimeColumnRender },
                         { title: '计划完成时间', width: 130, dataIndex: 'ScheduleDate', render: this.scheduleDateColumnRender },
                         { title: '操作', width: 200, render: this.buttonsColumnRender }
                     ]}

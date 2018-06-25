@@ -6,6 +6,8 @@ import api from '../../models/api'
 
 class EditSubTaskModal extends Component {
     handleSubmit = (data) => {
+        data.UpdateTime = data.UpdateTime.format();
+        data.ScheduleDate = data.ScheduleDate.format();
         api.Task.SaveSubTask(data, (json) => {
             this.props.onSubmit()
         });
