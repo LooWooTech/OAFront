@@ -5,7 +5,7 @@ const HTTP_GET = "GET"
 const HTTP_POST = "POST"
 const HTTP_DELETE = "DELETE"
 
-const host = process.env.NODE_ENV === 'production' ? '/' : 'http://localhost:8012/';
+const host = process.env.NODE_ENV === 'production' ? '/' : 'http://192.168.2.101:8012/';
 const apiPath = "api/";
 const apiHost = host + apiPath;
 const Forms = {
@@ -569,6 +569,9 @@ module.exports = {
         },
         Approval: (id, cb, err) => {
             invokeApi('goods/approval', HTTP_GET, null, cb, err);
+        },
+        Register: (goodsId, number, cb, err) => {
+            invokeApi(`goods/register?goodsId=${goodsId}&number=${number}`, HTTP_POST, null, cb, err);
         }
     }
 };

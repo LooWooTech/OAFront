@@ -5,17 +5,6 @@ import api from '../../models/api'
 
 class CategoryEditForm extends Component {
 
-    state = { visible: false, };
-
-    showModelHandler = (e) => {
-        if (e) e.stopPropagation();
-        this.setState({ visible: true, });
-    };
-
-    hideModelHandler = () => {
-        this.setState({ visible: false, });
-    };
-
     handleSubmit = (values) => {
         api.Category.Save(values, () => {
             this.props.onSubmit()

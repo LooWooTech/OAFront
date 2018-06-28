@@ -1,5 +1,6 @@
 import React from 'react'
 import { hashHistory } from 'react-router'
+import auth from './models/auth'
 let currentRequest = null;
 function xmlHttpRequest(url, method, data, cb, err) {
     var req = currentRequest = new XMLHttpRequest();
@@ -31,7 +32,7 @@ function xmlHttpRequest(url, method, data, cb, err) {
     };
     req.withCredentials = true;
     req.open(method, url, true);
-    //req.setRequestHeader("Authorization", auth.getToken());
+    req.setRequestHeader("token", auth.getToken());
     req.setRequestHeader("Content-Type", "application/json")
     var postData = data ? JSON.stringify(data) : null;
     req.send(postData);

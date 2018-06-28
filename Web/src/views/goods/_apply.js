@@ -6,20 +6,16 @@ export default class GoodsApplyFormModal extends Component {
     state = { disabled: this.props.model.Status === 0 }
     getItems = (model) => {
         let items = [
-            { name: 'ID', defaultValue: model.ID, render: <Input type="hidden" /> },
-            { title: '名称', name: 'Name', defaultValue: model.Name, render: <Input /> },
-            { title: '介绍', name: 'Description', defaultValue: model.Description, render: <Input type="textarea" autosize={{ minRows: 2, maxRows: 6 }} /> },
-            { title: '当前数量', name: 'Number', defaultValue: model.Number, render: <Input disabled={true} /> },
+            { name: 'GoodsId', defaultValue: model.ID, render: <Input type="hidden" /> },
+            { name: 'MaxNumber', defaultValue: model.Number, render: <Input type="hidden" /> },
+            { title: '名称', render: model.Name },
+            {
+                title: '申请数量', name: 'Number',
+                defaultValue: 1,
+                render: <Input />
+            },
+            { title: '备注', name: 'Note', render: <Input type="textarea" autosize={{ minRows: 2, maxRows: 6 }} /> }
         ];
-        if (model.Number > 0) {
-
-            items.push({
-                title: '状态', name: 'Disabled',
-                render: <Checkbox defaultChecked={this.state.disabled}
-                    onChange={e => this.setState({ disabled: e.target.checked })}
-                >停止认领</Checkbox>
-            })
-        }
         return items;
     }
 
@@ -29,6 +25,7 @@ export default class GoodsApplyFormModal extends Component {
 
         return (
             <Modal
+                title="物品申请"
                 trigger={<Button icon="add">申请</Button>}
                 children={this.getItems(model)}
             />

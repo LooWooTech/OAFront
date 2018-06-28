@@ -32,6 +32,9 @@ module.exports = {
   hasRight(rightName) {
     if (!rightName) return true;
     let user = this.getUser();
+    if (user.Role === 2) {
+      return true;
+    }
     return !!user.UserGroups.find(e => e.Group.Rights.find(r => r.Name === rightName));
   }
 

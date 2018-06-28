@@ -163,7 +163,7 @@ const data = [
             },
             {
                 title: '管理', items: [
-                    { path: '/category/list?formId=' + api.Forms.Goods.ID, icon: 'fa fa-list', text: '分类管理' },
+                    { path: '/category/list?depth=1&formId=' + api.Forms.Goods.ID, icon: 'fa fa-list', text: '分类管理' },
                     { path: '/goods/approvals', icon: 'fa fa-check', text: '申领审核', right: 'Form.Goods.Check' }
                 ]
             }

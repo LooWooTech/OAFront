@@ -6,6 +6,9 @@ import api from '../../models/api';
 import auth from '../../models/auth';
 import moment from 'moment';
 import ApplyModal from './_apply'
+import EditModal from './_edit'
+import RegisterModal from './_register'
+
 export default class GoodsList extends Component {
 
     state = {
@@ -17,7 +20,7 @@ export default class GoodsList extends Component {
             total: 0
         },
         categories: [],
-        data: []
+        list: []
     }
 
     componentWillMount() {
@@ -43,7 +46,7 @@ export default class GoodsList extends Component {
             data => {
                 this.setState({
                     loading: false,
-                    data: data.List,
+                    list: data.List,
                     page: data.Page,
                     searchKey: parameter.searchKey,
                 });
@@ -61,22 +64,32 @@ export default class GoodsList extends Component {
         utils.ReloadPage({ page })
     }
 
+    logColumnRender = (text, item) => <Link key='logs' to={`/goods/applylist?goodsId=${item.ID}`}>查看</Link>
+
     buttonColumnRender = (text, item) => {
         var btns = [];
         if (item.Number > 0 && item.Status) {
-            btns.push(<ApplyModal model={item} />)
+            btns.push(<ApplyModal key='apply' model={item} onSubmit={this.loadData} />)
         }
-        btns.push(<Link to={`/goods/applylist?goodsId=${item.ID}`}>申请记录</Link>)
-
+        if (auth.hasRight('Form.Goods.Edit')) {
+            btns.push(<RegisterModal key="register" model={item} onSubmit={this.loadData} />)
+            btns.push(<EditModal key='edit' model={item} onSubmit={this.loadData} categories={this.state.categories} />)
+        }
         return btns;
     }
 
     render() {
+
         return (
             <div>
                 <div className="toolbar">
                     <div className="left">
                         <h3>物品列表</h3>
+                        {this.state.categories.length > 0 && auth.hasRight('Form.Goods.Edit') ?
+                            <EditModal
+                                categories={this.state.categories}
+                                onSubmit={this.loadData}
+                            /> : null}
                     </div>
                     <div className="right" style={{ width: 400 }}>
                         <Row>
@@ -89,7 +102,7 @@ export default class GoodsList extends Component {
                                     placeholder="选择分类进行筛选"
                                     style={{ width: 200 }}
                                 >
-                                    {this.state.categories.map(c => <Select.Option value={c.ID}>{c.Name}</Select.Option>)}
+                                    {this.state.categories.map(c => <Select.Option key={c.ID}>{c.Name}</Select.Option>)}
                                 </Select>
                             </Col>
                         </Row>
@@ -102,7 +115,8 @@ export default class GoodsList extends Component {
                         { title: '物品名称', dataIndex: 'Name' },
                         { title: '现有数量', dataIndex: 'Number' },
                         { title: '物品描述', dataIndex: 'Note' },
-                        { title: '操作', dataIndex: 'ID', render: this.buttonColumnRender }
+                        { title: '认领记录', render: this.logColumnRender },
+                        { title: '操作', render: this.buttonColumnRender }
                     ]}
                     dataSource={this.state.list}
                     pagination={{

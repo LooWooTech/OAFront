@@ -35,12 +35,17 @@ export default class DepartmentList extends React.Component {
     }
 
     getChildren = (node, list) => {
+        const depth = this.props.location.query.depth;
+        if (depth && node.depth >= depth) {
+            return [];
+        }
         node.children = list.filter(e => e.ParentId === node.ID);
         node.children.map(item => this.getChildren(item, list));
         return node.children;
     }
 
     render() {
+        const depth = this.props.location.query.depth;
         return <div>
             <Affix offsetTop={0} className="toolbar">
                 <Button.Group>
@@ -61,7 +66,9 @@ export default class DepartmentList extends React.Component {
                         render: (text, item) => (
                             <span>
                                 <EditModal onSubmit={this.loadData} model={item} trigger={<Button icon="edit">编辑</Button>} />
-                                <EditModal onSubmit={this.loadData} model={{ ParentId: item.ID, FormId: item.FormId }} trigger={<Button icon="add">添加子类</Button>} />
+                                {!depth || item.depth < depth ?
+                                    <EditModal onSubmit={this.loadData} model={{ ParentId: item.ID, FormId: item.FormId }} trigger={<Button icon="add">添加子类</Button>} />
+                                    : null}
                                 <Popconfirm placement="topRight" title="你确定要删除吗？"
                                     onConfirm={() => this.onDelete(item)}
                                     okText="是" cancelText="否">
