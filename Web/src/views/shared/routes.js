@@ -52,6 +52,11 @@ import MailForm from '../mail/form'
 import MailDetail from '../mail/detail'
 import ContactList from '../user/contacts'
 
+import GoodsList from '../goods/list'
+import GoodsApplyList from '../goods/apply_list'
+import GoodsApprovalList from '../goods/approval_list'
+import ApplyList from '../forminfo_extend1/apply_list';
+
 const authorize = (nextState, replace) => {
     if (!auth.hasLogin()) {
         replace({
@@ -126,6 +131,11 @@ export default class Routes extends React.Component {
                     <Route path="flow/list" component={FlowList} />
                 </Route>
 
+                <Route path="goods">
+                    <IndexRoute component={GoodsList} />
+                    <Route path="applies" component={GoodsApplyList} />
+                    <Route path="approvals" component={GoodsApprovalList} />
+                </Route>
             </Route>
             <Route path="/user">
                 <Route path="login" component={Login} />

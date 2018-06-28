@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { Modal, Form, Input } from 'antd';
+import { Input } from 'antd';
+import FormModal from '../shared/_formmodal'
+import api from '../../models/api'
 
-const FormItem = Form.Item;
-
-class DepartmentEditForm extends Component {
+class CategoryEditForm extends Component {
 
     state = { visible: false, };
 
@@ -16,61 +16,37 @@ class DepartmentEditForm extends Component {
         this.setState({ visible: false, });
     };
 
-    handleSubmit = () => {
-        this.props.form.validateFields((err, values) => {
-            if (!err) {
-                this.props.onSubmit(err, values);
-                this.hideModelHandler();
-            }
+    handleSubmit = (values) => {
+        api.Category.Save(values, () => {
+            this.props.onSubmit()
         });
     }
 
-    render() {
-        const { children, record, parent } = this.props;
-        const { getFieldDecorator } = this.props.form;
-        const formItemLayout = {
-            labelCol: { span: 6 },
-            wrapperCol: { span: 14 },
-        };
+    getFormItems = (model) => {
+        let items = [
+            { name: 'ID', defaultValue: model.ID, render: <Input type="hidden" /> },
+            { name: 'ParentId', defaultValue: model.ParentId, render: <Input type="hidden" /> },
+            { name: 'FormId', defaultValue: model.FormId, render: <Input type="hidden" /> },
+            {
+                title: '分类名称', name: 'Name', defaultValue: model.Name, render: <Input />,
+                rules: [{ required: true, message: '请填写名称' }]
+            }
+        ]
 
+        return items;
+    }
+
+    render() {
+        const model = this.props.model
         return (
-            <span>
-                <span onClick={this.showModelHandler}>
-                    {children}
-                </span>
-                <Modal title={record ? '修改分类' : (parent ? '添加子类' : '添加分类')}
-                    visible={this.state.visible}
-                    onOk={this.handleSubmit}
-                    onCancel={this.hideModelHandler}
-                >
-                    <Form horizontal onSubmit={this.handleSubmit}>
-                        {
-                            getFieldDecorator('ID', {
-                                initialValue: (record ? record.ID : 0)
-                            })(<Input type="hidden" />)
-                        }
-                        {
-                            getFieldDecorator('ParentID', {
-                                initialValue: parent ? parent.ID : 0,
-                            })(<Input type="hidden" />)
-                        }
-                        {
-                            parent ? <FormItem {...formItemLayout} label="上级分类" >
-                                <Input defaultValue={parent.Name} />
-                            </FormItem> : ''
-                        }
-                        <FormItem {...formItemLayout} label="分组名称" >
-                            {
-                                getFieldDecorator('name', {
-                                    initialValue: (record ? record.Name : ''),
-                                })(<Input />)
-                            }
-                        </FormItem>
-                    </Form>
-                </Modal>
-            </span>
+            <FormModal
+                title={model.ID > 0 ? '修改分类' : model.ParentId > 0 ? '添加子类' : '添加分类'}
+                trigger={this.props.trigger}
+                children={this.getFormItems(model)}
+                onSubmit={this.handleSubmit}
+            />
         );
     }
 }
 
-export default Form.create()(DepartmentEditForm);
+export default CategoryEditForm;

@@ -3,58 +3,52 @@ import { Affix, Table, Button, Popconfirm } from 'antd';
 import EditModal from './edit';
 import api from '../../models/api';
 
-function buildTreeData(list) {
-    var roots = [];
-    list.map(item => {
-        if (item.ParentID === 0) {
-            roots.push(getChildren(item, list));
-        }
-        return null;
-    });
-    return roots;
-}
-function getChildren(node, list) {
-    list.map(item => {
-        if (item.ParentID === node.ID) {
-            if (!node.children) node.children = [];
-            node.children.push(getChildren(item, list));
-        }
-        return null;
-    });
-    return node;
-}
-
 export default class DepartmentList extends React.Component {
     state = { list: [] };
 
     componentDidMount() {
-        this.loadPageData();
+        this.loadData();
     };
     componentWillUnmount() {
         api.Abort();
     };
 
-    onEditSave = (err, values) => {
-        api.Category.Save(values, json => {
-            this.loadPageData();
-        });
-        return false;
+    onEditSave = () => {
+        this.loadData()
     };
     onDelete = item => {
-        api.Category.Delete(item.ID, this.loadPageData);
+        api.Category.Delete(item.ID, this.loadData);
     };
-    loadPageData = () => {
+
+    loadData = () => {
         let formId = this.props.location.query.formId || 0;
-        api.Category.List({ formId }, data => {
-            var tree = buildTreeData(data);
-            this.setState({ list: tree })
+        api.Category.List(formId, data => {
+            let tree = this.getTree(data)
+            this.setState({ list: tree, formId })
         });
     };
+
+    getTree = (list) => {
+        let roots = list.filter(e => e.ParentId === 0);
+        roots.map(item => this.getChildren(item, list));
+        return roots;
+    }
+
+    getChildren = (node, list) => {
+        node.children = list.filter(e => e.ParentId === node.ID);
+        node.children.map(item => this.getChildren(item, list));
+        return node.children;
+    }
+
     render() {
         return <div>
             <Affix offsetTop={0} className="toolbar">
                 <Button.Group>
-                    <EditModal children={<Button type="primary" icon="file">新建分类</Button>} onSubmit={this.onEditSave} />
+                    <EditModal
+                        trigger={<Button type="primary" icon="file">添加分类</Button>}
+                        model={{ FormId: this.state.formId }}
+                        onSubmit={this.onEditSave}
+                    />
                 </Button.Group>
             </Affix>
             <Table
@@ -63,11 +57,11 @@ export default class DepartmentList extends React.Component {
                 columns={[
                     { title: '名称', dataIndex: 'Name', },
                     {
-                        title: '操作', dataIndex: 'ID', width: 200,
+                        title: '操作', dataIndex: 'ID', width: 300,
                         render: (text, item) => (
                             <span>
-                                <EditModal onSubmit={this.loadPageData} record={item} children={<Button icon="edit">编辑</Button>} />
-                                <EditModal onSubmit={this.loadPageData} parent={item} children={<Button icon="add">添加子类</Button>} />
+                                <EditModal onSubmit={this.loadData} model={item} trigger={<Button icon="edit">编辑</Button>} />
+                                <EditModal onSubmit={this.loadData} model={{ ParentId: item.ID, FormId: item.FormId }} trigger={<Button icon="add">添加子类</Button>} />
                                 <Popconfirm placement="topRight" title="你确定要删除吗？"
                                     onConfirm={() => this.onDelete(item)}
                                     okText="是" cancelText="否">

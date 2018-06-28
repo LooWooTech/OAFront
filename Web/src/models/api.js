@@ -17,6 +17,7 @@ const Forms = {
     Seal: { ID: 6, FlowId: 6, Name: '印章', Icon: 'fa fa-dot-circle-o', InfoLink: '/extend1/approvals/6' },
     Leave: { ID: 7, FlowId: 7, Name: '请假', Icon: 'fa fa-calendar-check-o', InfoLink: '/extend1/approvals/7' },
     Mail: { ID: 8, Name: '邮件', Icon: 'fa fa-envelope-o', InfoLink: '/mail/detail?id={ID}' },
+    Goods: { ID: 9, Name: '物品', Icon: 'fa fa-box', InfoLink: '/goods/approvals' }
 };
 
 function getExceptionMessage(ex) {
@@ -285,8 +286,8 @@ module.exports = {
         }
     },
     Category: {
-        List: (data, cb, err) => {
-            invokeApi('Category/list', HTTP_GET, data, cb, err);
+        List: (formId, cb, err) => {
+            invokeApi('Category/list?formId=' + formId, HTTP_GET, null, cb, err);
         },
         Save: (data, cb, err) => {
             invokeApi('Category/save', HTTP_POST, data, cb, err);
@@ -551,6 +552,23 @@ module.exports = {
         },
         MyList: (formId, cb, err) => {
             invokeApi('userinfo/mylist?formId=' + formId, HTTP_GET, null, cb, err);
+        }
+    },
+    Goods: {
+        List: (parameters, cb, err) => {
+            invokeApi('goods/list', HTTP_GET, parameters, cb, err);
+        },
+        Save: (data, cb, err) => {
+            invokeApi('goods/save', HTTP_POST, data, cb, err);
+        },
+        Delete: (id, cb, err) => {
+            invokeApi('goods/delete', HTTP_DELETE, { id }, cb, err)
+        },
+        Apply: (data, cb, err) => {
+            invokeApi('goods/apply', HTTP_GET, data, cb, err);
+        },
+        Approval: (id, cb, err) => {
+            invokeApi('goods/approval', HTTP_GET, null, cb, err);
         }
     }
 };

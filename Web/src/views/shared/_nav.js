@@ -153,6 +153,23 @@ const data = [
         ]
     },
     {
+        name: 'goods', text: '物品', icon: 'fa fa-archive',
+        children: [
+            {
+                title: '申请', items: [
+                    { path: '/goods', icon: 'fa fa-list', text: '物品查询' },
+                    { path: `/goods/applies?userId=${auth.getUser().ID}`, icon: 'fa fa-inbox', text: '我的申请' },
+                ]
+            },
+            {
+                title: '管理', items: [
+                    { path: '/category/list?formId=' + api.Forms.Goods.ID, icon: 'fa fa-list', text: '分类管理' },
+                    { path: '/goods/approvals', icon: 'fa fa-check', text: '申领审核', right: 'Form.Goods.Check' }
+                ]
+            }
+        ]
+    },
+    {
         name: 'system', text: '系统', icon: 'fa fa-gear', role: 2, path: '/user/list',
         children: [
             {
