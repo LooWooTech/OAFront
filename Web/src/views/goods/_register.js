@@ -18,7 +18,8 @@ class GoodsRegisterModal extends Component {
             {
                 title: '物品', render: <span>{model.Name}</span>
             },
-            { title: '登记数量', name: 'Number', defaultValue: model.Number || 0, render: <Input /> },
+            { title: '当前数量', render: <span>{model.Number}</span> },
+            { title: '新增数量', name: 'Number', render: <Input /> },
         ]
 
         return items;

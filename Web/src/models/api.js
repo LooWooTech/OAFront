@@ -565,13 +565,13 @@ module.exports = {
             invokeApi('goods/delete', HTTP_DELETE, { id }, cb, err)
         },
         Apply: (data, cb, err) => {
-            invokeApi('goods/apply', HTTP_GET, data, cb, err);
+            invokeApi(`goods/apply`, HTTP_GET, data, cb, err);
         },
-        Approval: (id, cb, err) => {
-            invokeApi('goods/approval', HTTP_GET, null, cb, err);
+        Approval: (data, cb, err) => {
+            invokeApi('goods/approval', HTTP_GET, data, cb, err);
         },
         Register: (goodsId, number, cb, err) => {
-            invokeApi(`goods/register?goodsId=${goodsId}&number=${number}`, HTTP_POST, null, cb, err);
+            invokeApi(`goods/register`, HTTP_GET, { goodsId, number }, cb, err);
         }
     }
 };

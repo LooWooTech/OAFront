@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
-import { Input, Select, Checkbox ,Button} from 'antd';
+import { Input, Select, Checkbox, Button } from 'antd';
 import FormModal from '../shared/_formmodal'
 import api from '../../models/api'
 
 class GoodsEditModal extends Component {
     state = {}
-    handleSubmit = (values) => {
-        api.Goods.Save(values, () => {
+    handleSubmit = (data) => {
+        data.Status = this.state.status
+        console.log(data)
+        api.Goods.Save(data, () => {
             this.props.onSubmit()
         });
     }
@@ -33,11 +35,10 @@ class GoodsEditModal extends Component {
         ]
 
         if (model.ID > 0 && model.Number > 0) {
-
             items.push({
-                title: '状态', name: 'Disabled',
-                render: <Checkbox defaultChecked={this.state.disabled}
-                    onChange={e => this.setState({ disabled: e.target.checked })}
+                title: '状态',
+                render: <Checkbox defaultChecked={(this.state.status || model.Status) === 0}
+                    onChange={e => this.setState({ status: e.target.checked ? 0 : 1 })}
                 >停止认领</Checkbox>
             })
         }
