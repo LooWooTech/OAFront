@@ -17,7 +17,7 @@ const Forms = {
     Seal: { ID: 6, FlowId: 6, Name: '印章', Icon: 'fa fa-dot-circle-o', InfoLink: '/extend1/approvals/6' },
     Leave: { ID: 7, FlowId: 7, Name: '请假', Icon: 'fa fa-calendar-check-o', InfoLink: '/extend1/approvals/7' },
     Mail: { ID: 8, Name: '邮件', Icon: 'fa fa-envelope-o', InfoLink: '/mail/detail?id={ID}' },
-    Goods: { ID: 9, Name: '物品', Icon: 'fa fa-box', InfoLink: '/goods/approvals' }
+    Goods: { ID: 9, FlowId: 8, Name: '物品', Icon: 'fa fa-box', InfoLink: '/goods/approvals' }
 };
 
 function getExceptionMessage(ex) {

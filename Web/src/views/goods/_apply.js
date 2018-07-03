@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Modal from '../shared/_formmodal'
-import { Button, Input, Checkbox, message } from 'antd';
+import { Button, Input, message } from 'antd';
 import api from '../../models/api'
 import SelectUser from '../shared/_user_select'
 
@@ -25,7 +25,7 @@ export default class GoodsApplyFormModal extends Component {
             message.success('申请完成，请等待审核');
             if (this.props.onSubmit) {
                 this.props.onSubmit();
-            } 
+            }
         })
     }
 
@@ -39,12 +39,12 @@ export default class GoodsApplyFormModal extends Component {
                 defaultValue: 1,
                 render: <Input />
             },
-            { title: '备注', name: 'Note', render: <Input type="textarea" autosize={{ minRows: 2, maxRows: 6 }} /> },
+            { title: '备注', name: 'Note', defaultValue: '', render: <Input type="textarea" autosize={{ minRows: 2, maxRows: 6 }} /> },
             {
                 title: '审核人',
                 render: <SelectUser
                     formType="flow"
-                    flowId={api.Forms.Goods.ID}
+                    flowId={api.Forms.Goods.FlowId}
                     flowStep={2}
                     onSubmit={this.handleSelect}
                     ref="selectUserForm"

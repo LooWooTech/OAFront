@@ -64,7 +64,7 @@ export default class GoodsList extends Component {
         utils.ReloadPage({ page })
     }
 
-    logColumnRender = (text, item) => <Link key='logs' to={`/goods/applylist?goodsId=${item.ID}`}>查看</Link>
+    logColumnRender = (text, item) => <Link key='logs' to={`/goods/applies?goodsId=${item.ID}`}>查看</Link>
 
     buttonColumnRender = (text, item) => {
         var btns = [];
