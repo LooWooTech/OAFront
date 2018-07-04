@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router';
-import { Button, Input, Table, Popconfirm, Icon, Select, Row, Col } from 'antd';
+import { Input, Table, Select, Row, Col } from 'antd';
 import utils from '../../utils';
 import api from '../../models/api';
 import auth from '../../models/auth';
-import moment from 'moment';
 import ApplyModal from './_apply'
 import EditModal from './_edit'
 import RegisterModal from './_register'
@@ -113,10 +112,10 @@ export default class GoodsList extends Component {
                     loading={this.state.loading}
                     columns={[
                         { title: '物品名称', dataIndex: 'Name' },
-                        { title: '现有数量', dataIndex: 'Number' },
+                        { title: '现有数量', dataIndex: 'Number', width: 80 },
                         { title: '物品描述', dataIndex: 'Note' },
-                        { title: '认领记录', render: this.logColumnRender },
-                        { title: '操作', render: this.buttonColumnRender }
+                        { title: '认领记录', width: 100, render: this.logColumnRender },
+                        { title: '操作', width: 240, render: this.buttonColumnRender }
                     ]}
                     dataSource={this.state.list}
                     pagination={{

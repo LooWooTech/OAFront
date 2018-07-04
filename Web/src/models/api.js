@@ -567,11 +567,17 @@ module.exports = {
         Apply: (data, cb, err) => {
             invokeApi(`goods/apply`, HTTP_GET, data, cb, err);
         },
+        ApplyList: (data, cb, err) => {
+            invokeApi(`goods/applylist`, HTTP_GET, data, cb, err);
+        },
         Approval: (data, cb, err) => {
             invokeApi('goods/approval', HTTP_GET, data, cb, err);
         },
         Register: (goodsId, number, cb, err) => {
             invokeApi(`goods/register`, HTTP_GET, { goodsId, number }, cb, err);
+        },
+        CancelApply: (applyId, cb, err) => {
+            invokeApi(`goods/cancelapply`, HTTP_GET, { applyId }, cb, err);
         }
     }
 };

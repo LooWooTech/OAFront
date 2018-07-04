@@ -158,13 +158,13 @@ const data = [
             {
                 title: '申请', items: [
                     { path: '/goods', icon: 'fa fa-list', text: '物品查询' },
-                    { path: `/goods/applies?userId=${auth.getUser().ID}`, icon: 'fa fa-inbox', text: '我的申请' },
+                    { path: `/goods/my_applies`, icon: 'fa fa-inbox', text: '我的申请' },
                 ]
             },
             {
                 title: '管理', items: [
+                    { path: '/goods/approvals', icon: 'fa fa-check', text: '申领审核', right: 'Form.Goods.Check' },
                     { path: '/category/list?depth=1&formId=' + api.Forms.Goods.ID, icon: 'fa fa-list', text: '分类管理', right: 'Form.Goods.Edit' },
-                    { path: '/goods/approvals', icon: 'fa fa-check', text: '申领审核', right: 'Form.Goods.Check' }
                 ]
             }
         ]

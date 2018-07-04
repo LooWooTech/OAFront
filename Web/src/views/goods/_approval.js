@@ -8,7 +8,7 @@ export default class GoodsApprovalModal extends Component {
     state = { result: true }
 
     handleSubmit = (data) => {
-        api.Goods.Apporval(data, () => {
+        api.Goods.Approval(data, () => {
             if (this.props.onSubmit) {
                 this.props.onSubmit();
             }
@@ -17,7 +17,7 @@ export default class GoodsApprovalModal extends Component {
 
     getItems = (model) => {
         let items = [
-            { name: 'GoodsId', defaultValue: model.ID, render: <Input type="hidden" /> },
+            { name: 'ApplyId', defaultValue: model.ID, render: <Input type="hidden" /> },
             { title: '物品名称', render: model.Name },
             { title: '申请数量', render: model.Number },
             { title: '申请人', render: model.ApplyUserName },
@@ -25,7 +25,7 @@ export default class GoodsApprovalModal extends Component {
             { title: '申请日期', render: moment(model.CreateTime).format('lll') },
             {
                 title: '审核', name: 'Result', defaultValue: this.state.result,
-                render: <Radio.Group defaultValue={this.state.result}
+                render: <Radio.Group
                     onChange={e => this.setState({ result: e.target.value })}>
                     <Radio.Button value={true}>同意</Radio.Button>
                     <Radio.Button value={false}>不同意</Radio.Button>

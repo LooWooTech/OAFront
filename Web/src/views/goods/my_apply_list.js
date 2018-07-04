@@ -5,7 +5,7 @@ export default class MyApplyList extends Component {
     render() {
         const userId = auth.getUser().ID || 0;
         return (
-            <GoodsApplyList approvalUserId={userId} location={this.props.location}/>
+            <GoodsApplyList applyUserId={userId} location={this.props.location}/>
         )
     }
 }

@@ -55,7 +55,7 @@ import ContactList from '../user/contacts'
 import GoodsList from '../goods/list'
 import GoodsApplyList from '../goods/apply_list'
 import GoodsApprovalList from '../goods/approval_list'
-import ApplyList from '../forminfo_extend1/apply_list';
+import MyGoodsApplyList from '../goods/my_apply_list'
 
 const authorize = (nextState, replace) => {
     if (!auth.hasLogin()) {
@@ -134,6 +134,7 @@ export default class Routes extends React.Component {
                 <Route path="goods">
                     <IndexRoute component={GoodsList} />
                     <Route path="applies" component={GoodsApplyList} />
+                    <Route path="my_applies" component={MyGoodsApplyList} />
                     <Route path="approvals" component={GoodsApprovalList} />
                 </Route>
             </Route>
