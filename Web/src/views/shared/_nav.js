@@ -145,8 +145,7 @@ const data = [
                 ]
             },
             {
-                title: '管理&审核', items: [
-                    { path: '/seal/list', icon: 'fa fa-list', text: '印章管理', role: 2 },
+                title: '审核', items: [
                     { path: `/extend1/approvals/${api.Forms.Seal.ID}`, icon: 'fa fa-check', text: '印章审核' }
                 ]
             }

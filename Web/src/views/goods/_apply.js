@@ -69,7 +69,7 @@ export default class GoodsApplyFormModal extends Component {
         return (
             <Modal
                 title="物品申请"
-                trigger={<Button icon="add">申请</Button>}
+                trigger={<Button icon="plus" type="primary">申请</Button>}
                 children={this.getItems(model)}
                 onSubmit={this.handleSubmit}
             />

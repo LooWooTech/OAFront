@@ -13,6 +13,7 @@ export default class GoodsList extends Component {
     state = {
         loading: true,
         searchKey: this.props.location.query.searchKey || '',
+        categoryId: this.props.location.query.categoryId || 0,
         page: {
             pageSize: window.defaultRows,
             current: this.props.location.query.page || 1,
@@ -37,6 +38,7 @@ export default class GoodsList extends Component {
         query = query || this.props.query || {}
         let parameter = {
             searchKey: query.searchKey || '',
+            categoryId: query.categoryId || 0,
             page: query.page || this.state.page.current || 1,
             rows: this.state.page.pageSize
         };
@@ -48,6 +50,7 @@ export default class GoodsList extends Component {
                     list: data.List,
                     page: data.Page,
                     searchKey: parameter.searchKey,
+                    categoryId: parameter.categoryId
                 });
             });
     };
@@ -55,9 +58,19 @@ export default class GoodsList extends Component {
         api.Abort();
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.location.search !== this.props.location.search) {
+            this.loadData(nextProps.location.query)
+        }
+    }
+
     handleSearch = searchKey => {
         utils.ReloadPage({ searchKey, page: 1 })
     };
+
+    handleCategoryChange = (val) => {
+        utils.ReloadPage({ categoryId: val, page: 1 })
+    }
 
     handlePageChange = page => {
         utils.ReloadPage({ page })
@@ -93,16 +106,16 @@ export default class GoodsList extends Component {
                     <div className="right" style={{ width: 400 }}>
                         <Row>
                             <Col span={12}>
-                                <Input.Search defaultValue={this.state.searchKey} onSearch={this.handleSearch}
-                                    placeholder="物品名称" />
-                            </Col>
-                            <Col span={12}>
                                 <Select onChange={this.handleCategoryChange}
                                     placeholder="选择分类进行筛选"
                                     style={{ width: 200 }}
                                 >
                                     {this.state.categories.map(c => <Select.Option key={c.ID}>{c.Name}</Select.Option>)}
                                 </Select>
+                            </Col>
+                            <Col span={12}>
+                                <Input.Search defaultValue={this.state.searchKey} onSearch={this.handleSearch}
+                                    placeholder="物品名称" />
                             </Col>
                         </Row>
                     </div>

@@ -77,20 +77,15 @@ class SealApplyModal extends Component {
 
     render() {
 
-        const seals = this.props.seals || []
+        const model = this.props.model || {}
         return (
             <FormModal
                 title="申请印章"
-                trigger={<Button icon="check" type="primary">申请印章</Button>}
+                trigger={this.props.trigger || <Button icon="plus" type="primary">申请</Button>}
                 onSubmit={this.handleSubmit}
                 children={[
-                    {
-                        title: '申请印章', name: 'ExtendInfoId', defaultValue: '',
-                        rules: [{ required: true, message: '请选择申请印章' }],
-                        render: <Select>
-                            {seals.map(seal => <Select.Option key={seal.ID}>{seal.Name}</Select.Option>)}
-                        </Select>
-                    },
+                    { name: 'ExtendInfoId', render: <Input type="hidden" /> },
+                    { title: '申请印章', render: model.Name },
                     { title: '开始日期', name: 'ScheduleBeginTime', render: <DatePicker />, rules: [{ required: true, message: '请选择开始日期' }], },
                     { title: '结束日期', name: 'ScheduleEndTime', render: <DatePicker />, rules: [{ required: true, message: '请选择结束日期' }], },
                     { title: '申请用途', name: 'Reason', render: <Input type="textarea" autosize={{ minRows: 2, maxRows: 4 }} />, rules: [{ required: true, message: '请填写车辆申请用途' }] },

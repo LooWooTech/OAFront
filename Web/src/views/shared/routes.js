@@ -24,7 +24,6 @@ import MeetingRoomIndex from '../meetingroom/index'
 import MeetingRoomList from '../meetingroom/list'
 
 import SealIndex from '../seal/index'
-import SealList from '../seal/list'
 
 import Extend1ApplyList from '../forminfo_extend1/apply_list'
 import Extend1ApprovalList from '../forminfo_extend1/approval_list'
@@ -93,7 +92,6 @@ export default class Routes extends React.Component {
                 </Route>
                 <Route path="seal">
                     <IndexRoute component={SealIndex} />
-                    <Route path="list" component={SealList} />
                 </Route>
                 <Route path="extend1">
                     <Route path="approvals/:formId" component={Extend1ApprovalList} />
