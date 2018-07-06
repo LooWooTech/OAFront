@@ -5,6 +5,7 @@ import auth from '../../models/auth'
 import LeaveApprovalModal from '../attendance/_leave_approval'
 import ApprovalModal from './_approval_modal'
 import CheckLogModal from '../shared/_check_log_modal'
+import UpdateApprovalModal from '../forminfo_extend1/_approval';
 
 class ApprovalList extends Component {
     state = {
@@ -25,6 +26,9 @@ class ApprovalList extends Component {
             switch (this.state.formId) {
                 case api.Forms.Leave.ID:
                     buttons.push(<LeaveApprovalModal key="LeaveApprovalModal" model={item} onSubmit={this.handleSubmit} />);
+                    break;
+                case api.Forms.Seal.ID:
+                    buttons.push(<UpdateApprovalModal key="sealApprovalModal" model={item} onSubmit={this.handleSubmit} />)
                     break;
                 default:
                     buttons.push(<ApprovalModal key="ApprovalModal" model={item} onSubmit={this.handleSubmit} />);

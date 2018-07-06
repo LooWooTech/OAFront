@@ -15,6 +15,22 @@ class FlowNodeDataForm extends Component {
         itemLayout: this.props.itemLayout || { labelCol: { span: 2 }, wrapperCol: { span: 16 } }
     }
 
+    componentWillMount() {
+        let { flowData, flowNodeData } = this.props
+        if (!this.state.flowNodeData) {
+            flowNodeData = this.state.flowData.Nodes.sort((a, b) => a.ID > b.ID).find(e => auth.isCurrentUser(e.UserId))
+        }
+        const flowNodes = flowData.Flow.Nodes;
+        const currentNode = flowNodes.find(e => e.ID === flowNodeData.FlowNodeId)
+        const prevNode = currentNode ? flowData.Flow.Nodes.find(e => e.ID === currentNode.PrevId) : null
+        const nextNode = currentNode ? flowData.Flow.Nodes.find(e => e.PrevId === currentNode.ID) : null
+        const lastFlowNode = flowNodes[flowNodes.length - 1]
+        const canComplete = (nextNode && nextNode.ID === lastFlowNode.ID && lastFlowNode.CanSkip) 
+        || lastFlowNode.ID === flowNodeData.FlowNodeId
+
+        this.setState({ flowData, flowNodeData, currentNode, prevNode, nextNode, canComplete })
+    }
+
     submit = () => {
         var form = this.refs.form;
         form.validateFields((err, data) => {
@@ -29,7 +45,7 @@ class FlowNodeDataForm extends Component {
             if (!data.Result) {
                 if (!data.Content) {
                     message.error("请填写退回原因");
-                    
+
                     return false;
                 }
                 Modal.confirm({
@@ -81,11 +97,8 @@ class FlowNodeDataForm extends Component {
     }
 
     getFormItems = () => {
-        let { flowNodeData, flowData, canBack, canComplete } = this.state;
-        let flowNodes = flowData.Flow.Nodes;
-        let currentNode = flowNodes.find(e => e.ID === flowNodeData.FlowNodeId)
-        let prevNode = currentNode ? flowData.Flow.Nodes.find(e => e.ID === currentNode.PrevId) : null
-        let nextNode = currentNode ? flowData.Flow.Nodes.find(e => e.PrevId === currentNode.ID) : null
+        const { flowNodeData, flowData, canBack, currentNode, prevNode, nextNode, canComplete } = this.state;
+
         var items = [
             { name: 'InfoId', defaultValue: flowData.InfoId, render: <Input type="hidden" /> },
             { name: 'FlowNodeId', defaultValue: flowNodeData.FlowNodeId, render: <Input type="hidden" /> },
@@ -103,7 +116,6 @@ class FlowNodeDataForm extends Component {
             title: '意见', name: 'Content', defaultValue: flowNodeData.Content,
             render: <Input type="textarea" autosize={{ minRows: 2, maxRows: 6 }} />
         });
-
         if (nextNode && this.state.result) {
             //如果下一个节点可以跳过，则罗列出后面所有可以跳过的节点 直到最后一个不可以跳过的节点为止
             let nextFlowNodeId = this.state.nextFlowNodeId === undefined ? nextNode.ID : this.state.nextFlowNodeId
@@ -135,7 +147,6 @@ class FlowNodeDataForm extends Component {
                 })
             }
         }
-
         if (!this.props.isModal) {
             items.push({
                 render: <Row>
@@ -163,8 +174,9 @@ class FlowNodeDataForm extends Component {
     }
 
     render() {
-        if (this.state.loading || !this.state.flowData || !this.state.flowNodeData) return null;
-        if (this.state.flowNodeData.Result != null || !auth.isCurrentUser(this.state.flowNodeData.UserId)) return null;
+        let { loading, flowData, flowNodeData } = this.state
+        if (loading || !flowData || !flowNodeData) return null;
+        if (flowNodeData.Result != null || !auth.isCurrentUser(flowNodeData.UserId)) return null;
         return <Form
             ref="form"
             children={this.getFormItems()}

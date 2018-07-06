@@ -84,7 +84,7 @@ class SealApplyModal extends Component {
                 trigger={this.props.trigger || <Button icon="plus" type="primary">申请</Button>}
                 onSubmit={this.handleSubmit}
                 children={[
-                    { name: 'ExtendInfoId', render: <Input type="hidden" /> },
+                    { name: 'ExtendInfoId', defaultValue: model.ID, render: <Input type="hidden" /> },
                     { title: '申请印章', render: model.Name },
                     { title: '开始日期', name: 'ScheduleBeginTime', render: <DatePicker />, rules: [{ required: true, message: '请选择开始日期' }], },
                     { title: '结束日期', name: 'ScheduleEndTime', render: <DatePicker />, rules: [{ required: true, message: '请选择结束日期' }], },

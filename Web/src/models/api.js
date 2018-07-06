@@ -347,6 +347,9 @@ module.exports = {
         List: (parameters, cb, err) => {
             invokeApi('FormInfoExtend1/List', HTTP_GET, parameters, cb, err);
         },
+        UpdateApproval: (id, cb, err) => {
+            invokeApi('FormInfoExtend1/updateApproval', HTTP_GET, { id }, cb, err);
+        },
         Approval: (data, cb, err) => {
             invokeApi('FormInfoExtend1/approval', HTTP_GET, data, cb, err);
         },

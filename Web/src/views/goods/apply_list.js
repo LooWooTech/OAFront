@@ -13,6 +13,7 @@ class ApplyList extends Component {
         applyUserId: this.props.applyUserId,
         approvalUserId: this.props.approvalUserId,
         status: this.props.location.query.status || 0,
+        goodsId: this.props.location.query.goodsId || 0,
         page: {
             pageSize: window.defaultRows,
             current: this.props.location.query.page || 1,
@@ -26,6 +27,7 @@ class ApplyList extends Component {
         let parameter = {
             applyUserId: query.applyUserId || 0,
             approvalUserId: query.approvalUserId || 0,
+            goodsId: query.goodsId || 0,
             status: query.status || 0,
             searchKey: query.searchKey || '',
             page: query.page || 1,
@@ -38,9 +40,7 @@ class ApplyList extends Component {
                     loading: false,
                     data: data.List,
                     page: data.Page,
-                    status: parameter.status,
-                    searchKey: parameter.searchKey,
-                    userId: parameter.userId,
+                    ...parameter
                 });
             });
     };
@@ -58,7 +58,7 @@ class ApplyList extends Component {
     }
 
     componentWillMount() {
-        this.loadData();
+        this.loadData(this.state);
     }
 
     handleSearch = searchKey => {
