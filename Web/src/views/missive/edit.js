@@ -129,6 +129,17 @@ export default class MissiveEdit extends Component {
         }
     }
 
+    handleTransfer = () => {
+        Modal.confirm({
+            title: '转为收文',
+            content: '你确定执行此操作吗？',
+            onOk: () => {
+                api.Missive.Transfer(this.state.model.ID, (data) => {
+                    utils.Redirect(`/missive/edit/${data.FormId}/?id=${data.ID}`)
+                });
+            }
+        })
+    }
 
     render() {
         const model = this.state.model
@@ -136,6 +147,10 @@ export default class MissiveEdit extends Component {
         if (!model) return null
         const showFiles = model.ID > 0
         const showFlow = !!model.FlowDataId
+        const canTransferToReceive = model.FormId === api.Forms.Missive.ID
+            && model.FlowData
+            && model.FlowData.Completed
+            && auth.isCurrentUser(this.state.flowNodeData.UserId);
         return <div>
             <div className="toolbar">
                 <Button.Group>
@@ -161,6 +176,7 @@ export default class MissiveEdit extends Component {
                     }
                     {this.state.canCompleteFreeFlow ? <Button type="danger" icon="close" onClick={this.handleCloseFreeFlow}>结束自由发送</Button> : null}
                     {this.state.canCancel ? <Button type="danger" icon="rollback" htmlType="button" onClick={this.handleCancel}>撤销</Button> : null}
+                    {canTransferToReceive ? <Button type="primary" icon="retweet" onClick={this.handleTransfer}>转为收文</Button> : null}
                     <Button onClick={utils.GoBack} type="" icon="arrow-left" htmlType="button">返回</Button>
                 </Button.Group>
             </div>

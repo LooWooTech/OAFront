@@ -77,7 +77,6 @@ class SealList extends Component {
                     loading={this.state.loading}
                     columns={[
                         { title: '名称', dataIndex: 'Name' },
-                        { title: '状态', dataIndex: 'Status', render: this.statusColumnRender },
                         { title: '操作', render: this.buttonsColumnRender }
                     ]}
                     dataSource={this.state.list}

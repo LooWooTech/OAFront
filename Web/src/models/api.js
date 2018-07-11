@@ -5,7 +5,7 @@ const HTTP_GET = "GET"
 const HTTP_POST = "POST"
 const HTTP_DELETE = "DELETE"
 
-const host = process.env.NODE_ENV === 'production' ? '/' : 'http://192.168.2.101:8012/';
+const host = process.env.NODE_ENV === 'production' ? '/' : 'http://localhost:8012/';
 const apiPath = "api/";
 const apiHost = host + apiPath;
 const Forms = {
@@ -341,6 +341,9 @@ module.exports = {
         },
         Report: (id, cb, err) => {
             invokeApi('missive/report?id=' + id, HTTP_GET, null, cb, err);
+        },
+        Transfer: (id, cb, err) => {
+            invokeApi('missive/transfer?id=' + id, HTTP_GET, null, cb, err);
         }
     },
     FormInfoExtend1: {

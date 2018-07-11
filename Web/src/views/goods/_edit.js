@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
-import { Input, Select, Checkbox, Button } from 'antd';
+import { Input, Select, Checkbox, Button, message } from 'antd';
 import FormModal from '../shared/_formmodal'
 import api from '../../models/api'
 
 class GoodsEditModal extends Component {
     state = {}
     handleSubmit = (data) => {
+        if (data.CategoryId === 0) {
+            message.error("请选择一个分类");
+            return false;
+        }
         data.Status = this.state.status
-        console.log(data)
         api.Goods.Save(data, () => {
             this.props.onSubmit()
         });
@@ -51,12 +54,12 @@ class GoodsEditModal extends Component {
         return (
             <FormModal
                 title={model.ID > 0 ? '修改物品' : '添加物品'}
-                trigger={<Button>{model.ID ? '修改' : '添加物品'}</Button>}
+                trigger={this.props.trigger || (model.ID ? <Button>修改</Button> : <Button icon="plus" type="primary">添加物品</Button>)}
                 children={this.getFormItems(model)}
                 onSubmit={this.handleSubmit}
-            />
-        );
+                />
+            );
+        }
     }
-}
-
+    
 export default GoodsEditModal;

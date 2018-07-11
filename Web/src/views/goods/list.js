@@ -25,7 +25,7 @@ export default class GoodsList extends Component {
 
     componentWillMount() {
         this.loadCategories();
-        this.loadData();
+        this.loadData(this.props.query);
     }
 
     loadCategories = () => {
@@ -77,7 +77,7 @@ export default class GoodsList extends Component {
     }
 
     logColumnRender = (text, item) => <Link key='logs' to={`/goods/applies?goodsId=${item.ID}`}>查看</Link>
-
+    categoryColumnRender = (text, item) => <Link key='category' to={`/goods/?categoryId=${item.CategoryId}`}>{text}</Link>
     buttonColumnRender = (text, item) => {
         var btns = [];
         if (item.Number > 0 && item.Status) {
@@ -97,7 +97,7 @@ export default class GoodsList extends Component {
                 <div className="toolbar">
                     <div className="left">
                         <h3>物品列表</h3>
-                        {this.state.categories.length > 0 && auth.hasRight('Form.Goods.Edit') ?
+                        {auth.hasRight('Form.Goods.Edit') ?
                             <EditModal
                                 categories={this.state.categories}
                                 onSubmit={this.loadData}
@@ -107,10 +107,11 @@ export default class GoodsList extends Component {
                         <Row>
                             <Col span={12}>
                                 <Select onChange={this.handleCategoryChange}
+                                    defaultValue={this.state.categoryId ? this.state.categoryId.toString() : ''}
                                     placeholder="选择分类进行筛选"
                                     style={{ width: 200 }}
                                 >
-                                    {this.state.categories.map(c => <Select.Option key={c.ID}>{c.Name}</Select.Option>)}
+                                    {this.state.categories.map(c => <Select.Option key={c.ID} value={c.ID.toString()}>{c.Name}</Select.Option>)}
                                 </Select>
                             </Col>
                             <Col span={12}>
@@ -126,9 +127,10 @@ export default class GoodsList extends Component {
                     columns={[
                         { title: '物品名称', dataIndex: 'Name' },
                         { title: '现有数量', dataIndex: 'Number', width: 80 },
+                        { title: '所属分类', dataIndex: 'Category.Name', render: this.categoryColumnRender },
                         { title: '物品描述', dataIndex: 'Note' },
                         { title: '认领记录', width: 100, render: this.logColumnRender },
-                        { title: '操作', width: 240, render: this.buttonColumnRender }
+                        { title: '操作', width: 250, render: this.buttonColumnRender }
                     ]}
                     dataSource={this.state.list}
                     pagination={{
