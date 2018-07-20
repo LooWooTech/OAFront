@@ -13,6 +13,7 @@ export const FORMS = {
     Car: { ID: 3, FlowId: 3, Name: '用车', Color: '#7fb781', Icon: 'car', Detail: 'Extend1.Detail', Home: 'Car.List' },
     MeetingRoom: { ID: 5, FlowId: 5, Name: '会议室', 'Icon': 'tv', Color: '#4ca5af', Detail: 'Extend1.Detail', Home: 'MeetingRoom.List' },
     Seal: { ID: 6, FlowId: 6, Name: '印章', Icon: 'ticket', Color: 'red', Detail: 'Extend1.Detail', Home: 'Seal.List' },
+    Goods: { ID: 10, FlowId: 9, Name: '物品认领', Icon: 'archive', Color: '#3a76d0', Detail: 'Goods.Detail', Home: 'Goods.List' },
 };
 export const USER_ROLE = {
     User: 1,

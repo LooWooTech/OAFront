@@ -21,7 +21,7 @@ class ApprovalModal extends Component {
                 id: model.InfoId,
                 result: data.result,
                 toUserId: data.toUserId,
-                content: data.content
+                content: data.content || ''
             }, json => {
                 message.success("已提交审核");
                 if (this.props.onSubmit) {

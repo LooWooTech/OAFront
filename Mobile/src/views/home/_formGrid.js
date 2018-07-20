@@ -11,9 +11,9 @@ class GridItem extends Component {
         const form = this.props.data
         return (
             <TouchableOpacity onPress={this.handleClick}>
-                <View style={{ width: '100%', height: 100, alignItems: 'center', paddingTop: 20, paddingBottom: 20, }}>
+                <View style={{ width: '100%', alignItems: 'center', paddingTop: 10, paddingBottom: 10, }}>
                     <Icon name={form.Icon} style={{ color: form.Color || '#666', fontSize: 25 }} />
-                    <Text style={{ lineHeight: 30 }}>{form.Name}</Text>
+                    <Text style={{ lineHeight: 25 }}>{form.Name}</Text>
                 </View>
             </TouchableOpacity>
         );
@@ -41,7 +41,7 @@ class HomeFormGrid extends Component {
     render() {
         return (
             <Grid style={{ borderTopWidth: 1, borderTopColor: '#f7f7f7', borderLeftWidth: 1, borderLeftColor: '#f7f7f7' }}>
-                {this.getFormRows(3).map((row, i) => <Row key={'row-' + i} style={{ borderBottomWidth: 1, borderBottomColor: '#f7f7f7' }}>
+                {this.getFormRows(2).map((row, i) => <Row key={'row-' + i} style={{ borderBottomWidth: 1, borderBottomColor: '#f7f7f7' }}>
                     {row.map(form => (
                         <Col key={form.ID} style={{ borderRightWidth: 1, borderRightColor: '#f7f7f7' }}>
                             <GridItem data={form} onClick={this.props.onClick} />

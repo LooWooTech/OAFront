@@ -5,7 +5,6 @@ import moment from 'moment'
 import api from '../../models/api'
 import utils from '../../utils'
 
-
 class Extend1ListComponent extends Component {
 
     static contextTypes = {
@@ -84,10 +83,10 @@ class Extend1ListComponent extends Component {
     titleColumnRender = (text, item) => <span key={item.ID}>{item.Title}<br />{item.Reason}</span>
     getColumns = () => {
         var columns = []
-        let { userId, formId } = this.state
+        let { applyUserId, formId } = this.state
         let formName = api.Form.GetName(formId)
         columns.push({ title: formName, dataIndex: 'title', render: this.titleColumnRender })
-        if (!userId) {
+        if (!applyUserId) {
             columns.push({ title: '申请人', dataIndex: 'ApplyUser' })
         }
         let resonColumnName = '用途';
