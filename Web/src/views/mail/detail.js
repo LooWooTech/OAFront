@@ -18,7 +18,6 @@ class EmailDetail extends Component {
     loadData = () => {
         if (this.state.id === 0) return;
         api.Mail.Model(this.state.id, json => {
-            json.userMail = json.model.Users.find(e => e.$id === json.userMail.$ref)
             this.setState({ ...json })
         })
     }

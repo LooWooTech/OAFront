@@ -7,14 +7,7 @@ class FormInfoStore {
     @observable data = null
 
     @action async loadData(id) {
-        let data = await api.formInfo.model(id)
-        if (data.flowNodeData) {
-            data.flowNodeData = data.model.FlowData.Nodes.find(n => n.$id === data.flowNodeData.$ref);
-        }
-
-        if (data.freeFlowNodeData) {
-            data.freeFlowNodeData = data.flowNodeData.FreeFlowData.Nodes.find(n => n.$id === data.freeFlowNodeData.$ref);
-        }
+        let data = await api.formInfo.model(id)     
         this.data = data
         return data
     }

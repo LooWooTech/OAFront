@@ -38,11 +38,10 @@ export default class MissiveEdit extends Component {
         }
         else {
             api.FormInfo.Model(id, data => {
-                this.setState({ ...data });
+                api.Missive.Model(id, missive => {
+                    this.setState({ ...data, missive })
+                })
             });
-            api.Missive.Model(id, data => {
-                this.setState({ missive: data })
-            })
         }
     };
 
@@ -118,11 +117,12 @@ export default class MissiveEdit extends Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
+        console.log(nextProps, nextState)
         return JSON.stringify(nextProps) !== JSON.stringify(this.props) || nextState !== this.state
     }
 
     componentWillReceiveProps(nextProps) {
-        let formId = nextProps.params.formId;
+        let formId = parseInt(nextProps.params.formId);
         let id = nextProps.location.query.id;
         if (formId !== this.state.formId || id !== this.state.id) {
             this.setState({ formId, id }, this.loadData)

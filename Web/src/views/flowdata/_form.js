@@ -18,21 +18,22 @@ class FlowNodeDataForm extends Component {
     componentWillMount() {
         let { flowData, flowNodeData } = this.props
         if (!this.state.flowNodeData) {
-            flowNodeData = this.state.flowData.Nodes.sort((a, b) => a.ID > b.ID).find(e => auth.isCurrentUser(e.UserId))
+            flowNodeData = this.state.flowData.Nodes.sort((a, b) => a.ID < b.ID).find(e => auth.isCurrentUser(e.UserId))
         }
         const flowNodes = flowData.Flow.Nodes;
         const currentNode = flowNodes.find(e => e.ID === flowNodeData.FlowNodeId)
         const prevNode = currentNode ? flowData.Flow.Nodes.find(e => e.ID === currentNode.PrevId) : null
         const nextNode = currentNode ? flowData.Flow.Nodes.find(e => e.PrevId === currentNode.ID) : null
         const lastFlowNode = flowNodes[flowNodes.length - 1]
-        const canComplete = (nextNode && nextNode.ID === lastFlowNode.ID && lastFlowNode.CanSkip) 
-        || lastFlowNode.ID === flowNodeData.FlowNodeId
+        const canComplete = (nextNode && nextNode.ID === lastFlowNode.ID && lastFlowNode.CanSkip)
+            || lastFlowNode.ID === flowNodeData.FlowNodeId
 
         this.setState({ flowData, flowNodeData, currentNode, prevNode, nextNode, canComplete })
     }
 
     submit = () => {
         var form = this.refs.form;
+        if (!form) return;
         form.validateFields((err, data) => {
             let users = this.refs.selectUserForm ? this.refs.selectUserForm.getSelectedUsers() : []
             data.ToUserId = users.length > 0 ? users[0].ID : 0;
@@ -86,7 +87,7 @@ class FlowNodeDataForm extends Component {
     getNextNodes = () => {
         let flowNodes = this.state.flowData.Flow.Nodes;
         var list = [];
-        let prevNode = flowNodes.find(e => e.ID === this.state.flowNodeData.FlowNodeId)
+        let prevNode = this.state.currentNode;
         do {
             let nextNode = flowNodes.find(e => e.PrevId === prevNode.ID);
             list.push(nextNode);

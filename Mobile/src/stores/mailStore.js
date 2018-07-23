@@ -22,10 +22,6 @@ class MailStore extends FlatListData {
     @action async getDetailData(id) {
         if (!id) return null
         let data = await api.mail.model(id)
-        let userMail = data.userMail;
-        if (userMail.$ref) {
-            data.userMail = data.model.Users.find(e => e.$id === userMail.$ref)
-        }
         this.data = data;
         return this.data
     }
