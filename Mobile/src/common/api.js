@@ -205,5 +205,30 @@ export default api = {
         recovery: id => {
             $.get('userinfo/recovery', { id })
         }
+    },
+    goods: {
+        list: (params) => {
+            return $.get('goods/list', params)
+        },
+        apply: (data) => {
+            return $.get('goods/apply', data)
+        },
+        cancel: (applyId) => {
+            return $.get('goods/cancelApply', { applyId })
+        },
+        applyList: (params) => {
+            return $.get('goods/applylist', params)
+        },
+        approval: (data) => {
+            return $.get('goods/approval', data)
+        },
+    },
+    category: {
+        list: (formId) => {
+            return $.get('category/list', { formId })
+        },
+        getModel: (id) => {
+            return $.get('category/model', { id })
+        }
     }
 }

@@ -22,11 +22,10 @@ class Extend1ListComponent extends Component {
         formId: this.props.formId,
         page: {
             pageSize: window.defaultRows,
-            current: this.context.router.location.query.page || 1,
+            current: this.props.page,
             total: 0
         },
     }
-
 
     componentWillMount() {
         this.loadData()

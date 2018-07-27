@@ -16,6 +16,10 @@ import meetingroomStore from './meetingroomStore'
 import carStore from './carStore'
 import sealStore from './sealStore'
 import userInfoStore from './userInfoStore'
+import goodsStore from './goodsStore'
+import goodsApplyStore from './goodsApplyStore'
+import categoryStore from './categoryStore'
+
 export default {
     userStore,
     formStore,
@@ -34,5 +38,8 @@ export default {
     sealStore,
     meetingroomStore,
     mailStore,
-    userInfoStore
+    userInfoStore,
+    goodsStore,
+    goodsApplyStore,
+    categoryStore,
 }

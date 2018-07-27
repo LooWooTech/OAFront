@@ -37,6 +37,15 @@ import MailList from './views/mail/index'
 import MailDetail from './views/mail/detail'
 import MailForm from './views/mail/form'
 
+import GoodsList from './views/goods/index'
+import GoodsDetail from './views/goods/detail'
+import GoodsApply from './views/goods/apply'
+import GoodsApproval from './views/goods/approval'
+import GoodsApplyList from './views/goods/apply_list'
+
+
+import CategoryList from './views/category/index'
+
 export const RootNavigator = StackNavigator(
     {
         Welcome: { screen: Welcome },
@@ -67,6 +76,12 @@ export const RootNavigator = StackNavigator(
         'Mail.List': { screen: MailList },
         'Mail.Detail': { screen: MailDetail },
         'Mail.Form': { screen: MailForm },
+        'Goods.List': { screen: GoodsList },
+        'Goods.Detail': { screen: GoodsDetail },
+        'Goods.ApplyList': { screen: GoodsApplyList },
+        'Goods.Apply': { screen: GoodsApply },
+        'Goods.Approval': { screen: GoodsApproval },
+        'Category.List': { screen: CategoryList },
     },
     {
         initialRouteName: 'Welcome',

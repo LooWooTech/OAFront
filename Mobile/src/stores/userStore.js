@@ -23,9 +23,11 @@ class UserStore {
     }
 
     hasRight(rightName) {
-        console.log(this.user)
-        return true;
-        //return this.user != null && this.user.
+        if (!rightName) return true;
+        if (this.user.Role === 3) {
+            return true;
+        }
+        return !!this.user.UserGroups.find(e => e.Group.Rights.find(r => r.Name === rightName));
     }
 
     @computed get hasLogin() {

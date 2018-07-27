@@ -39,7 +39,7 @@ class FormExtend1List extends Component {
 
     render() {
         const { list, loading, params } = this.props.stores.extend1Store
-        const hasSegment = !this.props.stores.userStore.isCurrentUser(params.userId)
+        const hasSegment = !this.props.stores.userStore.isCurrentUser(params.applyUserId)
         const form = this.props.stores.formStore.getForm(params.formId)
 
         return (

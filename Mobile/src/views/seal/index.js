@@ -20,11 +20,11 @@ export default class SealIndex extends Component {
         this.menuData = [
             { label: '申请印章', value: 'Seal.Apply', icon: 'plus' },
             {
-                label: '申请记录', value: 'Extend1.List', icon: 'history',
+                label: '我的申请', value: 'Extend1.List', icon: 'history',
                 params: { formId: FORMS.Seal.ID, applyUserId: userId, approvalUserId: 0, extendInfoId: 0 }
             },
             {
-                label: '申请审批', value: 'Extend1.List', icon: 'check',
+                label: '我的审核', value: 'Extend1.List', icon: 'check',
                 params: { formId: FORMS.Seal.ID, status: 1, userId: userId, applyUserId: 0, extendInfoId: 0 }
             }
         ]
@@ -32,10 +32,18 @@ export default class SealIndex extends Component {
 
     showMenu = () => this.refs.menu.show()
     handleSelectMenu = (item) => this.props.navigation.navigate(item.value, item.params);
-    handleItemClick = (item) => this.props.navigation.navigate('Extend1.List', {
-        formId: FORMS.Seal.ID,
-        extendInfoId: item.ID,
-    })
+    handleItemClick = (item) => {
+        const userId = this.props.stores.userStore.user.ID
+        const hasViewRight = this.props.stores.userStore.hasRight('Form.Seal.View')
+        
+        this.props.navigation.navigate('Extend1.List', {
+            formId: FORMS.Seal.ID,
+            extendInfoId: item.ID,
+            applyUserId: 0,
+            approvalUserId: 0,
+            userId: hasViewRight ? 0 : userId
+        })
+    }
 
     render() {
         const { list } = this.props.stores.sealStore

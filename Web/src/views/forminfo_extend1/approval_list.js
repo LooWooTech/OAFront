@@ -38,14 +38,15 @@ class ApprovalList extends Component {
     }
 
     render() {
-        let user = auth.getUser()
+        const user = auth.getUser()
         return <List
             ref="list"
             title={api.Form.GetName(this.state.formId) + '审核'}
-            userId={user.ID}
+            userId={auth.hasRight('Form.Seal.View') ? 0 : user.ID}
             formId={this.state.formId}
             buttons={this.defaultButtonsRender}
             status={this.props.location.query.status}
+            page={this.props.location.query.page || 1}
         />
     }
 }

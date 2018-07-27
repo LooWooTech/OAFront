@@ -4,10 +4,6 @@ import PropTypes from 'prop-types';
 import { List, ListItem, Icon, Left, Body, Right, Text, View } from 'native-base'
 import { Menu, MenuOptions, MenuOption, MenuTrigger, renderers } from 'react-native-popup-menu'
 
-class NavbarOption extends Component {
-
-}
-
 class NavbarPopover extends Component {
 
     menu = null

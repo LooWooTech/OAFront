@@ -164,7 +164,7 @@ export default class SharedForm extends Component {
     componentWillMount() {
         let data = {};
         this.props.items.map(item => {
-            if (item.name) {
+            if (item.name && !item.disabled) {
                 data[item.name] = item.value || item.defaultValue
             }
         })

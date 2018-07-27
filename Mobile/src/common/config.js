@@ -1,4 +1,4 @@
-export const HOST = process.env.NODE_ENV === 'production' ? 'http://120.27.147.171:8080/' : 'http://120.27.147.171:8080/';
+export const HOST = process.env.NODE_ENV === 'production' ? 'http://120.27.147.171:8080/' : 'http://192.168.2.103:8012/';
 export const API_PATH = "api/";
 export const API_HOST = HOST + API_PATH;
 export const VERSION = "1.2.2";
@@ -13,7 +13,7 @@ export const FORMS = {
     Car: { ID: 3, FlowId: 3, Name: '用车', Color: '#7fb781', Icon: 'car', Detail: 'Extend1.Detail', Home: 'Car.List' },
     MeetingRoom: { ID: 5, FlowId: 5, Name: '会议室', 'Icon': 'tv', Color: '#4ca5af', Detail: 'Extend1.Detail', Home: 'MeetingRoom.List' },
     Seal: { ID: 6, FlowId: 6, Name: '印章', Icon: 'ticket', Color: 'red', Detail: 'Extend1.Detail', Home: 'Seal.List' },
-    Goods: { ID: 10, FlowId: 9, Name: '物品认领', Icon: 'archive', Color: '#3a76d0', Detail: 'Goods.Detail', Home: 'Goods.List' },
+    Goods: { ID: 9, FlowId: 8, Name: '物品认领', Icon: 'archive', Color: '#3a76d0', Detail: 'Goods.Detail', Home: 'Goods.List' },
 };
 export const USER_ROLE = {
     User: 1,
