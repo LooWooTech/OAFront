@@ -32,7 +32,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 22
         versionCode 1
-        versionName "0.17"
+        versionName "1.3.0"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
@@ -60,6 +60,9 @@ android {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
 			signingConfig signingConfigs.release
+            
+            aaptOptions.cruncherEnabled = false
+            aaptOptions.useNewCruncher = false
         }
     }
     // applicationVariants are e.g. debug, release
