@@ -148,6 +148,9 @@ class FlowNodeDataForm extends Component {
                 })
             }
         }
+        if (this.props.extendItems) {
+            items = items.concat(this.props.extendItems)
+        }
         if (!this.props.isModal) {
             items.push({
                 render: <Row>

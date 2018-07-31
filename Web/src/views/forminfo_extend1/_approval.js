@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import FlowCheckModal from '../flowdata/_modal'
-import { Button } from 'antd/lib/radio';
+import { Button, Icon } from 'antd';
 import api from '../../models/api'
 
 export default class UpdateApprovalModal extends Component {
@@ -13,6 +13,20 @@ export default class UpdateApprovalModal extends Component {
         })
     }
 
+    getItems = (model) => {
+        if (model.AttachmentId) {
+            return [{
+                title: '附件',
+                render: (
+                    <a href={api.File.PreviewUrl(model.AttachmentId)}>
+                        <Icon type="eye" /> 点击查看
+                    </a>
+                )
+            }]
+        }
+        return []
+    }
+
     render() {
         const model = this.props.model
 
@@ -23,6 +37,7 @@ export default class UpdateApprovalModal extends Component {
                 flowData={model.FlowData}
                 canBack={true}
                 trigger={<Button icon="check">审核</Button>}
+                extendItems={this.getItems(model)}
             />
         )
     }

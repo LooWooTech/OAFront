@@ -124,8 +124,8 @@ module.exports = {
         UploadUrl: (fileId = 0, infoId = 0, formId = 0, name = null, inline = false) => {
             return `${apiHost}file/upload?infoId=${infoId}&formId=${formId}&id=${fileId}&name=${name}&inline=${inline}`;
         },
-        PreviewUrl: (infoId) => {
-            return `${host}attachment/preview?id=${infoId}`;
+        PreviewUrl: (fileId, disabled = '') => {
+            return `${host}attachment/preview?id=${fileId}&disabled=${disabled}`;
         },
 
         List: (infoId, inline, cb, err) => {

@@ -109,7 +109,7 @@ class MissiveEditForm extends React.Component {
             defaultValue: content,
             //getField: !content.ID,
             rules: [{ required: true }],
-            tips:<span>点击预览没有反应？请<a href="/pageoffice/posetup.exe">下载安装PageOffice插件</a>。</span>,
+            tips: <span>点击预览没有反应？请<a href="/pageoffice/posetup.exe">下载安装PageOffice插件</a>。</span>,
             render: <span>
                 <Upload.Dragger
                     action={api.File.UploadUrl(content.ID || 0, 0, 0, 'content', true)}
@@ -133,7 +133,7 @@ class MissiveEditForm extends React.Component {
                 </Upload.Dragger>
                 {content.ID ?
                     <span style={{ fontSize: '1.2rem', fontWeight: 500 }}>
-                        <a href={api.File.PreviewUrl(content.ID)} target={content.IsWordFile ? '' : '_blank'}>
+                        <a href={api.File.PreviewUrl(content.ID, disabled)} target={content.IsWordFile ? '' : '_blank'}>
                             <Icon type="eye" /> 预览</a>
                         &nbsp;&nbsp;&nbsp;&nbsp;
                         <a href={api.File.DownloadUrl(content.ID)} target="_blank">
