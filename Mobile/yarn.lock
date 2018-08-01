@@ -1521,7 +1521,7 @@ crc@3.3.0:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/crc/-/crc-3.3.0.tgz#fa622e1bc388bf257309082d6b65200ce67090ba"
 
-create-react-class@^15.5.2:
+create-react-class@^15.5.2, create-react-class@^15.6.0:
   version "15.6.3"
   resolved "https://registry.yarnpkg.com/create-react-class/-/create-react-class-15.6.3.tgz#2d73237fb3f970ae6ebe011a9e66f46dbca80036"
   dependencies:
@@ -3360,30 +3360,30 @@ nanomatch@^1.2.9:
     snapdragon "^0.8.1"
     to-regex "^3.0.1"
 
-native-base-shoutem-theme@0.2.2:
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/native-base-shoutem-theme/-/native-base-shoutem-theme-0.2.2.tgz#5823310455fe391adf72236469c039fd44f56a20"
+native-base-shoutem-theme@0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/native-base-shoutem-theme/-/native-base-shoutem-theme-0.2.1.tgz#8494783833dcc5bace945db68dc7bfce209fcc40"
   dependencies:
     hoist-non-react-statics "^1.0.5"
     lodash "^4.10.1"
     prop-types "^15.5.10"
 
-native-base@^2.3.5:
-  version "2.4.3"
-  resolved "https://registry.yarnpkg.com/native-base/-/native-base-2.4.3.tgz#a821a4e21b83a167c59d00b6477f4b10d3f9a17d"
+native-base@2.3.5:
+  version "2.3.5"
+  resolved "https://registry.yarnpkg.com/native-base/-/native-base-2.3.5.tgz#3a9104a71ccc1b48e99d1939abdcab9d6cd71b45"
   dependencies:
     blueimp-md5 "^2.5.0"
     clamp "^1.0.1"
     color "~1.0.3"
     fs-extra "^2.0.0"
     lodash "~4.11.1"
-    native-base-shoutem-theme "0.2.2"
+    native-base-shoutem-theme "0.2.1"
     print-message "^2.1.0"
     prop-types "^15.5.10"
-    react-native-drawer "2.5.0"
-    react-native-easy-grid "0.1.17"
-    react-native-keyboard-aware-scroll-view "0.5.0"
-    react-native-vector-icons "~4.5.0"
+    react-native-drawer "https://github.com/GeekyAnts/react-native-drawer"
+    react-native-easy-grid "0.1.15"
+    react-native-keyboard-aware-scroll-view "https://github.com/GeekyAnts/react-native-keyboard-aware-scroll-view"
+    react-native-vector-icons "~4.4.2"
     react-tween-state "^0.1.5"
     tween-functions "^1.0.1"
 
@@ -3938,16 +3938,16 @@ react-native-drawer-layout@1.3.2:
   dependencies:
     react-native-dismiss-keyboard "1.0.0"
 
-react-native-drawer@2.5.0:
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/react-native-drawer/-/react-native-drawer-2.5.0.tgz#022cba5c0516126a9fc9cce3185cb46c644b51c4"
+"react-native-drawer@git+https://github.com/GeekyAnts/react-native-drawer.git":
+  version "2.3.0"
+  resolved "git+https://github.com/GeekyAnts/react-native-drawer.git#8d9078516d177c9cb02d2579a6860706d2370d25"
   dependencies:
     prop-types "^15.5.8"
     tween-functions "^1.0.1"
 
-react-native-easy-grid@0.1.17:
-  version "0.1.17"
-  resolved "https://registry.yarnpkg.com/react-native-easy-grid/-/react-native-easy-grid-0.1.17.tgz#fad8cb371d465828c1c71daa4d8b513d33253452"
+react-native-easy-grid@0.1.15:
+  version "0.1.15"
+  resolved "https://registry.yarnpkg.com/react-native-easy-grid/-/react-native-easy-grid-0.1.15.tgz#02939ae032d74662b50c9540d902c79866ba638a"
   dependencies:
     lodash "^4.11.1"
 
@@ -3958,16 +3958,13 @@ react-native-fs@^2.9.7:
     base-64 "^0.1.0"
     utf8 "^2.1.1"
 
-react-native-iphone-x-helper@^1.0.1:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/react-native-iphone-x-helper/-/react-native-iphone-x-helper-1.0.2.tgz#7dbca530930f7c1ce8633cc8fd13ba94102992e1"
-
-react-native-keyboard-aware-scroll-view@0.5.0:
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/react-native-keyboard-aware-scroll-view/-/react-native-keyboard-aware-scroll-view-0.5.0.tgz#57ab933089375bf62f4324797e8be949ad97849d"
+"react-native-keyboard-aware-scroll-view@git+https://github.com/GeekyAnts/react-native-keyboard-aware-scroll-view.git":
+  version "0.2.9"
+  resolved "git+https://github.com/GeekyAnts/react-native-keyboard-aware-scroll-view.git#f4805f254d6cc8e3329f5fb224944401f66655db"
   dependencies:
-    prop-types "^15.6.0"
-    react-native-iphone-x-helper "^1.0.1"
+    create-react-class "^15.6.0"
+    prop-types "^15.5.10"
+    react-timer-mixin "^0.13.3"
 
 react-native-popup-menu@^0.12.3:
   version "0.12.6"
@@ -3985,9 +3982,9 @@ react-native-safe-area-view@^0.7.0:
   dependencies:
     prop-types "^15.6.0"
 
-react-native-vector-icons@~4.5.0:
-  version "4.5.0"
-  resolved "https://registry.yarnpkg.com/react-native-vector-icons/-/react-native-vector-icons-4.5.0.tgz#6b95619e64f62f05f579f74a01fe5640df95158b"
+react-native-vector-icons@~4.4.2:
+  version "4.4.3"
+  resolved "https://registry.yarnpkg.com/react-native-vector-icons/-/react-native-vector-icons-4.4.3.tgz#9e847b8c432a17e5e0ffd60ccf09f3112a18b9df"
   dependencies:
     lodash "^4.0.0"
     prop-types "^15.5.10"
@@ -4081,6 +4078,10 @@ react-test-renderer@16.0.0:
 react-timer-mixin@^0.13.2:
   version "0.13.3"
   resolved "https://registry.yarnpkg.com/react-timer-mixin/-/react-timer-mixin-0.13.3.tgz#0da8b9f807ec07dc3e854d082c737c65605b3d22"
+
+react-timer-mixin@^0.13.3:
+  version "0.13.4"
+  resolved "https://registry.yarnpkg.com/react-timer-mixin/-/react-timer-mixin-0.13.4.tgz#75a00c3c94c13abe29b43d63b4c65a88fc8264d3"
 
 react-transform-hmr@^1.0.4:
   version "1.0.4"

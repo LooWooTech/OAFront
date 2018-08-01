@@ -66,10 +66,15 @@ async function request(path, query, data, httpMethod) {
             case 200:
             case 204:
                 if (result._bodyText)
-                    return JSON.parse(result._bodyText)
+                    try {
+                        return JSON.parse(result._bodyText)
+                    }
+                    catch(ex){
+                        return result._bodyText;
+                    }
                 break;
             default:
-                throwException(JSON.parse(result._bodyText))
+                throwException(result._bodyText)
                 break;
         }
     } catch (err) {

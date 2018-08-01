@@ -73,9 +73,12 @@ class FilePreview extends Component {
 
     getLocalPath = () => {
         const file = this.props.navigation.state.params.file
-        const url = (Platform.OS === 'ios' ? RNFS.DocumentDirectoryPath : RNFS.DocumentDirectoryPath) + '/' + file.SavePath
-        console.log(url)
-        return url
+        if(Platform.OS === 'ios'){
+            return  RNFS.DocumentDirectoryPath +  '/' + file.SavePath
+        }
+        else{
+            return "file://" + (RNFS.MainBundlePath || RNFS.DocumentDirectoryPath) + '/' + file.SavePath
+        }
     }
 
     handleOpenFile = () => {
@@ -95,7 +98,7 @@ class FilePreview extends Component {
             })
         } else {
             OpenFile.openDoc([{
-                url: localUrl,
+                url:  localUrl,
                 fileName: file.FileName,
                 cache: false,
                 fileType: file.FileExt.substring(1)

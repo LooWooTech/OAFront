@@ -15,7 +15,8 @@ class ClientStore {
     }
 
     @computed get shouldUpgrade() {
-        return parseFloat(this.lastVersion) > parseFloat(this.currentVersion)
+        const newVersion = [this.currentVersion, this.lastVersion].sort()[1]
+        return newVersion != this.currentVersion;
     }
 
     async checkVersion() {
