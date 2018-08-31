@@ -17,7 +17,7 @@ class Login extends Component {
           auth.login(json);
           utils.Redirect('/');
         }, (err) => {
-          message.error(err.Message)
+          message.error(err.ExceptionMessage || err.Message)
           this.setState({ loading: false });
         })
       } else {

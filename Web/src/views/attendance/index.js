@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Card, Badge, Row, Col, Calendar } from 'antd';
+import { Button, Card, Badge, Row, Col, Calendar, message } from 'antd';
 import LeaveFormModal from './_leave_form';
 import CheckButton from './_button';
 import moment from 'moment';
@@ -56,7 +56,7 @@ export default class AttendanceIndex extends React.Component {
     handleCheckInOut = () => {
         api.Attendance.CheckInOut(json => {
             if (json) {
-                alert(json);
+                message.warning(json)
             }
             this.loadData()
         });
@@ -110,7 +110,6 @@ export default class AttendanceIndex extends React.Component {
         }
         return <ul>
             <span>
-
                 {this.getAttendanceResult(model.AMResult, '上午')} <br />
                 {this.getAttendanceResult(model.PMResult, '下午')}
             </span>
@@ -184,7 +183,7 @@ export default class AttendanceIndex extends React.Component {
                         {this.state.logsOfDate.length > 0 ?
                             <ul>
                                 {this.state.logsOfDate.map(item => <li key={item.ID}>
-                                    {moment(item.CreateTime).format('YYYY-MM-DD HH:mm')} {JSON.parse(item.ApiContent).msg}
+                                    {moment(item.CreateTime).format('YYYY-MM-DD HH:mm')} {item.ApiResult ? '打卡' : JSON.parse(item.ApiContent).msg}
                                 </li>)
                                 }</ul>
                             : <span>未打卡</span>

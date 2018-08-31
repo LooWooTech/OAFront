@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Button, Popconfirm, Input, Select } from 'antd';
+import { Table, Button, Popconfirm, Input, Select, message } from 'antd';
 import EditModal from './_edit';
 import Form from '../shared/_form'
 import api from '../../models/api';
@@ -26,7 +26,6 @@ export default class UserList extends React.Component {
         api.Department.List(data => this.setState({ departments: data }));
         api.Group.List(data => this.setState({ groups: data }))
         api.JobTitle.List(data => this.setState({ titles: data }))
-        api.Attendance.Groups(data => this.setState({ attendanceGroups: data }))
     }
 
     componentWillUnmount() {
@@ -61,6 +60,12 @@ export default class UserList extends React.Component {
     handleSearch = (data) => {
         utils.ReloadPage({ departmentId: data.departmentId || 0, searchKey: data.searchKey || '' })
         return false
+    }
+
+    handleResetPassword = (item) => {
+        api.User.ResetPassword(item.ID, () => {
+            message.info('密码已重置')
+        })
     }
 
     componentWillReceiveProps(nextProps) {
@@ -117,9 +122,10 @@ export default class UserList extends React.Component {
                     { title: '职务', dataIndex: 'JobTitle' },
                     { title: '用户组', render: (text, item) => (item.Groups || []).map(g => g.Name).join() },
                     {
-                        title: '操作', width: 210,
+                        title: '操作', width: 350,
                         render: (text, item) => (
                             <span>
+                                <Button onClick={() => this.handleResetPassword(item)}>重置密码</Button>
                                 <EditModal
                                     title="修改用户"
                                     onSubmit={() => {

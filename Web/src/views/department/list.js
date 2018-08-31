@@ -1,21 +1,26 @@
 import React from 'react';
-import { Affix, Table, Button, Popconfirm, Input, TreeSelect } from 'antd';
+import { Affix, Table, Button, Popconfirm, Input, TreeSelect, Select } from 'antd';
 import EditModal from '../shared/_formmodal';
 import api from '../../models/api';
 const TreeNode = TreeSelect.TreeNode;
 export default class DepartmentList extends React.Component {
-    componentDidMount() {
+
+    state = { attendanceGroups: [], list: [] }
+    componentWillMount() {
         this.loadData();
-    };
+        api.Attendance.Groups(data => this.setState({ attendanceGroups: data }))
+    }
+
     componentWillUnmount() {
         api.Abort();
-    };
+    }
 
     onEditSave = (values) => {
         api.Department.Save(values, json => {
             this.loadData();
         });
-    };
+    }
+
     loadData = () => {
         api.Department.List(data => {
             let roots = data.filter(e => e.ParentId === 0)
@@ -61,7 +66,15 @@ export default class DepartmentList extends React.Component {
             defaultValue: (record.Sort || 0),
             layout: { labelCol: { span: 6 }, wrapperCol: { span: 3 } },
             render: <Input />
-        }
+        },
+        {
+            title: '考勤组',
+            name: 'AttendanceGroupId',
+            defaultValue: record.AttendanceGroupId ? record.AttendanceGroupId.toString() : '',
+            render: <Select>
+                {this.state.attendanceGroups.map(item => <Select.Option key={item.ID}>{item.Name}</Select.Option>)}
+            </Select>
+        },
         ];
     };
     render() {
@@ -85,6 +98,7 @@ export default class DepartmentList extends React.Component {
                 defaultExpandAllRows={true}
                 columns={[
                     { title: '部门名称', dataIndex: 'Name', },
+                    { title: '考勤组', dataIndex: 'AttendanceGroup' },
                     {
                         title: '操作', width: 200,
                         render: (text, item) => (

@@ -19,7 +19,7 @@ class ApprovalList extends Component {
 
     defaultButtonsRender = (text, item) => {
         let buttons = [];
-        if ((auth.isCurrentUser(item.UserId) || auth.isCurrentUser(item.approvalUserId)) && item.UpdateTime) {
+        if ((auth.hasRight('Form.Seal.View') || auth.isCurrentUser(item.UserId) || auth.isCurrentUser(item.approvalUserId)) && item.UpdateTime) {
             buttons.push(<CheckLogModal key="CheckLogModal" flowData={item.FlowData} />)
         }
         if (auth.isCurrentUser(item.ApprovalUserId)) {

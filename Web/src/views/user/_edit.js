@@ -16,7 +16,6 @@ class EditUserModal extends Component {
         const departments = this.props.departments || []
         const groups = this.props.groups || []
         const titles = this.props.titles || []
-        const attendanceGroups = this.props.attendanceGroups || []
         return [{
             name: 'ID',
             defaultValue: model.ID,
@@ -65,14 +64,6 @@ class EditUserModal extends Component {
             defaultValue: (model.Sort || 0),
             layout: { labelCol: { span: 6 }, wrapperCol: { span: 3 } },
             render: <Input />
-        },
-        {
-            title: '考勤组',
-            name: 'AttendanceId',
-            defaultValue: model.AttendanceId ? model.AttendanceId.toString() : '',
-            render: <Select>
-                {attendanceGroups.map(item => <Select.Option key={item.ID}>{item.Name}</Select.Option>)}
-            </Select>
         },
         {
             title: '指纹码',

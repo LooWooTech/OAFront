@@ -19,12 +19,11 @@ const Forms = {
     Mail: { ID: 8, Name: '邮件', Icon: 'fa fa-envelope-o', InfoLink: '/mail/detail?id={ID}' },
     Goods: { ID: 9, FlowId: 8, Name: '物品', Icon: 'fa fa-box', InfoLink: '/goods/approvals' }
 };
-
-function getExceptionMessage(ex) {
+function getInnerException(ex){
     if (ex.InnerException) {
-        return getExceptionMessage(ex.InnerException)
+        return getInnerException(ex.InnerException)
     }
-    return ex.ExceptionMessage || ex.Message || '未知错误'
+    return ex;
 }
 function invokeApi(path, method, data, callback, onError, async = true) {
     var url = host + apiPath + path;
@@ -38,15 +37,14 @@ function invokeApi(path, method, data, callback, onError, async = true) {
             callback(json)
         }
     }, error => {
+        const ex = getInnerException(error)
         if (onError) {
-            onError(error);
+            onError(ex);
         } else {
-            var msg = getExceptionMessage(error);
-            if (msg) {
-                message.error(msg);
+            if (ex) {
+                message.error(ex.ExceptionMessage || ex.Message || '未知错误');
             }
         }
-        console.log("ERROR:", error);
     }, async);
 }
 
@@ -95,6 +93,9 @@ module.exports = {
         },
         ParentTitleUserList: (userId, cb, err) => {
             invokeApi(`user/ParentTitleUserList?userId=${userId || 0}`, HTTP_GET, null, cb, err);
+        },
+        ResetPassword:(userId,cb,err)=>{
+            invokeApi(`user/ResetPassword?userId=${userId}`,HTTP_GET,null,cb,err);
         }
     },
     Form: {
