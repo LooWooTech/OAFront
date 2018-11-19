@@ -22,7 +22,10 @@ class CheckButton extends Component {
     getLogsOfDate = (logs, date) => logs.filter(e => moment(e.CreateTime).format('YYYYMMDD') === date.format('YYYYMMDD'))
 
     render() {
-        const config = this.props.config;
+        const config = {};
+        for(var key in this.props.config){
+            config[key] = moment(this.props.config[key]);
+        }
         const logs = this.props.logs || [];
         const onClick = this.props.onClick;
         if (!config) return null;
@@ -34,12 +37,12 @@ class CheckButton extends Component {
         //如果在上午打卡区间
         if (now >= config.AMBeginTime && now <= config.AMLastTime) {
             canCheck = true;
-            hasChecked = this.getLogsOfDate(logs, now).find(e => moment(e.CreateTime) >= config.AMBeginTime && moment(e.CreateTime) <= config.AMEndTime);
+            hasChecked = this.getLogsOfDate(logs, now).find(e => moment(e.CreateTime) >= config.AMBeginTime && moment(e.CreateTime) <= config.AMLastTime);
         }
         //如果在下午打卡区间
         else if (now >= config.PMEarlyTime && now <= config.PMEndTime) {
             canCheck = true;
-            hasChecked = this.getLogsOfDate(logs, now).find(e => moment(e.CreateTime) >= config.PMBeginTime && moment(e.CreateTime) <= config.PMEndTime);
+            hasChecked = this.getLogsOfDate(logs, now).find(e => moment(e.CreateTime) >= config.PMEarlyTime && moment(e.CreateTime) <= config.PMEndTime);
         }
         if (canCheck) {
             return <Card>

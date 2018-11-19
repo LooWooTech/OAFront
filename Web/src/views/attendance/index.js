@@ -40,12 +40,6 @@ export default class AttendanceIndex extends React.Component {
                 ...json,
                 logsOfDate: this.getLogsOfDate(json.logs, this.state.selectedDate),
                 leavesOfDate: this.getLeavesOfDate(json.leaves, this.state.selectedDate),
-                time: {
-                    AMBeginTime: moment(json.time.AMBeginTime),
-                    AMEndTime: moment(json.time.AMEndTime),
-                    PMBeginTime: moment(json.time.PMBeginTime),
-                    PMEndTime: moment(json.time.PMEndTime)
-                }
             });
         });
     }
@@ -90,7 +84,7 @@ export default class AttendanceIndex extends React.Component {
         let today = moment();
         if (!model) {
             if (holiday) {
-                return holiday.Name.indexOf('周') ? '周末' : '节假日'
+                return holiday.Name.indexOf('周') > -1 ? '周末' : holiday.Name;
             }
             if (leave && leave.Result) {
                 switch (leave.InfoId) {

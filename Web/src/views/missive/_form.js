@@ -262,7 +262,7 @@ class MissiveEditForm extends React.Component {
                     title: '是否上报',
                     tips: "只有在公文流程完全结束之后才会上报，不选择则不上报",
                     render: <Checkbox
-                        defaultChecked={model.NotReport === false ? false : true}
+                        defaultChecked={model.NotReport === true ? false : true}
                         onChange={e => this.setState({ notReport: !e.target.checked })}
                         disabled={disabled}
                     >

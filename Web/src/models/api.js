@@ -318,8 +318,8 @@ module.exports = {
         UpdateImportant: (id, cb, err) => {
             invokeApi('missive/UpdateImportant?id=' + id, HTTP_GET, null, cb, err);
         },
-        Report: (id, cb, err) => {
-            invokeApi('missive/report?id=' + id, HTTP_GET, null, cb, err);
+        Report: (id,manual, cb, err) => {
+            invokeApi('missive/report?id=' + id + '&manual=' + manual, HTTP_GET, null, cb, err);
         },
         Transfer: (id, cb, err) => {
             invokeApi('missive/transfer?id=' + id, HTTP_GET, null, cb, err);

@@ -8,6 +8,9 @@ export default class HolidayFormModal extends React.Component {
     state = {}
 
     handleSubmit = (data) => {
+        //如果不format，则用的是0区时间
+        data.BeginDate = data.BeginDate.format();
+        data.EndDate = data.EndDate.format();
         api.Holiday.Save(data, json => {
             this.props.onSubmit()
         });
@@ -26,8 +29,8 @@ export default class HolidayFormModal extends React.Component {
                 children={[
                     { name: 'ID', defaultValue: record.ID || 0, render: <Input type="hidden" /> },
                     { title: '节假日名称', name: 'Name', defaultValue: record.Name, render: <Input /> },
-                    { title: '开始日期', name: 'BeginDate', defaultValue: beginDate, render: <DatePicker /> },
-                    { title: '结束日期', name: 'EndDate', defaultValue: endDate, render: <DatePicker /> },
+                    { title: '开始日期', name: 'BeginDate', defaultValue: beginDate, render: <DatePicker  placeholder="选择日期" /> },
+                    { title: '结束日期', name: 'EndDate', defaultValue: endDate, render: <DatePicker placeholder="选择日期" /> },
                     //{ title: '备注', name: 'Note', defaultValue: record.Note, render: <Input type="textarea" autosize={{ minRows: 2, maxRows: 6 }} /> }
                 ]}
             />

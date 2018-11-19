@@ -87,7 +87,7 @@ export default class MissiveList extends React.Component {
     }
 
     handleReport = id => {
-        api.Missive.Report(id, () => {
+        api.Missive.Report(id,true, () => {
             utils.ReloadPage({ time: Math.random() })
         });
     }
