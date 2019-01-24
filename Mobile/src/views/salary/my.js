@@ -44,20 +44,14 @@ class MySalaryList extends Component {
                     <Body>
                         <Title>我的工资单</Title>
                     </Body>
-                    {years.length > 1 ?
-                        <Right>
-                            <Button transparent onPress={this.showPopover}>
-                                <Icon name="bars" />
-                            </Button>
-                        </Right>
-                        : null}
+                    <Right>
+                        <Button transparent onPress={this.showPopover}>
+                            <Icon name="bars" />
+                        </Button>
+                    </Right>
                 </Header>
                 <Content>
-                    {years.length > 1 ?
-                        <NavbarPopover ref="menu"
-                            data={years.map(year => ({ label: year, value: year }))}
-                            onSelect={this.handleSelectMenu} />
-                        : null}
+                    <NavbarPopover ref="menu" data={years.map(year => ({ label: year, value: year }))} onSelect={this.handleSelectMenu} />
                     <List>
                         {salaryDatas.map((item) => <SalaryItem key={item.ID} model={item} onClick={this.handleClickItem} />)}
                     </List>

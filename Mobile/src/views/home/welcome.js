@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import { NavigationActions } from 'react-navigation'
-import { StyleSheet, Image, Keyboard,info } from 'react-native';
+import { StyleSheet, Image, Keyboard } from 'react-native';
 import { observer, inject } from 'mobx-react'
-import { Container, Content, Text, View } from 'native-base'
-import CounterDown from '../shared/CounterDown'
+import { Container, Text } from 'native-base'
 import LoginForm from '../user/_login'
-import {VERSION} from '../../common/config'
+import { VERSION } from '../../common/config'
 @inject('stores')
 @observer
 class Welcome extends Component {
@@ -18,7 +17,7 @@ class Welcome extends Component {
     }
 
     render() {
-        const { hasLogin, inProgress } = this.props.stores.userStore
+        const { hasLogin } = this.props.stores.userStore
         setTimeout(() => {
             if (hasLogin) {
                 const resetAction = NavigationActions.reset({
@@ -34,7 +33,7 @@ class Welcome extends Component {
             <Container style={{ alignItems: 'center', backgroundColor: '#108ee9' }}>
                 <Image source={require('../../resources/logo.png')} style={{ marginTop: 40, marginBottom: 10 }} />
                 <Text style={styles.title}>
-                    舟山市国土局定海分局
+                    舟山市自然资源和规划局定海分局
                 </Text>
                 <Text style={styles.subTitle}>
                     办公自动化系统 v{VERSION}

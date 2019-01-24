@@ -1,7 +1,6 @@
-import { StackNavigator, TabNavigator, NavigationActions, StackRouter } from 'react-navigation'
+import { StackNavigator } from 'react-navigation'
 import Welcome from './views/home/welcome'
 import HomePage from './views/home/index'
-import Search from './views/search/index'
 import Settings from './views/home/settings'
 import Messages from './views/message/index'
 import MissvieList from './views/missive/index'

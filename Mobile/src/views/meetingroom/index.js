@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Container, Header, Body, Left, Text, View, Right, Content, Title, Icon, Button, List, ListItem, Item, H1, Input } from 'native-base'
+import { Container, Header, Body, Left, Text, Right, Content, Title, Icon, Button } from 'native-base'
 import { observer, inject } from 'mobx-react'
-import { FlatList, Dimensions } from 'react-native'
 import { FORMS } from '../../common/config';
 import BackButton from '../shared/BackButton'
 import ListRow from '../shared/ListRow'
@@ -39,6 +38,7 @@ export default class MeetingRoomIndex extends Component {
 
     render() {
         const { list } = this.props.stores.meetingroomStore
+        console.log(list)
         return (
             <Container>
                 <Header>

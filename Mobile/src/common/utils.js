@@ -23,7 +23,6 @@ function jsonToQueryString(json) {
 }
 
 function throwException(ex) {
-    console.debug("error", ex)
     const msg = ex.ExceptionMessage || ex.Message || ex.ReferenceError || '未知错误'
     //Toast.showLongCenter(msg)
     Toast.show({ text: msg, type: 'danger' })
@@ -62,20 +61,18 @@ async function request(path, query, data, httpMethod) {
                 break;
         }
         console.debug('result._bodyText', result._bodyText)
-        switch (result.status) {
-            case 200:
-            case 204:
-                if (result._bodyText)
-                    try {
-                        return JSON.parse(result._bodyText)
-                    }
-                    catch(ex){
-                        return result._bodyText;
-                    }
-                break;
-            default:
-                throwException(result._bodyText)
-                break;
+        let response = result._bodyText
+        if (response) {
+            try {
+                response = JSON.parse(response)
+            }
+            catch (ex) {
+            }
+        }
+        if (result.status == 200 || result.status == 204) {
+            return response
+        } else {
+            throwException(response)
         }
     } catch (err) {
         throwException(err)

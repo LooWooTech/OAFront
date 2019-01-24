@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Alert, Linking, IntentAndroid } from 'react-native'
+import { Linking } from 'react-native'
 import { observer, inject } from 'mobx-react'
-import { Toast, Container, Header, Text, View, Left, Body, Content, Title, Right, Icon, List, ListItem, Button } from 'native-base'
+import { Container, Header, Text, View, Left, Body, Content, Title, Right, List, ListItem, Button } from 'native-base'
 import BackButton from '../shared/BackButton'
 
 @inject('stores')
