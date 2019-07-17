@@ -23,7 +23,7 @@ export default class MissiveEdit extends Component {
 
         if (!id) {
             this.setState({
-                missive: {},
+                missive: { NotReport: true },
                 activeItem: 'info',
                 canView: true,
                 canEdit: true,
@@ -32,7 +32,8 @@ export default class MissiveEdit extends Component {
                 canBack: false,
                 model: {
                     ID: id,
-                    FormId: formId
+                    FormId: formId,
+                    NotReport: true
                 }
             });
         }
@@ -117,7 +118,6 @@ export default class MissiveEdit extends Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        console.log(nextProps, nextState)
         return JSON.stringify(nextProps) !== JSON.stringify(this.props) || nextState !== this.state
     }
 

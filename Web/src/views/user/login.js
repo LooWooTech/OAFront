@@ -3,6 +3,7 @@ import { Form, Icon, Input, Button, message } from 'antd';
 import auth from '../../models/auth'
 import api from '../../models/api'
 import utils from '../../utils'
+import { SiteName } from '../../models/config'
 import DocumentTitle from 'react-document-title'
 const FormItem = Form.Item;
 
@@ -27,14 +28,13 @@ class Login extends Component {
   }
   render() {
     const { getFieldDecorator } = this.props.form;
-
     return (
       <DocumentTitle title="登录">
         <div className="container login-page">
           <div className="login">
             <img src="/images/logo.png" alt="logo" />
             <h1>
-              舟山市国土局定海分局
+              {SiteName}
               <span>办公自动化系统</span>
             </h1>
             <Form onSubmit={this.handleSubmit}>
@@ -47,7 +47,7 @@ class Login extends Component {
                     prefix={<Icon type="user" />}
                     placeholder="用户名"
                   />
-                  )}
+                )}
               </FormItem>
               <FormItem>
                 {getFieldDecorator('password', {
@@ -61,7 +61,7 @@ class Login extends Component {
                     type="password"
                     placeholder="密码"
                   />
-                  )}
+                )}
               </FormItem>
 
               <FormItem className="additional">

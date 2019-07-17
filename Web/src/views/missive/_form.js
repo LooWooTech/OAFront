@@ -6,7 +6,7 @@ import api from '../../models/api'
 import utils from '../../utils'
 
 class MissiveEditForm extends React.Component {
-    state = { uploading: false }
+    state = { uploading: false, hasReport: false }
 
     componentWillMount() {
         // api.Missive.RedTitleList(data => {
@@ -30,7 +30,7 @@ class MissiveEditForm extends React.Component {
             formData.Content = content;
             formData.FW_RQ = formData.FW_RQ ? formData.FW_RQ.format() : ''
             formData.QX_RQ = formData.QX_RQ ? formData.QX_RQ.format('YYYY-MM-DD') : ''
-            formData.NotReport = this.state.notReport;
+            formData.NotReport = !this.state.hasReport;
             if (!formData.FormId) {
                 message.error("缺少参数FormId")
                 return false
@@ -263,7 +263,7 @@ class MissiveEditForm extends React.Component {
                     tips: "只有在公文流程完全结束之后才会上报，不选择则不上报",
                     render: <Checkbox
                         defaultChecked={model.NotReport === true ? false : true}
-                        onChange={e => this.setState({ notReport: !e.target.checked })}
+                        onChange={e => this.setState({ hasReport: e.target.checked })}
                         disabled={disabled}
                     >
                         上报市局OA系统

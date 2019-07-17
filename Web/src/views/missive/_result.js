@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Row, Col } from 'antd';
 import moment from 'moment';
+import { SiteName } from '../../models/config';
 
 class ResultTab extends Component {
 
@@ -45,7 +46,7 @@ class ResultTab extends Component {
         const flowData = this.props.flowData || {};
         return (
             <div className="missive_result">
-                <h1>舟山市国土资源局定海分局发文拟稿纸
+                <h1>{SiteName}发文拟稿纸
                 <span>发文字号：{model.WH}  号</span>
                 </h1>
                 <div className="table">

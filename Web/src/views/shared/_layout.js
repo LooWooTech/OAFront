@@ -3,6 +3,7 @@ import Header from './_header'
 import Sider from './_sider'
 import DocumentTitle from 'react-document-title'
 import nav from '../shared/_nav'
+import { SiteName } from '../../models/config';
 
 export default class Layout extends React.Component {
 
@@ -11,7 +12,7 @@ export default class Layout extends React.Component {
   }
 
   getPageTitle = (menu) => {
-    let title = '舟山市国土局定海分局办公自动化系统'
+    let title = SiteName + ' 办公自动化系统'
     if (menu) {
       title = menu.text + ' - ' + title;
       let url = this.props.location.pathname + this.props.location.search
