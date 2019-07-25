@@ -287,7 +287,7 @@ module.exports = {
             invokeApi('missive/save?formId=' + data.FormId, HttpMethod.POST, data, cb, err);
         },
         GetPreviewFileUrl: (infoId) => {
-            return 'file/GetPreviewFileUrl?id=' + infoId
+            return `${Api.Host}${Api.ApiPath}file/GetPreviewFileUrl?id=${infoId}`
         },
         RedTitleList: (cb, err) => {
             invokeApi('missive/redtitles', HttpMethod.GET, null, cb, err);
@@ -458,7 +458,7 @@ module.exports = {
             invokeApi('salary/delete', HttpMethod.DELETE, { id }, cb, err);
         },
         ImportUrl: () => {
-            return `salary/upload`;
+            return `${Api.Host}${Api.ApiPath}salary/upload`;
         },
         Import: (data, cb, err) => {
             let query = utils.jsonToQueryString(data)
