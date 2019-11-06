@@ -184,38 +184,73 @@ class UserSelect extends Component {
             : nodes;
     }
 
-    handleCheck = (checkedKeys, { checked, checkedNodes, node, event }) => {
-        if (!checkedKeys || checkedKeys.length === 0) {
-            this.setState({ selected: [] })
-            return;
-        }
-        if (!checked) {
-            let excludeIds = [];
-            if (!node.props.isLeaf) {
-                node.props.children.map(child => child.map(n => {
-                    excludeIds.push(n.key)
-                }));
-            } else {
-                excludeIds = [node.props.eventKey]
-            }
-            checkedKeys = checkedKeys.filter(id => !excludeIds.find(eId => id === eId))
-        }
-        if (this.state.multiple) {
-            let result = []
-            this.state.users.map(user => {
-                if (checkedKeys.find(id => user.ID.toString() === id)) {
-                    result.push(user)
-                }
-                return user
-            })
-            this.setState({ selected: result })
+    findUsersByTreeNode = (node) => {
+        if (node.props.isLeaf) {
+            return this.state.users.find(e => e.ID.toString() === (node.key || node.props.eventKey));
         }
         else {
-            let currentKey = node.props.eventKey;
-            let isLeaf = node.props.isLeaf;
-            if (!isLeaf) return;
-            let user = this.state.users.find(e => e.ID.toString() === currentKey)
-            this.setState({ selected: [user] })
+            if (!this.state.multiple) {
+                return []
+            }
+            let result = []
+            node.props.children.forEach(child => {
+                if (Array.isArray(child)) {
+                    result = result.concat(child.map(n => this.findUsersByTreeNode(n)))
+                }
+                else {
+                    result.push(this.findUsersByTreeNode(child))
+                }
+            })
+            return result;
+        }
+    }
+
+    handleCheck = (checkedKeys, { checked, checkedNodes, node, event }) => {
+        if (this.state.multiple) {
+            let checkedUsers = []
+            let target = this.findUsersByTreeNode(node);
+            if (Array.isArray(target)) {
+                target.forEach(item => {
+                    if (Array.isArray(item)) {
+                        checkedUsers = checkedUsers.concat(item)
+                    } else {
+                        checkedUsers.push(item)
+                    }
+                })
+            } else {
+                checkedUsers = [target]
+            }
+            let result = [];
+            let hasChecked = checked;
+            if (hasChecked === undefined) {
+                hasChecked = !node.props.checked
+            }
+            if (hasChecked) {
+                result = this.state.selected
+                checkedUsers.forEach(user => {
+                    if (!result.find(e => e.ID === user.ID)) {
+                        result.push(user)
+                    }
+                })
+            }
+            else {
+                this.state.selected.forEach(user => {
+                    if (!checkedUsers.find(e => e.ID === user.ID)) {
+                        result.push(user)
+                    }
+                })
+            }
+            this.setState({ selected: result })
+
+        }
+        else {
+            if (node.props.isLeaf) {
+                const user = this.findUsersByTreeNode(node)
+                this.setState({ selected: [user] })
+            }
+            else {
+                
+            }
         }
     }
 
@@ -358,6 +393,7 @@ class UserSelect extends Component {
                                 this.setState({ key: '', titleId: parseInt(value || '0', 10), inModal: true }, this.loadUsers)
                             }}
                         >
+                            <Select.Option key='0'>全部</Select.Option>
                             {(this.state.titles || []).map(t => <Select.Option key={t.ID}>{t.Name}</Select.Option>)}
                         </Select>
                     </Col>

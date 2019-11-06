@@ -11,7 +11,9 @@ class SharedFormItem extends Component {
     handleChangeValue = (val) => {
         const item = this.props.item
         item.value = val;
-        this.props.onChange(item)
+        if (item.onChange) {
+            item.onChange(val)
+        }
     }
 
     render() {

@@ -28,8 +28,8 @@ class FlowSubmitForm extends Component {
                         this.submitFlowData(data)
                     }
                 }], {
-                    cancelable: true
-                }
+                cancelable: true
+            }
             )
         } else {
             this.submitFlowData(data)

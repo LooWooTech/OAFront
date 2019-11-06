@@ -13,7 +13,7 @@ export const Forms = {
 };
 
 export const Api = {
-    Host :  process.env.NODE_ENV === 'production' ? '/' : 'http://localhost:53965/',
+    Host :  process.env.NODE_ENV === 'production' ? '/' : 'http://localhost:8012/',
     ApiPath : "api/",
 };
 
